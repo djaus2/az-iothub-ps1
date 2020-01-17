@@ -1,24 +1,28 @@
 
 param (
-   # [Parameter(Mandatory)]
+   [Parameter(Mandatory)]
     [string]$ListString, 
-   # [Parameter(Mandatory)]
     [string]$Title,
     [int]$DisplayIndex='0', 
     [int]$CodeIndex='0',
     [int]$ItemsPerLine=1,
+    [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
 cls
 
+[string]$temp =  [string]$ColWidth
+$FormatStrn = '{0,-' + $temp + '}'
+
 [boolean]$includeExit= $true
 [boolean]$includeBack= $true
-[boolean]$includeNew= $true
-[boolean]$includeDelete= $true
+[boolean]$includeNew= $false
+[boolean]$includeDelete= $false
+
 # These two checks not required as both parameters are mandatory
 if (([string]::IsNullOrEmpty($ListString)) -or ($ListString.ToUpper() -eq '--HELP') -or ($ListString.ToUpper() -eq '-H'))
 {
-    $prompt = 'Usage: menu ListString Title [DisplayIndex] [CodeIndex] [ItemsPerLine] [Current Selection]'
+    $prompt = 'Usage: menu ListString Title [DisplayIndex] [CodeIndex] [ItemsPerLine] [ColWidth] [Current Selection]'
     write-Host $prompt
     write-Host ''
     $prompt = 'ListString:       Required. A string of lines (new line separated). Each line is an entitiy to be listed in the menu.'
@@ -32,7 +36,9 @@ if (([string]::IsNullOrEmpty($ListString)) -or ($ListString.ToUpper() -eq '--HEL
     $prompt = 'CodeIndex:        Optional. Zero based index to entity property to to be returned. (Default 0)'
     write-Host $prompt    
     $prompt = 'ItemsPerLine:     Optional. Number of items to be displayed per line. (Default 1)'
-    write-Host $prompt    
+    write-Host $prompt   
+    $prompt = 'ColWidth:         Optional. Space for each item name. (Default 22)'
+    write-Host $prompt   
     $prompt = 'CurrentSelection: Optional. Current selection as property displayed. (Default blank) Exiting'
     write-Host $prompt 
     write-Host ''   
@@ -47,7 +53,7 @@ if ([string]::IsNullOrEmpty($Title))
 }  
 
 $lines =$ListString  -split '\n'
-$lines.Length
+$noEntities = $lines.Length -1
 [int] $i=1
 write-Host ''
 $prompt ='Select a ' + $Title
@@ -68,14 +74,31 @@ foreach ($j in $lines)
     [string]$prompt = [string]$i
     $prompt += '. '     
     $prompt +=  $itemToList
-    $prompt = [string]::Format("{0,-24}",$prompt )
-    if ( $itemToList -eq $CurrentSelection)
+    $prompt = [string]::Format($FormatStrn,$prompt )
+    if ($CurrentSelection -eq 'None')
+    {
+        write-Host $prompt -NoNewline
+    
+
+        if ($col -eq ($ItemsPerLine-1))
+        {
+            $col =0
+            write-Host ''
+        }
+        else 
+        {
+            $Tab = [char]9
+            write-Host $Tab -NoNewline
+            $col++
+        }
+    }
+    elseif ( $itemToList -eq $CurrentSelection)
     {
         write-Host ''
         [string]$prompt = [string]$i
         $prompt += '. '   
         write-Host $prompt -NoNewline
-        $prompt = [string]::Format("{0,-22}",$itemToList )
+        $prompt = [string]::Format($FormatStrn,$itemToList )
         write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
         write-Host ' <-- Current Selection' -ForegroundColor DarkGreen 
         $col = 0
@@ -86,7 +109,7 @@ foreach ($j in $lines)
         write-Host $prompt -NoNewline
     
 
-        if ($col -eq 3)
+        if ($col -eq ($ItemsPerLine-1))
         {
             $col =0
             write-Host ''
@@ -101,32 +124,30 @@ foreach ($j in $lines)
     
     $i++
 }
-if ($includeNew
+if ($includeNew)
 {
     write-Host ''
     $prompt = 'N. '
     $prompt +=  'New ' + $Title
     write-Host $prompt
-    }
+    
+}
 if ($includeExit)
 {
-    [string]$prompt = [string]$i
-    $prompt += 'D. '
+    $prompt = 'D. '
     $prompt +=  'Delete ' + $Title
     write-Host $prompt
 }
 
 if ($includeBack)
 {
-    write-Host ''
     $prompt = 'B. '
     $prompt +=  'Back '
     write-Host $prompt
     }
 if ($includeExit)
 {
-    [string]$prompt = [string]$i
-    $prompt += 'X. '
+    $prompt = 'X. '
     $prompt +=  'Exit '
     write-Host $prompt
 }
