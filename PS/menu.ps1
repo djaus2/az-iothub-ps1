@@ -11,6 +11,10 @@ param (
 )
 cls
 
+[boolean]$includeExit= $true
+[boolean]$includeBack= $true
+[boolean]$includeNew= $true
+[boolean]$includeDelete= $true
 # These two checks not required as both parameters are mandatory
 if (([string]::IsNullOrEmpty($ListString)) -or ($ListString.ToUpper() -eq '--HELP') -or ($ListString.ToUpper() -eq '-H'))
 {
@@ -97,19 +101,35 @@ foreach ($j in $lines)
     
     $i++
 }
+if ($includeNew
+{
+    write-Host ''
+    $prompt = 'N. '
+    $prompt +=  'New ' + $Title
+    write-Host $prompt
+    }
+if ($includeExit)
+{
+    [string]$prompt = [string]$i
+    $prompt += 'D. '
+    $prompt +=  'Delete ' + $Title
+    write-Host $prompt
+}
 
-
-
-write-Host ''
-[string]$prompt = [string]$i
-$prompt += '. '
-$prompt +=  'Back '
-write-Host $prompt
-$i++
-[string]$prompt = [string]$i
-$prompt += '. '
-$prompt +=  'Exit '
-write-Host $prompt
+if ($includeBack)
+{
+    write-Host ''
+    $prompt = 'B. '
+    $prompt +=  'Back '
+    write-Host $prompt
+    }
+if ($includeExit)
+{
+    [string]$prompt = [string]$i
+    $prompt += 'X. '
+    $prompt +=  'Exit '
+    write-Host $prompt
+}
 
 [int]$selection =1
 $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
@@ -121,6 +141,42 @@ do
     {
         # Just in case the user enters -1!
         $selection = 0
+    }
+    elseif ($answer.ToUpper() -eq 'X')
+    {
+        if ($includeExit){
+            $selection = $i+4
+        }
+        else {
+            $selection=o
+        }
+    }
+    elseif ($answer.ToUpper() -eq 'B')
+    {
+        if ($includeBack){
+            $selection = $i+3
+        }
+        else {
+            $selection=o
+        }
+    }
+    elseif ($answer.ToUpper() -eq 'D')
+    {
+        if ($includeDelete){
+            $selection = $i+2
+        }
+        else {
+            $selection=o
+        }
+    }
+    elseif ($answer.ToUpper() -eq 'N')
+    {
+        if ($includeNew){
+            $selection = $i+1
+        }
+        else {
+            $selection=o
+        }
     }
     elseif (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
     {
@@ -138,8 +194,8 @@ do
     $prompt = "Please make a VALID selection."
 
 } until (`
-        ($selection -gt 0) -and (($selection  -le  $i) `
-        -and ($selection  -ne  ($i -4)) ) `
+        ($selection -gt 0) -and (($selection  -le  $i+4) `
+        -and ($selection  -ne  ($i)) ) `
         -OR ($selection -eq -1))
 
 $output = ''
@@ -147,13 +203,21 @@ if ($selection -eq -1)
 {
     $output = $CurrentSelection
 }
-elseif ($selection -eq  $i-1)
+elseif ($selection -eq  $i+3)
 {
     $output = 'Back'
 }
-elseif ($selection -eq  $i)
+elseif ($selection -eq  $i+4)
 {
     $output = 'Exit'
+}
+elseif ($selection -eq  $i+2)
+{
+    $output = 'Delete'
+}
+elseif ($selection -eq  $i+1)
+{
+    $output = 'New'
 }
 else 
 {          
@@ -161,7 +225,7 @@ else
     $output =  ($lines2-split '\t')[$CodeIndex]   
 }
 write-Host ''
-$promptFinal = 'Location "' +  $output + '" selected'
+$promptFinal = $Title +' "' +  $output + '" selected'
 write-Host $promptFinal
 $global:result3 = $output
 return $output
