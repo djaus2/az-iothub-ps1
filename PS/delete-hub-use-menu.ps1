@@ -1,12 +1,13 @@
 param (
     [Parameter(Mandatory)]
     [string]$GroupName,
-    [string]$HubName=''
+    [string]$HubName='',
+    [boolean]$Refresh=$false
 )
 # Need a Hub name
 if ([string]::IsNullOrEmpty($HubName))
 {
-    If ([string]::IsNullOrEmpty($global:HubsStrn ))
+    If ( ([string]::IsNullOrEmpty($global:HubsStrn )) -or $Refresh)
     {   
         write-Host 'Getting Hubs from Azure'
         $global:HubsStrn =  az IoT Hub list --resource-group  $GroupName -o tsv | Out-String
@@ -19,7 +20,7 @@ if ([string]::IsNullOrEmpty($HubName))
         write-Host $Prompt
         Exit
     }
-    $HubName = show-menu $global:HubsStrn  'Hub'  4 4 1 22
+    $HubName = show-menu $global:HubsStrn  'Hub'  3 3 1 22
     if ($HubName -eq 'Exit')
     {
         exit
@@ -40,7 +41,8 @@ if  (($answer -eq 'N') -OR ($answer -eq 'n'))
 
 $prompt = 'Checking whether Azure Hub "' + $HubName  + '" exists.'
 write-Host $prompt
-if (  ( check-hub --HubName $HubName --GroupName $GroupName   ) -eq $true)
+# if (  ( check-hub --HubName $HubName --GroupName $GroupName --Refresh $True ) -eq $true)
+if (  ( check-hub -$GroupName $HubName  $True ) -eq $true)
 {
     $prompt = 'Deleting Azure Resource Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     write-Host $prompt
