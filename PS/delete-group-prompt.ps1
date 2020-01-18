@@ -1,5 +1,6 @@
 param (
-    [string]$GroupName=''
+    [string]$GroupName='',
+    [boolean]$Refresh=$false
 )
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
