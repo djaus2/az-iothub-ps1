@@ -156,7 +156,7 @@ write-Host ''
 $answer = read-Host ' Have you run "az login" to access your accounts. Y/N (Default Y)'
 if  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    exit
+    az login
 }
 
 

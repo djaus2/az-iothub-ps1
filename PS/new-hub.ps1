@@ -1,13 +1,18 @@
 param (
     [string]$Subscription = '' ,
     [string]$GroupName='',
-    [string]$HubName=''
+    [string]$HubName='',
+    [string]$SKU ='',
+    [boolean]$Refresh=$false
 )
 
 
 
+Clear-Host
+write-Host ' AZURE IOT HUB SETUP:  N E W  H U B  using PowerShell '  -BackgroundColor DarkBlue  -ForegroundColor White
+write-Host ''
 
-clear-Host
+
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
 {
@@ -26,7 +31,46 @@ if ([string]::IsNullOrEmpty($GroupName))
     }
     $GroupName = $answer
 }
-#Need a Hub Name
+
+#We need an SKU
+$skus = 'B1, B2, B3, F1, S1, S2, S3'
+$skusList = $skus.Replace(' ', '')
+if ([string]::IsNullOrEmpty($SKU))
+{
+    # do
+    #{
+        $prompt = 'Enter SKU. Choose from ' + $skus + '. X to exit/return'
+        $answer= read-Host $prompt
+        if ([string]::IsNullOrEmpty($answer))
+        {
+            $answer ='F1'
+        }
+        $answer = $answer.ToUpper()
+        $answer = $answer.Trim()
+        write-Host $answer
+        
+    # } until (-not ([string]::IsNullOrEmpty($answer)))
+
+    if ($answer -eq 'X')
+    {
+        write-Host 'Returning'
+        return false
+    }
+    elseif (($answer | %{$skusList.contains($_)}) -contains $true)
+    {
+        $SKU = $answer
+        write-Host $SKU
+
+    }
+    else 
+    {
+        write-Host 'Invalid SKU string. Returning'
+        return false
+    }
+    
+}
+
+#Need a Hub name
 if ([string]::IsNullOrEmpty($HubName))
 {
     do
@@ -46,75 +90,35 @@ if ([string]::IsNullOrEmpty($HubName))
 }
 
 
-# exit
-
 # Subscription is  optional
-if ([string]::IsNullOrEmpty($Subscription)) 
+if (([string]::IsNullOrEmpty($Subscription)) -or ($true))
 {
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName  +'" exists in Group "' + $GroupName + '"'
-    write-Host $prompt
-  
-    write-Host 'Getting Hubs from Azure'
-    $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
-    If ([string]::IsNullOrEmpty($global:HubsStrn ))
-    {   
-        $Index = 3
-        $com =$global:HubsStrn -split '\n'
-        foreach ($j in $com) 
-        {
-            $j
-            if ([string]::IsNullOrEmpty($j))
-            {   
-                continue
-            }
-            $itemToList = ($j-split '\t')[$Index]
-            if ($itemToList -eq $HubName)
-            {
-                $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
-                write-Host $prompt
-                return
-            }
-        }
-    }
-    else 
-    {
-        $prompt = "No hubs found ... Continuing."
-        write-Host $prompt
-    }
 
-    $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '"'
+    if ((check-hub  $GroupName $HubName  $Refresh) -eq $true)
+    {
+        $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
+        write-Host $prompt
+        return false
+    }
+    
+
+    $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
     write-Host $prompt
-    az iot hub create --name $HubName   --resource-group $GroupName --sku 'S1'
+
+    az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU
    
-# az iot hub delete --name qaz   --resource-group AzSpheerGroup
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
-    write-Host 'Getting Hubs from Azure'
-    $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
-    If ([string]::IsNullOrEmpty($global:HubsStrn ))
-    {   
-        $Index = 3
-        $com =$hubst -split '\n'
-        foreach ($j in $com) 
-        {
-            if ([string]::IsNullOrEmpty($j))
-            {   
-                continue
-            }
-            $itemToList = ($j-split '\t')[$Index]
-            if ($itemToList -eq $HubName)
-            {
-                $prompt = 'It was created'
-                write-Host $prompt
-                return
-            }
-        }
-        $prompt = 'Hub not created.'
+    if ((check-hub  $GroupName $HubName  $true) -eq $true)
+    {
+        $prompt = 'Hub was created.'
         write-Host $prompt
+        $global:HubName = $HubName
     }
     else 
     {
         $prompt = 'Hub not created.'
         write-Host $prompt
+        $global:HubName = null
     }
 }

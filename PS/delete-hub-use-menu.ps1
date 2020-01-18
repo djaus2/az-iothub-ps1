@@ -4,22 +4,27 @@ param (
     [string]$HubName='',
     [boolean]$Refresh=$false
 )
+
+Clear-Host
+write-Host ' AZURE IOT HUB SETUP:  D E L E T E   H U B  using PowerShell '  -BackgroundColor DarkBlue  -ForegroundColor White
+write-Host ''
+
 # Need a Hub name
 if ([string]::IsNullOrEmpty($HubName))
 {
+  
     If ( ([string]::IsNullOrEmpty($global:HubsStrn )) -or $Refresh)
     {   
         write-Host 'Getting Hubs from Azure'
         $global:HubsStrn =  az IoT Hub list --resource-group  $GroupName -o tsv | Out-String
-        # $global:HubsStrn =  az Hub list --subscription  $global:Subscription -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:HubsStrn ))
     {
-        # $Prompt = 'No Hubs found in Subscription ' + $global:Subscription + '. Exiting.'
-        $Prompt = 'No Hubs found in Subscription. Exiting.'
+        $Prompt = 'No Hubs found in Subscription. Returning.'
         write-Host $Prompt
-        Exit
+        return false
     }
+
     $HubName = show-menu $global:HubsStrn  'Hub'  3 3 1 22
     if ($HubName -eq 'Exit')
     {
@@ -27,22 +32,26 @@ if ([string]::IsNullOrEmpty($HubName))
     }
     elseif ($HubName -eq 'Back')
     {
-       return
+       return $false
+    }
+    elseif ([string]::IsNullOrEmpty($HubName))
+    {
+        $prompt = 'Hub Name is blank or null. Returning'
+        write-Host $prompt
+        return $false
     }
 
 }
+
 $prompt =  'Do you want to delete the Hub "' + $HubName +  '" Y/N (Default N)'
 $answer = read-Host $prompt
 if  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    return
+    return $false
 }
 
 
-$prompt = 'Checking whether Azure Hub "' + $HubName  + '" exists.'
-write-Host $prompt
-# if (  ( check-hub --HubName $HubName --GroupName $GroupName --Refresh $True ) -eq $true)
-if (  ( check-hub -$GroupName $HubName  $True ) -eq $true)
+if (  ( check-hub $GroupName $HubName  $Refresh ) -eq $true)
 {
     $prompt = 'Deleting Azure Resource Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     write-Host $prompt
@@ -52,19 +61,20 @@ else
 {
     $prompt = 'Azure Resource Hub "' + $HubName +'" doesnt exist. Returning'
     write-Host $prompt
-    return
+    return $false
 }
 
 $prompt = 'Checking whether Azure Hub "' + $HubName   +'" was deleted.'
 write-Host $prompt
-if (  ( az Hub exists --name $HubName   ) -eq $true)
+if (  ( check-hub $GroupName $HubName  $True   ) -eq $true)
 {
     $prompt = 'It Failed'
     write-Host $prompt
-    return 
+    return  $false
 }
 else 
 {
     $prompt = 'It was deleted.'
     write-Host $prompt
+    return $true
 }
