@@ -7,9 +7,16 @@ param (
     [string]$DeviceName,
     [boolean]$Refresh=$false
 )
-$prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" in IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exits.'
+$DevicesStrnIndex =5
+if ($Refresh -eq $true)
+{
+    $Refresh
+    $global:DevicesStrn  = $null
+}
+
+$prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" in IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exists.'
 write-Host $prompt
-If (([string]::IsNullOrEmpty($global:DevicesStrn )) -or $Refesh)
+If ([string]::IsNullOrEmpty($global:DevicesStrn ))
 {   
     write-Host 'Getting Devices from Azure'
     $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String
@@ -19,19 +26,16 @@ If ([string]::IsNullOrEmpty($global:DevicesStrn  ))
     $Prompt = 'No Devices found in Hub. Exiting.'
     exit
 }
-If (-not([string]::IsNullOrEmpty($global:DevicesStrn )))
+else
 {   
-    $Index = 3
-    $lines =$global:HubsStrn -split '\n'
+    $lines =$global:DevicesStrn -split '\n'
     foreach ($line in $lines) 
     {
-        $line
         if ([string]::IsNullOrEmpty($line))
         {   
             continue
         }
-        $itemToList = ($line -split '\t')[$Index]
-        $itemToList
+        $itemToList = ($line -split '\t')[$DevicesStrnIndex]
         if ($itemToList -eq $DeviceName)
         {
             $prompt = 'It exists'

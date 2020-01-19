@@ -5,16 +5,23 @@ param (
     [string]$HubName,
     [boolean]$Refresh=$false
 )
+
+$HubsStrnIndex =5
+if ($Refresh -eq $true)
+{
+    $Refresh
+    $global:HubsStrn  = $null
+}
+
 $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exits.'
 write-Host $prompt
-If( ([string]::IsNullOrEmpty($global:HubsStrn )) -or $Refresh)
+If([string]::IsNullOrEmpty($global:HubsStrn )) 
 { 
     write-Host 'Getting Hubs from Azure'
     $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
 }
 If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
 {   
-    $Index = 3
     $lines =$global:HubsStrn -split '\n'
     foreach ($line in $lines) 
     {
@@ -22,7 +29,7 @@ If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
         {   
             continue
         }
-        $itemToList = ($line -split '\t')[$Index]
+        $itemToList = ($line -split '\t')[$HubsStrnIndex ]
         if ($itemToList -eq $HubName)
         {
             $prompt = 'It exists'

@@ -3,6 +3,14 @@ param (
     [string]$GroupName,
     [boolean]$Refresh=$false
 )
+
+$GroupsStrnIndex =3
+if ($Refresh -eq $true)
+{
+    $Refresh
+    $global:GroupsStrn  = $null
+}
+
 $prompt = 'Checking whether Azure Group "'  + $GroupName + '" exits.'
 write-Host $prompt
 If ([string]::IsNullOrEmpty($global:GroupsStrn ))
@@ -18,7 +26,7 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 }
 If (-not([string]::IsNullOrEmpty($global:GroupsStrn )))
 {   
-    $Index = 3
+
     $lines =$global:GroupsStrn -split '\n'
     foreach ($line in $lines) 
     {
@@ -26,7 +34,7 @@ If (-not([string]::IsNullOrEmpty($global:GroupsStrn )))
         {   
             continue
         }
-        $itemToList = ($line -split '\t')[$Index]
+        $itemToList = ($line -split '\t')[$GroupsStrnIndex]
         if ($itemToList -eq $GroupName)
         {
             $prompt = 'It exists'

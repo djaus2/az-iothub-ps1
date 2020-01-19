@@ -10,7 +10,7 @@ write-Host '  N E W  G R O U P  '  -BackgroundColor DarkBlue  -ForegroundColor W
 write-Host ' using PowerShell'
 write-Host ''
 
-$global:GroupName = null
+$global:GroupName = $null
 
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))

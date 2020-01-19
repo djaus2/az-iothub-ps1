@@ -10,11 +10,11 @@ param (
 
 Clear-Host
 write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  N E W  H U B  '  -BackgroundColor DarkBlue  -ForegroundColor White -NoNewline
+write-Host '  N E W  I o T  H U B  '  -BackgroundColor DarkBlue  -ForegroundColor White -NoNewline
 write-Host ' using PowerShell'
 write-Host ''
 
-$global:HubName = null
+$global:HubName = $null
 
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
@@ -95,37 +95,33 @@ if ([string]::IsNullOrEmpty($HubName))
 }
 
 
-# Subscription is  optional
-if (([string]::IsNullOrEmpty($Subscription)) -or ($true))
+if ((check-hub  $GroupName $HubName  $Refresh) -eq $Refresh)
 {
-
-    if ((check-hub  $GroupName $HubName  $Refresh) -eq $true)
-    {
-        $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
-        write-Host $prompt
-        return 'Exists'
-    }
-    
-
-    $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
+    $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
     write-Host $prompt
-
-    az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU
-   
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
-    write-Host $prompt
-    # Need to refresh the list of hubs
-    if ((check-hub  $GroupName $HubName  $true) -eq $true)
-    {
-        $prompt = 'Hub was created.'
-        write-Host $prompt
-        $global:HubName = $HubName
-        return $HubName
-    }
-    else 
-    {
-        $prompt = 'Hub not created. Exiting'
-        write-Host $prompt
-        exit
-    }
+    return 'Exists'
 }
+
+
+$prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
+write-Host $prompt
+
+az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU
+
+$prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
+write-Host $prompt
+# Need to refresh the list of hubs
+if ((check-hub  $GroupName $HubName  $true) -eq $true)
+{
+    $prompt = 'Hub was created.'
+    write-Host $prompt
+    $global:HubName = $HubName
+    return $HubName
+}
+else 
+{
+    $prompt = 'Hub not created. Exiting'
+    write-Host $prompt
+    exit
+}
+

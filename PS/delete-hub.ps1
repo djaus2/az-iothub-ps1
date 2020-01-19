@@ -5,6 +5,13 @@ param (
     [boolean]$Refresh=$false
 )
 
+$HubsStrnIndex =5
+if ($Refresh -eq $true)
+{
+    $Refresh
+    $global:HubsStrn  = $null
+}
+
 Clear-Host
 write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
 write-Host '  D E L E T E  I o T  H U B  '  -BackgroundColor Red -ForegroundColor White -NoNewline
@@ -47,7 +54,11 @@ if ([string]::IsNullOrEmpty($HubName))
 
 $prompt =  'Do you want to delete the Hub "' + $HubName +  '" Y/N (Default N)'
 $answer = read-Host $prompt
-if  (($answer -eq 'N') -OR ($answer -eq 'n'))
+if ([string]::IsNullOrEmpty($answer))
+{
+    return $false
+}
+elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
     return $false
 }
