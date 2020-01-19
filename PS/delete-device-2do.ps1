@@ -11,28 +11,30 @@ write-Host '  D E L E T E  D E V I C E   '  -BackgroundColor Red -ForegroundColo
 write-Host ' using PowerShell'
 write-Host ''
 exit
+
+$global:DeviceName = null
 # Need a Hub name
 if ([string]::IsNullOrEmpty($HubName))
 {
   
-    If ( ([string]::IsNullOrEmpty($global:HubsStrn )) -or $Refresh)
+    If ( ([string]::IsNullOrEmpty($global:DevicesStrn )) -or $Refresh)
     {   
-        write-Host 'Getting Hubs from Azure'
-        $global:HubsStrn =  az IoT Hub list --resource-group  $GroupName -o tsv | Out-String
+        write-Host 'Getting IoT Hub Devices from Azure'
+        $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String 
     }
-    If ([string]::IsNullOrEmpty($global:HubsStrn ))
+    If ([string]::IsNullOrEmpty($global:DevicesStrn ))
     {
-        $Prompt = 'No Hubs found in Subscription. Returning.'
+        $Prompt = 'No Devices found in Hub. Returning.'
         write-Host $Prompt
         return false
     }
 
-    $HubName = show-menu $global:HubsStrn  'Hub'  3 3 1 22
-    if ($HubName -eq 'Exit')
+    $HubName = show-menu $global:DeicessStrn  'Hub'  3 3 1 22
+    if ($DeviceName -eq 'Exit')
     {
         exit
     }
-    elseif ($HubName -eq 'Back')
+    elseif ($DeviceName -eq 'Back')
     {
        return $false
     }
@@ -57,7 +59,7 @@ if (  ( check-hub $GroupName $HubName  $Refresh ) -eq $true)
 {
     $prompt = 'Deleting Azure Resource Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     write-Host $prompt
-    az iot hub delete --name $HubName   --resource-group $GroupName
+    az iot hub device-identity delete --device-id $DeviceName  --hub-name $HubName -resource-group $GroupName -o tsv | Out-String
 }
 else 
 {
