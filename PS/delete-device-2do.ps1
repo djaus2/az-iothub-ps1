@@ -6,9 +6,11 @@ param (
 )
 
 Clear-Host
-write-Host ' AZURE IOT HUB SETUP:  D E L E T E   H U B  using PowerShell '  -BackgroundColor DarkBlue  -ForegroundColor White
+write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
+write-Host '  D E L E T E  D E V I C E   '  -BackgroundColor Red -ForegroundColor White -NoNewline
+write-Host ' using PowerShell'
 write-Host ''
-
+exit
 # Need a Hub name
 if ([string]::IsNullOrEmpty($HubName))
 {

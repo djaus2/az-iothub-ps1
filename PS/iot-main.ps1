@@ -9,7 +9,8 @@ function Show-Menu{
         [string]$Index, 
         [Parameter(Mandatory)]
         [string]$Title,
-        [string]$CurrentSelection=''
+        [string]$CurrentSelection='',
+        [booelean]$Refresh=''
     )
     if ([string]::IsNullOrEmpty($ListString))
     {
@@ -163,7 +164,7 @@ if  (($answer -eq 'N') -OR ($answer -eq 'n'))
 
 write-Host '=== Subscription ==='
 write-Host ''
-If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
+If (([string]::IsNullOrEmpty($global:SubscriptionsStrn)) -or $Refresh)
 {   
     write-Host 'Getting Subscriptions from Azure'
     $global:SubscriptionsStrn  =  az account list  -o tsv | Out-String
@@ -175,7 +176,7 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     Exit
 
 }
-$Subscription = Show-Menu $global:SubscriptionsStrn 3  'Subscription' $global:Subscription
+$Subscription = ./utilities/Show-Menu $global:SubscriptionsStrn 3  'Subscription' $global:Subscription
 write-Host $Subscription
 
 
@@ -209,7 +210,7 @@ elseif ($Subscription -ne $global:Subscription)
 
 write-Host '=== Group ==='
 write-Host ''
-If ([string]::IsNullOrEmpty($global:GroupsStrn ))
+If (([string]::IsNullOrEmpty($global:GroupsStrn )) -or $Refresh )
 {   
     write-Host 'Getting Groups from Azure'
     $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
@@ -221,7 +222,7 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     write-Host $Prompt
     Exit
 }
-$Group = Show-Menu $global:GroupsStrn 3  'Group'  $global:Group
+$Group = ./utitilities/Show-Menu $global:GroupsStrn 3  'Group'  $global:Group
 
 write-Host $Group
 
@@ -281,7 +282,7 @@ if ($Group -ne $global:Group )
 write-Host '=== IoT Hub ==='
 write-Host ''
 
-If ([string]::IsNullOrEmpty($global:HubsStrn ))
+If ( ([string]::IsNullOrEmpty($global:HubsStrn ))  -or $Refresh )
 {   
     write-Host 'Getting Hubs from Azure'
     $global:HubsStrn =  az iot hub list --resource-group  $global:Group  -o tsv | Out-String
@@ -303,7 +304,7 @@ If ([string]::IsNullOrEmpty($global:HubsStrn ))
         exit
     }
 }
-$global:Hub = Show-Menu $global:HubsStrn 3  'Hub' $global:Hub
+$global:Hub = ./utitilities/Show-Menu $global:HubsStrn 3  'Hub' $global:Hub
 write-Host $Hub
 
 if ($Hub -eq 'Exit')
@@ -332,7 +333,7 @@ elseif ($Hub -ne $global:Hub)
 write-Host '=== Device ==='
 write-Host ''
 
-If ([string]::IsNullOrEmpty($global:DevicesStrn ))
+If (([string]::IsNullOrEmpty($global:DevicesStrn ))  -or $Refresh )
 {   
     write-Host 'Getting Devices from Azure'
     $global:DevicesStrn =  az iot hub device-identity list  --hub-name $global:Hub -o tsv | Out-String
@@ -355,7 +356,7 @@ If ([string]::IsNullOrEmpty($global:DevicesStrn  ))
     } 
     Exit
 }
-$Device = Show-Menu $global:DevicesStrn 4  'Device' $global:Device
+$Device = ./utilities/Show-Menu $global:DevicesStrn 3  'Device' $global:Device
 write-Host $Device
 
 if ($Device -eq 'Exit')

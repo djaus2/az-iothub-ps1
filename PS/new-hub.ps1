@@ -9,9 +9,12 @@ param (
 
 
 Clear-Host
-write-Host ' AZURE IOT HUB SETUP:  N E W  H U B  using PowerShell '  -BackgroundColor DarkBlue  -ForegroundColor White
+write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
+write-Host '  N E W  H U B  '  -BackgroundColor DarkBlue  -ForegroundColor White -NoNewline
+write-Host ' using PowerShell'
 write-Host ''
 
+$global:HubName = null
 
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
@@ -27,7 +30,7 @@ if ([string]::IsNullOrEmpty($GroupName))
     if ($answer.ToUpper() -eq 'X')
     {
         write-Host 'Returning'
-        return
+        return 'Back'
     }
     $GroupName = $answer
 }
@@ -54,8 +57,9 @@ if ([string]::IsNullOrEmpty($SKU))
     if ($answer -eq 'X')
     {
         write-Host 'Returning'
-        return false
+        return 'Back'
     }
+    # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
     elseif (($answer | %{$skusList.contains($_)}) -contains $true)
     {
         $SKU = $answer
@@ -64,8 +68,9 @@ if ([string]::IsNullOrEmpty($SKU))
     }
     else 
     {
-        write-Host 'Invalid SKU string. Returning'
-        return false
+        # Shouldn't get to here
+        write-Host 'Invalid SKU string. Exiting'
+        Exit
     }
     
 }
@@ -84,7 +89,7 @@ if ([string]::IsNullOrEmpty($HubName))
     if ($answer.ToUpper() -eq 'X')
     {
         write-Host 'Returning'
-        return
+        return 'Return'
     }
     $HubName = $answer
 }
@@ -98,7 +103,7 @@ if (([string]::IsNullOrEmpty($Subscription)) -or ($true))
     {
         $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
         write-Host $prompt
-        return false
+        return 'Exists'
     }
     
 
@@ -109,16 +114,18 @@ if (([string]::IsNullOrEmpty($Subscription)) -or ($true))
    
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
+    # Need to refresh the list of hubs
     if ((check-hub  $GroupName $HubName  $true) -eq $true)
     {
         $prompt = 'Hub was created.'
         write-Host $prompt
         $global:HubName = $HubName
+        return $HubName
     }
     else 
     {
-        $prompt = 'Hub not created.'
+        $prompt = 'Hub not created. Exiting'
         write-Host $prompt
-        $global:HubName = null
+        exit
     }
 }

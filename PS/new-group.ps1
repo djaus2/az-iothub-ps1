@@ -4,10 +4,14 @@ param (
     [string]$Location=''
 )
 
+Clear-Host
+write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
+write-Host '  N E W  G R O U P  '  -BackgroundColor DarkBlue  -ForegroundColor White -NoNewline
+write-Host ' using PowerShell'
+write-Host ''
 
+$global:GroupName = null
 
-
-clear-Host
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
 {
@@ -21,7 +25,7 @@ if ([string]::IsNullOrEmpty($GroupName))
     if ($answer.ToUpper() -eq 'X')
     {
         write-Host 'Returning'
-        return
+        return 'Return'
     }
     $GroupName = $answer
 }
@@ -42,10 +46,13 @@ if ([string]::IsNullOrEmpty($Location))
     }
     elseif ($Location -eq 'Exit')
     {
-        return 'Exit'
+        Exit
     }
 }
 # exit
+
+$global:GroupsStrn = $null
+$global:GroupName = $null
 
 # Subscription is  optional
 if ([string]::IsNullOrEmpty($Subscription)) 
@@ -62,22 +69,23 @@ if ([string]::IsNullOrEmpty($Subscription))
     {
         $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning'
         write-Host $prompt
-        return $GroupName + ' AlreadyExists'
+        return 'Exists'
     }
 
     $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was created.'
     write-Host $prompt
     if (  ( az group exists --name $GroupName   ) -eq $false)
     {
-        $prompt = 'It Failed'
+        $prompt = 'It Failed. Exiting'
         write-Host $prompt
-        return $GroupName + ' Failed'
+        Exit
     }
     else 
     {
         $prompt = 'It was created.'
         write-Host $prompt
-        $global:GroupsStrn
+        $global:GroupName =$GroupName
+        return $GroupName
     }
 }
 else 
@@ -94,22 +102,23 @@ else
     {
         $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning.'
         write-Host $prompt
-        return $GroupName + ' AlreadyExists'
+        return 'Exists'
     }
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was craeted.'
     write-Host $prompt
     if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $false)
     {
-        $prompt = 'It Failed'
+        $prompt = 'It Failed. Exiting'
         write-Host $prompt
-        return $GroupName + ' Failed'
+        exit
     }
     else 
     {
         $prompt = 'It was created.'
         write-Host $prompt
-        $global:GroupsStrn = $null
+        $global:GroupName = $GroupName
+        return $GroupName
     }
-    return $GroupName +' OK'
+  
 }
 

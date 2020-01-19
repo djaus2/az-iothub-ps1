@@ -1,6 +1,11 @@
 param (
     [string]$GroupName=''
 )
+Clear-Host
+write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
+write-Host '  D E L E T E  G R O U P   '  -BackgroundColor Red  -ForegroundColor White -NoNewline
+write-Host ' using PowerShell'
+write-Host ''
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
 {
@@ -17,8 +22,12 @@ if ([string]::IsNullOrEmpty($GroupName))
         write-Host $Prompt
         Exit
     }
-    $GroupName = show-menu $global:GroupsStrn  'Group'  3 3 3 40
-    if ($GroupName -eq 'Exit')
+    $GroupName = ./utilities/show-menu $global:GroupsStrn  'Group'  3 3 3 40
+    If ([string]::IsNullOrEmpty($GroupName ))
+    {
+        exit
+    }
+    elseif ($GroupName -eq 'Exit')
     {
         exit
     }

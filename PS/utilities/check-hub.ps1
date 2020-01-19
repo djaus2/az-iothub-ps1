@@ -2,7 +2,7 @@ param (
     [Parameter(Mandatory)]
     [string]$GroupName,
     [Parameter(Mandatory)]
-    [string]$HubName='',
+    [string]$HubName,
     [boolean]$Refresh=$false
 )
 $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exits.'
