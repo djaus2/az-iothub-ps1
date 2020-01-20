@@ -49,7 +49,7 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
 }
 # $HubName = show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
 # x$DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
-$Subscription = utilities\Show-Menu $global:SubscriptionsStrn   'Subscription' 3 3 1 22  $Current
+$Subscription = utilities\Show-Menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 3 3 1 22  $Current
 
 write-Host $Subscription
 

@@ -6,6 +6,12 @@ $answer = ''
 [int]$current = 1
 $selectionList ='1,2,3,4,5'
 $itemsList ='Subscription,Groups,IoT Hubs,Devices,Done'
+
+$Subscription = $global:Subscription
+$GroupName = $Global:GroupName
+$HubName = $global:HubName
+$DeviceName = $global:DeviceName
+
 do
 {
 
@@ -53,29 +59,35 @@ do
         {
             1   { 
                     $current=1
-                    res-subscription $global:Subscription
+                    $Subscription = res-subscription $Subscription
+                    $current=2
                 }
             2   { 
                     $current=2
-                    res-group   
+                    $GroupName = res-group   $Subscription $GroupName
+                    $current=3
                 }
             3   { 
                     $current = 3
-                    res-hub
+                    $HubName = res-hub $Subscription $GroupName $HubName
+                    $current = 4
                 }
             4   { 
                     $current = 4
-                    res-device  
+                    $DeviceName = res-device  $Subscription $GroupName $HubName $DeviceName
                 }
             5   { 
                     exit  
                 }
 
         }
+        Clear-Host
+        write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
+        write-Host ' using PowerShell'
+        write-Host ''
     }
     else 
     {
-        $Current +=1
         Clear-Host
         write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
         write-Host ' using PowerShell'

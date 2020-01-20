@@ -56,8 +56,9 @@ $lines =$ListString  -split '\n'
 $noEntities = $lines.Length -1
 [int] $i=1
 write-Host ''
-$prompt ='Select a ' + $Title
-write-Host $prompt
+write-Host 'Select a '  -NoNewline
+write-Host $Title  -BackgroundColor DarkGreen  -ForegroundColor White
+write-Host $prompt''
 
 $col=0
 foreach ($j in $lines) 
@@ -135,7 +136,7 @@ if ($includeNew)
 if ($includeExit)
 {
     $prompt = 'D. '
-    $prompt +=  'Delete ' + $Title
+    $prompt +=  'Delete a ' + $Title.Replace(' ', '')
     write-Host $prompt
 }
 
