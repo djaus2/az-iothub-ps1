@@ -1,4 +1,5 @@
 param (
+   [string]$Current = '',
    [boolean]$Refresh = $false
 )
 
@@ -8,22 +9,26 @@ write-Host '  S U B S C R I P T I O N  '  -BackgroundColor DarkRed  -ForegroundC
 write-Host ' using PowerShell'
 write-Host ''
 
-$answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
-if  (($answer -eq 'N') -OR ($answer -eq 'n'))
+If ([string]::IsNullOrEmpty($global:DoneLogin)) 
 {
-    az login
-}
-elseif  (($answer -eq 'X') -OR ($answer -eq 'x'))
-{
-    return
-}
-elseif  (($answer -eq 'Y') -OR ($answer -eq 'y'))
-{
-    write-Host 'Continuing1'
-}
-elseif ([string]::IsNullOrEmpty($answer))
-{
-    write-Host 'Continuing'
+    $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
+    if  (($answer -eq 'N') -OR ($answer -eq 'n'))
+    {
+        az login
+    }
+    elseif  (($answer -eq 'X') -OR ($answer -eq 'x'))
+    {
+        return
+    }
+    elseif  (($answer -eq 'Y') -OR ($answer -eq 'y'))
+    {
+        write-Host 'Continuing1'
+    }
+    elseif ([string]::IsNullOrEmpty($answer))
+    {
+        write-Host 'Continuing'
+    }
+    $global:DoneLogin = 'DoneLogin'
 }
 
 if ($Refresh -eq $true)
@@ -44,7 +49,7 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
 }
 # $HubName = show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
 # x$DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
-$Subscription = ./utilities/Show-Menu $global:SubscriptionsStrn   'Subscription' 3 1 22  
+$Subscription = utilities\Show-Menu $global:SubscriptionsStrn   'Subscription' 3 3 1 22  $Current
 
 write-Host $Subscription
 
@@ -74,4 +79,4 @@ elseif ($Subscription -ne $global:Subscription)
     $global:Hub = $null
     $global:Device=$null
 }
-exit
+return

@@ -22,10 +22,12 @@ if ([string]::IsNullOrEmpty($GroupName))
     do
     {
         $prompt = 'Enter Resource Group Name, X to exit/return'
-        $answer= read-Host $prompt
-        $answer = $answer.Trim()
-        write-Host $answer
-        
+        if (-not ([string]::IsNullOrEmpty($answer)))
+        {
+            $answer= read-Host $prompt
+            $answer = $answer.Trim()
+            write-Host $answer
+        }      
     } until (-not ([string]::IsNullOrEmpty($answer)))
     if ($answer.ToUpper() -eq 'X')
     {
@@ -95,7 +97,9 @@ if ([string]::IsNullOrEmpty($HubName))
 }
 
 
-if ((check-hub  $GroupName $HubName  $Refresh) -eq $Refresh)
+$prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
+write-Host $prompt
+if ((utilities\check-hub  $GroupName $HubName  $Refresh) -eq $true)
 {
     $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
     write-Host $prompt
@@ -111,7 +115,7 @@ az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU
 $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
 write-Host $prompt
 # Need to refresh the list of hubs
-if ((check-hub  $GroupName $HubName  $true) -eq $true)
+if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
 {
     $prompt = 'Hub was created.'
     write-Host $prompt

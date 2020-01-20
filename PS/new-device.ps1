@@ -21,10 +21,12 @@ if ([string]::IsNullOrEmpty($GroupName))
     do
     {
         $prompt = 'Enter Resource Group Name, X to exit/return'
-        $answer= read-Host $prompt
-        $answer = $answer.Trim()
-        write-Host $answer
-        
+        if (-not ([string]::IsNullOrEmpty($answer)))
+        {
+            $answer= read-Host $prompt
+            $answer = $answer.Trim()
+            write-Host $answer
+        }      
     } until (-not ([string]::IsNullOrEmpty($answer)))
     if ($answer.ToUpper() -eq 'X')
     {

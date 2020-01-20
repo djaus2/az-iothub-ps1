@@ -53,7 +53,7 @@ do
         {
             1   { 
                     $current=1
-                    res-subscription
+                    res-subscription $global:Subscription
                 }
             2   { 
                     $current=2
