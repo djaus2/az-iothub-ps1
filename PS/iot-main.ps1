@@ -281,7 +281,7 @@ if ($Group -ne $global:Group )
 
 write-Host '=== IoT Hub ==='
 write-Host ''
-
+{
 If ( ([string]::IsNullOrEmpty($global:HubsStrn ))  -or $Refresh )
 {   
     write-Host 'Getting Hubs from Azure'
@@ -329,7 +329,7 @@ elseif ($Hub -ne $global:Hub)
     $global:DevicesStrn=$null
     $global:Device=$null
 }
-
+}
 write-Host '=== Device ==='
 write-Host ''
 
