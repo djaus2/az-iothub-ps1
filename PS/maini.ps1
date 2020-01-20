@@ -1,6 +1,6 @@
 Clear-Host
 write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
+write-Host ' using PowerShell AND Azure CLI'
 write-Host ''
 $answer = ''
 [int]$current = 1
@@ -123,7 +123,7 @@ do
  
         Clear-Host
         write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
-        write-Host ' using PowerShell'
+        write-Host ' using PowerShell AND Azure CLI'
         write-Host ''
       
             continue
