@@ -43,19 +43,22 @@ do
         $i++
     }
     write-Host X. Exit
-    # $answer= read-Host 'Select action (number). (Default is highlighted) X To exit'
+    write-Host 'Select action (number). (Default is highlighted) X To exit'
     
     if ($GetKey -eq $true)
     {
-        do 
-        {
+        # do 
+        #{
             # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-            $KeyPress = [System.Console]::ReadKey()
+            $KeyPress = [System.Console]::ReadKey($false)
             $K = $KeyPress.Key
+            
         # Ref: https://www.computerperformance.co.uk/powershell/contains/
-        } while ( $selectionList -notcontains $K)
+        #} while ( $selectionList -notcontains $K)
     }
     $GetKey = $true
+    if  ( $selectionList -contains $K)
+    {
     switch ( $k )
         {
             'D1'   { 
@@ -120,10 +123,11 @@ do
                 } 
             }
         }
- 
+    }
         Clear-Host
         write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
         write-Host ' using PowerShell AND Azure CLI'
         write-Host ''
+    
       
     } until ($false)
