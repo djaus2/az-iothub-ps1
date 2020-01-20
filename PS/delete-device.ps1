@@ -5,7 +5,8 @@ param (
     [boolean]$Refresh=$false
 )
 
-$DevicesStrnIndex =5
+$DeviceStrnIndex =5
+$global:DeviceName = null
 if ($Refresh -eq $true)
 {
     $Refresh
@@ -36,7 +37,7 @@ if ([string]::IsNullOrEmpty($DeviceName))
         return false
     }
 
-    $DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DevicesStrnIndex  $DevicesStrnIndex  1 22
+    $DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
     if ($DeviceName -eq 'Exit')
     {
         exit

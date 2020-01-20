@@ -5,7 +5,8 @@ param (
     [boolean]$Refresh=$false
 )
 
-$HubsStrnIndex =5
+$HubStrnIndex =3
+$global:HubName= null
 if ($Refresh -eq $true)
 {
     $Refresh
@@ -34,7 +35,7 @@ if ([string]::IsNullOrEmpty($HubName))
         return false
     }
 
-    $HubName = show-menu $global:HubsStrn  'Hub'  3 3 1 22
+    $HubName = utilities\show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
     if ($HubName -eq 'Exit')
     {
         exit

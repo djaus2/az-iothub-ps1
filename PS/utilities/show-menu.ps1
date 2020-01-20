@@ -9,7 +9,7 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
-cls
+clear-host
 
 [string]$temp =  [string]$ColWidth
 $FormatStrn = '{0,-' + $temp + '}'
@@ -158,7 +158,16 @@ do
 {
     [int] $selection = 0
     $answer = read-host $prompt
-    if($answer -eq '-1')
+    if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
+    {
+        #Flag enter pressed so use $CurrentSelection
+        $selection  = -1
+    }
+    elseif ([string]::IsNullOrEmpty($answer)) 
+    {
+        $selection  = 0
+    }
+    elseif($answer -eq '-1')
     {
         # Just in case the user enters -1!
         $selection = 0
@@ -198,15 +207,6 @@ do
         else {
             $selection=o
         }
-    }
-    elseif (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
-    {
-        #Flag enter pressed so use $CurrentSelection
-        $selection  = -1
-    }
-    elseif ([string]::IsNullOrEmpty($answer)) 
-    {
-        $selection  = 0
     }
     else 
     {
