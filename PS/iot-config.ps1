@@ -4,7 +4,7 @@ write-Host ' using PowerShell AND Azure CLI'
 write-Host ''
 $answer = ''
 [int]$current = 1
-$selectionList ='1,2,3,4,5'
+$selectionList =@('D1','D2','D3','D4','D5','UpArrow','DownArrow','Enter','X')
 
 # $selections = $selectionList -split ','
 $itemsList ='Subscription,Groups,IoT Hubs,Devices,Done'
@@ -52,8 +52,8 @@ do
             # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
             $KeyPress = [System.Console]::ReadKey()
             $K = $KeyPress.Key
-        } while ( -not ( ($K -eq 'D1') -or ($K -eq 'D2') -or ($K -eq 'D3')   -or ($K -eq 'D4') -or ($K -eq 'D5') `
-        -or ($K -eq 'X')  -or ($K -eq 'UpArrow') -or ($K -eq 'DownArrow') -or ($K -eq 'Enter') ))
+        # Ref: https://www.computerperformance.co.uk/powershell/contains/
+        } while ( $selectionList -notcontains $K)
     }
     $GetKey = $true
     switch ( $k )
@@ -126,65 +126,4 @@ do
         write-Host ' using PowerShell AND Azure CLI'
         write-Host ''
       
-            continue
-    # $answer = $answer.Replace(':','')
-    # $answer = $answer.Trim()
-    # write-Host ''
-    # read-host $answer
-
-    # exit
-
-    if ([string]::IsNullOrEmpty($answer))
-    {
-        $answer =[string]$Current
-    }
-    if($answer -eq 'X')
-    {
-        $answer = 'DONE'
-        exit
-    }
-    $answer = $answer.ToUpper()
-    if (($answer | %{$selectionList.contains($_)}) -contains $true)
-    {
-        switch ( $answer )
-        {
-            1   { 
-                    $current=1
-                    $Subscription = res-subscription $Subscription
-                    $current=2
-                }
-            2   { 
-                    $current=2
-                    $GroupName = res-group   $Subscription $GroupName
-                    $current=3
-                }
-            3   { 
-                    $current = 3
-                    $HubName = res-hub $Subscription $GroupName $HubName
-                    $current = 4
-                }
-            4   { 
-                    $current = 4
-                    $DeviceName = res-device  $Subscription $GroupName $HubName $DeviceName
-                }
-            5   { 
-                    exit  
-                }
-
-        }
-        Clear-Host
-        write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
-        write-Host ' using PowerShell'
-        write-Host ''
-    }
-    else 
-    {
-        Clear-Host
-        write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
-        write-Host ' using PowerShell'
-        write-Host ''
-        $prompt = 'Incorrent entry. Select from: ' + $selectionList
-        write-Host $prompt
-        write-Host ''
-    }
-} until ($answer -eq 'DONE')
+    } until ($false)
