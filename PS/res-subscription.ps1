@@ -11,8 +11,13 @@ write-Host ''
 
 If ([string]::IsNullOrEmpty($global:DoneLogin)) 
 { 
-    [boolean] $answ = YNXMenu ' Have you run "az login" to access your accounts?' 'Y'
-    read-Host $answ
+    $selectionList =@('Y','N','X')
+    
+    $global:ReturnValue ='_'
+    YNXMenu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o E[x]it' $selectionList  'Y'
+    $answ  = $global:ReturnValue
+    write-Host $answ
+    read-host
     $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
     if  (($answer -eq 'N') -OR ($answer -eq 'n'))
     {

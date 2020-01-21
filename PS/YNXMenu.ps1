@@ -1,25 +1,32 @@
 param (
-   [string]$Prompt = '',
+   [string]$Prompt = 'Select one of: ',
+   [string]$ValidKeys = ' [Y]es [N]o ', 
+   [object]$SelectionList =@('Y','N'),
    [string]$Default =''
 )
 
-$selectionList =@('Y','N','X')
+
 write-Host $Prompt
-$prompt2 =  ' [Y]es [N]o E[x]it'
+# https://www.jonathanmedd.net/2014/01/adding-and-removing-items-from-a-powershell-array.html
+[System.Collections.ArrayList]$ModifyableSelectionList = $SelectionList
 If (-not ([string]::IsNullOrEmpty($Default)))
 {
-    $prompt2 += ' ( Default ' + $Default + ' )'
-    $selectionList =@('Y','N','X','Enter')
+    $ModifyableSelectionList.Add('Enter')
+    $ValidKeys += ' ( Default ' + $Default + ' )'
 }
-write-Host $prompt2
+$ModifyableSelectionList.Add({D1})
+write-Host $ValidKeys
+
 [boolean]$first = $true
 do 
 {
     # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
+    # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
     $KeyPress = [System.Console]::ReadKey($true)
     $K = $KeyPress.Key
+    $K.GetType()
 
-    if ( $selectionList -notcontains $K)
+    if ( $ModifyableSelectionList -notcontains $K)
     {
         if ($first)
         {
@@ -28,7 +35,7 @@ do
         }
     }
 # Ref: https://www.computerperformance.co.uk/powershell/contains/
-} while ( $selectionList -notcontains $K)
+} while ( $ModifyableSelectionList -notcontains $K)
 
 if ($first -eq $false)
 {
@@ -36,11 +43,38 @@ if ($first -eq $false)
     write-Host 'OK Now  ' 
 }
 
-[boolean] $def = ( $Default.ToUpper() -eq 'Y')
-switch ( $k )
+$val = $null
+if ($k -eq {Enter})
 {
-    'Y'   { return $true }
-    'N'   { return $false }
-    'Enter'{ return $def}
-    'X'   { exit }
+    $val = $Default
 }
+else {
+    switch ( $k )
+    {
+        # Numerical Keys 0 to 9
+        'D1'  {$val = '0'  }
+        'D1'  {$val = '1'  }
+        'D2'  {$val = '2'  }
+        'D3'  {$val = '3'  }
+        'D4'  {$val = '4'  }
+        'D5'  {$val = '5'  }
+        'D6'  {$val = '6'  }
+        'D7'  {$val = '7'  }
+        'D8'  {$val = '8'  }
+        'D9'  {$val = '9'  }
+        Default {$val = [char]$k}
+    }
+}
+
+write-Host $val
+
+
+
+$global:ReturnValue = $val
+
+$k =D1
+$val = [char]$k
+write-Host $val
+
+return
+
