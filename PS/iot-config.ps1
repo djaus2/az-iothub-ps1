@@ -47,19 +47,13 @@ do
     
     if ($GetKey -eq $true)
     {
-        # do 
-        #{
-            # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-            $KeyPress = [System.Console]::ReadKey($false)
-            $K = $KeyPress.Key
-            
-        # Ref: https://www.computerperformance.co.uk/powershell/contains/
-        #} while ( $selectionList -notcontains $K)
+        $KeyPress = [System.Console]::ReadKey($false)
+        $K = $KeyPress.Key
     }
     $GetKey = $true
     if  ( $selectionList -contains $K)
     {
-    switch ( $k )
+        switch ( $k )
         {
             'D1'   { 
                     $current=1
@@ -80,12 +74,9 @@ do
                     $current = 4
                     $DeviceName = res-device  $Subscription $GroupName $HubName $DeviceName
                 }
-            'D5'   { 
-                    exit  
-                }
-            X   { 
-                    exit  
-                }
+            'D5'    { exit  }
+
+            X       {  exit }
             
             UpArrow  { 
                 switch ($current )
@@ -109,7 +100,7 @@ do
                 } 
             }
             Enter {
-                $GetKey = $true
+                # $GetKey = $true
                 switch ($current )
                 {
                     1 { $K = 'D1'
@@ -120,6 +111,7 @@ do
                     $GetKey = $false}
                     4 { $K = 'D4'
                     $GetKey = $false}
+                    Default { $GetKey = $true }
                 } 
             }
         }
