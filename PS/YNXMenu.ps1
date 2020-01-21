@@ -9,7 +9,7 @@ write-Host ' [Y]es [N]o E[x]it'
 do 
 {
     # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-    $KeyPress = [System.Console]::ReadKey($false)
+    $KeyPress = [System.Console]::ReadKey($true)
     $K = $KeyPress.Key
 
     if ( $selectionList -notcontains $K)
@@ -26,7 +26,7 @@ do
 if ($first -eq $false)
 {
     write-Host `b`b`b`b`b`b`b -NoNewLine
-    write-Host '  OK Now  ' 
+    write-Host 'OK Now  ' 
 }
 
 
