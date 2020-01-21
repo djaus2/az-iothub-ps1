@@ -1,10 +1,17 @@
 param (
-   [string]$Prompt = ''
+   [string]$Prompt = '',
+   [string]$Default =''
 )
 
 $selectionList =@('Y','N','X')
 write-Host $Prompt
-write-Host ' [Y]es [N]o E[x]it'
+$prompt2 =  ' [Y]es [N]o E[x]it'
+If (-not ([string]::IsNullOrEmpty($Default)))
+{
+    $prompt2 += ' ( Default ' + $Default + ' )'
+    $selectionList =@('Y','N','X','Enter')
+}
+write-Host $prompt2
 [boolean]$first = $true
 do 
 {
@@ -29,10 +36,11 @@ if ($first -eq $false)
     write-Host 'OK Now  ' 
 }
 
-
+[boolean] $def = ( $Default.ToUpper() -eq 'Y')
 switch ( $k )
 {
     'Y'   { return $true }
     'N'   { return $false }
+    'Enter'{ return $def}
     'X'   { exit }
 }
