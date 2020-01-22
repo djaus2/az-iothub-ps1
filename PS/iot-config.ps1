@@ -1,10 +1,8 @@
-Clear-Host
-write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
-write-Host ' using PowerShell AND Azure CLI'
-write-Host ''
+utilities\heading '  S E T U P  ' DarkMagenta White
+
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','UpArrow','DownArrow','Enter','X')
+$selectionList =@('D1','D2','D3','D4','D5','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
 $itemsList ='Subscription,Groups,IoT Hubs,Devices,Done'
@@ -16,7 +14,6 @@ $DeviceName = $global:DeviceName
 [boolean] $GetKey = $true
 do
 {
-
     write-Host ''
     $items =$ItemsList  -split ','
     $i=1
@@ -42,7 +39,11 @@ do
         }
         $i++
     }
-    write-Host X. Exit
+
+    write-Host ''
+    write-Host R. 'Reset script globals'
+    write-Host X. 'Exit'
+    
     write-Host 'Select action (number). (Default is highlighted) X To exit'
     
     if ($GetKey -eq $true)
@@ -57,42 +58,90 @@ do
         {
             'D1'   { 
                     $current=1
-                    $Subscription = res-subscription $Subscription
-                    $current=2
+                    
+                    $response = res-subscription $Subscription
+                    
+                    if ($response -eq 'New')
+                    {
+                        read-Host 'New not an option for Subscription Press [Enter] to continue.'
+                    }
+                    elseif ($Response -eq 'Delete')
+                    {
+                        read-Host 'Delete not an option for Subscription. Press [Enter] to continue.'
+                    }
+                    elseif (-not ([string]::IsNullOrEmpty($response)) )
+                    {
+                        $Subscription = $response
+                    }
+
+                    $Current++
                 }
             'D2'   { 
                     $current=2
-                    $GroupName = res-group   $Subscription $GroupName
-                    $current=3
+                    $response= res-group   $Subscription $GroupName
+                    If ([string]::IsNullOrEmpty($response)) 
+                    {
+                        $GroupName = $response
+                    }
+                    $current++
                 }
             'D3'   { 
                     $current = 3
-                    $HubName = res-hub $Subscription $GroupName $HubName
-                    $current = 4
+                    $response = res-hub $Subscription $GroupName $HubName
+                    If ([string]::IsNullOrEmpty($response)) 
+                    {
+                        $HubName = $response
+                    }
+                    $current++
                 }
             'D4'  { 
                     $current = 4
-                    $DeviceName = res-device  $Subscription $GroupName $HubName $DeviceName
+                    $response= res-device  $Subscription $GroupName $HubName $DeviceName
+                    If ([string]::IsNullOrEmpty($response)) 
+                    {
+                        $DeviceName  = $response
+                    }
                 }
             'D5'    { exit  }
+            R    { 
+                    Clear-Host
+                    write-Host ''
+                    $answer = utilities\yes-no-menu 'Clear script globals variables? ' 'N'
+                    if ($answer = 'Y')
+                    {
+                        
+                        $global:DoneLogin = $null
+                        $global:Subscription = $null
+                        $global:SubscriptionStrn = $null
+                        $global:GroupsStrn =$null
+                        $global:HubsStrn=$null
+                        $global:DevicesStrn=$null
+                        $global:Group = $null
+                        $global:Hub = $null
+                        $global:Device=$null
+                        $Subscription = $global:Subscription
+                        $GroupName = $Global:GroupName
+                        $HubName = $global:HubName
+                        $DeviceName = $global:DeviceName
+                        [boolean] $GetKey = $true
+                        $Current=1
+                    }
+                }
 
             X       {  exit }
             
             UpArrow  { 
                 switch ($current )
                 {
-                    0 { $current = 0}
                     1 { $current = 1}
                     2 { $current = 1}
                     3 { $current = 2}
                     4 { $current = 3}
-                    5 { $current = 4}
                 } 
             }
             DownArrow  { 
                 switch ($current )
                 {
-                    0 { $current = 1}
                     1 { $current = 2}
                     2 { $current = 3}
                     3 { $current = 4}
@@ -116,10 +165,6 @@ do
             }
         }
     }
-        Clear-Host
-        write-Host '  A Z U R E  I o T  H U B    S E T U P  '  -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
-        write-Host ' using PowerShell AND Azure CLI'
-        write-Host ''
-    
-      
-    } until ($false)
+    utilities\heading '  S E T U P  ' DarkMagenta White
+  
+} until ($false)

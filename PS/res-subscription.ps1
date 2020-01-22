@@ -11,24 +11,22 @@ write-Host ''
 
 If ([string]::IsNullOrEmpty($global:DoneLogin)) 
 { 
-    $selectionList =@('Y','N','X')
-    
-    $global:ReturnValue ='_'
-    $answ = .\utilities\getchar-menu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o E[x]it' $selectionList  'Y'
-    write-Host $answ
-    read-host
-    $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
+    $selectionList =@('Y','N','B')
+
+    $answer = .\utilities\getchar-menu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o [B]ack' $selectionList  'Y'
+    # $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
     if  (($answer -eq 'N') -OR ($answer -eq 'n'))
     {
         az login
+        [Console]::ResetColor()
     }
-    elseif  (($answer -eq 'X') -OR ($answer -eq 'x'))
+    elseif  (($answer -eq 'B') -OR ($answer -eq 'b'))
     {
-        return
+        return ''
     }
     elseif  (($answer -eq 'Y') -OR ($answer -eq 'y'))
     {
-        write-Host 'Continuing1'
+        write-Host 'Continuing'
     }
     elseif ([string]::IsNullOrEmpty($answer))
     {
@@ -42,7 +40,7 @@ if ($Refresh -eq $true)
     $global:SubscriptionsStrn = $null
 }
 
-If ([string]::IsNullOrEmpty($global:SubscriptionsStrn)) 
+If  ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
 {   
     write-Host 'Getting Subscriptions from Azure'
     $global:SubscriptionsStrn  =  az account list  -o tsv | Out-String
@@ -55,29 +53,25 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
 }
 # $HubName = show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
 # x$DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
-$Subscription = utilities\Show-Menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 3 3 1 22  $Current
+$Subscription = utilities\smq $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 3 3 1 22  $Current
 
-write-Host $Subscription
-
-
-if ($Subscription -eq 'Exit')
+If ([string]::IsNullOrEmpty($Subscription)) 
 {
-    write-Host 'Exiting.'
-    exit
-}
-elseif ($Subscription-eq 'Back')
-{
-    return
+    $Subscription=$Current
+    $global:returnVal = ''
+    return ''
 }
 elseif ($Subscription -eq 'New')
 {
-    write-Host 'New not an option for Subscriptions. Exiting.'
-    return
+    return 'New'
 }
-elseif ($Subscription -ne $global:Subscription)
+elseif ($Subscription -eq 'New')
+{
+    return 'Delete'
+}
+elseif (($Subscription -ne $global:Subscription) -or ([string]::IsNullOrEmpty($global:Subscription)) )
 {
     $global:Subscription = $Subscription
-
     $global:GroupsStrn =$null
     $global:HubsStrn=$null
     $global:DevicesStrn=$null
@@ -85,4 +79,5 @@ elseif ($Subscription -ne $global:Subscription)
     $global:Hub = $null
     $global:Device=$null
 }
-return
+
+return $Subscription
