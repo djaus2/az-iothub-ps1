@@ -14,8 +14,7 @@ If ([string]::IsNullOrEmpty($global:DoneLogin))
     $selectionList =@('Y','N','X')
     
     $global:ReturnValue ='_'
-    YNXMenu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o E[x]it' $selectionList  'Y'
-    $answ  = $global:ReturnValue
+    $answ = .\utilities\getchar-menu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o E[x]it' $selectionList  'Y'
     write-Host $answ
     read-host
     $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
