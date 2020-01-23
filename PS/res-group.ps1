@@ -10,11 +10,11 @@ if ($Refresh -eq $true)
     $global:GroupsStrn = null
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  G R O U P  '  -BackgroundColor DarkRed  -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+util\Heading '  G R O U P  '  DarkRed   White
+$Prompt =  'Subscription :"' + $Subscription +'"'
+write-Host $Prompt
+$Prompt = 'Current Group :"' + $Current +'"'
+write-Host $Prompt
 
 
 If ([string]::IsNullOrEmpty($global:GroupsStrn ))
@@ -24,12 +24,23 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 }
 If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 {
-    $Prompt = 'No Groups found in Subscription ' + $global:Subscription + '. Exiting.'
+    $Prompt = 'No Groups found in Subscription "' + $Subscription + '".'
     write-Host $Prompt
-    Exit
+    $Prompt ='Do you want to create a new Group for the Group "'+ $Subscription +'"?'
+    $selectionList =@('Y','N','B')
+    $answer = .\util\getchar-menu $Prompt   '[Y]es [N]o [B]ack' $selectionList  'N'
+     if  (($answer -eq 'Y') -OR ($answer -eq 'y'))
+    {
+        return 'New'
+    }
+    elseif  (($answer -eq 'B') -OR ($answer -eq 'b'))
+    {
+        return ''
+    }
+    return ''
 }
-# $Subscription = utilities\Show-Menu $global:SubscriptionsStrn   'Subscription' 3 3 1 22  $Current
-$GroupName = utilities\Show-Menu $global:GroupsStrn  '  G R O U P  '   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
+# $Subscription = util\Show-Menu $global:SubscriptionsStrn   'Subscription' 3 3 1 22  $Current
+$GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
 
 write-Host $GroupName
 
@@ -51,7 +62,7 @@ elseif ($GroupName -eq 'New')
 {
     write-Host 'New-Group'
     # $GroupName = invoke-expression -Command $PSScriptRoot\new-group.ps1
-    $GroupName = utilities\new-group.ps1
+    $GroupName = util\new-group.ps1
     if ($GroupName -eq 'Exit')
     {
         exit
@@ -72,7 +83,7 @@ elseif ($GroupName -eq 'New')
         write-Host $prompt
     }
 }
-if ($GroupName -ne $global:Group )
+if ($GroupName -ne $global:GroupName )
 {
     $global:GroupName =  $GroupName
 

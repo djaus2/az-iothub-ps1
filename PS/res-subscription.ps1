@@ -3,17 +3,15 @@ param (
    [boolean]$Refresh = $false
 )
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  S U B S C R I P T I O N  '  -BackgroundColor DarkRed  -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+util\heading  -Prompt '  S U B S C R I P T I O N  '   -BG DarkRed  -FG White
+$Prompt =  'Current Subscription :"' + $Current +'"'
+write-Host $Prompt
 
 If ([string]::IsNullOrEmpty($global:DoneLogin)) 
 { 
     $selectionList =@('Y','N','B')
 
-    $answer = .\utilities\getchar-menu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o [B]ack' $selectionList  'Y'
+    $answer = .\util\getchar-menu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o [B]ack' $selectionList  'Y'
     # $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
     if  (($answer -eq 'N') -OR ($answer -eq 'n'))
     {
@@ -52,8 +50,8 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     Exit
 }
 # $HubName = show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
-# x$DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
-$Subscription = utilities\smq $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 3 3 1 22  $Current
+# x$DeviceName = util\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
+$Subscription = util\show-menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
 
 If ([string]::IsNullOrEmpty($Subscription)) 
 {

@@ -3,21 +3,27 @@ param (
    [Parameter(Mandatory)]
     [string]$ListString, 
     [string]$Title,
+    [string]$AdditionalMenuOptions='B. Back',
     [int]$DisplayIndex='0', 
     [int]$CodeIndex='0',
     [int]$ItemsPerLine=1,
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
-clear-host
 
+$Default = -1
+$SelectionList1 =@(1)
+# Ref: https://www.jonathanmedd.net/2014/01/adding-and-removing-items-from-a-powershell-array.html
+$SelectionList = {$SelectionList1}.Invoke()
 [string]$temp =  [string]$ColWidth
 $FormatStrn = '{0,-' + $temp + '}'
 
 [boolean]$includeExit= $false
 [boolean]$includeBack= $true
-[boolean]$includeNew= $false
-[boolean]$includeDelete= $false
+[boolean]$includeNew= $true
+[boolean]$includeDelete= $true
+
+$DefaultNo = -2
 
 # These two checks not required as both parameters are mandatory
 if (([string]::IsNullOrEmpty($ListString)) -or ($ListString.ToUpper() -eq '--HELP') -or ($ListString.ToUpper() -eq '-H'))
@@ -56,13 +62,13 @@ $lines =$ListString  -split '\n'
 $noEntities = $lines.Length -1
 [int] $i=1
 write-Host ''
-write-Host 'Select a '  -NoNewline
-write-Host $Title  -BackgroundColor DarkGreen  -ForegroundColor White
-write-Host $prompt''
-
+$prompt = 'Select a ' + $Title
+write-Host $prompt
+write-Host ''
 $col=0
 foreach ($j in $lines) 
 {
+
     if ([string]::IsNullOrEmpty($j))
     {   
         write-Host ''
@@ -71,6 +77,13 @@ foreach ($j in $lines)
     }
     else {       
         $itemToList = ($j-split '\t')[$DisplayIndex]
+        if ( $i -ne 1)
+        {
+            # Ref: https://stackoverflow.com/questions/25322636/powershell-convert-string-to-number
+            #[string]$num = [convert]::ToString($i)
+            #$n = $SelectionList.Add($num[0])
+            $n = $SelectionList.Add($i)
+        }
     }
     [string]$prompt = [string]$i
     $prompt += '. '     
@@ -95,6 +108,8 @@ foreach ($j in $lines)
     }
     elseif ( $itemToList -eq $CurrentSelection)
     {
+        $DefaultNo = $i
+
         write-Host ''
         [string]$prompt = [string]$i
         $prompt += '. '   
@@ -125,19 +140,45 @@ foreach ($j in $lines)
     
     $i++
 }
+If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
+{
+    $Options = $AdditionalMenuOptions -split ','
+    write-Host ''
+    foreach ($option in $Options)
+    {
+        
+        write-Host $option
+        $val = -100
+        switch ( $option[0] )
+        {
+            B {$val = -1}
+            D {$val = -2}
+            N {$val = -3}
+            X {$val = -4}
+        }
+        if ($val -ne -100)
+        {
+            $n = $SelectionList.Add($val)
+        }
+    }
+}
+if (1-eq 0)
+{
 if ($includeNew)
 {
     write-Host ''
     $prompt = 'N. '
-    $prompt +=  'New ' + $Title
+    $prompt +=  'New ' +  $Title.Replace(' ', '')
     write-Host $prompt
+    $n = $SelectionList.Add(-3)
     
 }
-if ($includeExit)
+if ($includeDelete)
 {
     $prompt = 'D. '
     $prompt +=  'Delete a ' + $Title.Replace(' ', '')
     write-Host $prompt
+    $n = $SelectionList.Add(-2)
 }
 
 if ($includeBack)
@@ -145,99 +186,106 @@ if ($includeBack)
     $prompt = 'B. '
     $prompt +=  'Back '
     write-Host $prompt
+    $n = $SelectionList.Add(-1)
     }
 if ($includeExit)
 {
     $prompt = 'X. '
     $prompt +=  'Exit '
     write-Host $prompt
+    $n = $SelectionList.Add(-4)
 }
-
-[int]$selection =1
+}
+# [int]$selection =1
+ #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
+#}
 $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
+# $SelectionList =@('1','2','3','4','-1','-2','-3')
+$first = $true
+
 do 
 {
-    [int] $selection = 0
-    $answer = read-host $prompt
-    if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
-    {
-        #Flag enter pressed so use $CurrentSelection
-        $selection  = -1
-    }
-    elseif ([string]::IsNullOrEmpty($answer)) 
-    {
-        $selection  = 0
-    }
-    elseif($answer -eq '-1')
-    {
-        # Just in case the user enters -1!
-        $selection = 0
-    }
-    elseif ($answer.ToUpper() -eq 'X')
-    {
-        if ($includeExit){
-            $selection = $i+4
-        }
-        else {
-            $selection=o
-        }
-    }
-    elseif ($answer.ToUpper() -eq 'B')
-    {
-        if ($includeBack){
-            $selection = $i+3
-        }
-        else {
-            $selection=o
-        }
-    }
-    elseif ($answer.ToUpper() -eq 'D')
-    {
-        if ($includeDelete){
-            $selection = $i+2
-        }
-        else {
-            $selection=o
-        }
-    }
-    elseif ($answer.ToUpper() -eq 'N')
-    {
-        if ($includeNew){
-            $selection = $i+1
-        }
-        else {
-            $selection=o
-        }
-    }
-    else 
-    {
-        $selection = [int]$answer
-    }
-    $prompt = "Please make a VALID selection."
+    # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
+    # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
+    $KeyPress = [System.Console]::ReadKey($true)
+    $K = $KeyPress.Key
 
-} until (`
-        ($selection -gt 0) -and (($selection  -le  $i+4) `
-        -and ($selection  -ne  ($i)) ) `
-        -OR ($selection -eq -1))
+    $val=-10
+    switch ( $k )
+    {
+        # Numerical Keys 0 to 9
+        'D1'  {$val = 0  }
+        'D1'  {$val = 1  }
+        'D2'  {$val = 2  }
+        'D3'  {$val = 3  }
+        'D4'  {$val = 4  }
+        'D5'  {$val = 5  }
+        'D6'  {$val = 6  }
+        'D7'  {$val = 7  }
+        'D8'  {$val = 8  }
+        'D9'  {$val = 9  }
+        B {$val = -1}
+        D {$val = -2}
+        N {$val = -3}
+        X {$val = -4}
+        UpArrow  { 
+            switch ($Default )
+            {
+                1 { $Default = 1}
+                2 { $Default = 1}
+                3 { $Default = 2}
+                4 { $Default = 3}
+            } 
+        }
+        DownArrow  { 
+            switch ($Default )
+            {
+                1 { $Default = 2}
+                2 { $Default= 3}
+                3 { $Default= 4}
+                4 { $Default= 5}
+            } 
+        }
+        Enter { 
+            If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
+            {
+                $val = $DefaultNo
+            } 
+            else{
+                $val = -11
+            }
+        }
+
+    }
+    if ( $SelectionList -notcontains $val){
+        if ($first){
+            write-Host '  --Invalid' -NoNewLine
+            $first = $false
+        }
+    }
+    ## $resp = [string]$val
+# Ref: https://www.computerperformance.co.uk/powershell/contains/
+} while ( $SelectionList -notcontains $val) ##  $resp)
+
+
+if ($first -eq $false)
+{
+    write-Host `b`b`b`b`b`b`b -NoNewLine
+    write-Host 'OK Now  ' 
+}
 
 $output = ''
-if ($selection -eq -1)
+$selection = $val
+if ($selection -eq  -1)
 {
-    $output = $CurrentSelection
+    return ''
 }
-elseif ($selection -eq  $i+3)
-{
-    $output = 'Back'
-}
-elseif ($selection -eq  $i+4)
-{
-    $output = 'Exit'
-}
-elseif ($selection -eq  $i+2)
+
+elseif ($selection -eq  -2)
 {
     $output = 'Delete'
 }
-elseif ($selection -eq  $i+1)
+elseif ($selection -eq  -3)
 {
     $output = 'New'
 }
@@ -250,5 +298,6 @@ write-Host ''
 $promptFinal = $Title +' "' +  $output + '" selected'
 write-Host $promptFinal
 $global:result3 = $output
+
 return $output
 

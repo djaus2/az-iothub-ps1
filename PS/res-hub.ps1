@@ -13,20 +13,25 @@ if ($Refresh -eq $true)
     $global:HubsStrn = null
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  I o T  H U B  '  -BackgroundColor DarkRed  -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+
+util\heading '  I o T  H U B  '  -BG DarkRed   -FG White
+$Prompt =  'Subscription :"' + $Subscription +'"'
+write-Host $Prompt
+$Prompt = '       Group :"' + $Group +'"'
+write-Host $Prompt
+$Prompt = ' Current Hub :"' + $Current +'"'
+write-Host $Prompt
 
 If  ([string]::IsNullOrEmpty($global:HubsStrn )) 
 {   
     write-Host 'Getting Hubs from Azure'
-    $global:HubsStrn =  az iot hub list --resource-group  $global:Group  -o tsv | Out-String
+    read-Host $global:HubsStrn
+    write-Host 'Getting Hubs from Azure'
+    $global:HubsStrn =  az iot hub list --resource-group  $Group  -o tsv | Out-String
 }
 If ([string]::IsNullOrEmpty($global:HubsStrn ))
 {
-    $Prompt = 'No Hubs found in Group ' + $global:Group + '. Exiting.'
+    $Prompt = 'No Hubs found in Group ' + $:Group + '.'
     write-Host $Prompt
     $Prompt ='OR Do you want to create a new Hub for the Group '+ $global:Group +'?'
     write-Host $Prompt
@@ -42,9 +47,10 @@ If ([string]::IsNullOrEmpty($global:HubsStrn ))
     }
 }
 
-read-host ''
-# $GroupName = utilities\Show-Menu $global:GroupsStrn  '  G R O U P  '   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
-$global:Hub = utilities\Show-Menu $global:HubsStrn   '  H U B  ' $HubStrnIndex $HubStrnDataIndex 1 22 $Current
+
+# $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
+
+$global:Hub = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 1  22 $Current
 write-Host $Hub
 
 if ($Hub -eq 'Exit')
@@ -62,7 +68,7 @@ elseif ($Hub -eq 'New')
     write-Host 'New-Group'
     exit
 }
-elseif ($Hub -ne $global:Hub)
+elseif ($Hub -ne $global:HubName)
 {
     $global:HubName = $Hub 
     $global:DevicesStrn=$null

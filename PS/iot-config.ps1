@@ -1,4 +1,4 @@
-utilities\heading '  S E T U P  ' DarkMagenta White
+util\heading  -Prompt '  S E T U P  ' -BG Blue   -FG White
 
 $answer = ''
 [int]$current = 1
@@ -79,7 +79,15 @@ do
             'D2'   { 
                     $current=2
                     $response= res-group   $Subscription $GroupName
-                    If ([string]::IsNullOrEmpty($response)) 
+                    if ($response -eq 'New')
+                    {
+                        read-Host 'New not an option for Group Yet Press [Enter] to continue.'
+                    }
+                    elseif ($Response -eq 'Delete')
+                    {
+                        read-Host 'Delete not an option for Group Yet. Press [Enter] to continue.'
+                    }
+                    elseif (-not ([string]::IsNullOrEmpty($response)) )
                     {
                         $GroupName = $response
                     }
@@ -87,10 +95,20 @@ do
                 }
             'D3'   { 
                     $current = 3
+                  
                     $response = res-hub $Subscription $GroupName $HubName
-                    If ([string]::IsNullOrEmpty($response)) 
+                    if ($response -eq 'New')
+                    {
+                        read-Host 'New not an option for Hub Press [Enter] to continue.'
+                    }
+                    elseif ($Response -eq 'Delete')
+                    {
+                        read-Host 'Delete not an option for Hubn. Press [Enter] to continue.'
+                    }
+                    elseif (-not ([string]::IsNullOrEmpty($response)) )
                     {
                         $HubName = $response
+                        $globalHubName = $response
                     }
                     $current++
                 }
@@ -106,7 +124,7 @@ do
             R    { 
                     Clear-Host
                     write-Host ''
-                    $answer = utilities\yes-no-menu 'Clear script globals variables? ' 'N'
+                    $answer = util\yes-no-menu 'Clear script globals variables? ' 'N'
                     if ($answer = 'Y')
                     {
                         
@@ -165,6 +183,6 @@ do
             }
         }
     }
-    utilities\heading '  S E T U P  ' DarkMagenta White
+    util\heading  -Prompt '  S E T U P  ' -BG Blue   -FG White
   
 } until ($false)
