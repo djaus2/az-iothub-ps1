@@ -15,6 +15,7 @@ If ([string]::IsNullOrEmpty($global:DoneLogin))
     # $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
     if  (($answer -eq 'N') -OR ($answer -eq 'n'))
     {
+        write-Host 'Openning Browser for Azure Login'
         az login
         [Console]::ResetColor()
     }

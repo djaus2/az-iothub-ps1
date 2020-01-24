@@ -133,6 +133,8 @@ if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
     $prompt = 'Hub was created.'
     write-Host $prompt
     $global:HubName = $HubName
+    $global:GotHubsStrn=$true
+    $global:GotDevicesStrn=$null
     return $HubName
 }
 else 

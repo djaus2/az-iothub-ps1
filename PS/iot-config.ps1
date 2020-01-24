@@ -61,72 +61,117 @@ do
                     
                     $response = res-subscription $Subscription
                     
-                    if ($response -eq 'New')
+                    if (-not ([string]::IsNullOrEmpty($response)) )
                     {
-                        read-Host 'New not an option for Subscription Press [Enter] to continue.'
+
                     }
-                    elseif ($Response -eq 'Delete')
-                    {
-                        read-Host 'Delete not an option for Subscription. Press [Enter] to continue.'
-                    }
-                    elseif (-not ([string]::IsNullOrEmpty($response)) )
-                    {
-                        $Subscription = $response
-                    }
+                   elseif ($response -eq 'Back')
+                   {
+
+                   }
+                   elseif ($response -eq 'Exit')
+                   {
+                        Exit
+                   }
+                   else
+                   {
+                    $Subscription = $response
+                    $global:Subscription = $response
+                   }
+
+                   
 
                     $Current++
                 }
             'D2'   { 
                     $current=2
                     $response= res-group   $Subscription $GroupName
-                    if ($response -eq 'New')
+                    if (-not ([string]::IsNullOrEmpty($response)) )
                     {
-                        read-Host 'New not an option for Group Yet Press [Enter] to continue.'
-                        new-Group $Subscription
+
                     }
-                    elseif ($Response -eq 'Delete')
+                    elseif ($response -eq 'New')
                     {
-                        read-Host 'Delete not an option for Group Yet. Press [Enter] to continue.'
-                        delete-Group $Subscription
-                    }          
-                    elseif ($Response -eq 'Back')
+                        new-Group $Subscription $Group
+                    }
+                    elseif ($response -eq 'Delete')
                     {
-                        read-Host 'Group action skipped.'
-                    }    
-                    elseif ($Response -eq 'Error')
+                        delete-Hub  $Subscription $Group $HubName
+                    }
+                    elseif ($response -eq 'Back')
+                    {
+
+                    }
+                    elseif ($response -eq 'Error')
                     {
                         exit
                     }  
+                    else
+                    {
+                        $GroupName = $response
+                        $global:GroupName = $response
+                    }
                     $Current++
                 }           
             'D3'   { 
                     $current = 3
                   
                     $response = res-hub $Subscription $GroupName $HubName
-                    if ($response -eq 'New')
+                    if (-not ([string]::IsNullOrEmpty($response)) )
                     {
-                        read-Host 'New not an option for Hub Press [Enter] to continue.x'
-                        new-Hub $Subscription $Group
+
+                    }
+                    elseif ($response -eq 'New')
+                    {
+                        new-Hub $Subscription $Group $HubName
                         read-Host 'Skipped'
                     }
-                    elseif ($Response -eq 'Delete')
+                    elseif ($response -eq 'Delete')
                     {
-                        read-Host 'Delete not an option for Hubn. Press [Enter] to continue.'
-                        delete-group 
+                        delete-Hub  $Subscription $Group $HubName
                     }
-                    elseif (-not ([string]::IsNullOrEmpty($response)) )
+                    elseif ($response -eq 'Back')
                     {
+ 
+                    }
+                    elseif ($response -eq 'Error')
+                    {
+                        exit
+                    }
+                    else {
                         $HubName = $response
-                        $globalHubName = $response
+                        $global:HubName = $response
                     }
+
                     $current++
                 }
             'D4'  { 
                     $current = 4
                     $response= res-device  $Subscription $GroupName $HubName $DeviceName
-                    If ([string]::IsNullOrEmpty($response)) 
+                    if (-not ([string]::IsNullOrEmpty($response)) )
                     {
-                        $DeviceName  = $response
+                        
+                    }
+                    elseif ($response -eq 'New')
+                    {
+                        new-Device $Subscription $Group $HubName $DeviceName
+                    }
+                    elseif ($response -eq 'Delete')
+                    {
+                        delete-Device  $Subscription $Group $HubName  $DeviceName
+                    }
+                    elseif ($response -eq 'Back')
+                    {
+
+                    }
+                    elseif ($response -eq 'Error')
+                    {
+                        exit
+                    }
+                    else
+                    {
+                        $Deviceame = $response
+                        $globa:DeviceName = $response
                     }
                 }
             'D5'    { exit  }
@@ -143,6 +188,10 @@ do
                         $global:GroupsStrn =$null
                         $global:HubsStrn=$null
                         $global:DevicesStrn=$null
+                        $global:GotSubscriptionStrn = $null
+                        $global:GotGroupsStrn =$null
+                        $global:GotHubsStrn=$null
+                        $global:GotDevicesStrn=$null
                         $global:Group = $null
                         $global:Hub = $null
                         $global:Device=$null

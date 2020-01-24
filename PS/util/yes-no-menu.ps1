@@ -10,7 +10,7 @@ $ValidKeys ='[Y]es [N]o'
 If (-not ([string]::IsNullOrEmpty($Default)))
 {
     if  ($SelectionList -contains $Default) {
-        $SelectionList = ('Y','No','Enter')
+        $SelectionList = ('Y','N','Enter')
         $ValidKeys += ' ( Default ' + $Default + ' )'
     }
     else {

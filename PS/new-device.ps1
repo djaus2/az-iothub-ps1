@@ -131,6 +131,7 @@ if ((utilities\check-device  $GroupName $HubName $DeviceName $true ) -eq $true)
     $prompt = 'Device was created.'
     write-Host $prompt
     $global:DeviceName = $DeviceName
+    $global:GotDevicesStrn=$true
     return $DeviceName
 }
 else 

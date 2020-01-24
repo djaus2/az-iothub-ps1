@@ -40,53 +40,51 @@ write-Host $Prompt
 If  ([string]::IsNullOrEmpty($global:HubsStrn )) 
 {   
     write-Host 'Getting Hubs from Azure'
-    read-Host $global:HubsStrn
-    write-Host 'Getting Hubs from Azure'
     $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
+    $global:GotGroupsStrn =$true
 }
 If ([string]::IsNullOrEmpty($global:HubsStrn ))
 {
-    $Prompt = 'No Hubs found in Group ' + $:Group + '.'
+    $Prompt = 'No Hubs found in Group "' + $GroupName + '".'
     write-Host $Prompt
-    $Prompt ='OR Do you want to create a new Hub for the Group '+ $global:Group +'?'
-    write-Host $Prompt
-    $answer = read-host 'Y or y for new Hub. Exit otherwise.'
+    $Prompt ='Do you want to create a new Hub for the Group "'+ $GroupName +'"?'
+    $answer = util\yes-no-menu $Prompt 'N'
     if (($answer -eq 'Y') -OR ($answer -eq 'y'))
     {
         write-Host 'New Hub'
-        exit
+        return 'New'
     }
     else {
-        write-Host 'Exiting'
-        exit
+        write-Host 'Returning'
+        return 'Back'
     }
 }
 
 
 # $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
 
-$global:Hub = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 1  22 $Current
-write-Host $Hub
+$HubName = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
+write-Host $HubName
 
-if ($Hub -eq 'Exit')
-{
-    write-Host 'Exiting'
-    exit
-}
-elseif ($Hub-eq 'Back')
+if ($HubName-eq 'Back')
 {
     write-Host 'Back. Exit for now.'
-    exit
+    retrun 'Back'
 }
-elseif ($Hub -eq 'New')
+elseif ($HubName -eq 'New')
 {
-    write-Host 'New-Group'
-    exit
+    write-Host 'New'
+    return 'New'
 }
-elseif ($Hub -ne $global:HubName)
+elseif ($HubName -eq 'Delete')
 {
-    $global:HubName = $Hub 
+    write-Host 'Delete'
+    return 'Delete'
+}
+elseif ($HubName -ne $global:HubName)
+{
+    $global:HubName = $HubName 
     $global:DevicesStrn=$null
     $global:Device=$null
 }
-return $Hub 
+return $HubName 

@@ -138,6 +138,9 @@ else
         $prompt = 'It was created.'
         write-Host $prompt
         $global:GroupName = $GroupName
+        $global:GotGroupsStrn =$true
+        $global:GotHubsStrn=$null
+        $global:GotDevicesStrn=$null
         return $GroupName
     }
   
