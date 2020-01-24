@@ -1,9 +1,24 @@
 param (
     [string]$Subscription = '' ,
-    [string]$Group = '' ,
+    [string]$GroupName = '' ,
     [string]$Current='',
     [boolean]$Refresh=$false
 )
+
+If ([string]::IsNullOrEmpty($Subscription ))
+{
+    write-Host ''
+    write-Host 'Need to select a Subscription first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return ''
+}
+elseIf ([string]::IsNullOrEmpty($GroupName ))
+{
+    write-Host ''
+    write-Host 'Need to select a Group first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return ''
+}
 
 $HubStrnIndex =3
 $HubStrnDataIndex =3
@@ -17,7 +32,7 @@ if ($Refresh -eq $true)
 util\heading '  I o T  H U B  '  -BG DarkRed   -FG White
 $Prompt =  'Subscription :"' + $Subscription +'"'
 write-Host $Prompt
-$Prompt = '       Group :"' + $Group +'"'
+$Prompt = '       Group :"' + $GroupName +'"'
 write-Host $Prompt
 $Prompt = ' Current Hub :"' + $Current +'"'
 write-Host $Prompt
@@ -27,7 +42,7 @@ If  ([string]::IsNullOrEmpty($global:HubsStrn ))
     write-Host 'Getting Hubs from Azure'
     read-Host $global:HubsStrn
     write-Host 'Getting Hubs from Azure'
-    $global:HubsStrn =  az iot hub list --resource-group  $Group  -o tsv | Out-String
+    $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
 }
 If ([string]::IsNullOrEmpty($global:HubsStrn ))
 {

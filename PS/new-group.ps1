@@ -5,6 +5,14 @@ param (
     [boolean]$Refresh=$false
 )
 
+If ([string]::IsNullOrEmpty($Subscription ))
+{
+    write-Host ''
+    write-Host 'Need to select a Subscription first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return ''
+}
+
 if ($Refresh)
 {
 	$global:LocationsStrn=null

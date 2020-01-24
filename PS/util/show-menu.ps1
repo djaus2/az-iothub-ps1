@@ -190,7 +190,7 @@ else
 
 
     [int]$selection =1
-    $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
+    $prompt ="Please make a selection then press [Enter].. Or just [Enter] if previous selection highlighted."
     do 
     {
         [int] $selection = 0

@@ -5,6 +5,21 @@ param (
     [boolean]$Refresh=$false
 )
 
+If ([string]::IsNullOrEmpty($Subscription ))
+{
+    write-Host ''
+    write-Host 'Need to select a Subscription first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return ''
+}
+elseIf ([string]::IsNullOrEmpty($GroupName ))
+{
+    write-Host ''
+    write-Host 'Need to select a Group first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return ''
+}
+
 $HubStrnIndex =3
 $global:HubName= null
 if ($Refresh -eq $true)

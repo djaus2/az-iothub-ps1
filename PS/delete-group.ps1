@@ -4,8 +4,15 @@ param (
     [boolean]$Refresh=$false
 )
 
+If ([string]::IsNullOrEmpty($Subscription ))
+{
+    write-Host ''
+    write-Host 'Need to select a Subscription first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return ''
+}
+
 $GroupStrnIndex =3
-$global:GroupName = $null
 if ($Refresh -eq $true)
 {
     $global:GroupsStrn  = $null
@@ -30,7 +37,7 @@ if ([string]::IsNullOrEmpty($GroupName))
         Exit
     }
     
-    $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 40  ''
+    $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
 
     #$GroupName =util\show-menu $global:GroupsStrn  'Group'  $GroupStrnIndex $GroupStrnIndex 3 40
     If ([string]::IsNullOrEmpty($GroupName ))
@@ -69,8 +76,9 @@ if (  ( az group exists --name $GroupName   ) -eq $true)
 }
 else 
 {
-    $prompt = 'Azure Resource Group "' + $GroupName +'" doesnt exist. Returning'
+    $prompt = 'Azure Resource Group "' + $GroupName +'" doesnt exist. Press and key to return.'
     write-Host $prompt
+    $KeyPress = [System.Console]::ReadKey($true)
     return
 }
 

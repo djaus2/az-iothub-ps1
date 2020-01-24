@@ -48,7 +48,7 @@ do
     
     if ($GetKey -eq $true)
     {
-        $KeyPress = [System.Console]::ReadKey($false)
+        $KeyPress = [System.Console]::ReadKey($true)
         $K = $KeyPress.Key
     }
     $GetKey = $true
