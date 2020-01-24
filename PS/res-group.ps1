@@ -56,10 +56,11 @@ elseif ($GroupName -eq 'Back')
 elseif ($GroupName -eq 'Delete')
 {
     write-Host 'Delete. Exit for now.'
-    exit
+    return 'Delete'
 }
 elseif ($GroupName -eq 'New')
 {
+    return 'New'
     write-Host 'New-Group'
     # $GroupName = invoke-expression -Command $PSScriptRoot\new-group.ps1
     $GroupName = util\new-group.ps1

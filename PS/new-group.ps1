@@ -10,28 +10,23 @@ if ($Refresh)
 	$global:LocationsStrn=null
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  N E W  G R O U P  '  -BackgroundColor DarkBlue  -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+
+util\heading '  N E W  G R O U P  '   DarkBlue  White 
 
 $global:GroupName = $null
 
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
 {
+    $answer =''
     do
     {
-        $prompt = 'Enter Resource Group Name, X to exit/return'
-        if (-not ([string]::IsNullOrEmpty($answer)))
-        {
-            $answer= read-Host $prompt
-            $answer = $answer.Trim()
-            write-Host $answer
-        }      
+        $prompt = 'Enter Resource Group Name, B to return'
+        $answer= read-Host $prompt
+        $answer = $answer.Trim()
+        write-Host $answer     
     } until (-not ([string]::IsNullOrEmpty($answer)))
-    if ($answer.ToUpper() -eq 'X')
+    if ($answer.ToUpper() -eq 'B')
     {
         write-Host 'Returning'
         return 'Back'
@@ -40,8 +35,6 @@ if ([string]::IsNullOrEmpty($GroupName))
 }
 
 
-
-}
 # Need a location
 if ([string]::IsNullOrEmpty($Location))
 {
@@ -52,19 +45,22 @@ if ([string]::IsNullOrEmpty($Location))
      if ([string]::IsNullOrEmpty($global:LocationsStrn))
     {
         write-Host 'Error getting Resource Group Location List. Exiting'
-	exit
+        return 'Error'
     }
-    [string]$result =  utilities\show-menu $global:LocationsStrn  Location 0 4 22
+# string]$result =  util\show-menu $global:LocationsStrn  Location 0 4 22
+    [string]$result = util\Show-Menu $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
+
     $Location = $result 
     $prompt = 'Location "' +$result +'" returned'
+
     write-Host $prompt
     if ($Location -eq 'Back')
     {
         return 'Back'
     }
-    elseif ($Location -eq 'Exit')
+    elseif ($Location -eq '')
     {
-        Exit
+        return 'Back'
     }
 }
 
@@ -76,7 +72,7 @@ if ([string]::IsNullOrEmpty($Subscription))
 {
     $prompt = 'Checking whether Azure Group "' + $GroupName  +'" exists.'
     write-Host $prompt
-    if (  ( utilities\check-group $GroupName   ) -eq $false)
+    if (  ( util\check-group $GroupName   ) -eq $false)
     {
         $prompt = 'Creating new Azure Resource Group "' + $GroupName + '" at location "' + $Location +'"'
         write-Host $prompt
@@ -91,7 +87,7 @@ if ([string]::IsNullOrEmpty($Subscription))
 
     $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was created.'
     write-Host $prompt
-    if  (( utilities\check-group $GroupName   ) -eq $false)
+    if  (( util\check-group $GroupName   ) -eq $false)
     {
         $prompt = 'It Failed. Exiting'
         write-Host $prompt

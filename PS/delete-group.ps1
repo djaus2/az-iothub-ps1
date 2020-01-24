@@ -1,20 +1,18 @@
 param (
+    [string]$Subscription='',
     [string]$GroupName='',
     [boolean]$Refresh=$false
 )
 
 $GroupStrnIndex =3
-$global:GroupName = null
+$global:GroupName = $null
 if ($Refresh -eq $true)
 {
     $global:GroupsStrn  = $null
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  D E L E T E  G R O U P   '  -BackgroundColor Red  -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+util\heading '  D E L E T E  G R O U P  '  DarkBlue  White
+
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
 {
@@ -31,7 +29,10 @@ if ([string]::IsNullOrEmpty($GroupName))
         write-Host $Prompt
         Exit
     }
-    $GroupName = ./utilities/show-menu $global:GroupsStrn  'Group'  $GroupStrnIndex $GroupStrnIndex 3 40
+    
+    $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 40  ''
+
+    #$GroupName =util\show-menu $global:GroupsStrn  'Group'  $GroupStrnIndex $GroupStrnIndex 3 40
     If ([string]::IsNullOrEmpty($GroupName ))
     {
         exit

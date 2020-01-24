@@ -82,28 +82,37 @@ do
                     if ($response -eq 'New')
                     {
                         read-Host 'New not an option for Group Yet Press [Enter] to continue.'
+                        new-Group $Subscription
                     }
                     elseif ($Response -eq 'Delete')
                     {
                         read-Host 'Delete not an option for Group Yet. Press [Enter] to continue.'
-                    }
-                    elseif (-not ([string]::IsNullOrEmpty($response)) )
+                        delete-Group $Subscription
+                    }          
+                    elseif ($Response -eq 'Back')
                     {
-                        $GroupName = $response
-                    }
-                    $current++
-                }
+                        read-Host 'Group action skipped.'
+                    }    
+                    elseif ($Response -eq 'Error')
+                    {
+                        exit
+                    }  
+                    $Current++
+                }           
             'D3'   { 
                     $current = 3
                   
                     $response = res-hub $Subscription $GroupName $HubName
                     if ($response -eq 'New')
                     {
-                        read-Host 'New not an option for Hub Press [Enter] to continue.'
+                        read-Host 'New not an option for Hub Press [Enter] to continue.x'
+                        new-Hub $Subscription $Group
+                        read-Host 'Skipped'
                     }
                     elseif ($Response -eq 'Delete')
                     {
                         read-Host 'Delete not an option for Hubn. Press [Enter] to continue.'
+                        delete-group 
                     }
                     elseif (-not ([string]::IsNullOrEmpty($response)) )
                     {

@@ -11,13 +11,33 @@ param (
     [string]$CurrentSelection='None'
 )
 
-[string]$temp =  [string]$ColWidth
-$FormatStrn = '{0,-' + $temp + '}'
-
 [boolean]$includeExit= $false
-[boolean]$includeBack= $true
+[boolean]$includeBack= $false
 [boolean]$includeNew= $false
 [boolean]$includeDelete= $false
+
+if ( -not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
+{
+    if ($AdditionalMenuOptions -like '*Back*')
+    {
+        $includeBack=$true
+    }
+    if ($AdditionalMenuOptions -like '*Exit*')
+    {
+        $includeExit=$true
+    }
+    if ($AdditionalMenuOptions -like '*New*')
+    {
+        $includeNew=$true
+    }
+    if ($AdditionalMenuOptions -like '*Delete*')
+    {
+        $includeDelete=$true
+    }
+}
+
+[string]$temp =  [string]$ColWidth
+$FormatStrn = '{0,-' + $temp + '}'
 
 # These two checks not required as both parameters are mandatory
 if (([string]::IsNullOrEmpty($ListString)) -or ($ListString.ToUpper() -eq '--HELP') -or ($ListString.ToUpper() -eq '-H'))
@@ -53,8 +73,9 @@ if ([string]::IsNullOrEmpty($Title))
 }  
 
 $lines =$ListString  -split '\n'
-$noEntities = $lines.Length -1
-if ($noEntries -lt 10)
+$noEntities = $lines.Length 
+
+if ($noEntities -lt 10)
 {
     return util\smq `
         $ListString `
@@ -68,7 +89,6 @@ if ($noEntries -lt 10)
 }
 else 
 {
-    
     [int] $i=1
     write-Host ''
     write-Host 'Select a '  -NoNewline
@@ -144,14 +164,14 @@ else
     {
         write-Host ''
         $prompt = 'N. '
-        $prompt +=  'New ' + $Title
+        $prompt +=  'New    ' + $Title
         write-Host $prompt
         
     }
-    if ($includeExit)
+    if ($includeDelete)
     {
         $prompt = 'D. '
-        $prompt +=  'Delete a ' + $Title.Replace(' ', '')
+        $prompt +=  'Delete ' + $Title
         write-Host $prompt
     }
 
@@ -167,6 +187,7 @@ else
         $prompt +=  'Exit '
         write-Host $prompt
     }
+
 
     [int]$selection =1
     $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
@@ -203,7 +224,7 @@ else
                 $selection = $i+3
             }
             else {
-                $selection=o
+                $selection=0
             }
         }
         elseif ($answer.ToUpper() -eq 'D')
@@ -236,6 +257,7 @@ else
             -OR ($selection -eq -1))
 
     $output = ''
+    # Got to update next section
     if ($selection -eq -1)
     {
         $output = $CurrentSelection

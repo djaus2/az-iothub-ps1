@@ -7,7 +7,7 @@ param (
    $FG
 )
 [Console]::ResetColor()
-Clear-Host
+# Clear-Host
 $prompt2 =  '  A Z U R E  I o T  H U B  ' 
 write-Host $prompt2 -BackgroundColor  DarkMagenta  -ForegroundColor   White  -NoNewline
 [Console]::ResetColor()

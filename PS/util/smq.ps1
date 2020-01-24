@@ -278,7 +278,7 @@ $output = ''
 $selection = $val
 if ($selection -eq  -1)
 {
-    return ''
+    return 'Back'
 }
 
 elseif ($selection -eq  -2)
