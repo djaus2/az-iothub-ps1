@@ -14,6 +14,7 @@ If ([string]::IsNullOrEmpty($Subscription ))
 }
 
 $GroupStrnIndex =3
+$GroupStrnDataIndex =3
 
 
 util\Heading '  G R O U P  '  DarkRed   White
@@ -42,65 +43,45 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 {
     $Prompt = 'No Groups found in Subscription "' + $Subscription + '".'
     write-Host $Prompt
-    $Prompt ='Do you want to create a new Group for the Group "'+ $Subscription +'"?'
-    $selectionList =@('Y','N','B')
-    $answer = .\util\getchar-menu $Prompt   '[Y]es [N]o [B]ack' $selectionList  'N'
-     if  (($answer -eq 'Y') -OR ($answer -eq 'y'))
+    $Prompt ='Do you want to create a new Group for the Subscription "'+ $Subscription +'"?'
+    $answer = util\yes-no-menu $Prompt 'N'
+    if (($answer -eq 'Y') -OR ($answer -eq 'y'))
     {
+	write-Host 'New Group'
         return 'New'
     }
-    elseif  (($answer -eq 'B') -OR ($answer -eq 'b'))
-    {
-        return ''
+    else {
+        write-Host 'Returning'
+        return 'Back'
     }
-    return ''
+    return 'Back'
 }
-# $Subscription = util\Show-Menu $global:SubscriptionsStrn   'Subscription' 3 3 1 22  $Current
-$GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
+
+$GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 40  $Current
 
 write-Host $GroupName
 
-if ($GroupName -eq 'Exit')
+If ([string]::IsNullOrEmpty($GroupName)) 
 {
-    write-Host 'Exiting.'
-    exit
+	write-Host 'Back'
+    return 'Back'
 }
-elseif ($GroupName -eq 'Back')
+esleif ($GroupName -eq 'Return')
 {
-    Return
-}
-elseif ($GroupName -eq 'Delete')
-{
-    write-Host 'Delete. Exit for now.'
-    return 'Delete'
+	write-Host 'Back'
+    return 'Back'
 }
 elseif ($GroupName -eq 'New')
 {
+    write-Host 'New'
     return 'New'
-    write-Host 'New-Group'
-    # $GroupName = invoke-expression -Command $PSScriptRoot\new-group.ps1
-    $GroupName = util\new-group.ps1
-    if ($GroupName -eq 'Exit')
-    {
-        exit
-    }
-    elseif ($GroupName -eq 'Back')
-    {
-        Return 
-    }
-    elseif ($Group.Contains('Fail'))
-    {
-        exit
-    }
-    elseif ($GroupName.Contains('Exists'))
-    {
-        $temp = ($GroupName -split ' ')[0]
-        $GroupName = $temp
-        $prompt =  'Using existing group "' + $GroupName + '"'
-        write-Host $prompt
-    }
 }
-if ($GroupName -ne $global:GroupName )
+elseif ($GroupName -eq 'Delete')
+{
+    write-Host 'Delete'
+    return 'Delete'
+}
+elseif ($GroupName -ne $global:GroupName)
 {
     $global:GroupName =  $GroupName
 
@@ -109,5 +90,9 @@ if ($GroupName -ne $global:GroupName )
     $global:Hub = $null
     $global:Device=$null
 }
-
-return $GroupName
+elseif ($GroupName -eq 'Error')
+{
+	write-Host 'Error'
+    return 'Error'
+}
+return $GroupName 

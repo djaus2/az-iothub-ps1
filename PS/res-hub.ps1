@@ -65,15 +65,18 @@ If ([string]::IsNullOrEmpty($global:HubsStrn ))
         write-Host 'Returning'
         return 'Back'
     }
+    return 'Back'
 }
-
-
-# $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
 
 $HubName = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
 write-Host $HubName
 
-if ($HubName-eq 'Back')
+If ([string]::IsNullOrEmpty($HubName)) 
+{
+	write-Host 'Back'
+    return 'Back'
+}
+elseif ($HubName-eq 'Back')
 {
     write-Host 'Back. Exit for now.'
     retrun 'Back'
@@ -93,5 +96,10 @@ elseif ($HubName -ne $global:HubName)
     $global:HubName = $HubName 
     $global:DevicesStrn=$null
     $global:Device=$null
+}
+elseif ($HubName -eq 'Error')
+{
+	write-Host 'Error'
+    return 'Error'
 }
 return $HubName 

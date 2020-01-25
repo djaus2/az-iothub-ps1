@@ -33,7 +33,6 @@ $DeviceStrnDataIndex =5
 
 
 
-
 util\heading '  D E V I C E   '  -BG DarkRed   -FG White
 $Prompt = '   Subscription :"' + $Subscription +'"'
 write-Host $Prompt
@@ -74,16 +73,20 @@ If ([string]::IsNullOrEmpty($global:DevicesStrn ))
         write-Host 'Returning'
         return 'Back'
     }
+    return 'Back'
 }
 
-
-# $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
-
 $DeviceName = util\Show-Menu $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
+write-Host $DeviceName
 
-if ($DeviceName-eq 'Back')
+If ([string]::IsNullOrEmpty($DeviceName)) 
 {
-    write-Host 'Back. Exit for now.'
+	write-Host 'Back'
+    return 'Back'
+}
+elseif ($DeviceName -eq 'Return')
+{
+	write-Host 'Back'
     return 'Back'
 }
 elseif ($DeviceName -eq 'New')
@@ -96,8 +99,13 @@ elseif ($DeviceName -eq 'Delete')
     write-Host 'Delete'
     return 'Delete'
 }
-elseif ($DeviceName -ne $global:HubName)
+elseif ($DeviceName -ne $global:DeviceName)
 {
     $global:DeviceName = $DeviceName 
+}
+elseif ($DeviceName -eq 'Error')
+{
+	write-Host 'Error'
+    return 'Error'
 }
 return $DeviceName 

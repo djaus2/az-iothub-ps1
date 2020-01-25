@@ -3,9 +3,7 @@ param (
    [boolean]$Refresh = $false
 )
 
-util\heading  -Prompt '  S U B S C R I P T I O N  '   -BG DarkRed  -FG White
-$Prompt =  'Current Subscription :"' + $Current +'"'
-write-Host $Prompt
+
 
 
 If ([string]::IsNullOrEmpty($global:DoneLogin)) 
@@ -35,6 +33,10 @@ If ([string]::IsNullOrEmpty($global:DoneLogin))
     $global:DoneLogin = 'DoneLogin'
 }
 
+
+util\heading  -Prompt '  S U B S C R I P T I O N  '   -BG DarkRed  -FG White
+$Prompt =  'Current Subscription :"' + $Current +'"'
+write-Host $Prompt
 if ($Refresh -eq $true)
 {
     $global:SubscriptionsStrn = $null
@@ -52,29 +54,25 @@ If  (([string]::IsNullOrEmpty($global:SubscriptionsStrn)) -and (-not $skip))
 }
 If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
 {
-    $Prompt = 'No Subscriptions found. Have you run Az Login? Exiting.'
-    write-Host $Prompt
-    Exit
+    $Prompt = 'No Subscriptions found. Have you run Az Login? Press [Return] to return.'
+    read-Host $Prompt
+    
 }
-# $HubName = show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
-# x$DeviceName = util\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
+
 $Subscription = util\show-menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
+write-Host $Subscription
 
 If ([string]::IsNullOrEmpty($Subscription)) 
 {
-    $Subscription=$Current
-    $global:returnVal = ''
-    return ''
+	write-Host 'Back'
+    return 'Back'
 }
-elseif ($Subscription -eq 'New')
+elseif ($Subscription -eq 'Return')
 {
-    return 'New'
+	write-Host 'Back'
+    return 'Back'
 }
-elseif ($Subscription -eq 'New')
-{
-    return 'Delete'
-}
-elseif (($Subscription -ne $global:Subscription) -or ([string]::IsNullOrEmpty($global:Subscription)) )
+elseif ($Subscription -ne $global:Subscription) 
 {
     $global:Subscription = $Subscription
     $global:GroupsStrn =$null
@@ -84,5 +82,9 @@ elseif (($Subscription -ne $global:Subscription) -or ([string]::IsNullOrEmpty($g
     $global:Hub = $null
     $global:Device=$null
 }
-
-return $Subscription
+elseif ($Subscription -eq 'Error')
+{
+	write-Host 'Error'
+    return 'Error'
+}
+return $Subscription 
