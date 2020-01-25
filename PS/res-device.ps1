@@ -76,36 +76,36 @@ If ([string]::IsNullOrEmpty($global:DevicesStrn ))
     return 'Back'
 }
 
-$DeviceName = util\Show-Menu $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
-write-Host $DeviceName
+$answer = util\Show-Menu $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
+write-Host $answer
 
-If ([string]::IsNullOrEmpty($DeviceName)) 
+If ([string]::IsNullOrEmpty($answer)) 
 {
 	write-Host 'Back'
     return 'Back'
 }
-elseif ($DeviceName -eq 'Return')
+elseif ($answer -eq 'Return')
 {
 	write-Host 'Back'
     return 'Back'
 }
-elseif ($DeviceName -eq 'New')
+elseif ($answer -eq 'New')
 {
     write-Host 'New'
     return 'New'
 }
-elseif ($DeviceName -eq 'Delete')
+elseif ($answer -eq 'Delete')
 {
     write-Host 'Delete'
     return 'Delete'
 }
-elseif ($DeviceName -ne $global:DeviceName)
+elseif ($answer -ne $global:DeviceName)
 {
-    $global:DeviceName = $DeviceName 
+    $global:DeviceName = $answer 
 }
-elseif ($DeviceName -eq 'Error')
+elseif ($answer -eq 'Error')
 {
 	write-Host 'Error'
     return 'Error'
 }
-return $DeviceName 
+return $answer 

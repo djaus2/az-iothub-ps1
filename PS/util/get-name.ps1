@@ -1,3 +1,6 @@
+param (
+    [string]$Title = '' 
+)
 $answer =''
 do
 {
@@ -8,7 +11,6 @@ do
 } until (-not ([string]::IsNullOrEmpty($answer)))
 if ($answer.ToUpper() -eq 'B')
 {
-    write-Host 'Returning'
     return 'Back'
 }
 return $answer

@@ -58,11 +58,11 @@ $prompt =  'Do you want to delete the group "' + $GroupName +  '" Y/N (Default N
 $answer = read-Host $prompt
 if ([string]::IsNullOrEmpty($answer))
 {
-    return $false
+    return 'Back'
 }
 elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    return $false
+    return 'Back'
 }
 
 

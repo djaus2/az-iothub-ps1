@@ -68,38 +68,39 @@ If ([string]::IsNullOrEmpty($global:HubsStrn ))
     return 'Back'
 }
 
-$HubName = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
-write-Host $HubName
+$answer = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
+write-Host $answer
 
-If ([string]::IsNullOrEmpty($HubName)) 
+If ([string]::IsNullOrEmpty($answer)) 
 {
 	write-Host 'Back'
     return 'Back'
 }
-elseif ($HubName-eq 'Back')
+elseif ($answer-eq 'Back')
 {
     write-Host 'Back. Exit for now.'
-    retrun 'Back'
+    return 'Back'
 }
-elseif ($HubName -eq 'New')
+elseif ($answer -eq 'New')
 {
     write-Host 'New'
     return 'New'
 }
-elseif ($HubName -eq 'Delete')
+elseif ($answer -eq 'Delete')
 {
     write-Host 'Delete'
     return 'Delete'
 }
-elseif ($HubName -ne $global:HubName)
+elseif ($answer -ne $global:HubName)
 {
-    $global:HubName = $HubName 
+    $global:HubName = $answer 
     $global:DevicesStrn=$null
     $global:Device=$null
+    return $answer
 }
-elseif ($HubName -eq 'Error')
+elseif ($answer -eq 'Error')
 {
 	write-Host 'Error'
     return 'Error'
 }
-return $HubName 
+return $answer 

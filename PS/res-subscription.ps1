@@ -59,32 +59,38 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     
 }
 
-$Subscription = util\show-menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
-write-Host $Subscription
+$answer = util\show-menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
+write-Host $answer
 
-If ([string]::IsNullOrEmpty($Subscription)) 
+If ([string]::IsNullOrEmpty($answer)) 
 {
 	write-Host 'Back'
     return 'Back'
 }
-elseif ($Subscription -eq 'Return')
+elseif ($answer -eq 'Return')
 {
 	write-Host 'Back'
     return 'Back'
 }
-elseif ($Subscription -ne $global:Subscription) 
+elseif ($answer -eq 'Back')
 {
-    $global:Subscription = $Subscription
+	write-Host 'Back'
+    return 'Back'
+}
+elseif ($answer -ne $global:Subscription) 
+{
+    $global:Subscription = $answer
     $global:GroupsStrn =$null
     $global:HubsStrn=$null
     $global:DevicesStrn=$null
     $global:Group = $null
     $global:Hub = $null
     $global:Device=$null
+    return $answer
 }
-elseif ($Subscription -eq 'Error')
+elseif ($answer -eq 'Error')
 {
 	write-Host 'Error'
     return 'Error'
 }
-return $Subscription 
+return $answer 

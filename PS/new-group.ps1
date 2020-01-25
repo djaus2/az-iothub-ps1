@@ -32,7 +32,7 @@ $global:DeviceName=$null
 if ([string]::IsNullOrEmpty($GroupName))
 {
     $answer = util\get-name 'Resource Group'
-    if ($answer.ToUpper() -eq 'B')
+    if ($answer -eq 'Back')
     {
         write-Host 'Returning'
         return 'Back'
@@ -65,7 +65,7 @@ if ([string]::IsNullOrEmpty($Location))
     {
         return 'Back'
     }
-    elseif    if ($Location -eq 'Back')
+    elseif ($Location -eq 'Back')
     {
         return 'Back'
     }
@@ -89,7 +89,7 @@ if ([string]::IsNullOrEmpty($Subscription))
 
     $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was created.'
     write-Host $prompt
-    if  (( util\check-group $GroupName   ) -eq $false)
+    if  (( util\check-group $GroupName $true  ) -eq $false)
     {
         $prompt = 'It Failed. Press [Enter] to exit.'
         read-Host $prompt

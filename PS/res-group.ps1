@@ -57,42 +57,43 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     return 'Back'
 }
 
-$GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 40  $Current
+$answer= util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 40  $Current
+$prompt = '>>' + $answer + "<<"
+write-Host $prompt
 
-write-Host $GroupName
-
-If ([string]::IsNullOrEmpty($GroupName)) 
+If ([string]::IsNullOrEmpty($answer)) 
 {
 	write-Host 'Back'
-    return 'Back'
+    return 'Back1'
 }
-elseif ($GroupName -eq 'Return')
+elseif ($answer -eq 'Return')
 {
 	write-Host 'Back'
-    return 'Back'
+    return 'Back2'
 }
-elseif ($GroupName -eq 'New')
+elseif ($answer -eq 'New')
 {
     write-Host 'New'
     return 'New'
 }
-elseif ($GroupName -eq 'Delete')
+elseif ($answer -eq 'Delete')
 {
     write-Host 'Delete'
     return 'Delete'
 }
-elseif ($GroupName -ne $global:GroupName)
+elseif ($answer -ne $global:GroupName)
 {
-    $global:GroupName =  $GroupName
+    $global:GroupName =  $answer
 
     $global:HubsStrn=$null
     $global:DevicesStrn=$null
     $global:Hub = $null
     $global:Device=$null
+    return $answer
 }
-elseif ($GroupName -eq 'Error')
+elseif ($answer -eq 'Error')
 {
 	write-Host 'Error'
     return 'Error'
 }
-return $GroupName 
+return $answer 

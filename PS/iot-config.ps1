@@ -18,6 +18,14 @@ do
     $GroupName = $Global:GroupName
     $HubName = $global:HubName
     $DeviceName = $global:DeviceName
+    $Prompt = '   Subscription :"' + $Subscription +'"'
+    write-Host $Prompt
+    $Prompt = '          Group :"' + $GroupName +'"'
+    write-Host $Prompt
+    $Prompt = '            Hub :"' + $HubName +'"'
+    write-Host $Prompt
+    $Prompt = '         Device :"' + $DeviceName +'"'
+    write-Host $Prompt
     write-Host ''
     $items =$ItemsList  -split ','
     $i=1
@@ -65,7 +73,7 @@ do
                     
                     $response = res-subscription $Subscription
                     
-                    if (-not ([string]::IsNullOrEmpty($response)) )
+                    if ( ([string]::IsNullOrEmpty($response)) )
                     {
 
                     }
@@ -79,7 +87,7 @@ do
                    }
                    else
                    {
-                    $Subscription = $response
+
                    }
 
                    
@@ -89,17 +97,17 @@ do
             'D2'   { 
                     $current=2
                     $response= res-group   $Subscription $GroupName
-                    if (-not ([string]::IsNullOrEmpty($response)) )
+                    if (([string]::IsNullOrEmpty($response)) )
                     {
 
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Group $Subscription $Group
+                        new-Group $Subscription
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-group  $Subscription $Group 
+                        delete-group  $Subscription 
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -111,7 +119,7 @@ do
                     }  
                     else
                     {
-                        $GroupName = $response
+                        
                     }
                     $Current++
                 }           
@@ -119,7 +127,7 @@ do
                     $current = 3
                   
                     $response = res-hub $Subscription $GroupName $HubName
-                    if (-not ([string]::IsNullOrEmpty($response)) )
+                    if (([string]::IsNullOrEmpty($response)) )
                     {
 
                     }
@@ -148,7 +156,7 @@ do
             'D4'  { 
                     $current = 4
                     $response= res-device  $Subscription $GroupName $HubName $DeviceName
-                    if (-not ([string]::IsNullOrEmpty($response)) )
+                    if ( ([string]::IsNullOrEmpty($response)) )
                     {
                         
                     }
@@ -170,7 +178,7 @@ do
                     }
                     else
                     {
-                        $DeviceName = $response
+ 
                     }
                 }
             'D5'    {   }
@@ -183,15 +191,19 @@ do
                     {
                         
                         $global:DoneLogin = $null
-                        $global:Subscription = $null
+
                         $global:SubscriptionStrn = $null
                         $global:GroupsStrn =$null
                         $global:HubsStrn=$null
                         $global:DevicesStrn=$null
-                        $global:Group = $null
-                        $global:Hub = $null
-                        $global:Device=$null
+
+                        $global:Subscription = $null
+                        $global:GroupName = $null
+                        $global:HubName= $null
+                        $global:DeviceName=$null
+
                         $global:Locations = $null
+                        
                         $Subscription = $global:Subscription
                         $GroupName = $Global:GroupName
                         $HubName = $global:HubName
