@@ -21,26 +21,26 @@ elseIf ([string]::IsNullOrEmpty($GroupName ))
     return ''
 }
 
+if ($Refresh)
+{
+	$global:HubsStrn=null
+}
 
 util\heading '  N E W  I o T  H U B  '   DarkBlue  White 
 
 $global:HubName = $null
+$global:DevicesStrn=$null
+$global:DeviceName=$null
 
 #Need a Hub name
+# Need a group name
 if ([string]::IsNullOrEmpty($HubName))
 {
-    do
-    {
-        $prompt = 'Enter IoT Hub Name, X to return'
-        $answer= read-Host $prompt
-        $answer = $answer.Trim()
-        write-Host $answer
-        
-    } until (-not ([string]::IsNullOrEmpty($answer)))
-    if ($answer.ToUpper() -eq 'X')
+    $answer = util\get-name 'IoT Hub'
+    if ($answer.ToUpper() -eq 'B')
     {
         write-Host 'Returning'
-        return 'Return'
+        return 'Back'
     }
     $HubName = $answer
 }
@@ -48,83 +48,104 @@ if ([string]::IsNullOrEmpty($HubName))
 
 #We need an SKU
 $skus = 'B1, B2, B3, F1, S1, S2, S3'
-$skusList = $skus.Replace(' ', '')
 if ([string]::IsNullOrEmpty($SKU))
 {
-    # do
-    #{
-        $prompt = 'Enter SKU. Choose from ' + $skus + '. X to exit/return'
-        $answer= read-Host $prompt
-        if ([string]::IsNullOrEmpty($answer))
-        {
-            $answer ='F1'
-        }
-        $answer = $answer.ToUpper()
-        $answer = $answer.Trim()
-        write-Host $answer
-        
-    # } until (-not ([string]::IsNullOrEmpty($answer)))
-
-    if ($answer -eq 'X')
+    $answer = util\choose-menu $skus.Replace(' ' , '') 'SKU' 'F1'
+  if ([string]::IsNullOrEmpty($SKU))
     {
-        write-Host 'Returning'
         return 'Back'
     }
-    # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-    elseif (($answer | %{$skusList.contains($_)}) -contains $true)
+    elseif  ($SKU -eq 'Back')
     {
-        $SKU = $answer
-        write-Host $SKU
+        return 'Back'
+    }
 
+    $SKU= $answer
+}
+
+# Subscription is  optional
+if ([string]::IsNullOrEmpty($Subscription)) 
+{
+
+    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
+    write-Host $prompt
+    if ((util\check-hub  $GroupName $HubName  $Refresh) -eq $true)
+    {
+        $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
+        read-Host $prompt
+        return 'Exists'
+    }
+
+
+    $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
+    write-Host $prompt
+
+    az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU
+
+    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
+    write-Host $prompt
+    # Need to refresh the list of hubs
+    if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
+    {
+        $prompt = 'Hub was created. Press [Enter] to return.'
+        read-Host $prompt
+        $global:HubName = $HubName
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+        return $HubName
     }
     else 
     {
-        # Shouldn't get to here
-        write-Host 'Invalid SKU string. Exiting'
-        Exit
+        #If not found after trying to create it, must be inerror
+        $prompt = 'Hub not created. Press [Return] to exit.'
+        read-Host $prompt
+        $global:HubName = $null
+        $global:HubsStrn = $null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+        return 'Error'
     }
+}
+else {
+    {
+        $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
+        write-Host $prompt
+        if ((util\check-hub  $GroupName $HubName  $Refresh) -eq $true)
+        {
+            $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
+            read-Host $prompt
+            return 'Exists'
+        }
     
-}
-
-
-
-
-$prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
-write-Host $prompt
-if ((util\check-hub  $GroupName $HubName  $Refresh) -eq $true)
-{
-    $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
-    write-Host $prompt
-    return 'Exists'
-}
-
-
-$prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
-write-Host $prompt
-
-az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU
-
-$prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
-write-Host $prompt
-# Need to refresh the list of hubs
-if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
-{
-    $prompt = 'Hub was created. Press [Enter] to return.'
-    read-Host $prompt
-    $global:HubName = $HubName
-    $global:DevicesStrn=$null
-    $global:DeviceName=$null
-    return $HubName
-}
-else 
-{
-    #If not found after trying to create it, must be inerror
-    $prompt = 'Hub not created. Press [Return] to exit.'
-    read-Host $prompt
-    $global:HubName = $null
-    $global:HubsStrn = $null
-    $global:DevicesStrn=$null
-    $global:DeviceName=$null
-    return 'Error'
+    
+        $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
+        write-Host $prompt
+    
+        az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU
+    
+        $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
+        write-Host $prompt
+        # Need to refresh the list of hubs
+        if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
+        {
+            $prompt = 'Hub was created. Press [Enter] to return.'
+            read-Host $prompt
+            $global:HubName = $HubName
+            $global:DevicesStrn=$null
+            $global:DeviceName=$null
+            return $HubName
+        }
+        else 
+        {
+            #If not found after trying to create it, must be inerror
+            $prompt = 'Hub not created. Press [Return] to exit.'
+            read-Host $prompt
+            $global:HubName = $null
+            $global:HubsStrn = $null
+            $global:DevicesStrn=$null
+            $global:DeviceName=$null
+            return 'Error'
+        }
+    }
 }
 

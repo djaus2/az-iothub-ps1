@@ -191,6 +191,7 @@ do
                         $global:Group = $null
                         $global:Hub = $null
                         $global:Device=$null
+                        $global:Locations = $null
                         $Subscription = $global:Subscription
                         $GroupName = $Global:GroupName
                         $HubName = $global:HubName

@@ -3,6 +3,7 @@ param (
     [string]$GroupName,
     [Parameter(Mandatory)]
     [string]$HubName,
+    [string]$Subscription='',
     [boolean]$Refresh=$false
 )
 
