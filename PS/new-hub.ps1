@@ -21,34 +21,30 @@ elseIf ([string]::IsNullOrEmpty($GroupName ))
     return ''
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  N E W  I o T  H U B  '  -BackgroundColor DarkBlue  -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+
+util\heading '  N E W  I o T  H U B  '   DarkBlue  White 
 
 $global:HubName = $null
 
-# Need a group name
-if ([string]::IsNullOrEmpty($GroupName))
+#Need a Hub name
+if ([string]::IsNullOrEmpty($HubName))
 {
     do
     {
-        $prompt = 'Enter Resource Group Name, X to exit/return'
-        if (-not ([string]::IsNullOrEmpty($answer)))
-        {
-            $answer= read-Host $prompt
-            $answer = $answer.Trim()
-            write-Host $answer
-        }      
+        $prompt = 'Enter IoT Hub Name, X to return'
+        $answer= read-Host $prompt
+        $answer = $answer.Trim()
+        write-Host $answer
+        
     } until (-not ([string]::IsNullOrEmpty($answer)))
     if ($answer.ToUpper() -eq 'X')
     {
         write-Host 'Returning'
-        return 'Back'
+        return 'Return'
     }
-    $GroupName = $answer
+    $HubName = $answer
 }
+
 
 #We need an SKU
 $skus = 'B1, B2, B3, F1, S1, S2, S3'
@@ -90,29 +86,12 @@ if ([string]::IsNullOrEmpty($SKU))
     
 }
 
-#Need a Hub name
-if ([string]::IsNullOrEmpty($HubName))
-{
-    do
-    {
-        $prompt = 'Enter IoT Hub Name, X to exit/return'
-        $answer= read-Host $prompt
-        $answer = $answer.Trim()
-        write-Host $answer
-        
-    } until (-not ([string]::IsNullOrEmpty($answer)))
-    if ($answer.ToUpper() -eq 'X')
-    {
-        write-Host 'Returning'
-        return 'Return'
-    }
-    $HubName = $answer
-}
+
 
 
 $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
 write-Host $prompt
-if ((utilities\check-hub  $GroupName $HubName  $Refresh) -eq $true)
+if ((util\check-hub  $GroupName $HubName  $Refresh) -eq $true)
 {
     $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
     write-Host $prompt

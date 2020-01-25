@@ -88,8 +88,8 @@ if ([string]::IsNullOrEmpty($Subscription))
     }
     else 
     {
-        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning'
-        write-Host $prompt
+        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Press [Enter] to return.'
+        read-Host $prompt
         return 'Exists'
     }
 
@@ -97,15 +97,25 @@ if ([string]::IsNullOrEmpty($Subscription))
     write-Host $prompt
     if  (( util\check-group $GroupName   ) -eq $false)
     {
-        $prompt = 'It Failed. Exiting'
-        write-Host $prompt
-        Exit
+        $prompt = 'It Failed. Press [Enter] to exit.'
+        read-Host $prompt
+        $global:GroupName = $null
+        $global:GroupsStrn = $null
+        $global:HubName = $null
+        $global:HubsStrn = $null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+        return 'Error'
     }
     else 
     {
-        $prompt = 'It was created.'
-        write-Host $prompt
+        $prompt = 'It was created. Press [Enter] to return'
+        read-Host $prompt
         $global:GroupName =$GroupName
+        $global:HubName = $null
+        $global:HubsStrn = $null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
         return $GroupName
     }
 }
@@ -121,8 +131,8 @@ else
     }
     else 
     {
-        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning.'
-        write-Host $prompt
+        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning. Press[Enter] to return.'
+        read-Host $prompt
         return 'Exists'
     }
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was craeted.'
@@ -132,12 +142,16 @@ else
         $prompt = 'Group was created. Press [Enter] to return.'
         read-Host $prompt
         $global:GroupName = $GroupName
+        $global:HubName = $null
+        $global:HubsStrn = $null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
         return $GroupName
     }
     else 
     {
         #If not found after trying to create it, must be inerror
-        $prompt = 'Group not created. Press [Return] to exit.'
+        $prompt = 'Group not created. Press [Enter] to exit.'
         read-Host $prompt
         $global:GroupName = $null
         $global:GroupsStrn = $null

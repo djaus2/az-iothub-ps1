@@ -66,7 +66,7 @@ If ([string]::IsNullOrEmpty($GroupName))
 	write-Host 'Back'
     return 'Back'
 }
-esleif ($GroupName -eq 'Return')
+elseif ($GroupName -eq 'Return')
 {
 	write-Host 'Back'
     return 'Back'
