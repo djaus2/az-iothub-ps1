@@ -125,7 +125,6 @@ do
                 }           
             'D3'   { 
                     $current = 3
-                  
                     $response = res-hub $Subscription $GroupName $HubName
                     if (([string]::IsNullOrEmpty($response)) )
                     {
@@ -133,11 +132,11 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Hub $Subscription $Group $HubName
+                        new-Hub $Subscription $GroupName $HubName
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Hub  $Subscription $Group $HubName
+                        delete-Hub  $Subscription $GroupName $HubName
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -162,11 +161,11 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Device $Subscription $Group $HubName $DeviceName
+                        new-Device $Subscription $GroupName $HubName $DeviceName
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Device  $Subscription $Group $HubName  $DeviceName
+                        delete-Device  $Subscription $GrouName $HubName  $DeviceName
                     }
                     elseif ($response -eq 'Back')
                     {

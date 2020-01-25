@@ -15,7 +15,7 @@ If ([string]::IsNullOrEmpty($global:DoneLogin))
     if  (($answer -eq 'N') -OR ($answer -eq 'n'))
     {
         write-Host 'Openning Browser for Azure Login'
-        az login
+        az login | Out-String
         [Console]::ResetColor()
     }
     elseif  (($answer -eq 'B') -OR ($answer -eq 'b'))

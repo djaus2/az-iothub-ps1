@@ -3,11 +3,11 @@ param (
     [Parameter(Mandatory)]
      [string]$ListString, 
      [string]$Title,
-     [string]$sep=',',
+     [string]$CurrentSelection='None',
+     [string]$Sep=',',
      [string]$AdditionalMenuOptions='B. Back',
      [int]$ItemsPerLine=1,
-     $ColWidth=1,
-     [string]$CurrentSelection='None'
+     $ColWidth=1
  )
  
  $Default = -1
@@ -57,7 +57,8 @@ param (
  }  
  
 
- $lines =$ListString  -split $sep
+ $lines =$ListString  -split $Sep[0]
+
  $noEntities = $lines.Length
 
  [int] $i=1
@@ -69,7 +70,7 @@ param (
  $col=0
  foreach ($line in $lines) 
  {
- 
+    $line
      if ([string]::IsNullOrEmpty($line))
      {   
          write-Host ''
@@ -117,7 +118,7 @@ param (
          write-Host $prompt -NoNewline
          $prompt = [string]::Format($FormatStrn,$itemToList )
          write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
-         write-Host ' <-- Current Selection' -ForegroundColor DarkGreen 
+         write-Host ' <-- Current/Default Selection' -ForegroundColor DarkGreen 
          $col = 0
      }
      else 
@@ -163,45 +164,13 @@ param (
          }
      }
  }
- if (1-eq 0)
- {
- if ($includeNew)
- {
-     write-Host ''
-     $prompt = 'N. '
-     $prompt +=  'New ' +  $Title.Replace(' ', '')
-     write-Host $prompt
-     $n = $SelectionList.Add(-3)
-     
- }
- if ($includeDelete)
- {
-     $prompt = 'D. '
-     $prompt +=  'Delete a ' + $Title.Replace(' ', '')
-     write-Host $prompt
-     $n = $SelectionList.Add(-2)
- }
  
- if ($includeBack)
- {
-     $prompt = 'B. '
-     $prompt +=  'Back '
-     write-Host $prompt
-     $n = $SelectionList.Add(-1)
-     }
- if ($includeExit)
- {
-     $prompt = 'X. '
-     $prompt +=  'Exit '
-     write-Host $prompt
-     $n = $SelectionList.Add(-4)
- }
- }
  # [int]$selection =1
   #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
  #}
  $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
  # $SelectionList =@('1','2','3','4','-1','-2','-3')
+ write-Host $prompt
  $first = $true
  
  do 
@@ -283,12 +252,14 @@ param (
  }
  else 
  {          
-    $output  =($ListString-split  $sep)[$selection-1]  
+    $output  =($ListString-split ',')[$selection-1]  
  }
  write-Host ''
  $promptFinal = $Title +' "' +  $output + '" selected'
- write-Host $promptFinal
+ read-Host $promptFinal
+read-Host $output
 
+$global:SKU = $output
  
  return $output
  

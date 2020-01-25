@@ -1,5 +1,7 @@
 param (
     [Parameter(Mandatory)]
+    [string]$Subscription,
+    [Parameter(Mandatory)]
     [string]$GroupName,
     [Parameter(Mandatory)]
     [string]$HubName,

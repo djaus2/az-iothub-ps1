@@ -14,7 +14,7 @@ if ($Refresh -eq $true)
     $global:HubsStrn  = $null
 }
 
-$prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exits.'
+$prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exists.'
 write-Host $prompt
 If([string]::IsNullOrEmpty($global:HubsStrn )) 
 { 
@@ -44,7 +44,7 @@ If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
 }
 else 
 {
-    $prompt = 'No Hubs not found.'
+    $prompt = 'No Hubs found.'
     write-Host $prompt
-    return false
+    return $false
 }

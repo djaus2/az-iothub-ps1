@@ -22,11 +22,7 @@ if ($Refresh)
 
 util\heading '  N E W  G R O U P  '   DarkBlue  White 
 
-$global:GroupName = $null
-$global:HubName = $null
-$global:HubsStrn = $null
-$global:DevicesStrn=$null
-$global:DeviceName=$null
+
 
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
@@ -41,8 +37,8 @@ if ([string]::IsNullOrEmpty($GroupName))
 }
 
 
-
 # Need a location
+# Get list from Azure
 if ([string]::IsNullOrEmpty($Location))
 {
         if ([string]::IsNullOrEmpty($global:LocationsStrn))
@@ -71,6 +67,8 @@ if ([string]::IsNullOrEmpty($Location))
     }
 }
 
+
+
 # Subscription is  optional
 if ([string]::IsNullOrEmpty($Subscription)) 
 {
@@ -83,14 +81,32 @@ if ([string]::IsNullOrEmpty($Subscription))
         return 'Exists'
     }
     
+    $global:GroupName = $null
+    $global:HubName = $null
+    $global:HubsStrn = $null
+    $global:DevicesStrn=$null
+    $global:DeviceName=$null
     $prompt = 'Creating new Azure Resource Group "' + $GroupName + '" at location "' + $Location +'"'
     write-Host $prompt
-    az group create --name $GroupName --location $Location
+    az group create --name $GroupName --location $Location | Out-String
 
     $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was created.'
     write-Host $prompt
-    if  (( util\check-group $GroupName $true  ) -eq $false)
+    # Need to refresh the list of groups
+    if  (( util\check-group $GroupName $true  ) -eq $true)
+       {
+        $prompt = 'It was created. Press [Enter] to return'
+        read-Host $prompt
+        $global:GroupName =$GroupName
+        $global:HubName = $null
+        $global:HubsStrn = $null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+        return $GroupName
+    }
+    else
     {
+        #If not found after trying to create it, must be inerror
         $prompt = 'It Failed. Press [Enter] to exit.'
         read-Host $prompt
         $global:GroupName = $null
@@ -101,17 +117,8 @@ if ([string]::IsNullOrEmpty($Subscription))
         $global:DeviceName=$null
         return 'Error'
     }
-    else 
-    {
-        $prompt = 'It was created. Press [Enter] to return'
-        read-Host $prompt
-        $global:GroupName =$GroupName
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
-        return $GroupName
-    }
+  
+ 
 }
 else 
 {
@@ -124,9 +131,14 @@ else
         read-Host $prompt
         return 'Exists'
     }
+    $global:GroupName = $null
+    $global:HubName = $null
+    $global:HubsStrn = $null
+    $global:DevicesStrn=$null
+    $global:DeviceName=$null
     $prompt = 'Creeating new Azure Resource Group "' + $GroupName +'"'
     write-Host $prompt
-    az group create --name $GroupName --location $Location --subscription $Subscription 
+    az group create --name $GroupName --location $Location --subscription $Subscription | Out-String
  
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was craeted.'
     write-Host $prompt
@@ -152,7 +164,6 @@ else
         $global:HubsStrn = $null
         $global:DevicesStrn=$null
         $global:DeviceName=$null
-        return 'Error'
-    }
+        return 'Error'    }
 }
 
