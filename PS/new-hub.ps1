@@ -130,17 +130,22 @@ write-Host $prompt
 # Need to refresh the list of hubs
 if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
 {
-    $prompt = 'Hub was created.'
-    write-Host $prompt
+    $prompt = 'Hub was created. Press [Enter] to return.'
+    read-Host $prompt
     $global:HubName = $HubName
-    $global:GotHubsStrn=$true
-    $global:GotDevicesStrn=$null
+    $global:DevicesStrn=$null
+    $global:DeviceName=$null
     return $HubName
 }
 else 
 {
-    $prompt = 'Hub not created. Exiting'
-    write-Host $prompt
-    exit
+    #If not found after trying to create it, must be inerror
+    $prompt = 'Hub not created. Press [Return] to exit.'
+    read-Host $prompt
+    $global:HubName = $null
+    $global:HubsStrn = $null
+    $global:DevicesStrn=$null
+    $global:DeviceName=$null
+    return 'Error'
 }
 

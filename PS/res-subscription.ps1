@@ -7,6 +7,7 @@ util\heading  -Prompt '  S U B S C R I P T I O N  '   -BG DarkRed  -FG White
 $Prompt =  'Current Subscription :"' + $Current +'"'
 write-Host $Prompt
 
+
 If ([string]::IsNullOrEmpty($global:DoneLogin)) 
 { 
     $selectionList =@('Y','N','B')
@@ -38,8 +39,13 @@ if ($Refresh -eq $true)
 {
     $global:SubscriptionsStrn = $null
 }
-
-If  ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
+[boolean]$skip = $false
+if  ($global:SubscriptionsStrn -eq '')
+{
+    # This allows for previously returned empty string
+    $skip = $true
+}
+If  (([string]::IsNullOrEmpty($global:SubscriptionsStrn)) -and (-not $skip))
 {   
     write-Host 'Getting Subscriptions from Azure'
     $global:SubscriptionsStrn  =  az account list  -o tsv | Out-String

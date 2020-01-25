@@ -28,17 +28,14 @@ elseIf ([string]::IsNullOrEmpty($HubName ))
     return ''
 }
 
-$DeviceStrnIndex =3
-$DeviceStrnDataIndex =3
+$DeviceStrnIndex =5
+$DeviceStrnDataIndex =5
 
-if ($Refresh -eq $true)
-{
-    $global:DeviceNamesStrn = null
-}
+
 
 
 util\heading '  D E V I C E   '  -BG DarkRed   -FG White
-$Prompt =  'Subscription :"' + $Subscription +'"'
+$Prompt = '   Subscription :"' + $Subscription +'"'
 write-Host $Prompt
 $Prompt = '          Group :"' + $GroupName +'"'
 write-Host $Prompt
@@ -47,18 +44,22 @@ write-Host $Prompt
 $Prompt = ' Current Device :"' + $Current +'"'
 write-Host $Prompt
 
-[boolean]$skip = $false
-if (-not ($global:GotDevicesStrn -eq $null))
+if ($Refresh -eq $true)
 {
-    $skip = $global:GotDevicesStrn
+    $global:DeviceNamesStrn = null
 }
-If  (([string]::IsNullOrEmpty($global:DevicessStrn ))  -and (-not $skip))
+[boolean]$skip = $false
+if  ($global:DevicesStrn -eq '')
+{
+    # This allows for previously returned empty string
+    $skip = $true
+}
+If  (([string]::IsNullOrEmpty($global:DevicesStrn  ))  -and (-not $skip))
 {   
     write-Host 'Getting Devices from Azure'
     $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String
-    $global:GotDevicesStrn = $true
 }
-If ([string]::IsNullOrEmpty($global:DevicessStrn ))
+If ([string]::IsNullOrEmpty($global:DevicesStrn ))
 {
     $Prompt = 'No Devices found in Hub "' + $HubName + '".'
     write-Host $Prompt
@@ -78,13 +79,12 @@ If ([string]::IsNullOrEmpty($global:DevicessStrn ))
 
 # $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnIndex  3 40  $Current
 
-$DeviceName = util\Show-Menu $global:DevicessStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 2  22 $Current
-write-Host $DeviceName
+$DeviceName = util\Show-Menu $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
 
 if ($DeviceName-eq 'Back')
 {
     write-Host 'Back. Exit for now.'
-    retrun 'Back'
+    return 'Back'
 }
 elseif ($DeviceName -eq 'New')
 {

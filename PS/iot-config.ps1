@@ -2,10 +2,10 @@ util\heading  -Prompt '  S E T U P  ' -BG Blue   -FG White
 
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -14,6 +14,10 @@ $DeviceName = $global:DeviceName
 [boolean] $GetKey = $true
 do
 {
+    $Subscription = $global:Subscription
+    $GroupName = $Global:GroupName
+    $HubName = $global:HubName
+    $DeviceName = $global:DeviceName
     write-Host ''
     $items =$ItemsList  -split ','
     $i=1
@@ -76,7 +80,6 @@ do
                    else
                    {
                     $Subscription = $response
-                    $global:Subscription = $response
                    }
 
                    
@@ -96,7 +99,7 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Hub  $Subscription $Group $HubName
+                        delete-group  $Subscription $Group 
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -109,7 +112,6 @@ do
                     else
                     {
                         $GroupName = $response
-                        $global:GroupName = $response
                     }
                     $Current++
                 }           
@@ -124,7 +126,6 @@ do
                     elseif ($response -eq 'New')
                     {
                         new-Hub $Subscription $Group $HubName
-                        read-Host 'Skipped'
                     }
                     elseif ($response -eq 'Delete')
                     {
@@ -140,7 +141,6 @@ do
                     }
                     else {
                         $HubName = $response
-                        $global:HubName = $response
                     }
 
                     $current++
@@ -170,11 +170,11 @@ do
                     }
                     else
                     {
-                        $Deviceame = $response
-                        $globa:DeviceName = $response
+                        $DeviceName = $response
                     }
                 }
-            'D5'    { exit  }
+            'D5'    {   }
+            'D6'    { exit  }
             R    { 
                     Clear-Host
                     write-Host ''
@@ -188,10 +188,6 @@ do
                         $global:GroupsStrn =$null
                         $global:HubsStrn=$null
                         $global:DevicesStrn=$null
-                        $global:GotSubscriptionStrn = $null
-                        $global:GotGroupsStrn =$null
-                        $global:GotHubsStrn=$null
-                        $global:GotDevicesStrn=$null
                         $global:Group = $null
                         $global:Hub = $null
                         $global:Device=$null

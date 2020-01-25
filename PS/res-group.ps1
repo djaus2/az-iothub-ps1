@@ -14,23 +14,29 @@ If ([string]::IsNullOrEmpty($Subscription ))
 }
 
 $GroupStrnIndex =3
-if ($Refresh -eq $true)
-{
-    $global:GroupsStrn = null
-}
+
 
 util\Heading '  G R O U P  '  DarkRed   White
-$Prompt =  'Subscription :"' + $Subscription +'"'
+$Prompt = ' Subscription :"' + $Subscription +'"'
 write-Host $Prompt
 $Prompt = 'Current Group :"' + $Current +'"'
 write-Host $Prompt
 
 
-If ([string]::IsNullOrEmpty($global:GroupsStrn ))
+if ($Refresh -eq $true)
+{
+    $global:GroupsStrn = null
+}
+[boolean]$skip = $false
+if ($global:GroupsStrn -eq '')
+{
+    # This allows for previously returned empty string
+    $skip = $true
+}
+If (([string]::IsNullOrEmpty($global:GroupsStrn ))  -and (-not $skip))
 {   
     write-Host 'Getting Groups from Azure'
     $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
-    $global:GotGroupsStrn =$true
 }
 If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 {

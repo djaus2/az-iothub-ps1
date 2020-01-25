@@ -23,10 +23,7 @@ elseIf ([string]::IsNullOrEmpty($GroupName ))
 $HubStrnIndex =3
 $HubStrnDataIndex =3
 
-if ($Refresh -eq $true)
-{
-    $global:HubsStrn = null
-}
+
 
 
 util\heading '  I o T  H U B  '  -BG DarkRed   -FG White
@@ -37,11 +34,21 @@ write-Host $Prompt
 $Prompt = ' Current Hub :"' + $Current +'"'
 write-Host $Prompt
 
-If  ([string]::IsNullOrEmpty($global:HubsStrn )) 
+
+if ($Refresh -eq $true)
+{
+    $global:HubsStrn = null
+}
+[boolean]$skip = $false
+if  ($global:HubsStrn -eq '')
+{
+    # This allows for previously returned empty string
+    $skip = $true
+}
+If  (([string]::IsNullOrEmpty($global:HubsStrn ))  -and (-not $skip))
 {   
     write-Host 'Getting Hubs from Azure'
     $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
-    $global:GotGroupsStrn =$true
 }
 If ([string]::IsNullOrEmpty($global:HubsStrn ))
 {

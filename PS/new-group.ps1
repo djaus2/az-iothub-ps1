@@ -127,22 +127,25 @@ else
     }
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was craeted.'
     write-Host $prompt
-    if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $false)
+    if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $true)
     {
-        $prompt = 'It Failed. Exiting'
-        write-Host $prompt
-        exit
+        $prompt = 'Group was created. Press [Enter] to return.'
+        read-Host $prompt
+        $global:GroupName = $GroupName
+        return $GroupName
     }
     else 
     {
-        $prompt = 'It was created.'
-        write-Host $prompt
-        $global:GroupName = $GroupName
-        $global:GotGroupsStrn =$true
-        $global:GotHubsStrn=$null
-        $global:GotDevicesStrn=$null
-        return $GroupName
+        #If not found after trying to create it, must be inerror
+        $prompt = 'Group not created. Press [Return] to exit.'
+        read-Host $prompt
+        $global:GroupName = $null
+        $global:GroupsStrn = $null
+        $global:HubName = $null
+        $global:HubsStrn = $null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+        return 'Error'
     }
-  
 }
 

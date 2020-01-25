@@ -128,16 +128,18 @@ write-Host $prompt
 # Need to refresh the list of devices
 if ((utilities\check-device  $GroupName $HubName $DeviceName $true ) -eq $true)
 {
-    $prompt = 'Device was created.'
-    write-Host $prompt
+    $prompt = 'Device was created. Press [Enter] to return.'
+    read-Host $prompt
     $global:DeviceName = $DeviceName
-    $global:GotDevicesStrn=$true
     return $DeviceName
 }
 else 
 {
-    $prompt = 'Device not created. Exiting'
-    write-Host $prompt
-    exit
+    #If not found after trying to create it, must be inerror
+    $prompt = 'Device not created. Press [Return] to exit.'
+    read-Host $prompt
+    $global:DeviceName = $null
+    $global:DevicesStrn = $null
+    return 'Error'
 }
 
