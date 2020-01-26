@@ -17,7 +17,7 @@ $GroupStrnIndex =3
 $GroupStrnDataIndex =3
 
 
-util\Heading '  G R O U P  '  DarkRed   White
+util\Heading '  G R O U P  '  DarkBlue   White
 $Prompt = ' Subscription :"' + $Subscription +'"'
 write-Host $Prompt
 $Prompt = 'Current Group :"' + $Current +'"'

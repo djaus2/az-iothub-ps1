@@ -1,5 +1,5 @@
 param (
-    [Parameter(Mandatory)]
+    [string]$Subscription,
     [string]$GroupName,
     [string]$HubName='',
     [boolean]$Refresh=$false
@@ -10,29 +10,23 @@ If ([string]::IsNullOrEmpty($Subscription ))
     write-Host ''
     write-Host 'Need to select a Subscription first. Press any key to return.'
     $KeyPress = [System.Console]::ReadKey($true)
-    return ''
+    return 'Back'
 }
 elseIf ([string]::IsNullOrEmpty($GroupName ))
 {
     write-Host ''
     write-Host 'Need to select a Group first. Press any key to return.'
     $KeyPress = [System.Console]::ReadKey($true)
-    return ''
+    return 'Back'
 }
 
 $HubStrnIndex =3
-$global:HubName= null
 if ($Refresh -eq $true)
 {
-    $Refresh
     $global:HubsStrn  = $null
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  D E L E T E  I o T  H U B  '  -BackgroundColor Red -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
+util\heading '  D E L E T E  I o T  H U B  '   DarkRed  White
 
 # Need a Hub name
 if ([string]::IsNullOrEmpty($HubName))
@@ -50,14 +44,18 @@ if ([string]::IsNullOrEmpty($HubName))
         return false
     }
 
-    $HubName = utilities\show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
+    $HubName = menu\show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
     if ($HubName -eq 'Exit')
-    {
-        exit
+{
+        return 'Exit'
     }
     elseif ($HubName -eq 'Back')
     {
-       return $false
+       return 'Back'
+    }
+    elseif ($HubName -eq 'Error')
+    {
+       return 'Error'
     }
     elseif ([string]::IsNullOrEmpty($HubName))
     {
@@ -72,38 +70,40 @@ $prompt =  'Do you want to delete the Hub "' + $HubName +  '" Y/N (Default N)'
 $answer = read-Host $prompt
 if ([string]::IsNullOrEmpty($answer))
 {
-    return $false
+    return 'Back'
 }
 elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    return $false
+    return 'Backe
 }
 
+$global:HubName= null
 
-if (  ( check-hub $GroupName $HubName  $Refresh ) -eq $true)
+
+if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 {
     $prompt = 'Deleting Azure Resource Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     write-Host $prompt
-    az iot hub delete --name $HubName   --resource-group $GroupName
+    az iot hub delete --name $HubName   --resource-group $GroupName -o tsv | Out-String
 }
 else 
 {
-    $prompt = 'Azure Resource Hub "' + $HubName +'" doesnt exist. Returning'
-    write-Host $prompt
-    return $false
+    $prompt = 'Azure Resource Hub "' + $HubName +'" doesnt exist. Press [Enter] to return.'
+    read-Host $prompt
+    return 'Back'
 }
 
 $prompt = 'Checking whether Azure Hub "' + $HubName   +'" was deleted.'
 write-Host $prompt
-if (  ( check-hub $GroupName $HubName  $True   ) -eq $true)
+if (  ( uti\check-hub $GroupName $HubName  $True   ) -eq $true)
 {
-    $prompt = 'It Failed'
-    write-Host $prompt
+    $prompt = 'It Failed.  Press [Enter] to return.'
+    read-Host $prompt
     return  $false
 }
 else 
 {
-    $prompt = 'It was deleted.'
-    write-Host $prompt
-    return $true
+    $prompt = 'It was deleted.  Press [Enter] to return.'
+    read-Host $prompt
+    return 'Back'
 }

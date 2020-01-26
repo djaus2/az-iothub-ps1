@@ -34,7 +34,7 @@ If ([string]::IsNullOrEmpty($global:DoneLogin))
 }
 
 
-util\heading  -Prompt '  S U B S C R I P T I O N  '   -BG DarkRed  -FG White
+util\heading  -Prompt '  S U B S C R I P T I O N  '   -BG DarkBlue  -FG White
 $Prompt =  'Current Subscription :"' + $Current +'"'
 write-Host $Prompt
 if ($Refresh -eq $true)

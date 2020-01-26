@@ -1,26 +1,43 @@
 param (
-    [Parameter(Mandatory)]
-    [string]$GroupName,
-    [string]$HubName='',
+    [string]$Subscription = '' ,
+    [string]$GroupName = '' ,
+    [string]$HubName = '' ,
+    [string]$DeviceName='',
     [boolean]$Refresh=$false
 )
 
-$DeviceStrnIndex =5
-$global:DeviceName = null
+
+If ([string]::IsNullOrEmpty($Subscription ))
+{
+    write-Host ''
+    write-Host 'Need to select a Subscription first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return 'Back'
+}
+elseIf ([string]::IsNullOrEmpty($GroupName ))
+{
+    write-Host ''
+    write-Host 'Need to select a Group first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return 'Back'
+}
+elseIf ([string]::IsNullOrEmpty($HubName ))
+{
+    write-Host ''
+    write-Host 'Need to select an IoT Hub first. Press any key to return.'
+    $KeyPress = [System.Console]::ReadKey($true)
+    return 'Back'
+}
+
+$HubStrnIndex =3
 if ($Refresh -eq $true)
 {
     $Refresh
     $global:DevicesStrn  = $null
 }
 
-Clear-Host
-write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
-write-Host '  D E L E T E  D E V I C E   '  -BackgroundColor Red -ForegroundColor White -NoNewline
-write-Host ' using PowerShell'
-write-Host ''
-exit
+util\heading '  D E L E T E  D E V I C E  '   DarkRed  White
 
-$global:DeviceName = null
 # Need a Hub name
 if ([string]::IsNullOrEmpty($DeviceName))
 {
@@ -37,21 +54,25 @@ if ([string]::IsNullOrEmpty($DeviceName))
         return false
     }
 
-    $DeviceName = utilities\show-menu $global:DeicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
+    $DeviceName = menu\show-menu $global:DevicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
     if ($DeviceName -eq 'Exit')
     {
-        exit
+        return 'Exit'
     }
     elseif ($DeviceName -eq 'Back')
     {
-       return $false
+       return 'Back'
+    }
+    elseif ($DeviceName -eq 'Error')
+    {
+       return 'Error'
     }
     elseif ([string]::IsNullOrEmpty($DeviceName))
     {
         # Shouldn't get to here.
         $prompt = 'Device Name is blank or null. Returning'
         write-Host $prompt
-        return $false
+        return 'Back'
     }
 }
 
@@ -60,15 +81,16 @@ $answer = read-Host $prompt
 $answer = $answer.Trim()
 if ([string]::IsNullOrEmpty($DeviceName))
 {
-    retrun $false
+    retrun 'Back
 }
 elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    return $false
+    return 'Back
 }
+$global:DeviceName = null
 
 
-if (  ( utilities\check-device $GroupName $HubName $DeviceName  $Refresh ) -eq $true)
+if (  ( util\check-device $GroupName $HubName $DeviceName  $Refresh ) -eq $true)
 {
     $prompt = 'Deleting Azure IOT Hub Device "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     write-Host $prompt
@@ -76,23 +98,23 @@ if (  ( utilities\check-device $GroupName $HubName $DeviceName  $Refresh ) -eq $
 }
 else 
 {
-    $prompt = 'Azure IOT Hub Device "' + $DeviceName +'" doesnt exist. Returning'
-    write-Host $prompt
-    return $false
+    $prompt = 'Azure IOT Hub Device "' + $DeviceName +'" doesnt exist. . Press [Enter] to return.'
+    read-Host $prompt
+    return 'Back'
 }
 
-$prompt =  $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'" was deleted.'
+$prompt =  'Checking whether Azure Resource "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'" was deleted.'
 write-Host $prompt
 
-if (  ( utilities\check-device $GroupName $HubName $DeviceName  $true ) -eq $true)
+if (  ( util\utilities\check-device $GroupName $HubName $DeviceName  $true ) -eq $true)
 {
-    $prompt = 'It Failed'
-    write-Host $prompt
-    return  $false
+    $prompt = 'It Failed.  Press [Enter] to return.'
+    read-Host $prompt
+    return  'Back'
 }
 else 
 {
-    $prompt = 'It was deleted.'
-    write-Host $prompt
-    return $true
+    $prompt = 'It was deleted.  Press [Enter] to return.'
+    read-Host $prompt
+    return 'Back'
 }

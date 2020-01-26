@@ -9,7 +9,7 @@ If ([string]::IsNullOrEmpty($Subscription ))
     write-Host ''
     write-Host 'Need to select a Subscription first. Press any key to return.'
     $KeyPress = [System.Console]::ReadKey($true)
-    return ''
+    return 'Back'
 }
 
 $GroupStrnIndex =3
@@ -18,7 +18,7 @@ if ($Refresh -eq $true)
     $global:GroupsStrn  = $null
 }
 
-util\heading '  D E L E T E  G R O U P  '  DarkBlue  White
+util\heading '  D E L E T E  G R O U P  '  DarkRed  White
 
 # Need a group name
 if ([string]::IsNullOrEmpty($GroupName))
@@ -37,7 +37,7 @@ if ([string]::IsNullOrEmpty($GroupName))
         Exit
     }
     
-    $GroupName = util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
+    $GroupName = menu\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
 
     #$GroupName =util\show-menu $global:GroupsStrn  'Group'  $GroupStrnIndex $GroupStrnIndex 3 40
     If ([string]::IsNullOrEmpty($GroupName ))
