@@ -32,30 +32,29 @@ if ([string]::IsNullOrEmpty($GroupName))
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     {
         # $Prompt = 'No Groups found in Subscription ' + $global:Subscription + '. Exiting.'
-        $Prompt = 'No Groups found in Subscription. Exiting.'
+        $Prompt = 'No Groups found in Subscription. press any key to return.'
         write-Host $Prompt
-        Exit
+    	$KeyPress = [System.Console]::ReadKey($true
+        return 'Back'
     }
-    
     $GroupName = menu\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
 
-    #$GroupName =util\show-menu $global:GroupsStrn  'Group'  $GroupStrnIndex $GroupStrnIndex 3 40
     If ([string]::IsNullOrEmpty($GroupName ))
     {
-        exit
-    }
-    elseif ($GroupName -eq 'Exit')
-    {
-        exit
+        return 'Back'
     }
     elseif ($GroupName -eq 'Back')
     {
-       return
+        return 'Back'
     }
-
+    elseif ($GroupName -eq 'Error')
+    {
+       return 'Error'
+    }
 }
-$prompt =  'Do you want to delete the group "' + $GroupName +  '" Y/N (Default N)'
-$answer = read-Host $prompt
+
+$prompt =  'Do you want to delete the group "' + $GroupName +  '"'
+$answer = menu\yes-no $prompt 'N'
 if ([string]::IsNullOrEmpty($answer))
 {
     return 'Back'
@@ -65,14 +64,18 @@ elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
     return 'Back'
 }
 
+$global:GroupName= $null
+$global:GroupsStrn= $null
+$global:HubName= $null
+$global:HubsStrn=$null
+$global:DeviceName = null
+$global:DevicesStrn=$null
 
-$prompt = 'Checking whether Azure Group "' + $GroupName  + '" exists.'
-write-Host $prompt
-if (  ( az group exists --name $GroupName   ) -eq $true)
+if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 {
     $prompt = 'Deleting Azure Resource Group "' + $GroupName + '"'
     write-Host $prompt
-    az group delete --name $GroupName
+    az group delete --name $GroupName -o tsv | Out-String
 }
 else 
 {
@@ -86,12 +89,15 @@ $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was deleted.'
 write-Host $prompt
 if (  ( az group exists --name $GroupName   ) -eq $true)
 {
-    $prompt = 'It Failed'
+    $prompt = 'It Failed.  Press any key to return.'
     write-Host $prompt
-    return 
+    $KeyPress = [System.Console]::ReadKey($true)
+    return  'Error'
 }
 else 
 {
-    $prompt = 'It was deleted.'
+    $prompt = 'It was deleted.  Press [Enter] to return.'
     write-Host $prompt
+    $KeyPress = [System.Console]::ReadKey($true)
+    return 'Back'
 }

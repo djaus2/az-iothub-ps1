@@ -50,7 +50,7 @@ if ([string]::IsNullOrEmpty($Location))
             write-Host 'Error getting Resource Group Location List. Exiting'
             return 'Error'
         }
-        [string]$result = util\Show-Menu $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
+        [string]$result = menu\Show-Menu $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
 
         $Location = $result 
         $prompt = 'Location "' +$result +'" returned'

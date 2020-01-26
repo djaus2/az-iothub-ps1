@@ -39,15 +39,17 @@ if ([string]::IsNullOrEmpty($HubName))
     }
     If ([string]::IsNullOrEmpty($global:HubsStrn ))
     {
-        $Prompt = 'No Hubs found in Subscription. Returning.'
+        $Prompt = 'No Hubs found in Subscription. Press any key to return.'
         write-Host $Prompt
-        return false
+	$KeyPress = [System.Console]::ReadKey($true
+        return 'Back'
     }
 
     $HubName = menu\show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
-    if ($HubName -eq 'Exit')
-{
-        return 'Exit'
+    
+    If ([string]::IsNullOrEmpty($HubName ))
+    {
+        return 'Back'    
     }
     elseif ($HubName -eq 'Back')
     {
@@ -57,28 +59,23 @@ if ([string]::IsNullOrEmpty($HubName))
     {
        return 'Error'
     }
-    elseif ([string]::IsNullOrEmpty($HubName))
-    {
-        $prompt = 'Hub Name is blank or null. Returning'
-        write-Host $prompt
-        return $false
-    }
-
 }
 
-$prompt =  'Do you want to delete the Hub "' + $HubName +  '" Y/N (Default N)'
-$answer = read-Host $prompt
+$prompt =  'Do you want to delete the Hub "' + $HubName +  '"'
+$answer = menu\yes-no $prompt 'N'
 if ([string]::IsNullOrEmpty($answer))
 {
     return 'Back'
 }
 elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    return 'Backe
+    return 'Back'
 }
 
-$global:HubName= null
-
+$global:HubName= $null
+$global:HubsStrn=$null
+$global:DeviceName = null
+$global:DevicesStrn=$null
 
 if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 {
@@ -88,22 +85,26 @@ if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 }
 else 
 {
-    $prompt = 'Azure Resource Hub "' + $HubName +'" doesnt exist. Press [Enter] to return.'
-    read-Host $prompt
+    $prompt = 'Azure Resource Hub "' + $HubName +'" doesnt exist. Press any key to return.'
+    write-Host $prompt
+    $KeyPress = [System.Console]::ReadKey($true)
     return 'Back'
 }
 
 $prompt = 'Checking whether Azure Hub "' + $HubName   +'" was deleted.'
 write-Host $prompt
-if (  ( uti\check-hub $GroupName $HubName  $True   ) -eq $true)
+
+if (  ( util\check-hub $GroupName $HubName  $True   ) -eq $true)
 {
-    $prompt = 'It Failed.  Press [Enter] to return.'
-    read-Host $prompt
-    return  $false
+    $prompt = 'It Failed.  Press any key to return.'
+    write-Host $prompt
+    $KeyPress = [System.Console]::ReadKey($true)
+    return  'Error'
 }
 else 
 {
     $prompt = 'It was deleted.  Press [Enter] to return.'
-    read-Host $prompt
+    write-Host $prompt
+    $KeyPress = [System.Console]::ReadKey($true)
     return 'Back'
 }

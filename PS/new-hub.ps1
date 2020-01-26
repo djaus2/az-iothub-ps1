@@ -47,7 +47,7 @@ if ([string]::IsNullOrEmpty($HubName))
 $skus = 'B1,B2,B3,F1,S1,S2,S3'
 if ([string]::IsNullOrEmpty($SKU))
 {
-    $answer = util\choose-menu $skus 'SKU' 'F1'
+    $answer = menu\choose-menu $skus 'SKU' 'F1'
     read-Host $answer
     if ([string]::IsNullOrEmpty($answer))
     {
@@ -94,7 +94,7 @@ if ([string]::IsNullOrEmpty($Subscription))
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
     # Need to refresh the list of hubs
-    if ((utilities\check-hub  $GroupName $HubName  $true) -eq $true)
+    if ((util\check-hub  $GroupName $HubName  $true) -eq $true)
     {
         $prompt = 'Hub was created. Press [Enter] to return.'
         read-Host $prompt
