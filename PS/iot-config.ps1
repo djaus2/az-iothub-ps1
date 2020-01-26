@@ -1,4 +1,4 @@
-util\heading  -Prompt '  S E T U P  ' -BG Blue   -FG White
+util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta   -FG White
 
 $answer = ''
 [int]$current = 1
@@ -249,6 +249,6 @@ do
             }
         }
     }
-    util\heading  -Prompt '  S E T U P  ' -BG Blue   -FG White
+    util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
   
 } until ($false)

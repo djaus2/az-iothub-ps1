@@ -34,7 +34,7 @@ if ($Refresh)
 	$global:DevicesStrn=null
 }
 
-util\heading '  N E W  D E V I C E   '   DarkBlue  White 
+util\heading '  N E W  D E V I C E   '   DarkGreen  White 
 
 
 

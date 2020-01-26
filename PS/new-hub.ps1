@@ -26,7 +26,7 @@ if ($Refresh)
 	$global:HubsStrn=null
 }
 
-util\heading '  N E W  I o T  H U B  '   DarkBlue  White 
+util\heading '  N E W  I o T  H U B  '   DarkGreen  White 
 
 
 

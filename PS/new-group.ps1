@@ -20,7 +20,7 @@ if ($Refresh)
 }
 
 
-util\heading '  N E W  G R O U P  '   DarkBlue  White 
+util\heading '  N E W  G R O U P  '   DarkGreen  White 
 
 
 
