@@ -10,22 +10,22 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt =  'Need to select a Subscription first.'
+    menu\any-key $prompt
     return 'Back'
 }
 elseIf ([string]::IsNullOrEmpty($GroupName ))
 {
     write-Host ''
-    write-Host 'Need to select a Group first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Need to select a Group first.'
+    menu\any-key $prompt
     return 'Back'
 }
 elseIf ([string]::IsNullOrEmpty($HubName ))
 {
     write-Host ''
-    write-Host 'Need to select an IoT Hub first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt =  'Need to select an IoT Hub first.'
+    menu\any-key $prompt
     return 'Back'
 }
 
@@ -48,9 +48,8 @@ if ([string]::IsNullOrEmpty($DeviceName))
     }
     If ([string]::IsNullOrEmpty($global:DevicesStrn ))
     {
-        $Prompt = 'No Devices found in Hub. Press any key to return.'
-        write-Host $Prompt
-	$KeyPress = [System.Console]::ReadKey($true
+        $Prompt = 'No Devices found in Hub'
+	    menu\any-key $prompt
         return 'Back'
     }
 
@@ -75,11 +74,11 @@ $prompt =  'Do you want to delete the Device "' + $DeviceName +  '"'
 $answer = menu\yes-no $prompt 'N'
 if ([string]::IsNullOrEmpty($DeviceName))
 {
-    return 'Back
+    return 'Back'
 }
 elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
-    return 'Back
+    return 'Back'
 }
 $global:DeviceName = null
 $global:DevicesStrn=$null
@@ -93,9 +92,8 @@ if (  ( util\check-device $GroupName $HubName $DeviceName  $Refresh ) -eq $true)
 }
 else 
 {
-    $prompt = 'Azure IOT Hub Device "' + $DeviceName +'" doesnt exist. . Press any key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Azure IOT Hub Device "' + $DeviceName +'" doesnt exist.'
+    menu\any-key $prompt
     return 'Back'
 }
 
@@ -104,15 +102,13 @@ write-Host $prompt
 
 if (  ( util\utilities\check-device $GroupName $HubName $DeviceName  $true ) -eq $true)
 {
-    $prompt = 'It Failed.  Press any key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'It Failed.'
+    menu\any-key $prompt
     return  'Error'
 }
 else 
 {
-    $prompt = 'It was deleted.  Press any key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'It was deleted.'
+    menu\any-key $prompt
     return 'Back'
 }

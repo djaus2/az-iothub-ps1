@@ -8,7 +8,7 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first.'
+    $prompt =  'Need to select a Subscription first.'
     $menu\any-key $prompt
     return ''
 }
@@ -105,7 +105,7 @@ if ([string]::IsNullOrEmpty($Subscription))
     }
     else
     {
-        #If not found after trying to create it, must be inerror
+        #If not found after trying to create it, must be in-error
         $prompt = 'It Failed.'
         menu\any-key $prompt 'Exit'
         $global:GroupName = $null
@@ -126,7 +126,7 @@ else
     if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $true)
     {
 
-        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning.'
+        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists.'
         menu\any-key $prompt
         return 'Exists'
     }
