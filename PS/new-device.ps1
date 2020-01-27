@@ -10,22 +10,22 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Need to select a Subscription first.'
+    menu\any-key $prompt
     return ''
 }
 elseIf ([string]::IsNullOrEmpty($GroupName ))
 {
     write-Host ''
-    write-Host 'Need to select a Group first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Need to select a Group first.'
+    menu\any-key $prompt
     return ''
 }
 elseIf ([string]::IsNullOrEmpty($HubName ))
 {
     write-Host ''
-    write-Host 'Need to select an IoT Hub first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Need to select an IoT Hub first.'
+    menu\any-key $prompt
     return ''
 }
 
@@ -42,7 +42,7 @@ util\heading '  N E W  D E V I C E   '   DarkGreen  White
 if ([string]::IsNullOrEmpty($DeviceName))
 {
     $answer = util\get-name 'Device'
-    if ($answer.ToUpper() -eq 'B')
+    if ($answer.ToUpper() -eq 'Back')
     {
         write-Host 'Returning'
         return 'Back'
@@ -60,25 +60,18 @@ if ([string]::IsNullOrEmpty($DeviceName))
 if ([string]::IsNullOrEmpty($EdgeEnabled))
 {
     $EdgeEnabled = $false
-    # do
-    #{
-        $prompt = 'Do you want it to be Edge Enabled? Not required for IoT Hub SDK Quickstarts.'
-        write-Host $prompt
-        $prompt = 'Y/N (Default N). X to exit/return'
-        $answer= read-Host $prompt
-        if ([string]::IsNullOrEmpty($answer))
-        {
-            $answer ='Y'
-        }
-        $answer = $answer.ToUpper()
-        $answer = $answer.Trim()
-        write-Host $answer
-        If ($answer = 'Y')
-        {
-            $EdgeEnabled = true
-        }
-        
-    # } until (-not ([string]::IsNullOrEmpty($answer)))
+
+    $prompt = 'Do you want it to be Edge Enabled? Not required for IoT Hub SDK Quickstarts.'
+    $answer= menu\yes-no $prompt 'N'
+    if ([string]::IsNullOrEmpty($answer))
+    {
+        $answer ='N'
+    }
+    write-Host $answer
+    If ($answer = 'Y')
+    {
+        $EdgeEnabled = true
+    }     
 }
 
 $prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" in Hub "' + $HubName + '"  in Group "' + $GroupName + '" exists.'
@@ -86,8 +79,8 @@ write-Host $prompt
 
 if ((util\check-device $Subscription $GroupName $HubName $DeviceName $Refresh) -eq $true)
 {
-    $prompt = 'Azure IoT Hub Device "' + $DeviceName + '" in IoT Hub "'+ $HubName +'" in Group "' + $GroupName + '" already exists. Returning'
-    write-Host $prompt
+    $prompt = 'Azure IoT Hub Device "' + $DeviceName + '" in IoT Hub "'+ $HubName +'" in Group "' + $GroupName + '" already exists.'
+    menu\any-key $prompt
     return 'Exists'
 }
 
@@ -114,16 +107,16 @@ write-Host $prompt
 # Need to refresh the list of hubs
 if ((util\check-device $Subscription  $GroupName $HubName  $DeviceName $true) -eq $true)
 {
-    $prompt = 'Device was created. Press [Enter] to return.'
-    read-Host $prompt
+    $prompt = 'Device was created.'
+    menu\any-key $prompt
     $global:DeviceName=$DeviceName
     return $DeviceName
 }
 else 
 {
     #If not found after trying to create it, must be inerror
-    $prompt = 'Device not created. Press [Return] to exit.'
-    read-Host $prompt
+    $prompt = 'Device not created.'
+    menu\any-key $prompt
     $global:DevicesStrn=$null
     $global:DeviceName=$null
     return 'Error'

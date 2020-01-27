@@ -8,8 +8,8 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    write-Host 'Need to select a Subscription first.'
+    $menu\any-key $prompt
     return ''
 }
 
@@ -52,19 +52,18 @@ if ([string]::IsNullOrEmpty($Location))
         }
         [string]$result = menu\Show-Menu $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
 
-        $Location = $result 
-        $prompt = 'Location "' +$result +'" returned'
-
+        $prompt = 'Location "' + $result +'" returned'
     write-Host $prompt
 
-    if ([string]::IsNullOrEmpty($Location))
+    if ([string]::IsNullOrEmpty($answer))
     {
         return 'Back'
     }
-    elseif ($Location -eq 'Back')
+    elseif ($answer -eq 'Back')
     {
         return 'Back'
     }
+    $Location = $answer
 }
 
 
@@ -76,8 +75,8 @@ if ([string]::IsNullOrEmpty($Subscription))
     write-Host $prompt
     if (  ( util\check-group $GroupName   ) -eq $true)
     {
-        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Press [Enter] to return.'
-        read-Host $prompt
+        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists.'
+        menu\any-key $prompt
         return 'Exists'
     }
     
@@ -95,8 +94,8 @@ if ([string]::IsNullOrEmpty($Subscription))
     # Need to refresh the list of groups
     if  (( util\check-group $GroupName $true  ) -eq $true)
        {
-        $prompt = 'It was created. Press [Enter] to return'
-        read-Host $prompt
+        $prompt = 'It was created.'
+        menu\any-key $prompt
         $global:GroupName =$GroupName
         $global:HubName = $null
         $global:HubsStrn = $null
@@ -107,8 +106,8 @@ if ([string]::IsNullOrEmpty($Subscription))
     else
     {
         #If not found after trying to create it, must be inerror
-        $prompt = 'It Failed. Press [Enter] to exit.'
-        read-Host $prompt
+        $prompt = 'It Failed.'
+        menu\any-key $prompt 'Exit'
         $global:GroupName = $null
         $global:GroupsStrn = $null
         $global:HubName = $null
@@ -127,8 +126,8 @@ else
     if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $true)
     {
 
-        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning. Press[Enter] to return.'
-        read-Host $prompt
+        $prompt = 'Azure Resource Group "' + $GroupName +'" already exists. Returning.'
+        menu\any-key $prompt
         return 'Exists'
     }
     $global:GroupName = $null
@@ -144,8 +143,8 @@ else
     write-Host $prompt
     if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $true)
     {
-        $prompt = 'Group was created. Press [Enter] to return.'
-        read-Host $prompt
+        $prompt = 'Group was created.'
+        menu\any-key $prompt
         $global:GroupName = $GroupName
         $global:HubName = $null
         $global:HubsStrn = $null
@@ -156,14 +155,15 @@ else
     else 
     {
         #If not found after trying to create it, must be inerror
-        $prompt = 'Group not created. Press [Enter] to exit.'
-        read-Host $prompt
+        $prompt = 'Group not created.'
+        menu\any-key $prompt 'Exit'
         $global:GroupName = $null
         $global:GroupsStrn = $null
         $global:HubName = $null
         $global:HubsStrn = $null
         $global:DevicesStrn=$null
         $global:DeviceName=$null
-        return 'Error'    }
+        return 'Error'    
+    }
 }
 
