@@ -185,7 +185,7 @@ do
             R    { 
                     Clear-Host
                     write-Host ''
-                    $answer = util\yes-no-menu 'Clear script globals variables? ' 'N'
+                    $answer = menu\yes-no 'Clear script globals variables? ' 'N'
                     if ($answer = 'Y')
                     {
                         

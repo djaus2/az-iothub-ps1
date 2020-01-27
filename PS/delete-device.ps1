@@ -49,30 +49,31 @@ if ([string]::IsNullOrEmpty($DeviceName))
     If ([string]::IsNullOrEmpty($global:DevicesStrn ))
     {
         $Prompt = 'No Devices found in Hub'
-	    menu\any-key $prompt
+	menu\any-key $prompt
         return 'Back'
     }
 
-    $DeviceName = menu\show-menu $global:DevicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
+    $answer = menu\parse-list $global:DevicessStrn  'Device'  $DeviceStrnIndex  $DeviceStrnIndex  1 22
 
-    If ([string]::IsNullOrEmpty($HubName ))
+    If ([string]::IsNullOrEmpty($answer ))
     {
         return 'Back'
     }
 
-    elseif ($DeviceName -eq 'Back')
+    elseif ($answer -eq 'Back')
     {
        return 'Back'
     }
-    elseif ($DeviceName -eq 'Error')
+    elseif ($answer -eq 'Error')
     {
        return 'Error'
     }
+    $DeviceName = $answer
 }
 
 $prompt =  'Do you want to delete the Device "' + $DeviceName +  '"'
 $answer = menu\yes-no $prompt 'N'
-if ([string]::IsNullOrEmpty($DeviceName))
+if ([string]::IsNullOrEmpty($answer))
 {
     return 'Back'
 }
@@ -80,8 +81,8 @@ elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
 {
     return 'Back'
 }
-$global:DeviceName = null
-$global:DevicesStrn=$null
+$global:DeviceName = $null
+$global:DevicesStrn = $null
 
 
 if (  ( util\check-device $GroupName $HubName $DeviceName  $Refresh ) -eq $true)
@@ -99,8 +100,7 @@ else
 
 $prompt =  'Checking whether Azure Resource "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'" was deleted.'
 write-Host $prompt
-
-if (  ( util\utilities\check-device $GroupName $HubName $DeviceName  $true ) -eq $true)
+if (  ( util\check-device $GroupName $HubName $DeviceName  $true ) -eq $true)
 {
     $prompt = 'It Failed.'
     menu\any-key $prompt

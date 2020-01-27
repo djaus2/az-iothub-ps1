@@ -81,6 +81,7 @@ if ([string]::IsNullOrEmpty($Subscription))
     }
     
     $global:GroupName = $null
+    $global:GroupsStrn = $null
     $global:HubName = $null
     $global:HubsStrn = $null
     $global:DevicesStrn=$null
@@ -96,24 +97,12 @@ if ([string]::IsNullOrEmpty($Subscription))
        {
         $prompt = 'It was created.'
         menu\any-key $prompt
-        $global:GroupName =$GroupName
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
         return $GroupName
     }
     else
     {
         #If not found after trying to create it, must be in-error
         $prompt = 'It Failed.'
-        menu\any-key $prompt 'Exit'
-        $global:GroupName = $null
-        $global:GroupsStrn = $null
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
         return 'Error'
     }
   
@@ -131,6 +120,7 @@ else
         return 'Exists'
     }
     $global:GroupName = $null
+    $global:GroupsStrn = $null
     $global:HubName = $null
     $global:HubsStrn = $null
     $global:DevicesStrn=$null
@@ -145,11 +135,8 @@ else
     {
         $prompt = 'Group was created.'
         menu\any-key $prompt
-        $global:GroupName = $GroupName
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
+
+        $global:DeviceNam = $GroupName
         return $GroupName
     }
     else 
@@ -157,12 +144,6 @@ else
         #If not found after trying to create it, must be inerror
         $prompt = 'Group not created.'
         menu\any-key $prompt 'Exit'
-        $global:GroupName = $null
-        $global:GroupsStrn = $null
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
         return 'Error'    
     }
 }

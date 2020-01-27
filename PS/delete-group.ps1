@@ -7,8 +7,8 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt= 'Need to select a Subscription first.'
+    menu\any-key $prompt
     return 'Back'
 }
 
@@ -20,7 +20,7 @@ if ($Refresh -eq $true)
 
 util\heading '  D E L E T E  G R O U P  '  DarkRed  White
 
-# Need a group name
+# Need a Group name
 if ([string]::IsNullOrEmpty($GroupName))
 {
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
@@ -31,26 +31,26 @@ if ([string]::IsNullOrEmpty($GroupName))
     }
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     {
-        # $Prompt = 'No Groups found in Subscription ' + $global:Subscription + '. Exiting.'
-        $Prompt = 'No Groups found in Subscription. press any key to return.'
-        write-Host $Prompt
-    	$KeyPress = [System.Console]::ReadKey($true
+        $Prompt = 'No Groups found in Subscription.'
+        menu\any-key $prompt
         return 'Back'
     }
-    $GroupName = menu\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
-
-    If ([string]::IsNullOrEmpty($GroupName ))
+      
+    $answer = menu\parse-list $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
+    
+    If ([string]::IsNullOrEmpty($answer ))
     {
         return 'Back'
     }
-    elseif ($GroupName -eq 'Back')
+    elseif ($answer -eq 'Back')
     {
         return 'Back'
     }
-    elseif ($GroupName -eq 'Error')
+    elseif ($answer -eq 'Error')
     {
        return 'Error'
     }
+    $GroupName = $answer
 }
 
 $prompt =  'Do you want to delete the group "' + $GroupName +  '"'
@@ -79,25 +79,22 @@ if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 }
 else 
 {
-    $prompt = 'Azure Resource Group "' + $GroupName +'" doesnt exist. Press and key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
-    return
+    $prompt = 'Azure Resource Group "' + $GroupName +'" doesnt exist.'
+    menu\any-key $prompt
+    return 'Back'
 }
 
 $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was deleted.'
 write-Host $prompt
 if (  ( az group exists --name $GroupName   ) -eq $true)
 {
-    $prompt = 'It Failed.  Press any key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'It Failed.'
+    menu\any-key $prompt
     return  'Error'
 }
 else 
 {
-    $prompt = 'It was deleted.  Press [Enter] to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'It was deleted.'
+    menu\any-key $prompt
     return 'Back'
 }

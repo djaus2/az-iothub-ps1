@@ -8,15 +8,15 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Need to select a Subscription first.'
+    menu\any-key $prompt
     return 'Back'
 }
 elseIf ([string]::IsNullOrEmpty($GroupName ))
 {
     write-Host ''
-    write-Host 'Need to select a Group first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'Need to select a Group first.'
+    menu\any-key $prompt
     return 'Back'
 }
 
@@ -32,33 +32,33 @@ util\heading '  D E L E T E  I o T  H U B  '   DarkRed  White
 if ([string]::IsNullOrEmpty($HubName))
 {
   
-    If ( ([string]::IsNullOrEmpty($global:HubsStrn )) -or $Refresh)
+    If ([string]::IsNullOrEmpty($global:HubsStrn ))
     {   
         write-Host 'Getting Hubs from Azure'
         $global:HubsStrn =  az IoT Hub list --resource-group  $GroupName -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:HubsStrn ))
     {
-        $Prompt = 'No Hubs found in Subscription. Press any key to return.'
-        write-Host $Prompt
-	$KeyPress = [System.Console]::ReadKey($true
+        $Prompt = 'No Hubs found in Subscription.'
+        menu\any-key $prompt
         return 'Back'
     }
 
-    $HubName = menu\show-menu $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
+    $answer = menu\parse-list $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnIndex 1 22
     
-    If ([string]::IsNullOrEmpty($HubName ))
+    If ([string]::IsNullOrEmpty($answer ))
     {
         return 'Back'    
     }
-    elseif ($HubName -eq 'Back')
+    elseif ($answer -eq 'Back')
     {
-       return 'Back'
+        return 'Back'
     }
-    elseif ($HubName -eq 'Error')
+    elseif ($answer -eq 'Error')
     {
        return 'Error'
     }
+    $HubName = $answer
 }
 
 $prompt =  'Do you want to delete the Hub "' + $HubName +  '"'
@@ -72,10 +72,10 @@ elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
     return 'Back'
 }
 
-$global:HubName= $null
-$global:HubsStrn=$null
-$global:DeviceName = null
-$global:DevicesStrn=$null
+$global:HubName = $null
+$global:HubsStrn = $null
+$global:DeviceName = $null
+$global:DevicesStrn = $null
 
 if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 {
@@ -86,8 +86,7 @@ if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
 else 
 {
     $prompt = 'Azure Resource Hub "' + $HubName +'" doesnt exist. Press any key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    menu\any-key $prompt
     return 'Back'
 }
 
@@ -96,15 +95,13 @@ write-Host $prompt
 
 if (  ( util\check-hub $GroupName $HubName  $True   ) -eq $true)
 {
-    $prompt = 'It Failed.  Press any key to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'It Failed.'
+    menu\any-key $prompt
     return  'Error'
 }
 else 
 {
-    $prompt = 'It was deleted.  Press [Enter] to return.'
-    write-Host $prompt
-    $KeyPress = [System.Console]::ReadKey($true)
+    $prompt = 'It was deleted.'
+    menu\any-key $prompt
     return 'Back'
 }

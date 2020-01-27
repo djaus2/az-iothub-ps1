@@ -77,6 +77,7 @@ if ([string]::IsNullOrEmpty($Subscription))
     }
 
     $global:HubName = $null
+    $global:HubsStrn = $null
     $global:DevicesStrn=$null
     $global:DeviceName=$null
 
@@ -96,9 +97,7 @@ if ([string]::IsNullOrEmpty($Subscription))
     {
         $prompt = 'Hub was created.'
         menu\any-key $prompt
-        $global:HubName = $HubName
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
+	$global:HubName = $HubName
         return $HubName
     }
     else 
@@ -106,10 +105,6 @@ if ([string]::IsNullOrEmpty($Subscription))
         #If not found after trying to create it, must be inerror
         $prompt = 'Hub not created.'
         menu\any-key $prompt 'Exit'
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
         return 'Error'
     }
 }
@@ -125,8 +120,10 @@ else {
     }
 
     $global:HubName = $null
+    $global:HubsStrn = $null
     $global:DevicesStrn=$null
     $global:DeviceName=$null
+
 
     $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
     write-Host $prompt
@@ -140,9 +137,7 @@ else {
     {
         $prompt = 'Hub was created.'
         menu\any-key $prompt
-        $global:HubName = $HubName
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
+	$global:HubName = $HubName
         return $HubName
     }
     else 
@@ -150,10 +145,6 @@ else {
         #If not found after trying to create it, must be inerror
         $prompt = 'Hub not created.'
         menu\any-key $prompt 'Exit'
-        $global:HubName = $null
-        $global:HubsStrn = $null
-        $global:DevicesStrn=$null
-        $global:DeviceName=$null
         return 'Error'
     }
 

@@ -3,7 +3,7 @@ param (
     [string]$GroupName='',
     [string]$HubName='',
     [string]$DeviceName ='',
-    [boolean]$EdgeEnabled=$false,
+    [Nullable[boolean]]$EdgeEnabled=$false,
     [boolean]$Refresh=$false
 )
 
@@ -84,6 +84,7 @@ if ((util\check-device $Subscription $GroupName $HubName $DeviceName $Refresh) -
     return 'Exists'
 }
 
+$global:DevicesStrn = $null
 $global:DeviceName  = $null
 
 write-Host ''
@@ -102,6 +103,7 @@ else
     az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o tsv | Out-String
 }
 
+
 $prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" in Hub "' + $HubName + '"  in Group "' + $GroupName + '" was created.'
 write-Host $prompt
 # Need to refresh the list of hubs
@@ -116,9 +118,7 @@ else
 {
     #If not found after trying to create it, must be inerror
     $prompt = 'Device not created.'
-    menu\any-key $prompt
-    $global:DevicesStrn=$null
-    $global:DeviceName=$null
+    menu\any-key $prompt 'Exit'
     return 'Error'
 }
 
