@@ -161,7 +161,7 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Device $Subscription $GroupName $HubName $DeviceName
+                        new-Device $Subscription $GroupName $HubName ''
                     }
                     elseif ($response -eq 'Delete')
                     {
@@ -186,7 +186,7 @@ do
                     Clear-Host
                     write-Host ''
                     $answer = menu\yes-no 'Clear script globals variables? ' 'N'
-                    if ($answer = 'Y')
+                    if ($answer)
                     {
                         
                         $global:DoneLogin = $null

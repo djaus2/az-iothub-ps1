@@ -7,6 +7,8 @@ param (
     [boolean]$Refresh=$false
 )
 
+$DeviceName=$null
+
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
@@ -37,7 +39,6 @@ if ($Refresh)
 util\heading '  N E W  D E V I C E   '   DarkGreen  White 
 
 
-
 # Need a Device name
 if ([string]::IsNullOrEmpty($DeviceName))
 {
@@ -63,19 +64,11 @@ if ([string]::IsNullOrEmpty($EdgeEnabled))
 
     $prompt = 'Do you want it to be Edge Enabled? Not required for IoT Hub SDK Quickstarts.'
     $answer= menu\yes-no $prompt 'N'
-    if ([string]::IsNullOrEmpty($answer))
-    {
-        $answer ='N'
-    }
-    write-Host $answer
-    If ($answer = 'Y')
+    If ($answer)
     {
         $EdgeEnabled = true
     }     
 }
-
-$prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" in Hub "' + $HubName + '"  in Group "' + $GroupName + '" exists.'
-write-Host $prompt
 
 if ((util\check-device $Subscription $GroupName $HubName $DeviceName $Refresh) -eq $true)
 {

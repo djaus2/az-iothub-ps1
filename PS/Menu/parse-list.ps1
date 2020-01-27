@@ -1,8 +1,7 @@
-
 param (
    [Parameter(Mandatory)]
     [string]$ListString, 
-    [string]$Title,
+    [string]$Title='Menu List',
     [string]$AdditionalMenuOptions='B. Back',
     [int]$DisplayIndex='0', 
     [int]$CodeIndex='0',
@@ -10,6 +9,8 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
+
+
 
 [boolean]$includeExit= $false
 [boolean]$includeBack= $false
@@ -75,17 +76,10 @@ if ([string]::IsNullOrEmpty($Title))
 $lines =$ListString  -split '\n'
 $noEntities = $lines.Length 
 
+
 if ($noEntities -lt 10)
 {
-    return util\smq `
-        $ListString `
-        $Title `
-        $AdditionalMenuOptions `
-        $DisplayIndex `
-        $CodeIndex `
-        $ItemsPerLine `
-        $ColWidth  `
-        $CurrentSelection `
+    return menu\parse-short-list $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 
 }
 else 
 {

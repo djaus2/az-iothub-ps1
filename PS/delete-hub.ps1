@@ -63,11 +63,7 @@ if ([string]::IsNullOrEmpty($HubName))
 
 $prompt =  'Do you want to delete the Hub "' + $HubName +  '"'
 $answer = menu\yes-no $prompt 'N'
-if ([string]::IsNullOrEmpty($answer))
-{
-    return 'Back'
-}
-elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
+if  (-not $answer)
 {
     return 'Back'
 }

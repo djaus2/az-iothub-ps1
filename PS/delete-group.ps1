@@ -55,11 +55,7 @@ if ([string]::IsNullOrEmpty($GroupName))
 
 $prompt =  'Do you want to delete the group "' + $GroupName +  '"'
 $answer = menu\yes-no $prompt 'N'
-if ([string]::IsNullOrEmpty($answer))
-{
-    return 'Back'
-}
-elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
+if  (-not $answer )
 {
     return 'Back'
 }

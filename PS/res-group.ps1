@@ -44,8 +44,8 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     $Prompt = 'No Groups found in Subscription "' + $Subscription + '".'
     write-Host $Prompt
     $Prompt ='Do you want to create a new Group for the Subscription "'+ $Subscription +'"?'
-    $answer = util\yes-no-menu $Prompt 'N'
-    if (($answer -eq 'Y') -OR ($answer -eq 'y'))
+    $answer = menu\yes-no $Prompt 'N'
+    if ($answer )
     {
 	write-Host 'New Group'
         return 'New'
@@ -57,19 +57,18 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     return 'Back'
 }
 
-$answer= util\Show-Menu $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 40  $Current
-$prompt = '>>' + $answer + "<<"
+$answer= menu\parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 40  $Current
 write-Host $prompt
 
 If ([string]::IsNullOrEmpty($answer)) 
 {
 	write-Host 'Back'
-    return 'Back1'
+    return 'Back'
 }
-elseif ($answer -eq 'Return')
+elseif ($answer -eq 'Back')
 {
 	write-Host 'Back'
-    return 'Back2'
+    return 'Back'
 }
 elseif ($answer -eq 'New')
 {

@@ -37,7 +37,7 @@ if ($Refresh -eq $true)
 
 util\heading '  D E L E T E  D E V I C E  '   DarkRed  White
 
-# Need a Hub name
+# Need a Device name
 if ([string]::IsNullOrEmpty($DeviceName))
 {
   
@@ -49,7 +49,7 @@ if ([string]::IsNullOrEmpty($DeviceName))
     If ([string]::IsNullOrEmpty($global:DevicesStrn ))
     {
         $Prompt = 'No Devices found in Hub'
-	menu\any-key $prompt
+	    menu\any-key $prompt
         return 'Back'
     }
 
@@ -73,11 +73,7 @@ if ([string]::IsNullOrEmpty($DeviceName))
 
 $prompt =  'Do you want to delete the Device "' + $DeviceName +  '"'
 $answer = menu\yes-no $prompt 'N'
-if ([string]::IsNullOrEmpty($answer))
-{
-    return 'Back'
-}
-elseif  (($answer -eq 'N') -OR ($answer -eq 'n'))
+if (-not $answer)
 {
     return 'Back'
 }

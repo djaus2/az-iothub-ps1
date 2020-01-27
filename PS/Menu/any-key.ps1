@@ -2,9 +2,9 @@ param (
    [string]$Prompt = '',
    [string]$Mode =''
 )
-If  ( -not ([string]::IsNullOrEmpty($global:DevicesStrn  )))
+If  ( -not ([string]::IsNullOrEmpty( $Mode  )))
 {
-    $prompt += ' Press any key to ' + $Mode' +'.''
+    $prompt += ' Press any key to ' + $Mode +'.'
 }
 else
 {
@@ -12,5 +12,6 @@ else
 }
 write-Host $prompt
 [System.Console]::ReadKey($true)
+
 
 return ''

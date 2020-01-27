@@ -8,25 +8,15 @@ param (
 
 If ([string]::IsNullOrEmpty($global:DoneLogin)) 
 { 
-    $selectionList =@('Y','N','B')
-
-    $answer = .\util\getchar-menu ' Have you run "az login" to access your accounts?'  '[Y]es [N]o [B]ack' $selectionList  'Y'
+    $answer = menu\yes-no ' Have you run "az login" to access your accounts?'  'Y'
     # $answer = read-Host ' Have you run "az login" to access your accounts. Y/N X to Return. (Default Yes)'
-    if  (($answer -eq 'N') -OR ($answer -eq 'n'))
+    if  (-not $answer)
     {
         write-Host 'Openning Browser for Azure Login'
         az login | Out-String
         [Console]::ResetColor()
     }
-    elseif  (($answer -eq 'B') -OR ($answer -eq 'b'))
-    {
-        return ''
-    }
-    elseif  (($answer -eq 'Y') -OR ($answer -eq 'y'))
-    {
-        write-Host 'Continuing'
-    }
-    elseif ([string]::IsNullOrEmpty($answer))
+    else 
     {
         write-Host 'Continuing'
     }
@@ -59,7 +49,7 @@ If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     
 }
 
-$answer = util\show-menu $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
+$answer = menu\parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
 write-Host $answer
 
 If ([string]::IsNullOrEmpty($answer)) 

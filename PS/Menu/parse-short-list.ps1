@@ -10,6 +10,7 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
+write-Host 'Short'
 $baseMenu =@()
 $Selns={$baseMenu}.Invoke()
 function AddKey
@@ -206,6 +207,11 @@ do
                 2 { $Default = 1}
                 3 { $Default = 2}
                 4 { $Default = 3}
+                5 { $Default = 4}
+                6 { $Default = 5}
+                7 { $Default = 6}
+                8 { $Default = 7}
+                9 { $Default = 8}
             } 
         }
         DownArrow  { 
@@ -215,6 +221,11 @@ do
                 2 { $Default= 3}
                 3 { $Default= 4}
                 4 { $Default= 5}
+                5 { $Default = 6}
+                6 { $Default= 7}
+                7 { $Default= 8}
+                8 { $Default= 9}
+                9 { $Default= 9}
             } 
         }
         Enter { 
@@ -260,7 +271,7 @@ elseif ($KK -eq 'D')
 }
 elseif ($KK -eq 'N')
 {
-    return'New'
+    return 'New'
 }
 else 
 {     

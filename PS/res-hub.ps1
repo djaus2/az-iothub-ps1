@@ -8,16 +8,16 @@ param (
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host 'Need to select a Subscription first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
-    return ''
+    $prompt =  'Need to select a Subscription first.'
+    menu\any-key $prompt
+    return 'Back'
 }
 elseIf ([string]::IsNullOrEmpty($GroupName ))
 {
     write-Host ''
-    write-Host 'Need to select a Group first. Press any key to return.'
-    $KeyPress = [System.Console]::ReadKey($true)
-    return ''
+    $prompt = 'Need to select a Group first'
+    menu\any-key $prompt
+    return 'Back'
 }
 
 $HubStrnIndex =3
@@ -55,8 +55,8 @@ If ([string]::IsNullOrEmpty($global:HubsStrn ))
     $Prompt = 'No Hubs found in Group "' + $GroupName + '".'
     write-Host $Prompt
     $Prompt ='Do you want to create a new Hub for the Group "'+ $GroupName +'"?'
-    $answer = util\yes-no-menu $Prompt 'N'
-    if (($answer -eq 'Y') -OR ($answer -eq 'y'))
+    $answer = menu\yes-no $Prompt 'N'
+    if ($answer)
     {
         write-Host 'New Hub'
         return 'New'
@@ -65,10 +65,9 @@ If ([string]::IsNullOrEmpty($global:HubsStrn ))
         write-Host 'Returning'
         return 'Back'
     }
-    return 'Back'
 }
 
-$answer = util\Show-Menu $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
+$answer = menu\parse-list $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
 write-Host $answer
 
 If ([string]::IsNullOrEmpty($answer)) 
@@ -78,7 +77,7 @@ If ([string]::IsNullOrEmpty($answer))
 }
 elseif ($answer-eq 'Back')
 {
-    write-Host 'Back. Exit for now.'
+    write-Host 'Back'
     return 'Back'
 }
 elseif ($answer -eq 'New')
