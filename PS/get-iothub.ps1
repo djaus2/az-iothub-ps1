@@ -17,11 +17,11 @@ try {
     . ("$global:ScriptDirectory\resources\res-device.ps1")
 
 
-   #  . ("$global:ScriptDirectory\new_delete\new-group.ps1")
+     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
     # . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
     . ("$global:ScriptDirectory\new_delete\new-device.ps1")
 
-        #  . ("$global:ScriptDirectory\new_delete\new-group.ps1")
+    #. ("$global:ScriptDirectory\new_delete\delete-group.ps1")
    # . ("$global:ScriptDirectory\new_delete\delete-hub.ps1")
      . ("$global:ScriptDirectory\new_delete\delete-device.ps1")
 }
@@ -142,11 +142,12 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Group 
+                        new-Group  $Subscription 
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-group  $Subscription 
+                        . ("$global:ScriptDirectory\new_delete\delete-group.ps1")
+                        Remove-group  $Subscription $global:GroupName
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -214,7 +215,7 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Device  $Subscription $GroupName $HubName $global:DeviceName
+                        Remove-Device  $Subscription $GroupName $HubName $global:DeviceName
                     }
                     elseif ($response -eq 'Back')
                     {

@@ -1,4 +1,4 @@
-function Delete-Device{
+function Remove-Device{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
