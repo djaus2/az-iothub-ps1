@@ -1,3 +1,4 @@
+function global:parse-list{
 param (
    [Parameter(Mandatory)]
     [string]$ListString, 
@@ -184,7 +185,7 @@ else
 
 
     [int]$selection =1
-    $prompt ="Please make a selection then press [Enter].. Or just [Enter] if previous selection highlighted."
+    $prompt ="Please make enter a number to select then press [Enter].. Or just [Enter] if required selection highlighted."
     do 
     {
         [int] $selection = 0
@@ -282,5 +283,6 @@ else
     write-Host $promptFinal
     $global:result3 = $output
     return $output
+}
 }
 

@@ -1,5 +1,20 @@
 util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta   -FG White
 
+# region Include required files
+#
+$ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+write-Host $ScriptDirectory
+try {
+    . ("$ScriptDirectory\menu\any-key-menu.ps1")
+    . ("$ScriptDirectory\menu\yes-no-menu.ps1")
+}
+catch {
+    Write-Host "Error while loading supporting PowerShell Scripts" 
+    Write-Host $_
+}
+
+#endregion
+
 $answer = ''
 [int]$current = 1
 $selectionList =@('D1','D2','D3','D4','D5','D6','UpArrow','DownArrow','Enter','X','R')
@@ -85,6 +100,10 @@ do
                    {
                         Exit
                    }
+                   elseif ($response -eq 'Error')
+                   {
+                        Exit
+                   }
                    else
                    {
 
@@ -113,6 +132,10 @@ do
                     {
 
                     }
+                    elseif ($response -eq 'Exit')
+                    {
+                        exit
+                    } 
                     elseif ($response -eq 'Error')
                     {
                         exit
@@ -142,6 +165,10 @@ do
                     {
  
                     }
+                    elseif ($response -eq 'Exit')
+                    {
+                        exit
+                    } 
                     elseif ($response -eq 'Error')
                     {
                         exit
@@ -171,6 +198,10 @@ do
                     {
 
                     }
+                    elseif ($response -eq 'Exit')
+                    {
+                        exit
+                    } 
                     elseif ($response -eq 'Error')
                     {
                         exit
@@ -185,7 +216,8 @@ do
             R    { 
                     Clear-Host
                     write-Host ''
-                    $answer = menu\yes-no 'Clear script globals variables? ' 'N'
+                    yes-nof $false 'Clear script globals variables? [Yes] [No]'
+                    $answer = $global:retVal
                     if ($answer)
                     {
                         

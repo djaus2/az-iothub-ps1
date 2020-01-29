@@ -1,4 +1,5 @@
-param (
+   function global:press-anykey{
+   param (
    [string]$Prompt = '',
    [string]$Mode =''
 )
@@ -15,3 +16,4 @@ write-Host $prompt
 
 
 return ''
+}

@@ -54,10 +54,9 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
         write-Host 'Returning'
         return 'Back'
     }
-    return 'Back'
 }
 
-$answer= menu\parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 40  $Current
+$answer= menu\parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 36  $Current
 write-Host $prompt
 
 If ([string]::IsNullOrEmpty($answer)) 

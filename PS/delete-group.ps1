@@ -1,7 +1,6 @@
 param (
     [string]$Subscription='',
-    [string]$GroupName='',
-    [boolean]$Refresh=$false
+    [string]$GroupName=''
 )
 
 If ([string]::IsNullOrEmpty($Subscription ))
@@ -13,6 +12,8 @@ If ([string]::IsNullOrEmpty($Subscription ))
 }
 
 $GroupStrnIndex =3
+# Force refresh of list og Groups
+$Refresh = $true
 if ($Refresh -eq $true)
 {
     $global:GroupsStrn  = $null
@@ -64,14 +65,18 @@ $global:GroupName= $null
 $global:GroupsStrn= $null
 $global:HubName= $null
 $global:HubsStrn=$null
-$global:DeviceName = null
+$global:DeviceName = $null
 $global:DevicesStrn=$null
 
-if (  ( util\check-hub $GroupName $HubName  $Refresh ) -eq $true)
+if  ( util\check-group $GroupName  ) 
 {
     $prompt = 'Deleting Azure Resource Group "' + $GroupName + '"'
     write-Host $prompt
-    az group delete --name $GroupName -o tsv | Out-String
+    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+    {
+        write-Host "az group delete --name  $GroupName"
+    }
+    az group delete --name $GroupName  
 }
 else 
 {
@@ -82,7 +87,9 @@ else
 
 $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was deleted.'
 write-Host $prompt
-if (  ( az group exists --name $GroupName   ) -eq $true)
+
+$global:GroupsStrn=$null
+if ( util\check-group $GroupName) 
 {
     $prompt = 'It Failed.'
     menu\any-key $prompt

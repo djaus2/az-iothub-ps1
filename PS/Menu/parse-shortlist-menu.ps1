@@ -1,4 +1,5 @@
 
+function $global:parse-shortlist{
 param (
    [Parameter(Mandatory)]
     [string]$ListString, 
@@ -180,7 +181,7 @@ If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
 # [int]$selection =1
  #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
 #}
-$prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
+$prompt ="Please make a (numerical) selection .. Or just [Enter] if required selection is highlighted."
 # $SelectionList =@('1','2','3','4','-1','-2','-3')
 $first = $true
 
@@ -293,4 +294,5 @@ write-Host $promptFinal
 $global:result3 = $output
 
 return $output
+}
 

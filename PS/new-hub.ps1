@@ -2,28 +2,31 @@ param (
     [string]$Subscription = '' ,
     [string]$GroupName='',
     [string]$HubName='',
-    [string]$SKU ='',
-    [boolean]$Refresh=$false
+    [string]$SKU =''
 )
 
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
-    write-Host = 'Need to select a Subscription first.'
-    $menu\any-key $prompt
-    return ''
+    $prompt = 'Need to select a Subscription first.'
+    . menu\any-key
+    any-key $prompt
+    return 'Back'
 }
 elseIf ([string]::IsNullOrEmpty($GroupName ))
 {
     write-Host ''
     write-Host = 'Need to select a Group first.'
-    menu\any-key $prompt
-    return ''
+    . menu\any-key
+    any-key $prompt
+    return 'Back'
 }
 
+# Force Refresh
+$Refresh = $false #$true
 if ($Refresh)
 {
-	$global:HubsStrn=null
+	$global:HubsStrn=$null
 }
 
 util\heading '  N E W  I o T  H U B  '   DarkGreen  White 
@@ -47,7 +50,8 @@ if ([string]::IsNullOrEmpty($HubName))
 $skus = 'B1,B2,B3,F1,S1,S2,S3'
 if ([string]::IsNullOrEmpty($SKU))
 {
-    $answer = menu\choose-menu $skus 'SKU' 'F1'
+    .  menu\choose-menu
+    $answer =choose-menu $skus 'SKU' 'F1'
 
     if ([string]::IsNullOrEmpty($answer))
     {
@@ -58,10 +62,11 @@ if ([string]::IsNullOrEmpty($SKU))
         return 'Back'
     }
 
-    $SKU= $answer
+    $SKU = $global:retVal
 
 }
 
+read-Host $SKU
 
 # Subscription is  optional
 if ([string]::IsNullOrEmpty($Subscription)) 
@@ -69,7 +74,8 @@ if ([string]::IsNullOrEmpty($Subscription))
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
     write-Host $prompt
-    if ((util\check-hub  $GroupName $HubName  $Refresh) -eq $true)
+    $global:HubsStrn = $null
+    if (util\check-hub  $GroupName $HubName)
     {
         $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists.'
         menu\any-key $prompt
@@ -81,29 +87,32 @@ if ([string]::IsNullOrEmpty($Subscription))
     $global:DevicesStrn=$null
     $global:DeviceName=$null
 
-    write-Host ''
     $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
     write-Host $prompt
     $prompt = ''
     write-Host $prompt
     write-Host ''
 
-    az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU | Out-String
+    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+    {
+        write-Host "az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU | Out-String"
+    }
+    az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU --output table
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
     # Need to refresh the list of hubs
-    if ((util\check-hub  $GroupName $HubName  $true) -eq $true)
+    if (util\check-hub  $GroupName $HubName  )
     {
         $prompt = 'Hub was created.'
         menu\any-key $prompt
-	$global:HubName = $HubName
+	    $global:HubName = $HubName
         return $HubName
     }
     else 
     {
         #If not found after trying to create it, must be inerror
-        $prompt = 'Hub not created.'
+        $prompt = 'It failed.'
         menu\any-key $prompt 'Exit'
         return 'Error'
     }
@@ -112,7 +121,7 @@ else {
     
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
     write-Host $prompt
-    if ((util\check-hub  $GroupName $HubName  $Refresh) -eq $true)
+    if (util\check-hub  $GroupName $HubName ) 
     {
         $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists.'
         menu\any-key $prompt
@@ -128,12 +137,16 @@ else {
     $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
     write-Host $prompt
 
-    az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU | Out-String
+    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+    {
+        write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table"
+    }
+    az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
     # Need to refresh the list of hubs
-    if ((util\check-hub  $GroupName $HubName  $true) -eq $true)
+    if (util\check-hub  $GroupName)
     {
         $prompt = 'Hub was created.'
         menu\any-key $prompt

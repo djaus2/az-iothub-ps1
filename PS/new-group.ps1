@@ -1,22 +1,22 @@
 param (
     [string]$Subscription = '' ,
     [string]$GroupName='',
-    [string]$Location='',
-    [boolean]$Refresh=$false
+    [string]$Location=''
 )
 
 If ([string]::IsNullOrEmpty($Subscription ))
 {
     write-Host ''
     $prompt =  'Need to select a Subscription first.'
-    $menu\any-key $prompt
+    menu\any-key $prompt
     return ''
 }
 
+# Force Refresh
+$Refresh = $true
 if ($Refresh)
 {
 	$global:Groups=null
-	$global:Locations = $null
 }
 
 
@@ -50,20 +50,28 @@ if ([string]::IsNullOrEmpty($Location))
             write-Host 'Error getting Resource Group Location List. Exiting'
             return 'Error'
         }
-        [string]$result = menu\Show-Menu $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
+        [string]$result = menu\parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
 
         $prompt = 'Location "' + $result +'" returned'
     write-Host $prompt
 
-    if ([string]::IsNullOrEmpty($answer))
+    if ([string]::IsNullOrEmpty($result))
     {
         return 'Back'
     }
-    elseif ($answer -eq 'Back')
+    elseif ($result -eq 'Back')
     {
         return 'Back'
     }
-    $Location = $answer
+    elseif ($result -eq 'Error')
+    {
+        return 'Error'
+    }
+    elseif ($result -eq 'Exit')
+    {
+        return 'Exit'
+    }
+    $Location = $result
 }
 
 
@@ -73,7 +81,7 @@ if ([string]::IsNullOrEmpty($Subscription))
 {
     $prompt = 'Checking whether Azure Group "' + $GroupName  +'" exists.'
     write-Host $prompt
-    if (  ( util\check-group $GroupName   ) -eq $true)
+    if ( util\check-group $GroupName   ) 
     {
         $prompt = 'Azure Resource Group "' + $GroupName +'" already exists.'
         menu\any-key $prompt
@@ -88,21 +96,27 @@ if ([string]::IsNullOrEmpty($Subscription))
     $global:DeviceName=$null
     $prompt = 'Creating new Azure Resource Group "' + $GroupName + '" at location "' + $Location +'"'
     write-Host $prompt
-    az group create --name $GroupName --location $Location | Out-String
+    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+    {
+        write-Host "az group create --name $GroupName --location $Location"
+    }
+    az group create --name $GroupName --location $Location --output table
 
     $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was created.'
     write-Host $prompt
     # Need to refresh the list of groups
-    if  (( util\check-group $GroupName $true  ) -eq $true)
-       {
+    if ( util\check-group $GroupName ) 
+    {
         $prompt = 'It was created.'
         menu\any-key $prompt
+	$global:GroupName = $GroupName
         return $GroupName
     }
     else
     {
         #If not found after trying to create it, must be in-error
         $prompt = 'It Failed.'
+	menu\any-key $prompt 'Exit'
         return 'Error'
     }
   
@@ -110,11 +124,10 @@ if ([string]::IsNullOrEmpty($Subscription))
 }
 else 
 {
-    $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" exists.' + '# at location "' + $Location +'"'
+    $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" exists.' + '" at location "' + $Location +'"'
     write-Host $prompt
     if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $true)
     {
-
         $prompt = 'Azure Resource Group "' + $GroupName +'" already exists.'
         menu\any-key $prompt
         return 'Exists'
@@ -127,16 +140,20 @@ else
     $global:DeviceName=$null
     $prompt = 'Creeating new Azure Resource Group "' + $GroupName +'"'
     write-Host $prompt
-    az group create --name $GroupName --location $Location --subscription $Subscription | Out-String
+    
+    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+    {
+        write-Host "az group create --name $GroupName --location $Location --subscription $Subscription  -o Table"
+    }
+    az group create --name $GroupName --location $Location --subscription $Subscription  -o Table 
  
-    $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was craeted.'
+    $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was created.'
     write-Host $prompt
-    if (  ( az group exists --name $GroupName  --subscription $Subscription) -eq $true)
+    if (az group exists --name $GroupName  --subscription $Subscription) 
     {
         $prompt = 'Group was created.'
         menu\any-key $prompt
-
-        $global:DeviceNam = $GroupName
+        $global:GroupName = $GroupName
         return $GroupName
     }
     else 

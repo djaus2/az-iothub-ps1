@@ -1,17 +1,11 @@
 param (
     [Parameter(Mandatory)]
-    [string]$GroupName,
-    [boolean]$Refresh=$false
+    [string]$GroupName
 )
 
 $GroupsStrnIndex =3
-if ($Refresh -eq $true)
-{
-    $Refresh
-    $global:GroupsStrn  = $null
-}
 
-$prompt = 'Checking whether Azure Group "'  + $GroupName + '" exits.'
+$prompt = 'Checking whether Azure Group "'  + $GroupName + '" exists.'
 write-Host $prompt
 If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 {   
@@ -20,9 +14,9 @@ If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 }
 If ([string]::IsNullOrEmpty($global:GroupsStrn ))
 {
-    $Prompt = 'No Groups found in Subscription. Exiting.'
+    $Prompt = 'No Groups found in Subscription..'
     write-Host $Prompt
-    Exit
+    return $false
 }
 If (-not([string]::IsNullOrEmpty($global:GroupsStrn )))
 {   

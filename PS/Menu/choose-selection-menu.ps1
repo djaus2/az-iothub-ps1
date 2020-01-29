@@ -1,4 +1,4 @@
-
+function global:choose-selection{
 param (
     [Parameter(Mandatory)]
      [string]$ListString, 
@@ -9,9 +9,8 @@ param (
      [int]$ItemsPerLine=1,
      $ColWidth=1
  )
- 
  $Default = -1
- $SelectionList1 =@(1)
+ $SelectionList1 =@()
  # Ref: https://www.jonathanmedd.net/2014/01/adding-and-removing-items-from-a-powershell-array.html
  $SelectionList = {$SelectionList1}.Invoke()
  [string]$temp =  [string]$ColWidth
@@ -70,7 +69,6 @@ param (
  $col=0
  foreach ($line in $lines) 
  {
-    $line
      if ([string]::IsNullOrEmpty($line))
      {   
          write-Host ''
@@ -79,13 +77,10 @@ param (
      }
      else {       
          $itemToList = $line
-         if ( $i -ne 1)
-         {
-             # Ref: https://stackoverflow.com/questions/25322636/powershell-convert-string-to-number
-             #[string]$num = [convert]::ToString($i)
-             #$n = $SelectionList.Add($num[0])
-             $n = $SelectionList.Add($i)
-         }
+        # Ref: https://stackoverflow.com/questions/25322636/powershell-convert-string-to-number
+        #[string]$num = [convert]::ToString($i)
+        #$n = $SelectionList.Add($num[0])
+        $n = $SelectionList.Add($i)        
      }
      [string]$prompt = [string]$i
      $prompt += '. '     
@@ -248,6 +243,7 @@ param (
  $selection = $val
  if ($selection -eq  -1)
  {
+     $global:retVal = 'Back'
      return 'Back'
  }
  else 
@@ -256,11 +252,15 @@ param (
  }
  write-Host ''
  $promptFinal = $Title +' "' +  $output + '" selected'
- read-Host $promptFinal
-read-Host $output
+write-Host $promptFinal
 
-$global:SKU = $output
+$val=$null
+$SelectionList = $null
+$ListString = $null
  
+$global:retVal =  $output
+
  return $output
+}
  
  
