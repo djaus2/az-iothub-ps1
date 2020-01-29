@@ -95,10 +95,20 @@ param (
 
     if ($EdgeEnabled)
     {
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Create Device Command:"
+            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o tsv | Out-String"
+        }
         az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o tsv | Out-String
     }
     else
     {
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Create Device Command:"
+            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o tsv | Out-String"
+        }
         az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o tsv | Out-String
     }
 

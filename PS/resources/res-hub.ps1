@@ -49,6 +49,11 @@ param (
     If  (([string]::IsNullOrEmpty($global:HubsStrn ))  -and (-not $skip))
     {   
         write-Host 'Getting Hubs from Azure'
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Get Hubs Command:"
+            write-host "$global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String "
+        }
         $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:HubsStrn ))

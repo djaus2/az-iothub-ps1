@@ -50,19 +50,22 @@ if ([string]::IsNullOrEmpty($HubName))
 $skus = 'B1,B2,B3,F1,S1,S2,S3'
 if ([string]::IsNullOrEmpty($SKU))
 {
-    .  menu\choose-menu
-    $answer =choose-menu $skus 'SKU' 'F1'
+
+    choose-selection $skus 'SKU' 'F1'
+    $answer = $global:retVal
 
     if ([string]::IsNullOrEmpty($answer))
     {
-        return 'Back'
+        $global:retVal = 'Back'
+        return
     }
     elseif  ($answer -eq 'Back')
     {
-        return 'Back'
+        $global:retVal = 'Back'
+        return
     }
 
-    $SKU = $global:retVal
+    $SKU = $answer
 
 }
 

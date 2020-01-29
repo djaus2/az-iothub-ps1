@@ -8,13 +8,13 @@ param (
 )
 
     $DeviceStrnIndex =5
-    $DeviceStrnDataIndex =5
+    $DeviceStrnDataIndex =5 
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
         $prompt =  'Need to select a Subscription first.'
-        get-anykey$prompt
+        get-anykey $prompt
         $global:retVal = 'Back'
         return
     }
@@ -30,7 +30,7 @@ param (
     {
         write-Host ''
         $prompt =  'Need to select an IoT Hub first.'
-       get-anykey$prompt
+       get-anykey $prompt
        $global:retVal = 'Back'
        return
     }
@@ -50,12 +50,17 @@ param (
         If ([string]::IsNullOrEmpty($global:DevicesStrn )) 
         {   
             write-Host 'Getting IoT Hub Devices from Azure'
+            if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+            {
+                write-Host "Get Devices Command:"
+                write-host "$global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String "
+            }
             $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String 
         }
         If ([string]::IsNullOrEmpty($global:DevicesStrn ))
         {
             $Prompt = 'No Devices found in Hub'
-           get-anykey$prompt
+           get-anykey $prompt
            $global:retVal = 'Back'
            return
         }
@@ -79,6 +84,10 @@ param (
         }
         $DeviceName = $answer
     }
+    else {
+        # Would've been selected from menu or just created so DevicesStrn should be current
+    }
+
 
     $prompt =  'Do you want to delete the Device "' + $DeviceName +  '"'
     write-Host $prompt
@@ -93,32 +102,38 @@ param (
     $global:DevicesStrn = $null
 
 
-    if (  ( util\check-device $GroupName $HubName $DeviceName  $Refresh ) -eq $true)
+    if ( util\check-device $Subscription $GroupName $HubName $DeviceName  )
     {
         $prompt = 'Deleting Azure IOT Hub Device "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'"'
         write-Host $prompt
-        az iot hub device-identity delete --device-id $DeviceName  --hub-name $HubName -resource-group $GroupName -o tsv | Out-String
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Delete Device Command:"
+            write-Host "az iot hub device-identity delete --device-id $DeviceName  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String"
+        }
+        az iot hub device-identity delete --device-id $DeviceName  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String
 
 
         $prompt =  'Checking whether Azure Resource "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'" was deleted.'
         write-Host $prompt
-        if (  ( util\check-device $Subscription $GroupName $HubName $DeviceName  $true ) -eq $true)
+        $global:DevicesStrn = $null
+        if ( util\check-device $Subscription $GroupName $HubName $DeviceName  ) 
         {
             $prompt = 'It Failed.'
-            get-anykey$prompt
+            get-anykey $prompt
             $global:retVal =  'Error'
         }
         else 
         {
             $prompt = 'It was deleted.'
-            get-anykey$prompt
+            get-anykey $prompt
             $global:retVal = 'Back'
         }
     }
     else 
     {
         $prompt = 'Azure IOT Hub Device "' + $DeviceName +'" doesnt exist.'
-        get-anykey$prompt
+        get-anykey $prompt
         $global:retVal = 'Back'
     }
 }

@@ -97,9 +97,9 @@ param (
     $lines =$ListString  -split '\n'
     $noEntities = ($lines.Count)
     
-    write-Host '---'
-  write-Host $noEntities
-    write-Host '---'
+    write-Host 'No. of entities: ' -NoNewLine
+    write-Host $noEntities
+    
     [int] $i=1
     write-Host ''
     $prompt = 'Select a ' + $Title

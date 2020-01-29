@@ -46,9 +46,10 @@ param (
     $Prompt = ' Current Device :"' + $Current +'"'
     write-Host $Prompt
 
+
     if ($Refresh -eq $true)
     {
-        $global:DeviceNamesStrn = null
+        $global:DevicesStrn = null
     }
     [boolean]$skip = $false
     if  ($global:DevicesStrn -eq '')
@@ -59,6 +60,11 @@ param (
     If  (([string]::IsNullOrEmpty($global:DevicesStrn  ))  -and (-not $skip))
     {   
         write-Host 'Getting Devices from Azure'
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Get Devices Command:"
+            write-host "$global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String "
+        }
         $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:DevicesStrn ))
@@ -68,7 +74,6 @@ param (
         $Prompt ='Do you want to create a new Device for the Hub "'+ $Hub +'"?'
         write-Host $prompt
         get-yesorno $false
-        read-Host $global:retVal
         $answer =  $global:retVal
         if ($answer)
         {

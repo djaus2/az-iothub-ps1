@@ -180,7 +180,7 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Hub  $Subscription $GroupName $HubName
+                        delete-Hub  $Subscription $GroupName $global:HubName
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -214,7 +214,7 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Device  $Subscription $GroupName $HubName 
+                        delete-Device  $Subscription $GroupName $HubName $global:DeviceName
                     }
                     elseif ($response -eq 'Back')
                     {
