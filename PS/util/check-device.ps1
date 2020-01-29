@@ -21,7 +21,12 @@ write-Host $prompt
 If ([string]::IsNullOrEmpty($global:DevicesStrn ))
 {   
     write-Host 'Getting Devices from Azure'
-    $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName -o tsv | Out-String
+    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+    {
+        write-Host "Get Devices Command:"
+        write-host "$global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String"
+    }
+    $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String
 }
 If ([string]::IsNullOrEmpty($global:DevicesStrn  ))
 {
