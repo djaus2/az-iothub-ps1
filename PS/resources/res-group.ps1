@@ -1,3 +1,4 @@
+function Do-Group{
 param (
     [string]$Subscription = '' ,
     [string]$Current='',
@@ -95,3 +96,4 @@ elseif ($answer -eq 'Error')
     return 'Error'
 }
 return $answer 
+}

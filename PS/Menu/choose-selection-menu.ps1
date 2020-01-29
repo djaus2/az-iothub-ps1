@@ -1,4 +1,4 @@
-function global:choose-selection{
+function choose-selection{
 param (
     [Parameter(Mandatory)]
      [string]$ListString, 

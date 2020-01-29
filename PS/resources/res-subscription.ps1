@@ -1,4 +1,4 @@
-function do-subscription{
+function global:Do-Subscription{
 param (
    [string]$Current = '',
    [boolean]$Refresh = $false
@@ -49,7 +49,6 @@ param (
 
     parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
     $answer = $global:retVal
-    write-Host $answer
 
     If ([string]::IsNullOrEmpty($answer)) 
     {
@@ -60,6 +59,7 @@ param (
 
     }
     elseif ($answer -eq 'Back')
+    {
 
     }
     elseif ($answer -eq 'Error')
@@ -76,4 +76,5 @@ param (
         $global:Hub = $null
         $global:Device=$null
     }
+    $global:retVal = $answer
 }

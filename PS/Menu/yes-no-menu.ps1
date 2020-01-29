@@ -1,8 +1,8 @@
-function global:yes-no{
-    param (
-        [boolean]$Default = $false,
-        [string]$Prompt = 'Select one of [Y]es [N]o'
-     )
+function get-yesorno{
+param (
+    [boolean]$Default = $false,
+    [string]$Prompt = 'Select one of [Y]es [N]o'
+    )
      
     if ($Default)
     {
@@ -14,9 +14,10 @@ function global:yes-no{
     }
      
      write-Host $Prompt
+
      $KeyPress = [System.Console]::ReadKey($true)
      $K = $KeyPress.Key
-     $KK = $KeyPress.KeyChar
+
      $global:retVal = $Default
      switch ($K)
      {

@@ -1,3 +1,4 @@
+function Do-Hub{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
@@ -103,3 +104,4 @@ elseif ($answer -eq 'Error')
     return 'Error'
 }
 return $answer 
+}
