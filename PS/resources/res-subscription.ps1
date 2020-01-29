@@ -1,4 +1,4 @@
-function global:Do-Subscription{
+function global:Get-Subscription{
 param (
    [string]$Current = '',
    [boolean]$Refresh = $false

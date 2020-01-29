@@ -13,7 +13,7 @@ try {
     . ("$global:ScriptDirectory\resources\res-subscription.ps1")
     . ("$global:ScriptDirectory\resources\res-group.ps1")
     . ("$global:ScriptDirectory\resources\res-hub.ps1")
-    . ("$global:ScriptDirectory\resources\res-device.ps1")
+   # . ("$global:ScriptDirectory\resources\res-device.ps1")
    #  . ("$global:ScriptDirectory\new-delete\new-group.ps1")
    # . ("$global:ScriptDirectory\new-delete\delete-group.ps1")
    # . ("$global:ScriptDirectory\new-delete\new-hub.ps1")
@@ -99,7 +99,7 @@ do
             'D1'   { 
                     $current=1
                     
-                    do-Subscription $Subscription
+                    Get-Subscription $Subscription
                     $response = $global:retVal
                     write-Host $response
                     
@@ -130,7 +130,7 @@ do
                 }
             'D2'   { 
                     $current=2
-                    do-Group   $Subscription $GroupName
+                    Get-Group   $Subscription $GroupName
                     $response = $global:retVal
                     if (([string]::IsNullOrEmpty($response)) )
                     {
@@ -164,7 +164,7 @@ do
                 }           
             'D3'   { 
                     $current = 3
-                    Do-Hub $Subscription $GroupName $HubName
+                    Get-Hub $Subscription $GroupName $HubName
                     $response = $global:retVal
                     if (([string]::IsNullOrEmpty($response)) )
                     {
@@ -198,7 +198,8 @@ do
                 }
             'D4'  { 
                     $current = 4
-                    do-Device  $Subscription $GroupName $HubName $DeviceName
+                    . ("$global:ScriptDirectory\resources\res-device.ps1")
+                    Get-Device  $Subscription $GroupName $HubName $DeviceName
                     $response = $global:retVal
                     if ( ([string]::IsNullOrEmpty($response)) )
                     {

@@ -1,4 +1,4 @@
-function Do-Device{
+function Get-Device{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
@@ -64,16 +64,18 @@ If ([string]::IsNullOrEmpty($global:DevicesStrn ))
     $Prompt = 'No Devices found in Hub "' + $HubName + '".'
     write-Host $Prompt
     $Prompt ='Do you want to create a new Device for the Hub "'+ $Hub +'"?'
-    $answer = menu\yes-no $Prompt 'N'
+    write-Host $prompt
+    $answer = get-yesorno $false
     if ($answer)
     {
         write-Host 'New Device'
-        return 'New'
+        $global:retVal =  'New'
     }
     else {
         write-Host 'Returning'
-        return 'Back'
+        $global:retVal = 'Back'
     }
+    return
 }
 
 $answer = menu\parse-list $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
