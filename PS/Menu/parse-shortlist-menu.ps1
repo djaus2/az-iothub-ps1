@@ -11,7 +11,7 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
-    write-Host 'Short'
+    write-Host 'Short Menu'
     $baseMenu =@()
     $Selns={$baseMenu}.Invoke()
     function AddKey
@@ -95,7 +95,11 @@ param (
     }  
 
     $lines =$ListString  -split '\n'
-    $noEntities = $lines.Length -1
+    $noEntities = ($lines.Count)
+    
+    write-Host '---'
+  write-Host $noEntities
+    write-Host '---'
     [int] $i=1
     write-Host ''
     $prompt = 'Select a ' + $Title
@@ -104,15 +108,15 @@ param (
     $col=0
     foreach ($j in $lines) 
     {
+        $line = $j.Trim()
 
-        if ([string]::IsNullOrEmpty($j))
+        if ([string]::IsNullOrEmpty($line))
         {   
-            write-Host ''
             $i++        
             break
         }
         else {       
-            $itemToList = ($j-split '\t')[$DisplayIndex]
+            $itemToList = ($line-split '\t')[$DisplayIndex]
                 $Selns.Add([string]$i)
         }
         [string]$prompt = [string]$i
@@ -185,6 +189,7 @@ param (
     #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
     #}
     $prompt ="Please make a (numerical) selection .. Or just [Enter] if required selection is highlighted."
+    write-Host $prompt
     # $SelectionList =@('1','2','3','4','-1','-2','-3')
     $first = $true
 
@@ -282,8 +287,11 @@ param (
         [int]$indx =-1  
         if ( [int]::TryParse($KK,[ref] $indx))
         {
-            $lines2 =($ListString-split '\n')[$indx-1]
-            $output =  ($lines2-split '\t')[$CodeIndex]   
+            write-Host $indx
+            $line =($ListString-split '\n')[$indx-1]
+            write-Host $CodeIndex
+            Write-Host $line
+            $output =  ($line -split '\t')[$CodeIndex]   
         }
         else
         {

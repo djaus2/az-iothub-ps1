@@ -10,16 +10,20 @@ try {
     . ("$global:ScriptDirectory\menu\parse-list-menu.ps1")
     . ("$global:ScriptDirectory\menu\parse-shortlist-menu.ps1")
     . ("$global:ScriptDirectory\menu\choose-selection-menu.ps1")
+
     . ("$global:ScriptDirectory\resources\res-subscription.ps1")
     . ("$global:ScriptDirectory\resources\res-group.ps1")
     . ("$global:ScriptDirectory\resources\res-hub.ps1")
-   # . ("$global:ScriptDirectory\resources\res-device.ps1")
-   #  . ("$global:ScriptDirectory\new-delete\new-group.ps1")
-   # . ("$global:ScriptDirectory\new-delete\delete-group.ps1")
-   # . ("$global:ScriptDirectory\new-delete\new-hub.ps1")
-   # . ("$global:ScriptDirectory\new-delete\delete-hub.ps1")
-   # . ("$global:ScriptDirectory\new-delete\new-device.ps1")
-    # . ("$global:ScriptDirectory\new-delete\delete-device.ps1")
+    . ("$global:ScriptDirectory\resources\res-device.ps1")
+
+
+   #  . ("$global:ScriptDirectory\new_delete\new-group.ps1")
+    # . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
+    . ("$global:ScriptDirectory\new_delete\new-device.ps1")
+
+        #  . ("$global:ScriptDirectory\new_delete\new-group.ps1")
+   # . ("$global:ScriptDirectory\new_delete\delete-hub.ps1")
+     . ("$global:ScriptDirectory\new_delete\delete-device.ps1")
 }
 catch {
     Write-Host "Error while loading supporting PowerShell Scripts" 
@@ -138,7 +142,7 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Group $Subscription
+                        new-Group 
                     }
                     elseif ($response -eq 'Delete')
                     {
@@ -172,7 +176,7 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Hub $Subscription $GroupName $HubName
+                        new-Hub $Subscription $GroupName 
                     }
                     elseif ($response -eq 'Delete')
                     {
@@ -198,7 +202,6 @@ do
                 }
             'D4'  { 
                     $current = 4
-                    . ("$global:ScriptDirectory\resources\res-device.ps1")
                     Get-Device  $Subscription $GroupName $HubName $DeviceName
                     $response = $global:retVal
                     if ( ([string]::IsNullOrEmpty($response)) )
@@ -207,11 +210,11 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Device $Subscription $GroupName $HubName ''
+                        New-Device $Subscription $GroupName $HubName ''
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Device  $Subscription $GrouName $HubName  $DeviceName
+                        delete-Device  $Subscription $GroupName $HubName 
                     }
                     elseif ($response -eq 'Back')
                     {
