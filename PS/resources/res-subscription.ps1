@@ -4,9 +4,11 @@ param (
    [boolean]$Refresh = $false
 )
 
+    clear-host
     If ([string]::IsNullOrEmpty($global:DoneLogin)) 
     { 
-        get-yesorno $false ' Have you run "az login" to access your accounts?'
+        write-Host 'Have you run "az login" to access your accounts?'
+        get-yesorno $false
         $answer = $global:retVal
         if  (-not $answer)
         {

@@ -150,7 +150,7 @@ param (
             write-Host $prompt -NoNewline
             $prompt = [string]::Format($FormatStrn,$itemToList )
             write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
-            write-Host ' <-- Current/Default Selection' -ForegroundColor DarkGreen 
+            write-Host ' <-- Previous Selection' -ForegroundColor DarkGreen 
             $col = 0
         }
         else 
@@ -200,6 +200,14 @@ param (
     $KK = ' '
     do 
     {
+        if (-not([string]::IsNullOrEmpty($CurrentSelection)))
+        {
+            [string]$prompt = [string]$DefaultNo
+            $prompt += '. '   
+            write-Host $prompt -NoNewline
+            write-Host $CurrentSelection -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
+            write-Host ' <-- Current Selection' -ForegroundColor DarkBlue -NoNewline
+        }
         # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
         # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
         $KeyPress = [System.Console]::ReadKey($true)
@@ -240,7 +248,7 @@ param (
             Enter { 
                 If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
                 {
-                    $val = $DefaultNo
+                    $KK = $selns[$DefaultNo-1]
                 } 
                 else{
                     $val = -11
