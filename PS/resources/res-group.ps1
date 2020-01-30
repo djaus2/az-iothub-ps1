@@ -66,7 +66,7 @@ param (
         return
     }
 
-    parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 36  $Current
+    parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete'   $GroupStrnIndex  $GroupStrnDataIndex  3 36  $Current
     $answer = $global:retVal
     write-Host $answer
 

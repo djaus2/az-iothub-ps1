@@ -87,7 +87,7 @@ param (
         return
     }
 
-    parse-list $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete,B. Back'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
+    parse-list $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
     $answer =  $global:retVal
     write-Host $answer
 

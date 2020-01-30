@@ -78,7 +78,7 @@ param (
         return
     }
 
-    parse-list $global:HubsStrn   '  H U B  '  'N. New,D. Delete,B. Back'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
+    parse-list $global:HubsStrn   '  H U B  '  'N. New,D. Delete'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
     $answer= $global:retVal
     write-Host $answer
 

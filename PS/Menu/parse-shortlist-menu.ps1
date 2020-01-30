@@ -4,7 +4,7 @@ param (
    [Parameter(Mandatory)]
     [string]$ListString, 
     [string]$Title,
-    [string]$AdditionalMenuOptions='B. Back',
+    [string]$AdditionalMenuOptions='',
     [int]$DisplayIndex='0', 
     [int]$CodeIndex='0',
     [int]$ItemsPerLine=1,
@@ -149,7 +149,7 @@ param (
             $prompt += '. '   
             write-Host $prompt -NoNewline
             $prompt = [string]::Format($FormatStrn,$itemToList )
-            write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
+            write-Host $itemToList -BackgroundColor DarkGreen -ForegroundColor Black -NoNewline
             write-Host ' <-- Previous Selection' -ForegroundColor DarkGreen 
             $col = 0
         }
@@ -185,28 +185,51 @@ param (
         }
     }
 
+    if (-not([string]::IsNullOrEmpty($CurrentSelection))){
+        write-Host 'B. Back (Use Previous Selection)'
+    }
+    else {
+        write-Host 'B. Back'
+        $Selns.Add('B')
+    }
+    write-Host ''
+
     # [int]$selection =1
     #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
     #}
-    $prompt ="Please make a (numerical) selection .. Or just [Enter] if required selection is highlighted."
+    $prompt ="Please make a (numerical) selection .. Or just [Enter] if required selection is highlighted BELOW"
     write-Host $prompt
     # $SelectionList =@('1','2','3','4','-1','-2','-3')
     $first = $true
 
-    write-Host 'Valid Keys: ' -NoNewline
-    foreach ($n in $Selns) {write-Host $n -NoNewline; write-Host ' ' -NoNewline}
-    write-Host ''
+    # write-Host 'Valid Keys: ' -NoNewline
+    # foreach ($n in $Selns) {write-Host $n -NoNewline; write-Host ' ' -NoNewline}
+    $NextSelection = $CurrentSelection
+    $NextNo = $DefaultNo
 
     $KK = ' '
     do 
     {
-        if (-not([string]::IsNullOrEmpty($CurrentSelection)))
+        if (-not([string]::IsNullOrEmpty($NextSelection)))
         {
-            [string]$prompt = [string]$DefaultNo
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            write-Host `b`b`b`b`b`b`b -NoNewLine
+            [string]$prompt = [string]$NextNo
             $prompt += '. '   
             write-Host $prompt -NoNewline
-            write-Host $CurrentSelection -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
-            write-Host ' <-- Current Selection' -ForegroundColor DarkBlue -NoNewline
+            write-Host $NextSelection -BackgroundColor Yellow -ForegroundColor Black -NoNewline
+            write-Host ' <-- Current Selection [Enter]                      ' -BackgroundColor Black -ForegroundColor Yellow  -NoNewline
         }
         # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
         # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
@@ -218,40 +241,54 @@ param (
         {
 
             UpArrow  { 
-                switch ($Default )
+                switch ($NextNo )
                 {
-                    1 { $Default = 1}
-                    2 { $Default = 1}
-                    3 { $Default = 2}
-                    4 { $Default = 3}
-                    5 { $Default = 4}
-                    6 { $Default = 5}
-                    7 { $Default = 6}
-                    8 { $Default = 7}
-                    9 { $Default = 8}
+                    1 { $NextNo = 1}
+                    2 { $NextNo = 1}
+                    3 { $NextNo = 2}
+                    4 { $NextNo = 3}
+                    5 { $NextNo = 4}
+                    6 { $NextNo = 5}
+                    7 { $NextNo = 6}
+                    8 { $NextNo = 7}
+                    9 { $NextNo = 8}
                 } 
+                $line =($ListString-split '\n')[$NextNo-1]
+                $NextSelection =  ($line -split '\t')[$CodeIndex] 
             }
             DownArrow  { 
-                switch ($Default )
+                if ($NextNo -le $noEntities)
                 {
-                    1 { $Default = 2}
-                    2 { $Default= 3}
-                    3 { $Default= 4}
-                    4 { $Default= 5}
-                    5 { $Default = 6}
-                    6 { $Default= 7}
-                    7 { $Default= 8}
-                    8 { $Default= 9}
-                    9 { $Default= 9}
-                } 
+                    switch ($NextNo )
+                    {
+                        1 { $NextNo = 2}
+                        2 { $NextNo= 3}
+                        3 { $NextNo= 4}
+                        4 { $NextNo= 5}
+                        5 { $NextNo = 6}
+                        6 { $NextNo= 7}
+                        7 { $NextNo= 8}
+                        8 { $NextNo= 9}
+                        9 { $NextNo= 9}
+                    } 
+                    $line =($ListString-split '\n')[$NextNo-1]
+                    $NextSelection =  ($line -split '\t')[$CodeIndex] 
+                }
             }
             Enter { 
                 If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
                 {
-                    $KK = $selns[$DefaultNo-1]
+                    $KK = $selns[$NextNo-1]
                 } 
-                else{
-                    $val = -11
+            }
+            B {
+                If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
+                {
+                    # Previous value supplied return that with Back
+                    $KK=[string]$DefaultNo
+                }
+                else {
+                    # Just Back
                 }
             }
             Default
@@ -277,7 +314,7 @@ param (
     }
 
     $output = ''
-
+x
     if ($KK -eq 'B')
     {
         $output = 'Back'
@@ -295,10 +332,7 @@ param (
         [int]$indx =-1  
         if ( [int]::TryParse($KK,[ref] $indx))
         {
-            write-Host $indx
             $line =($ListString-split '\n')[$indx-1]
-            write-Host $CodeIndex
-            Write-Host $line
             $output =  ($line -split '\t')[$CodeIndex]   
         }
         else

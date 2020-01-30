@@ -50,7 +50,7 @@ param (
         
     }
 
-    parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back' 3 3 1 22  $Current
+    parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' '' 3 3 1 22  $Current
     $answer = $global:retVal
 
     If ([string]::IsNullOrEmpty($answer)) 
