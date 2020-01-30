@@ -34,7 +34,8 @@ param (
        $global:retVal = 'Back'
        return
     }
-
+    
+    # Force refresh of list of Devices
     $Refresh = $true
     if ($Refresh -eq $true)
     {
@@ -64,7 +65,7 @@ param (
            $global:retVal = 'Back'
            return
         }
-        parse-list $global:DevicesStrn  'Device' 'B. Back' $DeviceStrnIndex  $DeviceStrnIndex  1 22
+        parse-list $global:DevicesStrn  'Device' 'B. Back' $DeviceStrnIndex  $DeviceStrnDataIndex  1 22
         $answer = $global:retVal 
         If ([string]::IsNullOrEmpty($answer ))
         {
@@ -74,12 +75,10 @@ param (
 
         elseif ($answer -eq 'Back')
         {
-            $global:retVal = 'Back'
             return
         }
         elseif ($answer -eq 'Error')
         {
-            $global:retVal = 'Error'
             return
         }
         $DeviceName = $answer
@@ -95,7 +94,7 @@ param (
    $answer = $global:retVal
     if (-not $answer)
     {
-        $global:retVal = $false
+        $global:retVal = 'Back'
         return
     }
     $global:DeviceName = $null

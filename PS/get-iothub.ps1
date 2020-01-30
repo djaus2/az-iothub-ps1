@@ -17,12 +17,12 @@ try {
     . ("$global:ScriptDirectory\resources\res-device.ps1")
 
 
-     #. ("$global:ScriptDirectory\new_delete\new-group.ps1")
+    # . ("$global:ScriptDirectory\new_delete\new-group.ps1")
     # . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
     . ("$global:ScriptDirectory\new_delete\new-device.ps1")
 
-    #. ("$global:ScriptDirectory\new_delete\delete-group.ps1")
-    #. ("$global:ScriptDirectory\new_delete\delete-hub.ps1")
+    . ("$global:ScriptDirectory\new_delete\delete-group.ps1")
+    . ("$global:ScriptDirectory\new_delete\delete-hub.ps1")
      . ("$global:ScriptDirectory\new_delete\delete-device.ps1")
 }
 catch {
@@ -105,7 +105,7 @@ do
                     
                     Get-Subscription $Subscription
                     $response = $global:retVal
-                    write-Host $response
+                    # read-Host $response
                     
                     if ( ([string]::IsNullOrEmpty($response)) )
                     {
@@ -125,7 +125,7 @@ do
                    }
                    else
                    {
-
+                        $Subscription = $response
                    }
 
                    
@@ -136,6 +136,7 @@ do
                     $current=2
                     Get-Group   $Subscription $GroupName
                     $response = $global:retVal
+                    # read-Host $response
                     if (([string]::IsNullOrEmpty($response)) )
                     {
 
@@ -147,7 +148,7 @@ do
                     elseif ($response -eq 'Delete')
                     {
                         . ("$global:ScriptDirectory\new_delete\delete-group.ps1")
-                        Remove-group  $Subscription $global:GroupName
+                        Remove-group  $Subscription $GroupName
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -163,7 +164,7 @@ do
                     }  
                     else
                     {
-                        
+                        $GroupName = $response
                     }
                     $Current++
                 }           
@@ -171,6 +172,7 @@ do
                     $current = 3
                     Get-Hub $Subscription $GroupName $HubName
                     $response = $global:retVal
+                    # read-Host $response
                     if (([string]::IsNullOrEmpty($response)) )
                     {
 
@@ -181,7 +183,7 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        delete-Hub  $Subscription $GroupName $global:HubName
+                        Remove-Hub  $Subscription $GroupName $HubName
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -205,9 +207,10 @@ do
                     $current = 4
                     Get-Device  $Subscription $GroupName $HubName $DeviceName
                     $response = $global:retVal
+                    # read-Host $response
                     if ( ([string]::IsNullOrEmpty($response)) )
                     {
-                        
+                        $DeviceName = $null
                     }
                     elseif ($response -eq 'New')
                     {
@@ -215,7 +218,7 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        Remove-Device  $Subscription $GroupName $HubName $global:DeviceName
+                        Remove-Device  $Subscription $GroupName $HubName $DeviceName
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -231,20 +234,20 @@ do
                     }
                     else
                     {
- 
+                        $DeviceName = $response
                     }
                 }
             'D5'    {   }
             'D6'    { exit  }
             R    { 
-                    Clear-Host
-                    write-Host ''
+                    util\heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'
                     $answer = $global:retVal
                     if ($answer)
                     {
                         
                         $global:DoneLogin = $null
+                        $global:DontClearOnHeading = $null
 
                         $global:SubscriptionStrn = $null
                         $global:GroupsStrn =$null

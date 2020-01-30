@@ -106,6 +106,7 @@ param (
     write-Host $prompt
     write-Host ''
     $col=0
+    $NumActualEntries=0
     foreach ($j in $lines) 
     {
         $line = $j.Trim()
@@ -118,6 +119,7 @@ param (
         else {       
             $itemToList = ($line-split '\t')[$DisplayIndex]
                 $Selns.Add([string]$i)
+            $NumActualEntries++
         }
         [string]$prompt = [string]$i
         $prompt += '. '     
@@ -144,13 +146,12 @@ param (
         {
             $DefaultNo = $i
 
-            write-Host ''
             [string]$prompt = [string]$i
             $prompt += '. '   
             write-Host $prompt -NoNewline
             $prompt = [string]::Format($FormatStrn,$itemToList )
-            write-Host $itemToList -BackgroundColor DarkGreen -ForegroundColor Black -NoNewline
-            write-Host ' <-- Previous Selection' -ForegroundColor DarkGreen 
+            write-Host $itemToList -BackgroundColor Blue -ForegroundColor Black -NoNewline
+            write-Host ' <-- Previous Selection' -ForegroundColor Blue 
             $col = 0
         }
         else 
@@ -174,6 +175,8 @@ param (
         
         $i++
     }
+    write-Host ''
+
     If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
     {
         $Options = $AdditionalMenuOptions -split ','
@@ -240,37 +243,18 @@ param (
         switch ( $k )
         {
 
-            UpArrow  { 
-                switch ($NextNo )
+            UpArrow  {
+                if ($NextNo -gt 1)
                 {
-                    1 { $NextNo = 1}
-                    2 { $NextNo = 1}
-                    3 { $NextNo = 2}
-                    4 { $NextNo = 3}
-                    5 { $NextNo = 4}
-                    6 { $NextNo = 5}
-                    7 { $NextNo = 6}
-                    8 { $NextNo = 7}
-                    9 { $NextNo = 8}
-                } 
+                    $NextNo--
+                }
                 $line =($ListString-split '\n')[$NextNo-1]
                 $NextSelection =  ($line -split '\t')[$CodeIndex] 
             }
             DownArrow  { 
-                if ($NextNo -le $noEntities)
+                if ($NextNo -lt $NumActualEntries)
                 {
-                    switch ($NextNo )
-                    {
-                        1 { $NextNo = 2}
-                        2 { $NextNo= 3}
-                        3 { $NextNo= 4}
-                        4 { $NextNo= 5}
-                        5 { $NextNo = 6}
-                        6 { $NextNo= 7}
-                        7 { $NextNo= 8}
-                        8 { $NextNo= 9}
-                        9 { $NextNo= 9}
-                    } 
+                    $NextNo++
                     $line =($ListString-split '\n')[$NextNo-1]
                     $NextSelection =  ($line -split '\t')[$CodeIndex] 
                 }
@@ -314,7 +298,6 @@ param (
     }
 
     $output = ''
-x
     if ($KK -eq 'B')
     {
         $output = 'Back'

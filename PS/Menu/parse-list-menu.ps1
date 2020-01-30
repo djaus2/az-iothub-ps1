@@ -3,7 +3,7 @@ param (
    [Parameter(Mandatory)]
     [string]$ListString, 
     [string]$Title='Menu List',
-    [string]$AdditionalMenuOptions='B. Back',
+    [string]$AdditionalMenuOptions='',
     [int]$DisplayIndex='0', 
     [int]$CodeIndex='0',
     [int]$ItemsPerLine=1,
@@ -12,7 +12,7 @@ param (
 )
 
     [boolean]$includeExit= $false
-    [boolean]$includeBack= $false
+    [boolean]$includeBack= $true
     [boolean]$includeNew= $false
     [boolean]$includeDelete= $false
 
@@ -88,6 +88,7 @@ param (
         write-Host 'Select a '  -NoNewline
         write-Host $Title 
         write-Host $prompt''
+        $DefaultNo = -1
 
         $col=0
         foreach ($j in $lines) 
@@ -105,7 +106,7 @@ param (
             $prompt += '. '     
             $prompt +=  $itemToList
             $prompt = [string]::Format($FormatStrn,$prompt )
-            if ($CurrentSelection -eq 'None')
+            If  ([string]::IsNullOrEmpty($CurrentSelection))
             {
                 write-Host $prompt -NoNewline
             
@@ -124,13 +125,14 @@ param (
             }
             elseif ( $itemToList -eq $CurrentSelection)
             {
+                $DefaultNo = $i
                 write-Host ''
                 [string]$prompt = [string]$i
                 $prompt += '. '   
                 write-Host $prompt -NoNewline
                 $prompt = [string]::Format($FormatStrn,$itemToList )
-                write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
-                write-Host ' <-- Current/Default Selection' -ForegroundColor DarkGreen 
+                write-Host $itemToList -BackgroundColor Blue -ForegroundColor Black -NoNewline
+                write-Host ' <-- Current/Default Selection [Enter]' -BackgroundColor Black -ForegroundColor Blue
                 $col = 0
             }
             else 
@@ -168,13 +170,6 @@ param (
             $prompt +=  'Delete ' + $Title
             write-Host $prompt
         }
-
-        if ($includeBack)
-        {
-            $prompt = 'B. '
-            $prompt +=  'Back '
-            write-Host $prompt
-            }
         if ($includeExit)
         {
             $prompt = 'X. '
@@ -182,9 +177,24 @@ param (
             write-Host $prompt
         }
 
+        if ($includeBack)
+        {
+            write-Host 'B. Back'
+        }
+
+
+
+
+        write-Host ''
+
 
         [int]$selection =1
-        $prompt ="Please make enter a number to select then press [Enter].. Or just [Enter] if required selection highlighted."
+        If ([string]::IsNullOrEmpty($CurrentSelection)){
+            $prompt ="Please make enter a number (or letter) to select then press [Enter]"
+        }
+        else{
+            $prompt ="Please make enter a number (or letter) to select then press [Enter].. Or just [Enter] for Current"
+        }
         do 
         {
             [int] $selection = 0
@@ -215,7 +225,18 @@ param (
             elseif ($answer.ToUpper() -eq 'B')
             {
                 if ($includeBack){
-                    $selection = $i+3
+                    if (-not([string]::IsNullOrEmpty($CurrentSelection))){
+                        if ($DefaultNo -gt 1){
+                            $Selection= $DefaultNo
+                        }
+                        else{
+                            $selection = $i+3
+                        }
+                    }
+                    else {
+                        $selection = $i+3
+                    }
+                    
                 }
                 else {
                     $selection=0

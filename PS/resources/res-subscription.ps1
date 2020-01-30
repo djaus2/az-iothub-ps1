@@ -73,8 +73,8 @@ param (
         $global:GroupsStrn =$null
         $global:HubsStrn=$null
         $global:DevicesStrn=$null
-        $global:Group = $null
-        $global:Hub = $null
+        $global:GroupName = $null
+        $global:HubName = $null
         $global:Device=$null
     }
     elseif ($answer -eq 'Error')

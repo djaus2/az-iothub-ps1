@@ -1,19 +1,25 @@
 function Remove-Group{
 param (
-    [string]$Subscription='',
-    [string]$GroupName=''
+    [Parameter(Mandatory)]
+    [string]$Subscription,
+    [Parameter(Mandatory)]
+    [string]$GroupName,
+    [boolean]$Refresh=$false
 )
 
+    $GroupStrnIndex =3
+    $GroupStrnDataIndex =3
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
         $prompt= 'Need to select a Subscription first.'
-        menu\any-key $prompt
-        return 'Back'
+        get-anykey $prompt
+        $global:retVal = 'Back'
+        return
     }
 
-    $GroupStrnIndex =3
-    # Force refresh of list og Groups
+  
+    # Force refresh of list of Groups
     $Refresh = $true
     if ($Refresh -eq $true)
     {
@@ -29,37 +35,47 @@ param (
         {   
             write-Host 'Getting Groups from Azure'
             $global:GroupsStrn =  az group list -o tsv | Out-String
-            # $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
+            if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+            {
+                write-Host "Get Devices Command:"
+                write-host "$global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String"
+            }
+            $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
         }
         If ([string]::IsNullOrEmpty($global:GroupsStrn ))
         {
             $Prompt = 'No Groups found in Subscription.'
-            menu\any-key $prompt
-            return 'Back'
+            get-anykey $prompt
+           $global:retVal = 'Back'            
+	   return 'Back'
         }
         
-        $answer = menu\parse-list $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
-        
+        parse-list $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
+        $answer = $global:retVal 
         If ([string]::IsNullOrEmpty($answer ))
         {
-            return 'Back'
+	    $global:retVal = 'Back'
+            return
         }
         elseif ($answer -eq 'Back')
         {
-            return 'Back'
+            return
         }
         elseif ($answer -eq 'Error')
         {
-        return 'Error'
+            return
         }
         $GroupName = $answer
     }
 
     $prompt =  'Do you want to delete the group "' + $GroupName +  '"'
-    $answer = menu\yes-no $prompt 'N'
+    write-Host $prompt
+   get-yesorno $false
+   $answer = $global:retVal
     if  (-not $answer )
     {
-        return 'Back'
+	$global:retVal = 'Back'
+        return
     }
 
     $global:GroupName= $null
@@ -75,31 +91,34 @@ param (
         write-Host $prompt
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
+            write-Host "Delete Group Command:"
             write-Host "az group delete --name  $GroupName"
         }
         az group delete --name $GroupName  
+
+
+    	$prompt = 'Checking whether Azure Group "' + $GroupName   +'" was deleted.'
+    	write-Host $prompt
+
+    	$global:GroupsStrn=$null
+    	if ( util\check-group $GroupName) 
+    	{
+            $prompt = 'It Failed.'
+            get-anykey $prompt
+            $global:retVal =  'Error'
+    	}
+   	 else 
+    	{
+            $prompt = 'It was deleted.'
+            get-anykey $prompt
+            $global:retVal = 'Back'
+    	}
     }
     else 
     {
         $prompt = 'Azure Resource Group "' + $GroupName +'" doesnt exist.'
-        menu\any-key $prompt
-        return 'Back'
-    }
+        get-anykey $prompt
+        $global:retVal = 'Back'
 
-    $prompt = 'Checking whether Azure Group "' + $GroupName   +'" was deleted.'
-    write-Host $prompt
-
-    $global:GroupsStrn=$null
-    if ( util\check-group $GroupName) 
-    {
-        $prompt = 'It Failed.'
-        menu\any-key $prompt
-        return  'Error'
-    }
-    else 
-    {
-        $prompt = 'It was deleted.'
-        menu\any-key $prompt
-        return 'Back'
     }
 }
