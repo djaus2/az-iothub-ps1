@@ -9,9 +9,9 @@ param (
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
-        write-Host 'Need to select a Subscription first. Press any key to return.'
-        $KeyPress = [System.Console]::ReadKey($true)
-        $global:retVal = $null
+        $prompt =  'Need to select a Subscription first.'
+        get-anykey $prompt
+        $global:DeviceName =  'Back'
         return
     }
 
@@ -39,6 +39,11 @@ param (
     If (([string]::IsNullOrEmpty($global:GroupsStrn ))  -and (-not $skip))
     {   
         write-Host 'Getting Groups from Azure'
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Get Groups Command:"
+            write-host "$global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String"
+        }
         $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
@@ -47,7 +52,8 @@ param (
         write-Host $Prompt
         $Prompt ='Do you want to create a new Group for the Subscription "'+ $Subscription +'"?'
         write-Host $prompt
-        $answer = get-yesorno $false
+        get-yesorno $false
+        $answer =  $global:retVal
         if ($answer )
         {
             write-Host 'New Group'
@@ -62,7 +68,7 @@ param (
 
     parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete,B. Back'   $GroupStrnIndex  $GroupStrnDataIndex  3 36  $Current
     $answer = $global:retVal
-    write-Host $answer = $global:retVal
+    write-Host $answer
 
     If ([string]::IsNullOrEmpty($answer)) 
     {

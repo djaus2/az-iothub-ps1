@@ -1,4 +1,4 @@
-function global:Get-Subscription{
+function Get-Subscription{
 param (
    [string]$Current = '',
    [boolean]$Refresh = $false
@@ -11,7 +11,7 @@ param (
         if  (-not $answer)
         {
             write-Host 'Openning Browser for Azure Login'
-            az login | Out-String
+            az login  --output Table
             [Console]::ResetColor()
         }
         else 
@@ -29,21 +29,22 @@ param (
     {
         $global:SubscriptionsStrn = $null
     }
-    [boolean]$skip = $false
-    if  ($global:SubscriptionsStrn -eq '')
-    {
-        # This allows for previously returned empty string
-        $skip = $true
-    }
-    If  (([string]::IsNullOrEmpty($global:SubscriptionsStrn)) -and (-not $skip))
+# Assume there is atleast one subscription
+
+    If  ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     {   
         write-Host 'Getting Subscriptions from Azure'
+        if(-not([string]::IsNullOrEmpty($global:echoCommands)))
+        {
+            write-Host "Get Devices Command:"
+            write-host "$global:SubscriptionsStrn  =  az account list  -o tsv | Out-String"
+        }
         $global:SubscriptionsStrn  =  az account list  -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     {
-        $Prompt = 'No Subscriptions found. Have you run Az Login? Press [Return] to return.'
-        read-Host $Prompt
+        $prompt = 'No Subscriptions found. Have you run Az Login?'
+        get-anykey $prompt 
         
     }
 
@@ -52,19 +53,17 @@ param (
 
     If ([string]::IsNullOrEmpty($answer)) 
     {
-
-    }
-    elseif ($answer -eq 'Return')
-    {
-
+        write-Host 'Back'
+        $answer =  'Back'
     }
     elseif ($answer -eq 'Back')
     {
-
+        write-Host 'Back'
     }
-    elseif ($answer -eq 'Error')
+    elseif ($answer -eq 'Return')
     {
-
+        write-Host 'Back'
+        $answer =  'Back'
     }
     elseif ($answer -ne $global:Subscription) 
     {
@@ -75,6 +74,10 @@ param (
         $global:Group = $null
         $global:Hub = $null
         $global:Device=$null
+    }
+    elseif ($answer -eq 'Error')
+    {
+        write-Host 'Error'
     }
     $global:retVal = $answer
 }

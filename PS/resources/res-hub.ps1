@@ -11,14 +11,16 @@ param (
         write-Host ''
         $prompt =  'Need to select a Subscription first.'
         get-anykey $prompt
-        return 'Back'
+        $global:DeviceName =  'Back'
+        return
     }
     elseIf ([string]::IsNullOrEmpty($GroupName ))
     {
         write-Host ''
         $prompt = 'Need to select a Group first'
         get-anykey $prompt
-        return 'Back'
+        $global:DeviceName =  'Back'
+        return
     }
 
     $HubStrnIndex =3
@@ -62,7 +64,8 @@ param (
         write-Host $Prompt
         $Prompt ='Do you want to create a new Hub for the Group "'+ $GroupName +'"?'
         write-Host $prompt
-        $answer = get-yesorno $false
+        get-yesorno $false
+	$answer =  $global:retVal
         if ($answer )
         {
             write-Host 'New Group'
@@ -82,22 +85,19 @@ param (
     If ([string]::IsNullOrEmpty($answer)) 
     {
         write-Host 'Back'
-        $global:retVal =  'Back'
+        $answer = 'Back'
     }
     elseif ($answer-eq 'Back')
     {
         write-Host 'Back'
-        $global:retVal =  'Back'
     }
     elseif ($answer -eq 'New')
     {
         write-Host 'New'
-        $global:retVal =  'New'
     }
     elseif ($answer -eq 'Delete')
     {
         write-Host 'Delete'
-        $global:retVal =  'Delete'
     }
     elseif ($answer -ne $global:HubName)
     {
@@ -109,7 +109,7 @@ param (
     elseif ($answer -eq 'Error')
     {
         write-Host 'Error'
-        $global:retVal =  'Error'
 
     }
+    $global:retval = $answer 
 }
