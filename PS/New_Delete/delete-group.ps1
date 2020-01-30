@@ -2,7 +2,6 @@ function Remove-Group{
 param (
     [Parameter(Mandatory)]
     [string]$Subscription,
-    [Parameter(Mandatory)]
     [string]$GroupName,
     [boolean]$Refresh=$false
 )
@@ -37,7 +36,7 @@ param (
             $global:GroupsStrn =  az group list -o tsv | Out-String
             if(-not([string]::IsNullOrEmpty($global:echoCommands)))
             {
-                write-Host "Get Devices Command:"
+                write-Host "Get Groups Command:"
                 write-host "$global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String"
             }
             $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
@@ -46,8 +45,8 @@ param (
         {
             $Prompt = 'No Groups found in Subscription.'
             get-anykey $prompt
-           $global:retVal = 'Back'            
-	   return 'Back'
+           $global:retVal = 'Back'           
+	        return
         }
         
         parse-list $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
@@ -70,11 +69,11 @@ param (
 
     $prompt =  'Do you want to delete the group "' + $GroupName +  '"'
     write-Host $prompt
-   get-yesorno $false
-   $answer = $global:retVal
+    get-yesorno $false
+    $answer = $global:retVal
     if  (-not $answer )
     {
-	$global:retVal = 'Back'
+	    $global:retVal = 'Back'
         return
     }
 

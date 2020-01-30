@@ -147,8 +147,14 @@ do
                     }
                     elseif ($response -eq 'Delete')
                     {
-                        . ("$global:ScriptDirectory\new_delete\delete-group.ps1")
-                        Remove-group  $Subscription $GroupName
+                        If([string]::IsNullOrEmpty($GroupName )) 
+                        {
+                            Remove-group  $Subscription ''
+                        }
+                        else {
+                            Remove-group  $Subscription $GroupName
+                        }
+                        
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -182,8 +188,14 @@ do
                         new-Hub $Subscription $GroupName 
                     }
                     elseif ($response -eq 'Delete')
-                    {
-                        Remove-Hub  $Subscription $GroupName $HubName
+                    {                    
+                        If([string]::IsNullOrEmpty($HubName )) 
+                        {
+                            Remove-Hub  $Subscription $GroupName
+                        }
+                        else {
+                            Remove-Hub  $Subscription $GroupName $HubName
+                        }
                     }
                     elseif ($response -eq 'Back')
                     {
@@ -217,8 +229,14 @@ do
                         New-Device $Subscription $GroupName $HubName ''
                     }
                     elseif ($response -eq 'Delete')
-                    {
-                        Remove-Device  $Subscription $GroupName $HubName $DeviceName
+                    {                       
+                        If([string]::IsNullOrEmpty($DeviceName )) 
+                        {
+                            Remove-Device  $Subscription $GroupName $HubName
+                        }
+                        else {
+                            Remove-Device  $Subscription $GroupName $HubName $DeviceName
+                        }
                     }
                     elseif ($response -eq 'Back')
                     {
