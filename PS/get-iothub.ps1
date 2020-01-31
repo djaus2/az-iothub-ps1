@@ -17,7 +17,7 @@ try {
     . ("$global:ScriptDirectory\resources\res-device.ps1")
 
 
-    # . ("$global:ScriptDirectory\new_delete\new-group.ps1")
+    . ("$global:ScriptDirectory\new_delete\new-group.ps1")
     # . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
     . ("$global:ScriptDirectory\new_delete\new-device.ps1")
 
@@ -136,14 +136,14 @@ do
                     $current=2
                     Get-Group   $Subscription $GroupName
                     $response = $global:retVal
-                    # read-Host $response
                     if (([string]::IsNullOrEmpty($response)) )
                     {
 
                     }
                     elseif ($response -eq 'New')
                     {
-                        new-Group  $Subscription 
+                        #. ("$global:ScriptDirectory\new_delete\new-group.ps1")
+                        New-Group  $Subscription 
                     }
                     elseif ($response -eq 'Delete')
                     {

@@ -30,8 +30,9 @@ If ([string]::IsNullOrEmpty($global:DevicesStrn ))
 }
 If ([string]::IsNullOrEmpty($global:DevicesStrn  ))
 {
-    $Prompt = 'No Devices found in Hub. Exiting.'
-    exit
+    $Prompt = 'No Devices found in Hub. Return'
+    write-Hosty $Prompt
+    return $false
 }
 else
 {   

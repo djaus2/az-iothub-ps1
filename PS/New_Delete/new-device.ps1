@@ -98,25 +98,27 @@ param (
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
             write-Host "Create Device Command:"
-            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o tsv | Out-String"
+            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o Table"
         }
-        az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o tsv | Out-String
+        az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o Table
     }
     else
     {
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
             write-Host "Create Device Command:"
-            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o tsv | Out-String"
+            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o Table"
         }
-        az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o tsv | Out-String
+        az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName  -o Table
     }
 
 
     $prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" in Hub "' + $HubName + '"  in Group "' + $GroupName + '" was created.'
     write-Host $prompt
-    # Need to refresh the list of hubs
-    if ((util\check-device $Subscription  $GroupName $HubName  $DeviceName $true) -eq $true)
+    
+    # Need to refresh the list of devices
+    $global:DevicesStrn = $null
+    if (util\check-device $Subscription  $GroupName $HubName  $DeviceName )
     {
         $prompt = 'Device was created.'
         get-anykey $prompt

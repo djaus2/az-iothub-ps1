@@ -5,6 +5,7 @@ param (
     [string]$GroupName,
     [boolean]$Refresh=$false
 )
+. ("$global:ScriptDirectory\Util\Check-Group.ps1")
 
     $GroupStrnIndex =3
     $GroupStrnDataIndex =3
@@ -84,7 +85,7 @@ param (
     $global:DeviceName = $null
     $global:DevicesStrn=$null
 
-    if  ( util\check-group $GroupName  ) 
+    if  ( check-group $Subscription $GroupName  ) 
     {
         $prompt = 'Deleting Azure Resource Group "' + $GroupName + '"'
         write-Host $prompt
@@ -100,13 +101,13 @@ param (
     	write-Host $prompt
 
     	$global:GroupsStrn=$null
-    	if ( util\check-group $GroupName) 
+    	if ( check-group $Subscription $GroupName) 
     	{
             $prompt = 'It Failed.'
             get-anykey $prompt
             $global:retVal =  'Error'
     	}
-   	 else 
+   	    else 
     	{
             $prompt = 'It was deleted.'
             get-anykey $prompt
