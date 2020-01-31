@@ -6,7 +6,7 @@ param (
     [string]$GroupName
 )
 
-    # $GroupsStrnIndex =3
+    # $GroupStrnIndex =3
 
     $prompt = 'Checking whether Azure Group "'  + $GroupName + '" exists.'
     write-Host $prompt
@@ -31,7 +31,7 @@ param (
             {   
                 continue
             }
-            $itemToList = ($line -split '\t')[$GroupsStrnIndex]
+            $itemToList = ($line -split '\t')[$GroupStrnIndex]
             if ($itemToList -eq $GroupName)
             {
                 $prompt = 'It exists'

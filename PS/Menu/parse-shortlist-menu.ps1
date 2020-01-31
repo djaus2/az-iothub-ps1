@@ -11,9 +11,7 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
-    write-Host 'Short Menu'
-    read-Host $DisplayIndex
-    read-Host $CodeIndex
+    write-Host 'Using Short Menu'
 
     $baseMenu =@()
     $Selns={$baseMenu}.Invoke()
