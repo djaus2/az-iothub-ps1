@@ -23,8 +23,8 @@ param (
         return
     }
 
-    $HubStrnIndex =3
-    $HubStrnDataIndex =3
+    # $HubStrnIndex =3
+    # $HubStrnDataIndex =3
 
 
 

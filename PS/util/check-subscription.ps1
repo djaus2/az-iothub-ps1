@@ -4,7 +4,7 @@ param (
     [boolean]$Refresh=$false
 )
 
-$SubscriptionStrnIndex =3
+# $SubscriptionStrnIndex =3
 if ($Refresh -eq $true)
 {
     $Refresh

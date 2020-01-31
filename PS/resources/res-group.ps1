@@ -15,8 +15,8 @@ param (
         return
     }
 
-    $GroupStrnIndex =3
-    $GroupStrnDataIndex =3
+    # $GroupStrnIndex =3
+    # $GroupStrnDataIndex =3
 
 
     util\Heading '  G R O U P  '  DarkBlue   White

@@ -10,7 +10,7 @@ param (
     [string]$DeviceName,
     [boolean]$Refresh=$false
 )
-    $DevicesStrnIndex =5
+    # $DevicesStrnIndex =5
     if ($Refresh -eq $true)
     {
         $Refresh

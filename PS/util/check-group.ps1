@@ -6,7 +6,7 @@ param (
     [string]$GroupName
 )
 
-    $GroupsStrnIndex =3
+    # $GroupsStrnIndex =3
 
     $prompt = 'Checking whether Azure Group "'  + $GroupName + '" exists.'
     write-Host $prompt

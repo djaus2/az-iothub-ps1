@@ -12,6 +12,9 @@ param (
     [string]$CurrentSelection='None'
 )
     write-Host 'Short Menu'
+    read-Host $DisplayIndex
+    read-Host $CodeIndex
+
     $baseMenu =@()
     $Selns={$baseMenu}.Invoke()
     function AddKey

@@ -3,7 +3,8 @@ param (
    [string]$Current = '',
    [boolean]$Refresh = $false
 )
-
+    read-Host $SubscriptionStrnIndex
+    read-Host $SubscriptionStrnDataIndex
     clear-host
     If ([string]::IsNullOrEmpty($global:DoneLogin)) 
     { 
@@ -50,7 +51,7 @@ param (
         
     }
 
-    parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' '' 3 3 1 22  $Current
+    parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' '' $SubscriptionStrnIndex $SubscriptionStrnDataIndex 1 22  $Current
     $answer = $global:retVal
 
     If ([string]::IsNullOrEmpty($answer)) 

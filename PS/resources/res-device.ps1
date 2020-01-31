@@ -31,8 +31,8 @@ param (
         return
     }
 
-    $DeviceStrnIndex =5
-    $DeviceStrnDataIndex =5
+    # $DeviceStrnIndex =5
+    # $DeviceStrnDataIndex =5
 
 
 

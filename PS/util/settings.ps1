@@ -1,0 +1,10 @@
+$SubscriptionStrnIndex =3
+$SubscriptionStrnDataIndex =3
+$GroupStrnIndex =3
+$GroupStrnDataIndex =3
+$HubStrnIndex =3
+$HubStrnDataIndex =3
+$DeviceStrnIndex =5
+$DeviceStrnDataIndex =5
+$LocationsStrnIndex = 0 
+$LocationsStrnDataIndex = 4

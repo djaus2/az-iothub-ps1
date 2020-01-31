@@ -5,6 +5,7 @@ util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta   -FG White
 $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 write-Host $global:ScriptDirectory
 try {
+    . ("$global:ScriptDirectory\util\settings.ps1")
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
     . ("$global:ScriptDirectory\menu\yes-no-menu.ps1")
     . ("$global:ScriptDirectory\menu\parse-list-menu.ps1")
@@ -31,6 +32,9 @@ catch {
 }
 
 #endregion
+
+read-Host $SubscriptionStrnIndex
+read-Host $SubscriptionStrnDataIndex
 
 $answer = ''
 [int]$current = 1
