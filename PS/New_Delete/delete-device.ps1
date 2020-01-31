@@ -1,7 +1,10 @@
 function Remove-Device{
 param (
+    [Parameter(Mandatory)]
     [string]$Subscription = '' ,
+    [Parameter(Mandatory)]
     [string]$GroupName = '' ,
+    [Parameter(Mandatory)]
     [string]$HubName = '' ,
     [string]$DeviceName='',
     [boolean]$Refresh=$false
@@ -9,6 +12,8 @@ param (
 
     $DeviceStrnIndex =5
     $DeviceStrnDataIndex =5 
+
+    . ("$global:ScriptDirectory\Util\Check-Device.ps1")
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
@@ -101,7 +106,7 @@ param (
     $global:DevicesStrn = $null
 
 
-    if ( util\check-device $Subscription $GroupName $HubName $DeviceName  )
+    if ( check-device $Subscription $GroupName $HubName $DeviceName  )
     {
         $prompt = 'Deleting Azure IOT Hub Device "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'"'
         write-Host $prompt
@@ -116,7 +121,7 @@ param (
         $prompt =  'Checking whether Azure Resource "' + $DeviceName +'" in IoT Hub "' + $HubName + '" in Group "' + $GroupName +'" was deleted.'
         write-Host $prompt
         $global:DevicesStrn = $null
-        if ( util\check-device $Subscription $GroupName $HubName $DeviceName  ) 
+        if ( check-device $Subscription $GroupName $HubName $DeviceName  ) 
         {
             $prompt = 'It Failed.'
             get-anykey $prompt

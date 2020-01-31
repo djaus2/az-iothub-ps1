@@ -1,134 +1,89 @@
+function New-Hub{
 param (
+    [Parameter(Mandatory)]
     [string]$Subscription = '' ,
+    [Parameter(Mandatory)]
     [string]$GroupName='',
     [string]$HubName='',
     [string]$SKU =''
 )
+. ("$global:ScriptDirectory\Util\Check-Hub.ps1")
 
-If ([string]::IsNullOrEmpty($Subscription ))
-{
-    write-Host ''
-    $prompt = 'Need to select a Subscription first.'
-    . menu\any-key
-    any-key $prompt
-    return 'Back'
-}
-elseIf ([string]::IsNullOrEmpty($GroupName ))
-{
-    write-Host ''
-    write-Host = 'Need to select a Group first.'
-    . menu\any-key
-    any-key $prompt
-    return 'Back'
-}
-
-# Force Refresh
-$Refresh = $false #$true
-if ($Refresh)
-{
-	$global:HubsStrn=$null
-}
-
-util\heading '  N E W  I o T  H U B  '   DarkGreen  White 
-
-
-
-#Need a Hub name
-if ([string]::IsNullOrEmpty($HubName))
-{
-    $answer = util\get-name 'IoT Hub'
-    if ($answer-eq 'Back')
+    If ([string]::IsNullOrEmpty($Subscription ))
     {
-        write-Host 'Returning'
-        return 'Back'
-    }
-    $HubName = $answer
-}
-
-
-#Need an SKU
-$skus = 'B1,B2,B3,F1,S1,S2,S3'
-if ([string]::IsNullOrEmpty($SKU))
-{
-
-    choose-selection $skus 'SKU' 'F1'
-    $answer = $global:retVal
-
-    if ([string]::IsNullOrEmpty($answer))
-    {
+        write-Host ''
+        $prompt = 'Need to select a Subscription first.'
+        get-anykey $prompt
         $global:retVal = 'Back'
         return
     }
-    elseif  ($answer -eq 'Back')
+    elseIf ([string]::IsNullOrEmpty($GroupName ))
     {
+        write-Host ''
+        $prompt= 'Need to select a Group first.'
+        get-anykey $prompt
         $global:retVal = 'Back'
         return
     }
 
-    $SKU = $answer
+    # Force Refresh
+    $Refresh = $false #$true
+    if ($Refresh)
+    {
+        $global:HubsStrn=$null
+    }
 
-}
+    util\heading '  N E W  I o T  H U B  '   DarkGreen  White 
 
-read-Host $SKU
 
-# Subscription is  optional
-if ([string]::IsNullOrEmpty($Subscription)) 
-{
+
+    #Need a Hub name
+    if ([string]::IsNullOrEmpty($HubName))
+    {
+        $answer = util\get-name 'IoT Hub'
+        if ($answer-eq 'Back')
+        {
+            write-Host 'Returning'
+            $global:retVal = 'Back'
+            return
+        }
+        $HubName = $answer
+    }
+
+
+    #Need an SKU
+    $skus = 'B1,B2,B3,F1,S1,S2,S3'
+    if ([string]::IsNullOrEmpty($SKU))
+    {
+
+        choose-selection $skus 'SKU' 'F1'
+        $answer = $global:retVal
+
+        if ([string]::IsNullOrEmpty($answer))
+        {
+            $global:retVal = 'Back'
+            return
+        }
+        elseif  ($answer -eq 'Back')
+        {
+            $global:retVal = 'Back'
+            return
+        }
+
+        $SKU = $answer
+
+    }
+
+    read-Host $SKU
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
     write-Host $prompt
-    $global:HubsStrn = $null
-    if (util\check-hub  $GroupName $HubName)
+    if (check-hub  $Subscription $GroupName $HubName ) 
     {
         $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists.'
-        menu\any-key $prompt
-        return 'Exists'
-    }
-
-    $global:HubName = $null
-    $global:HubsStrn = $null
-    $global:DevicesStrn=$null
-    $global:DeviceName=$null
-
-    $prompt = 'Creating new Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" using SKU "' +$SKU +'"'
-    write-Host $prompt
-    $prompt = ''
-    write-Host $prompt
-    write-Host ''
-
-    if(-not([string]::IsNullOrEmpty($global:echoCommands)))
-    {
-        write-Host "az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU | Out-String"
-    }
-    az iot hub create --name $HubName   --resource-group $GroupName --sku $SKU --output table
-
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
-    write-Host $prompt
-    # Need to refresh the list of hubs
-    if (util\check-hub  $GroupName $HubName  )
-    {
-        $prompt = 'Hub was created.'
-        menu\any-key $prompt
-	    $global:HubName = $HubName
-        return $HubName
-    }
-    else 
-    {
-        #If not found after trying to create it, must be inerror
-        $prompt = 'It failed.'
-        menu\any-key $prompt 'Exit'
-        return 'Error'
-    }
-}
-else {
-    
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
-    write-Host $prompt
-    if (util\check-hub  $GroupName $HubName ) 
-    {
-        $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists.'
-        menu\any-key $prompt
-        return 'Exists'
+        get-anykey $prompt
+        $global:retVal = 'Exists'
+        Return
     }
 
     $global:HubName = $null
@@ -142,27 +97,28 @@ else {
 
     if(-not([string]::IsNullOrEmpty($global:echoCommands)))
     {
-        write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table"
+        write-Host "Create Hub Command:" -ForeGroundColor DarkGreen
+        write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table" -ForeGroundColor DarkBlue
     }
     az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
     # Need to refresh the list of hubs
-    if (util\check-hub  $GroupName)
+    $global:HubsStrn = $null
+    if (check-hub  $Subscription $GroupName $HubName)
     {
         $prompt = 'Hub was created.'
-        menu\any-key $prompt
-	$global:HubName = $HubName
-        return $HubName
+        get-anykey $prompt
+        $global:HubName = $HubName
+        $global:retVal = 'Back'
     }
     else 
     {
         #If not found after trying to create it, must be inerror
         $prompt = 'Hub not created.'
-        menu\any-key $prompt 'Exit'
-        return 'Error'
+        get-anykey $prompt 'Exit'
+        $global:retVal = 'Error'
     }
-
 }
 

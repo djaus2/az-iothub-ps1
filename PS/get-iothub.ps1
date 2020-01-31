@@ -18,7 +18,7 @@ try {
 
 
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
-    # . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
+     . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
     . ("$global:ScriptDirectory\new_delete\new-device.ps1")
 
     . ("$global:ScriptDirectory\new_delete\delete-group.ps1")

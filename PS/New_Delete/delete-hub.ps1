@@ -7,6 +7,7 @@ param (
     [string]$HubName,
     [boolean]$Refresh=$false
 )
+. ("$global:ScriptDirectory\Util\Check-Hub.ps1")
 
     $HubStrnIndex =3
     $HubStrnDataIndex =3
@@ -99,7 +100,7 @@ param (
     $global:DeviceName = $null
     $global:DevicesStrn = $null
 
-    if ( util\check-hub $GroupName $HubName )
+    if ( check-hub $Subscription $GroupName $HubName )
     {
     	$prompt = 'Deleting Azure Resource Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     	write-Host $prompt
@@ -113,8 +114,8 @@ param (
 
     	$prompt = 'Checking whether Azure Hub "' + $HubName   +'" was deleted.'
     	write-Host $prompt
-    	$global:DevicesStrn = $null
-    	if ( util\check-hub $GroupName $HubName )
+    	$global:HubsStrn = $null
+    	if ( check-hub $Subscription $GroupName $HubName )
     	{
             $prompt = 'It Failed.'
             get-anykey $prompt

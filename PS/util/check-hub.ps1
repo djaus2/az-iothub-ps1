@@ -1,6 +1,8 @@
 function Check-Hub{
 param (
     [Parameter(Mandatory)]
+    [string]$Subscription,
+    [Parameter(Mandatory)]
     [string]$GroupName,
     [Parameter(Mandatory)]
     [string]$HubName,
@@ -25,13 +27,14 @@ $HubStrnDataIndex =3
     If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
     {   
         $lines =$global:HubsStrn -split '\n'
-        foreach ($line in $lines) 
+        foreach ($linex in $lines) 
         {
+            $line = $linex.Trim()
             if ([string]::IsNullOrEmpty($line))
             {   
                 continue
             }
-            $itemToList = ($line -split '\t')[$HubsStrnIndex ]
+            $itemToList = ($line -split '\t')[$HubStrnDataIndex ]
             if ($itemToList -eq $HubName)
             {
                 $prompt = 'It exists'

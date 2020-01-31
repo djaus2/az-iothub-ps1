@@ -1,5 +1,6 @@
 function New-Group{
 param (
+    [Parameter(Mandatory)]
     [string]$Subscription = '' ,
     [string]$GroupName='',
     [string]$Location=''

@@ -1,12 +1,18 @@
 function New-Device{
 param (
+    [Parameter(Mandatory)]
     [string]$Subscription = '' ,
+    [Parameter(Mandatory)]
     [string]$GroupName='',
+    [Parameter(Mandatory)]
     [string]$HubName='',
+    [Parameter(Mandatory)]
     [string]$DeviceName ='',
     [Nullable[boolean]]$EdgeEnabled=$false,
     [boolean]$Refresh=$false
 )
+
+. ("$global:ScriptDirectory\Util\Check-Device.ps1")
 
     $DeviceName=$null
 
@@ -75,7 +81,7 @@ param (
         }     
     }
 
-    if ((util\check-device $Subscription $GroupName $HubName $DeviceName $Refresh) -eq $true)
+    if (check-device $Subscription $GroupName $HubName $DeviceName )
     {
         $prompt = 'Azure IoT Hub Device "' + $DeviceName + '" in IoT Hub "'+ $HubName +'" in Group "' + $GroupName + '" already exists.'
         get-anykey $prompt
@@ -118,7 +124,7 @@ param (
     
     # Need to refresh the list of devices
     $global:DevicesStrn = $null
-    if (util\check-device $Subscription  $GroupName $HubName  $DeviceName )
+    if (check-device $Subscription  $GroupName $HubName  $DeviceName )
     {
         $prompt = 'Device was created.'
         get-anykey $prompt
