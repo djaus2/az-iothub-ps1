@@ -45,19 +45,6 @@ function set-env{
       write-host $SERVICE_CONNECTION_STRING
      $env:SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING
 
-    # Remote Host Name
-    write-host 'REMOTE_HOST_NAME'
-    $REMOTE_HOST_NAME = ""
-    write-host $REMOTE_HOST_NAME
-    $env:REMOTE_HOST_NAME = $REMOTE_HOST_NAME
-
-    # Remote Port
-    write-host 'REMOTE_PORT'
-    $REMOTE_PORT  =""
-    write-host $REMOTE_PORT 
-    $env:REMOTE_PORT = $REMOTE_PORT
-
-
     #DeviceID
     write-host 'DEVICE_ID'
     $DEVICE_ID = $DeviceName
@@ -99,4 +86,22 @@ function set-env{
     $EventHubsConnectionString = $cs
     write-host $EventHubsConnectionString
     $env:EVENT_HUBS_CONNECTION_STRING = $EventHubsConnectionString
+
+    # The next two are only required by Device Streaming Proxy Hub
+
+    # Remote Host Name
+    write-host ''
+    write-host 'Next two are only required by Device Streaming SSH/RDP Proxy Quickstart.'
+    write-host " See https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-device-streams-proxy-csharp"
+    write-host 'REMOTE_HOST_NAME'
+    $REMOTE_HOST_NAME = "localhost"
+    write-host $REMOTE_HOST_NAME
+    $env:REMOTE_HOST_NAME = $REMOTE_HOST_NAME
+
+    # Remote Port
+    write-host 'REMOTE_PORT'
+    $REMOTE_PORT  =  2222
+    write-host $REMOTE_PORT 
+    $env:REMOTE_PORT = $REMOTE_PORT
+    get-any-key
 }
