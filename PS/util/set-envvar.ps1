@@ -31,53 +31,72 @@ function set-env{
     # Hub Coonection String
     #                             az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
     write-host 'Getting IOTHUB_CONN_STRING_CSHARP'
-    $cs = az iot hub show-connection-string --name $HubName --policy-name $SharedAccesKeyName --key primary  --resource-group $GroupName --output json  
+    $cs = az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
     $IOTHUB_CONN_STRING_CSHARP = ($cs   | ConvertFrom-Json).connectionString
     write-host $IOTHUB_CONN_STRING_CSHARP
     $env:IOTHUB_CONN_STRING_CSHARP =$IOTHUB_CONN_STRING_CSHARP 
 
-    return
     
-    ////////////////////////////////////////
     
     # Service Connection string
      write-host 'Getting Service Connection string'
-     $SERVICE_CONNECTION_STRING = az iot hub show-connection-string --policy-name service --name $HubName --output table | out-string
-     write-host $SERVICE_CONNECTION_STRING
+      $cs = az iot hub show-connection-string --policy-name service --name $HubName --output json | out-string
+      $SERVICE_CONNECTION_STRING = ($cs   | ConvertFrom-Json).connectionString
+      write-host $SERVICE_CONNECTION_STRING
      $env:SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING
 
+    # Remote Host Name
+    write-host 'REMOTE_HOST_NAME'
     $REMOTE_HOST_NAME = ""
+    write-host $REMOTE_HOST_NAME
     $env:REMOTE_HOST_NAME = $REMOTE_HOST_NAME
 
+    # Remote Port
+    write-host 'REMOTE_PORT'
     $REMOTE_PORT  =""
+    write-host $REMOTE_PORT 
     $env:REMOTE_PORT = $REMOTE_PORT
-    
-    # Service Connection string
-    write-host 'Getting Service Connection string'
-    $SERVICE_CONNECTION_STRING = az iot hub show-connection-string --policy-name service --name $HubName --output table | out-string
-    write-host $SERVICE_CONNECTION_STRING
-    $env:SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING
 
-    write-host 'Getting IOTHUB_CONN_STRING_CSHARP'
-    $IOTHUB_CONN_STRING_CSHARP = az iot hub show-connection-string --name $HubName --policy-name service --key primary  --resource-group $GroupName --output table | out-string
-    write-host $IOTHUB_CONN_STRING_CSHARP
-    $env:IOTHUB_CONN_STRING_CSHARP =$IOTHUB_CONN_STRING_CSHARP
 
+    #DeviceID
+    write-host 'DEVICE_ID'
     $DEVICE_ID = $DeviceName
+    write-Host $DEVICE_ID
     $env:DEVICE_ID = $DEVICE_ID 
 
-    $EventHubsConnectionString = ""
-    $env:EventHubsConnectionString = $EventHubsConnectionString
 
-    $EventHubsCompatibleEndpoint = az iot hub show --query properties.eventHubEndpoints.events.endpoint --name $HubName |out-string
-    $env:EventHubsCompatibleEndpoint = $EventHubsCompatibleEndpoint.Replace('"','')
+
+    # EventHubsCompatibleEndpoint
+    write-host 'Getting EventHubsCompatibleEndpoint'
+    $cs =  az iot hub show --query properties.eventHubEndpoints.events.endpoint --name $HubName --output json |out-string
+    $cs = ($cs -split '\n')[0]
+    $EventHubsCompatibleEndpoint = $cs.Replace('"','')
+    write-host $EventHubsCompatibleEndpoint
+    $env:EVENT_THUBS_COMPATIBILITY_ENDPOINT = $EventHubsCompatibleEndpoint
     
-    $EventHubsCompatiblePath= az iot hub show --query properties.eventHubEndpoints.events.path --name $HubName  |out-string
-    $env:EventHubsCompatiblePath =$EventHubsCompatiblePath
+    # EventHubsCompatiblePath
+    write-host 'Getting EventHubsCompatiblePath'
+    $cs = az iot hub show --query properties.eventHubEndpoints.events.path --name $HubName --output json  |out-string
+    $cs = ($cs -split '\n')[0]
+    $EventHubsCompatiblePath = $cs.Replace('"','')
+    write-host $EventHubsCompatiblePath 
+    $env:EVENT_HUBS_COMPATIBILITY_PATH =$EventHubsCompatiblePath
 
-    $EventHubPrimaryKeyCode = az iot hub policy show --name  $HubKeyNamequery primaryKey --hub-name $HubName  |out-string
 
     
-    $EventHubsSasKey =""
-    $env:EventHubsSasKey=$EventHubsSasKey
+    # EventHubsSasKey
+    write-host 'Getting EventHubsSasKey'
+    $cs = az iot hub policy show --name iothubowner --query primaryKey --hub-name $HubName   |out-string
+    $cs = ($cs -split '\n')[0]
+    $EventHubsSasKey = $cs.Replace('"','')
+    write-host  $EventHubsSasKey
+    $envEVENT_HUBS_SAS_KEY=$EventHubsSasKey
+
+    # EventHubsConnectionString
+    write-host 'Calculating the Builtin Event Hub-Compatible Endpoint Connection String'
+    # Endpoint=sb://<FQDN>/;SharedAccessKeyName=<KeyName>;SharedAccessKey=<KeyValue>
+    $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
+    $EventHubsConnectionString = $cs
+    write-host $EventHubsConnectionString
+    $env:EVENT_HUBS_CONNECTION_STRING = $EventHubsConnectionString
 }

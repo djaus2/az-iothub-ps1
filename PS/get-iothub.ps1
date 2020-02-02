@@ -258,9 +258,7 @@ do
                         $DeviceName = $response
                     }
                 }
-            'D5'    {  
-                read-Host 'D5'
-                set-env $Subscription $GroupName $HubName $DeviceName }
+            'D5'    {  set-env $Subscription $GroupName $HubName $DeviceName }
             'D6'    {  clear-env  }
             'D7'    { exit  }
             R    { 
