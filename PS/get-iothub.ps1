@@ -37,10 +37,10 @@ catch {
 
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Write Env Vars To File,Clear Environment Variables,Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Clear Environment Variables,Write Env Vars To File,Bash Env Vars to File,Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -259,9 +259,10 @@ do
                     }
                 }
             'D5'    {  set-env $Subscription $GroupName $HubName $DeviceName }
-            'D6'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
-            'D7'    {  clear-env  }
-            'D8'    { exit  }
+            'D6'    {  clear-env  }
+            'D7'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
+            'D8'    {  write-bash $Subscription $GroupName $HubName $DeviceName  }
+            'D9'    { exit  }
             R    { 
                     util\heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'
