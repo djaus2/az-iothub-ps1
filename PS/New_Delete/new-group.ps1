@@ -103,7 +103,7 @@ param (
     $global:HubsStrn = $null
     $global:DevicesStrn=$null
     $global:DeviceName=$null
-    $prompt = 'Creeating new Azure Resource Group "' + $GroupName +'"'
+    $prompt = 'Creating new Azure Resource Group "' + $GroupName +'"'
     write-Host $prompt
     
     if(-not([string]::IsNullOrEmpty($global:echoCommands)))

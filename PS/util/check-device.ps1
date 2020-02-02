@@ -27,7 +27,7 @@ param (
     If ([string]::IsNullOrEmpty($global:DevicesStrn  ))
     {
         $Prompt = 'No Devices found in Hub. Return'
-        write-Hosty $Prompt
+        write-Host $Prompt
         return $false
     }
     else

@@ -6,7 +6,6 @@ param (
     [string]$GroupName='',
     [Parameter(Mandatory)]
     [string]$HubName='',
-    [Parameter(Mandatory)]
     [string]$DeviceName ='',
     [Nullable[boolean]]$EdgeEnabled=$false,
     [boolean]$Refresh=$false

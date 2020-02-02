@@ -229,7 +229,7 @@ do
                     }
                     elseif ($response -eq 'New')
                     {
-                        New-Device $Subscription $GroupName $HubName ''
+                        New-Device $Subscription $GroupName $HubName 
                     }
                     elseif ($response -eq 'Delete')
                     {                       
@@ -258,8 +258,10 @@ do
                         $DeviceName = $response
                     }
                 }
-            'D5'    {  set-env }
-            'D6'    {  clear-env }
+            'D5'    {  
+                read-Host 'D5'
+                set-env $Subscription $GroupName $HubName $DeviceName }
+            'D6'    {  clear-env  }
             'D7'    { exit  }
             R    { 
                     util\heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
