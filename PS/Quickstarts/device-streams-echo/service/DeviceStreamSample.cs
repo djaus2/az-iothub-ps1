@@ -26,13 +26,14 @@ namespace Microsoft.Azure.Devices.Samples
         {
             try
             {
+                Console.WriteLine("Service: Sending TestStream");
                 DeviceStreamRequest deviceStreamRequest = new DeviceStreamRequest(
                     streamName: "TestStream"
                 );
 
                 DeviceStreamResponse result = await _serviceClient.CreateStreamAsync(_deviceId, deviceStreamRequest).ConfigureAwait(false);
 
-                Console.WriteLine("Stream response received: Name={0} IsAccepted={1}", deviceStreamRequest.StreamName, result.IsAccepted);
+                Console.WriteLine("Service: Stream response received: Name={0} IsAccepted={1}", deviceStreamRequest.StreamName, result.IsAccepted);
 
                 if (result.IsAccepted)
                 {
@@ -44,21 +45,22 @@ namespace Microsoft.Azure.Devices.Samples
 
                         await stream.SendAsync(sendBuffer, WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
 
-                        Console.WriteLine("Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
+                        Console.WriteLine("Service: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
 
                         var receiveResult = await stream.ReceiveAsync(receiveBuffer, cancellationTokenSource.Token).ConfigureAwait(false);
 
-                        Console.WriteLine("Received stream data: {0}", Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count));
+                        Console.WriteLine("Service: Received stream data: {0}", Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count));
+                        await stream.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).ConfigureAwait(true);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Stream request was rejected by the device");
+                    Console.WriteLine("Service: Stream request was rejected by the device");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Got an exception: {0}", ex);
+                Console.WriteLine("Service: Got an exception: {0}", ex);
                 throw;
             }
         }

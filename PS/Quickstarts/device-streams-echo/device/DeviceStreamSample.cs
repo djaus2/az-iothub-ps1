@@ -30,21 +30,23 @@ namespace Microsoft.Azure.Devices.Client.Samples
 
             using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5)))
             {
+                Console.WriteLine("Device: Looking for Stream Request.");
                 DeviceStreamRequest streamRequest = await _deviceClient.WaitForDeviceStreamRequestAsync(cancellationTokenSource.Token).ConfigureAwait(false);
 
                 if (streamRequest != null)
                 {
                     if (acceptDeviceStreamingRequest)
                     {
+                        Console.WriteLine("Device: Accepting Stream Request.");
                         await _deviceClient.AcceptDeviceStreamRequestAsync(streamRequest, cancellationTokenSource.Token).ConfigureAwait(false);
 
                         using (ClientWebSocket webSocket = await DeviceStreamingCommon.GetStreamingClientAsync(streamRequest.Url, streamRequest.AuthorizationToken, cancellationTokenSource.Token).ConfigureAwait(false))
                         {
                             WebSocketReceiveResult receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, 0, buffer.Length), cancellationTokenSource.Token).ConfigureAwait(false);
-                            Console.WriteLine("Received stream data: {0}", Encoding.UTF8.GetString(buffer, 0, receiveResult.Count));
+                            Console.WriteLine("Device: Received stream data: {0}", Encoding.UTF8.GetString(buffer, 0, receiveResult.Count));
 
                             await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, receiveResult.Count), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
-                            Console.WriteLine("Sent stream data: {0}", Encoding.UTF8.GetString(buffer, 0, receiveResult.Count));
+                            Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(buffer, 0, receiveResult.Count));
 
                             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationTokenSource.Token).ConfigureAwait(false);
                         }

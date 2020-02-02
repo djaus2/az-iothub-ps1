@@ -39,7 +39,7 @@ param (
             {   
                 continue
             }
-            $itemToList = ($line -split '\t')[$DevicesStrnIndex]
+            $itemToList = ($line -split '\t')[$DeviceStrnIndex]
             if ($itemToList -eq $DeviceName)
             {
                 $prompt = 'It exists'

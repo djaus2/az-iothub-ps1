@@ -44,7 +44,7 @@ namespace Microsoft.Azure.Devices.Samples
                 Console.WriteLine("Usage: ServiceClientC2DStreamingSample [iotHubConnString] [deviceId]");
                 return 1;
             }
-
+            Console.WriteLine("Service: Starting (Got parameters)");
             using (ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(s_connectionString, s_transportType))
             {
                 var sample = new DeviceStreamSample(serviceClient, s_deviceId);

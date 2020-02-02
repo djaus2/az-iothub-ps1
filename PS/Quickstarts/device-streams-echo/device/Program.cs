@@ -32,16 +32,17 @@ namespace Microsoft.Azure.Devices.Client.Samples
 
             if (string.IsNullOrEmpty(s_deviceConnectionString))
             {
-                Console.WriteLine("Please provide a device connection string");
-                Console.WriteLine("Usage: DeviceClientC2DStreamingSample [iotHubDeviceConnString]");
+                Console.WriteLine("Device: Please provide a device connection string");
+                Console.WriteLine("Device-Usage: DeviceClientC2DStreamingSample [iotHubDeviceConnString]");
                 return 1;
             }
 
+            Console.WriteLine("Device: Starting (Got parameters)");
             using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(s_deviceConnectionString, s_transportType))
             {
                 if (deviceClient == null)
                 {
-                    Console.WriteLine("Failed to create DeviceClient!");
+                    Console.WriteLine("Device: Failed to create DeviceClient!");
                     return 1;
                 }
 
@@ -49,7 +50,7 @@ namespace Microsoft.Azure.Devices.Client.Samples
                 sample.RunSampleAsync().GetAwaiter().GetResult();
             }
 
-            Console.WriteLine("Done.\n");
+            Console.WriteLine("Device: Done.\n");
             return 0;
         }
     }

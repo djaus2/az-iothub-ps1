@@ -103,5 +103,5 @@ function set-env{
     $REMOTE_PORT  =  2222
     write-host $REMOTE_PORT 
     $env:REMOTE_PORT = $REMOTE_PORT
-    get-any-key
+    get-anykey
 }
