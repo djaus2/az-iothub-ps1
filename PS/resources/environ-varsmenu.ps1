@@ -55,13 +55,16 @@ param (
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
 
-        $selectionList =@('D1','D2','D3','D4','D5','D6','D7')
         $itemsList ='Generate Environment Variables,Clear Env Vars,Write Env Vars To File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Done'
 
 
 
-        choose-selection $itemsList  'Hub Connwectyion Strins as Environment Variables' 
+        choose-selection $itemsList  'Action for IoT Hub Connection String Environment Variables'   '' ','
         $answer = $global:retVal1
+        
+        if ( $global:retVal -eq 'Back'){
+            return  'Back'
+        }
 
         switch ($answer)
         {
@@ -71,7 +74,7 @@ param (
             'D4'    {  set-export $Subscription $GroupName $HubName $DeviceName }
             'D5'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
             'D6'    {  write-export $Subscription $GroupName $HubName $DeviceName }
-            'D7'    {  return}
+            'D7'    {  return 'Back' }
         }  
     }  
     while ($true)

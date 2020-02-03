@@ -51,6 +51,8 @@ namespace Microsoft.Azure.Devices.Client.Samples
             }
 
             Console.WriteLine("Device: Done.\n");
+            Console.WriteLine("Press any key to close window.");
+            Console.ReadKey();
             return 0;
         }
     }

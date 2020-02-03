@@ -80,7 +80,8 @@ param (
         {
             return $answer
         }
-        write-Host 'Enter dotnet run to run the app.'
+        write-Host 'Enter .\run-apps run to run the apps simultaneously.'
+        write-Host 'Assumes that you have written env vars an run script to these apps.'
         Set-Location -Path $global:ScriptDirectory\Quickstarts\$answer
         return 'Exit'   
 }

@@ -40,8 +40,8 @@ namespace Microsoft.Azure.Devices.Samples
             if (string.IsNullOrEmpty(s_connectionString) ||
                 string.IsNullOrEmpty(s_deviceId))
             {
-                Console.WriteLine("Please provide a connection string and device ID");
-                Console.WriteLine("Usage: ServiceClientC2DStreamingSample [iotHubConnString] [deviceId]");
+                Console.WriteLine("Service: Please provide a connection string and device ID");
+                Console.WriteLine("Service: Usage: ServiceClientC2DStreamingSample [iotHubConnString] [deviceId]");
                 return 1;
             }
             Console.WriteLine("Service: Starting (Got parameters)");
@@ -51,7 +51,9 @@ namespace Microsoft.Azure.Devices.Samples
                 sample.RunSampleAsync().GetAwaiter().GetResult();
             }
 
-            Console.WriteLine("Done.\n");
+            Console.WriteLine("Service: Done.\n");
+            Console.WriteLine("Service:Press any key to close window.");
+            Console.ReadKey();
             return 0;
         }
     }

@@ -139,6 +139,33 @@ function write-env{
     [string]$folder =''
     )
 
+    $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
+    $list2 = $lst -split '\n'
+    $menu = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
+    [string]$itemslist =''
+    foreach ($app in $menu) 
+    {
+        $app2 = $app  -replace '"',''
+        if ($app2 -ne 'Common')
+        {
+            $itemslist += $app2 + ','
+        }
+    }
+    $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
+     
+    choose-selection $itemslist  'Quickstarts'  ''  ','
+    $answer = $global:retVal
+    if ($answer -eq 'Back')
+    {
+        return $answer
+    }
+    
+    $PsScriptFile =  "$global:ScriptDirectory\Quickstarts\$answer\set-env.ps1"
+    write-host 'Writing to:'
+    read-host $PsScriptFile
+    Out-File -FilePath $PsScriptFile    -InputObject "" -Encoding ASCII
+
+
     #SharedAccesKeyName
     $SharedAccesKeyName = 'iothubowner'
     # $SharedAccesKeyName = 'service'
@@ -151,7 +178,7 @@ function write-env{
     $IOTHUB_DEVICE_CONN_STRING = ($cs   | ConvertFrom-Json).connectionString
     write-Host $IOTHUB_DEVICE_CONN_STRING
     $op = '$env:IOTHUB_DEVICE_CONN_STRING = "' + $IOTHUB_DEVICE_CONN_STRING +'"'
-    Out-File -FilePath c:\temp\set-envs.ps1     -InputObject $op -Encoding ASCII
+    Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII
  
 
 
@@ -162,7 +189,7 @@ function write-env{
     $IOTHUB_CONN_STRING_CSHARP = ($cs   | ConvertFrom-Json).connectionString
     write-host $IOTHUB_CONN_STRING_CSHARP
     $op = '$env:IOTHUB_CONN_STRING_CSHARP = "' +$IOTHUB_CONN_STRING_CSHARP +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1 -Value $op
+    Add-Content -Path  $PsScriptFile -Value $op
     
     
     # Service Connection string
@@ -171,14 +198,14 @@ function write-env{
     $SERVICE_CONNECTION_STRING = ($cs   | ConvertFrom-Json).connectionString
     write-host $SERVICE_CONNECTION_STRING
     $op = '$env:SERVICE_CONNECTION_STRING = "' + $SERVICE_CONNECTION_STRING +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile -Value $op
 
     #DeviceID
     write-host 'DEVICE_ID'
     $DEVICE_ID = $DeviceName
     write-Host $DEVICE_ID
     $op = '$env:DEVICE_ID = "' + $DEVICE_ID +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile  -Value $op
 
 
 
@@ -189,7 +216,7 @@ function write-env{
     $EventHubsCompatibleEndpoint = $cs
     write-host $EventHubsCompatibleEndpoint
     $op = '$env:EVENT_THUBS_COMPATIBILITY_ENDPOINT = "' + $EventHubsCompatibleEndpoint +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile  -Value $op
     
     # EventHubsCompatiblePath
     write-host 'Getting EventHubsCompatiblePath'
@@ -198,7 +225,7 @@ function write-env{
     $EventHubsCompatiblePath = $cs
     write-host $EventHubsCompatiblePath 
     $op = '$env:EVENT_HUBS_COMPATIBILITY_PATH = "' + $EventHubsCompatiblePath +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile  -Value $op
 
 
     
@@ -209,7 +236,7 @@ function write-env{
     $EventHubsSasKey = $cs
     write-host  $EventHubsSasKey
     $op = '$env:EVENT_HUBS_SAS_KEY = "' + $EventHubsSasKey +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile  -Value $op
 
     # EventHubsConnectionString
     write-host 'Calculating the Builtin Event Hub-Compatible Endpoint Connection String'
@@ -218,7 +245,7 @@ function write-env{
     $EventHubsConnectionString = $cs
     write-host $EventHubsConnectionString
     $op = '$env:EVENT_HUBS_CONNECTION_STRING = "' + $EventHubsConnectionString +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile  -Value $op
 
     # The next two are only required by Device Streaming Proxy Hub
 
@@ -230,15 +257,25 @@ function write-env{
     $REMOTE_HOST_NAME = "localhost"
     #write-host $REMOTE_HOST_NAME
     $op = '$env:REMOTE_HOST_NAME = "' + $REMOTE_HOST_NAME +'"'
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile  -Value $op
 
     # Remote Port
     # write-host 'REMOTE_PORT'
     $REMOTE_PORT  =  2222
     # write-host $REMOTE_PORT 
     $op =  '$env:REMOTE_PORT = ' + $REMOTE_PORT
-    Add-Content -Path  c:\temp\set-envs.ps1  -Value $op
+    Add-Content -Path  $PsScriptFile -Value $op
 
+    $PsScriptFile =  "$global:ScriptDirectory\Quickstarts\$answer\run-apps.ps1"
+    write-Host 'Written PowerShell script to: ' + $PsScriptFile +' that will set the Hub connection strings as Env. Vars'
+    
+    write-host 'Writing ps script to root of apps to simultaneously run both apps  as run-apps.ps1'
+    Out-File -FilePath $PsScriptFile    -InputObject '.\set-env' -Encoding ASCII
+    Add-Content -Path  $PsScriptFile   -Value 'cd device'
+    Add-Content -Path  $PsScriptFile   -Value 'Start-process dotnet run'
+    Add-Content -Path  $PsScriptFile   -Value 'cd ..\service' 
+    Add-Content -Path  $PsScriptFile   -Value 'start-process dotnet run'
+    Add-Content -Path  $PsScriptFile   -Value 'cd ..'
     get-anykey
 }
 
