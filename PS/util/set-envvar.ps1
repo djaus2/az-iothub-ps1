@@ -269,14 +269,14 @@ function write-env{
     $PsScriptFile =  "$global:ScriptDirectory\Quickstarts\$answer\run-apps.ps1"
     write-Host 'Written PowerShell script to: ' + $PsScriptFile +' that will set the Hub connection strings as Env. Vars'
     
-    write-host 'Writing ps script to root of apps to simultaneously run both apps  as run-apps.ps1'
-    Out-File -FilePath $PsScriptFile    -InputObject '.\set-env' -Encoding ASCII
-    Add-Content -Path  $PsScriptFile   -Value 'cd device'
-    Add-Content -Path  $PsScriptFile   -Value 'Start-process dotnet run'
-    Add-Content -Path  $PsScriptFile   -Value 'cd ..\service' 
-    Add-Content -Path  $PsScriptFile   -Value 'start-process dotnet run'
-    Add-Content -Path  $PsScriptFile   -Value 'cd ..'
-    get-anykey
+    # write-host 'Writing ps script to root of apps to simultaneously run both apps  as run-apps.ps1'
+    # Out-File -FilePath $PsScriptFile    -InputObject '.\set-env' -Encoding ASCII
+    # Add-Content -Path  $PsScriptFile   -Value 'cd device'
+    # Add-Content -Path  $PsScriptFile   -Value 'Start-process dotnet run'
+    # Add-Content -Path  $PsScriptFile   -Value 'cd ..\service' 
+    # Add-Content -Path  $PsScriptFile   -Value 'start-process dotnet run'
+    # Add-Content -Path  $PsScriptFile   -Value 'cd ..'
+    # get-anykey
 }
 
 
