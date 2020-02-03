@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-Quickstarts/*/set-env.ps1
+PS/Quickstarts/*/set-env.ps1
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
