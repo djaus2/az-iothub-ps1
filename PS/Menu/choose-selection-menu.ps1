@@ -4,7 +4,7 @@ param (
      [string]$ListString, 
      [string]$Title,
      [string]$CurrentSelection='None',
-     [string]$Sep=',',
+     [string]$Sep='\n',
      [string]$AdditionalMenuOptions='B. Back',
      [int]$ItemsPerLine=1,
      $ColWidth=1
