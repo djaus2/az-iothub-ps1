@@ -19,7 +19,15 @@ namespace simulated_device
         // The device connection string to authenticate the device with your IoT hub.
         // Using the Azure CLI:
         // az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyDotnetDevice --output table
-        private readonly static string s_connectionString = "{Your device connection string here}";
+        ////private readonly static string s_connectionString = "{Your device connection string here}";
+        
+        // For this sample either
+        // - pass this value as a command-prompt argument
+        // - set the IOTHUB_DEVICE_CONN_STRING environment variable 
+        // - create a launchSettings.json (see launchSettings.json.template) containing the variable
+        private static string s_connectionString = Environment.GetEnvironmentVariable("IOTHUB_DEVICE_CONN_STRING");
+
+
 
         // Async method to send simulated telemetry
         private static async void SendDeviceToCloudMessagesAsync()

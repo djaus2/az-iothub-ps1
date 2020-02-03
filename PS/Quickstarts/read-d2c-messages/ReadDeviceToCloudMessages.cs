@@ -17,15 +17,27 @@ namespace read_d2c_messages
     {
         // Event Hub-compatible endpoint
         // az iot hub show --query properties.eventHubEndpoints.events.endpoint --name {your IoT Hub name}
-        private readonly static string s_eventHubsCompatibleEndpoint = "{your Event Hubs compatible endpoint}";
+        ////private readonly static string s_eventHubsCompatibleEndpoint = "{your Event Hubs compatible endpoint}";
+        
+        private  static string s_eventHubsCompatibleEndpoint = Environment.GetEnvironmentVariable("EVENT_THUBS_COMPATIBILITY_ENDPOINT");
+
 
         // Event Hub-compatible name
         // az iot hub show --query properties.eventHubEndpoints.events.path --name {your IoT Hub name}
-        private readonly static string s_eventHubsCompatiblePath = "{your Event Hubs compatible name}";
-        
+        //// private readonly static string s_eventHubsCompatiblePath = "{your Event Hubs compatible name}";
+  
+        private  static string s_eventHubsCompatiblePath = Environment.GetEnvironmentVariable("EVENT_HUBS_COMPATIBILITY_PATH");
+
+
         // az iot hub policy show --name service --query primaryKey --hub-name {your IoT Hub name}
-        private readonly static string s_iotHubSasKey = "{your service primary key}";
-        private readonly static string s_iotHubSasKeyName = "service";
+        //private readonly static string s_iotHubSasKey = "{your service primary key}";
+        //private readonly static string s_iotHubSasKeyName = "service";
+
+        private  static string s_iotHubSasKey = Environment.GetEnvironmentVariable("EVENT_HUBS_SAS_KEY");// "{your service primary key}";
+        private  static string s_iotHubSasKeyName = "iothubowner"; //Environment.GetEnvironmentVariable("");// "service";
+        
+        
+        
         private static EventHubClient s_eventHubClient;
 
         // Asynchronously create a PartitionReceiver for a partition and then start 
@@ -73,6 +85,9 @@ namespace read_d2c_messages
             // Create an EventHubClient instance to connect to the
             // IoT Hub Event Hubs-compatible endpoint.
             var connectionString = new EventHubsConnectionStringBuilder(new Uri(s_eventHubsCompatibleEndpoint), s_eventHubsCompatiblePath, s_iotHubSasKeyName, s_iotHubSasKey);
+            
+            
+            
             s_eventHubClient = EventHubClient.CreateFromConnectionString(connectionString.ToString());
 
             // Create a PartitionReciever for each partition on the hub.

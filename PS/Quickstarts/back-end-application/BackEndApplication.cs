@@ -15,7 +15,15 @@ namespace back_end_application
         
         // Connection string for your IoT Hub
         // az iot hub show-connection-string --hub-name {your iot hub name} --policy-name service
-        private readonly static string s_connectionString = "{Your service connection string here}";
+        ////private readonly static string s_connectionString = "{Your service connection string here}";
+
+        // For this sample either:
+        // - pass this value as a command-prompt argument
+        // - set the IOTHUB_CONN_STRING_CSHARP environment variable 
+        // - create a launchSettings.json (see launchSettings.json.template) containing the variable
+        private static string s_connectionString = Environment.GetEnvironmentVariable("IOTHUB_CONN_STRING_CSHARP");
+
+
 
         // Invoke the direct method on the device, passing the payload
         private static async Task InvokeMethod()
