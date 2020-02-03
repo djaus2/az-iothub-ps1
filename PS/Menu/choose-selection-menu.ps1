@@ -174,6 +174,7 @@ param (
      # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
      $KeyPress = [System.Console]::ReadKey($true)
      $K = $KeyPress.Key
+     $KK = $KeyPress.KeyChar
  
      $val=-10
      switch ( $k )
@@ -259,6 +260,8 @@ $SelectionList = $null
 $ListString = $null
  
 $global:retVal =  $output
+$global:retVal1 = $k
+$global:retVal2 = $kk
 
  return $output
 }

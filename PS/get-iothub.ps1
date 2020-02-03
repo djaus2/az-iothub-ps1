@@ -6,8 +6,10 @@ $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -P
 write-Host $global:ScriptDirectory
 try {
     . ("$global:ScriptDirectory\util\settings.ps1")
-    . ("$global:ScriptDirectory\util\set-envvar.ps1")
-    . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
+    # . ("$global:ScriptDirectory\util\set-envvar.ps1")
+    # . ("$global:ScriptDirectory\util\set-export.ps1")
+     . ("$global:ScriptDirectory\menu\environ-varsmenu.ps1")
+     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
     . ("$global:ScriptDirectory\menu\yes-no-menu.ps1")
     . ("$global:ScriptDirectory\menu\parse-list-menu.ps1")
     . ("$global:ScriptDirectory\menu\parse-shortlist-menu.ps1")
@@ -37,10 +39,10 @@ catch {
 
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Clear Environment Variables,Write Env Vars To File,Bash Env Vars to File,Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -258,11 +260,8 @@ do
                         $DeviceName = $response
                     }
                 }
-            'D5'    {  set-env $Subscription $GroupName $HubName $DeviceName }
-            'D6'    {  clear-env  }
-            'D7'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
-            'D8'    {  write-bash $Subscription $GroupName $HubName $DeviceName  }
-            'D9'    { exit  }
+            'D5' { Do-Envs $Subscription $GroupName $HubName $DeviceName }
+            'D6' {exit}
             R    { 
                     util\heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'

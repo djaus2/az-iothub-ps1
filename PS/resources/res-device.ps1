@@ -27,6 +27,7 @@ param (
     {
         write-Host ''
         prompt =  'Need to select a Hub first.'
+        get-anykey $prompt
         $global:DeviceName =  'Back'
         return
     }
