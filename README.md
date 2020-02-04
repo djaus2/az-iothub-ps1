@@ -25,7 +25,7 @@ The Main Menu:_**
             Hub :"DSHub" <br>
          Device :"DSHubDevice"<br>
 
-1. Subscription <-- Current Selection
+1. **Subscription** <-- _Current Selection_
 2. Groups
 3. IoT Hubs
 4. Devices
