@@ -3,14 +3,22 @@ param (
 [string]$Prompt = '',
 [string]$Mode =''
 )
-    If  ( -not ([string]::IsNullOrEmpty( $Mode  )))
+    If  (  ([string]::IsNullOrEmpty( $Prompt  )))
     {
-        $prompt += ' Press any key to ' + $Mode +'.'
+        If  ( -not ([string]::IsNullOrEmpty( $Mode  )))
+        {
+            $prompt += ' Press any key to ' + $Mode +'.'
+        }
+        else
+        {
+            $prompt += ' Press any key to return.'
+        }
     }
-    else
+    elseIf  ( -not ([string]::IsNullOrEmpty( $Mode  )))
     {
-        $prompt += ' Press any key to return.'
+        $prompt += $Mode +'.'
     }
+   
     write-Host $prompt
     [System.Console]::ReadKey($true)
 }

@@ -1,4 +1,4 @@
-.\set-env
+# .\set-env
 cd device
 Start-process dotnet run
 cd ..\service
