@@ -16,9 +16,9 @@ Within an Azure Subscription you have a Resource Group.
 An IoT Hub is an element of a Resource Group.
 A Device belongs to an IoT Hub.
 
-The Main Menu:_**
 <table border="1"  style="background-color:#FFFFE0;"><tr><td>
-  **A Z U R E  I o T  H U B     S E T U P**   using PowerShell AND Azure CLI
+
+**A&nbsp;Z&nbsp;U&nbsp;R&nbsp;E&nbsp;&nbsp;I&nbsp;o&nbsp;T&nbsp;&nbsp;H&nbsp;U&nbsp;B&nbsp;&nbsp;S&nbsp;E&nbsp;T&nbsp;U&nbsp;P**&nbsp;&nbsp;_using&nbsp;PowerShell&nbsp;AND&nbsp;Azure&nbsp;CLI_
 
    Subscription :"Visual Studio Ultimate with MSDN"<br>
           Group :"DSHubGrp"<br>
@@ -39,6 +39,8 @@ X. Exit<br>
 Select action (number). (Default is highlighted) X To exit
 </td></tr></table>
 
+_The **get-iothub** PowerShell scipt Main Menu_
+
 ## Creating an IoT and subservient Device
 
 - Select the Subscription to use _(Normally only one option here)_
@@ -54,7 +56,7 @@ The script can...
 - Place you in the folder to run a Quickstart (menu of them) with the environment variables set so as to be able to run the app/s.
     - You then just enter ```dontnet run`` to run the app/s.
     - There is also a script in some Quickstart folders to fork two processes for when a device and service are required (Eg Device Streaming).
-- The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Coonection strings are taken from environemnt variables.
+- The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
 Nb: Nothing there yet on this ..coming.
