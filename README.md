@@ -18,11 +18,11 @@ A Device belongs to an IoT Hub.
 
 ## Creating an IoT and subservient Device
 - Select the Subscription to use _(Normally only one option here)_
-- Create a Group ( or use an existing one)  _(Group option in Main Menu)_
-- Create an IoT Hub (or use an existing one) _(Hub option in Main Menu)_
+- Create a Group ( or select an existing one)  _(Group option in Main Menu)_
+- Create an IoT Hub (or select an existing one) _(Hub option in Main Menu)_
 - Create a Device (or select an existing one) _(Device opton in Main Menu)_
 
 Read more on mu blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
-Nb: Nothing there yet on this ..comin.
+Nb: Nothing there yet on this ..coming.
 
 Enjoy!
