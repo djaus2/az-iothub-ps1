@@ -8,7 +8,7 @@ In the [Azure IoT Hub Quickstarts](https://docs.microsoft.com/en-us/azure/iot-hu
 
 But wouldn't it be nice to have **ONE PowerShell script that prompts you for required information** when creating or selecting a Hub and for when collecting the required meta-data. Its output could be the required meta-data in temporary environment variables, ready for use by the Quickstarts. _Look no further!_
 
-It's here now.  You run the manin PowerShell script **_get-iothub_** in teh PS folder. Whilst there are numerous other PowerShell script under PS in other folders, there are functions called by the main script. The script displays menus where the user makes selections or choices.
+It's here now.  You run the main PowerShell script **_get-iothub_** in teh PS folder. Whilst there are numerous other PowerShell script under PS in other folders, there are functions called by the main script. The script displays menus where the user makes selections or choices.
 
 There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as .\set-path). You then can run the main script just by entering ```get-iothub``` as teh PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
 
