@@ -22,7 +22,7 @@ A Device belongs to an IoT Hub.
 - Create an IoT Hub (or select an existing one) _(Hub option in Main Menu)_
 - Create a Device (or select an existing one) _(Device opton in Main Menu)_
 
-Read more on mu blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
+Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
 Nb: Nothing there yet on this ..coming.
 
 Enjoy!
