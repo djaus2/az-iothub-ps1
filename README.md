@@ -18,12 +18,12 @@ A Device belongs to an IoT Hub.
 
 The Main Menu:_**
 <table border="1"  style="background-color:#FFFFE0;"><tr><td>
-  A Z U R E  I o T  H U B     S E T U P   using PowerShell AND Azure CLI
+  **A Z U R E  I o T  H U B     S E T U P**   using PowerShell AND Azure CLI
 
-   Subscription :"Visual Studio Ultimate with MSDN"
-          Group :"DSHubGrp"
-            Hub :"DSHub"
-         Device :"DSHubDevice"
+   Subscription :"Visual Studio Ultimate with MSDN"<br>
+          Group :"DSHubGrp"<br>
+            Hub :"DSHub" <br>
+         Device :"DSHubDevice"<br>
 
 1. Subscription <-- Current Selection
 2. Groups
@@ -34,8 +34,8 @@ The Main Menu:_**
 7. Manage App Data
 8. Done
 
-R. Reset script globals
-X. Exit
+R. Reset script globals<br>
+X. Exit<br>
 Select action (number). (Default is highlighted) X To exit
 </td></tr></table>
 
