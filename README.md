@@ -8,7 +8,7 @@ In the [Azure IoT Hub Quickstarts](https://docs.microsoft.com/en-us/azure/iot-hu
 
 But wouldn't it be nice to have **ONE PowerShell script that prompts you for required information** when creating or selecting a Hub and for when collecting the required meta-data. Its output could be the required meta-data in temporary environment variables, ready for use by the Quickstarts. _Look no further!_
 
-It's here now.  You run the main PowerShell script **_get-iothub_** in teh PS folder. Whilst there are numerous other PowerShell script under PS in other folders, there are functions called by the main script. The script displays menus where the user makes selections or choices.
+It's here now.  You run the main PowerShell script **_get-iothub_** in the PS folder. Whilst there are numerous other PowerShell script under PS in other folders, there are functions called by the main script. The script displays menus where the user makes selections or choices.
 
 There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as .\set-path). You then can run the main script just by entering ```get-iothub``` as teh PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
 
@@ -16,11 +16,45 @@ Within an Azure Subscription you have a Resource Group.
 An IoT Hub is an element of a Resource Group.
 A Device belongs to an IoT Hub.
 
+The Main Menu:_**
+<table border="1"  style="background-color:#FFFFE0;"><tr><td>
+  A Z U R E  I o T  H U B     S E T U P   using PowerShell AND Azure CLI
+
+   Subscription :"Visual Studio Ultimate with MSDN"
+          Group :"DSHubGrp"
+            Hub :"DSHub"
+         Device :"DSHubDevice"
+
+1. Subscription <-- Current Selection
+2. Groups
+3. IoT Hubs
+4. Devices
+5. Generate Environment Variables
+6. Run Quickstart Apps
+7. Manage App Data
+8. Done
+
+R. Reset script globals
+X. Exit
+Select action (number). (Default is highlighted) X To exit
+</td></tr></table>
+
 ## Creating an IoT and subservient Device
+
 - Select the Subscription to use _(Normally only one option here)_
 - Create a Group ( or select an existing one)  _(Group option in Main Menu)_
 - Create an IoT Hub (or select an existing one) _(Hub option in Main Menu)_
 - Create a Device (or select an existing one) _(Device opton in Main Menu)_
+
+## The PS Script CanDos
+
+The script can...
+- Create a new Group, IoT Hub and Device
+- Generate all of the Hub and Device connection strings required by the IoT Hub SDK for the Quickstart apps and write them as System environment variables and to a PS script to do same.
+- Place you in the folder to run a Quickstart (menu of them) with the environment variables set so as to be able to run the app/s.
+    - You then just enter ```dontnet run`` to run the app/s.
+    - There is also a script in some Quickstart folders to fork two processes for when a device and service are required (Eg Device Streaming).
+- The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Coonection strings are taken from environemnt variables.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
 Nb: Nothing there yet on this ..coming.
