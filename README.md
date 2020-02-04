@@ -7,3 +7,22 @@ In the [Azure IoT Hub Quickstarts](https://docs.microsoft.com/en-us/azure/iot-hu
 **_N.b.: The .NET (Core C#) versions of the apps are the focus here._**
 
 But wouldn't it be nice to have **ONE PowerShell script that prompts you for required information** when creating or selecting a Hub and for when collecting the required meta-data. Its output could be the required meta-data in temporary environment variables, ready for use by the Quickstarts. _Look no further!_
+
+It's here now.  You run the manin PowerShell script **_get-iothub_** in teh PS folder. Whilst there are numerous other PowerShell script under PS in other folders, there are functions called by the main script. The script displays menus where the user makes selections or choices.
+
+There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as .\set-path). You then can run the main script just by entering ```get-iothub``` as teh PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
+
+Within an Azure Subscription you have a Resource Group.
+An IoT Hub is an element of a Resource Group.
+A Device belongs to an IoT Hub.
+
+## Creating an IoT and subservient Device
+- Select the Subscription to use _(Normally only one option here)_
+- Create a Group ( or use an existing one)  _(Group option in Main Menu)_
+- Create an IoT Hub (or use an existing one) _(Hub option in Main Menu)_
+- Create a Device (or select an existing one) _(Device opton in Main Menu)_
+
+Read more on mu blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
+Nb: Nothing there yet on this ..comin.
+
+Enjoy!
