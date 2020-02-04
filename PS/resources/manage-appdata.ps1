@@ -11,7 +11,7 @@ function Manage-AppData{
     }
 
     do {
-        util\heading '  S A V E  A P P  D A T A   '  -BG DarkGreen   -FG White
+        util\heading '  S A V E  A P P  D A T A   '  -BG DarkBlue   -FG White
         If (-not([string]::IsNullOrEmpty($global:Subscription )))
         {
             $Prompt = '   $global:Subscription :"' + $global:Subscription +'"'
@@ -44,7 +44,7 @@ function Manage-AppData{
 
 
 
-        choose-selection $itemsList  'Manage App Data'   '' ','
+        choose-selection $itemsList  'Manage App Data Action'   '' ','
         $answer = $global:retVal1
         
         if ( $global:retVal -eq 'Back'){

@@ -45,7 +45,7 @@ param (
     }
 
     do {
-        util\heading '  S E T  E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
+        util\heading '  S E T  E N V I R O N M E N T  V A R S   '  -BG DarkBlue   -FG White
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '          Group :"' + $GroupName +'"'

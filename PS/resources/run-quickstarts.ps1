@@ -45,7 +45,7 @@ param (
     }
 
 
-        util\heading '  R U N   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkGreen   -FG White
+        util\heading '  R U N   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '          Group :"' + $GroupName +'"'
@@ -55,7 +55,6 @@ param (
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
 
-        $itemsList ='Generate Environment Variables,Clear Env Vars,Write Env Vars To File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Done'
         $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
         $list2 = $lst -split '\n'
         $menu = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
@@ -69,7 +68,7 @@ param (
             }
         }
         $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
-        write-host $itemsList
+ 
         
 
         

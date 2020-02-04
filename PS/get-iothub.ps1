@@ -310,6 +310,9 @@ do
                     2 { $current = 1}
                     3 { $current = 2}
                     4 { $current = 3}
+                    5 { $current = 4}
+                    6 { $current = 5}
+                    7 { $current = 6}
                 } 
             }
             DownArrow  { 
@@ -319,6 +322,9 @@ do
                     2 { $current = 3}
                     3 { $current = 4}
                     4 { $current = 5}
+                    5 { $current = 6}
+                    6 { $current = 7}
+                    7 { $current = 7}
                 } 
             }
             Enter {
@@ -332,6 +338,12 @@ do
                     3 { $K = 'D3'
                     $GetKey = $false}
                     4 { $K = 'D4'
+                    $GetKey = $false}
+                    5 { $K = 'D5'
+                    $GetKey = $false}
+                    6 { $K = 'D6'
+                    $GetKey = $false}
+                    7 { $K = 'D7'
                     $GetKey = $false}
                     Default { $GetKey = $true }
                 } 
