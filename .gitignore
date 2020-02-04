@@ -11,6 +11,7 @@
 *.sln.docstates
 
 PS/Quickstarts/*/set-env.ps1
+PS/app-settings.ps1
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

@@ -19,6 +19,7 @@ try {
     . ("$global:ScriptDirectory\resources\res-hub.ps1")
     . ("$global:ScriptDirectory\resources\res-device.ps1")
     . ("$global:ScriptDirectory\resources\run-quickstarts.ps1")
+    . ("$global:ScriptDirectory\resources\manage-appdata.ps1")
 
 
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
@@ -39,10 +40,10 @@ catch {
 
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Run Quickstart Apps,Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Run Quickstart Apps,Manage App Data,Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -267,7 +268,8 @@ do
                         exit
                     }
                 }
-            'D7' {exit}
+            'D7' { Manage-AppData}
+            'D8' {exit}
             R    { 
                     util\heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'
