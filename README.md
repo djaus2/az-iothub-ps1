@@ -58,7 +58,7 @@ The script can...
     - There is also a script in some Quickstart folders to fork two processes for when a device and service are required (Eg Device Streaming).
 - The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables.
 
-Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au) 
-Nb: Nothing there yet on this ..coming.
+Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
+Nb: Nothing new there yet on this ..coming.
 
 Enjoy!
