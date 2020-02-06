@@ -23,6 +23,8 @@ namespace back_end_application
         // - create a launchSettings.json (see launchSettings.json.template) containing the variable
         private static string s_connectionString = Environment.GetEnvironmentVariable("IOTHUB_CONN_STRING_CSHARP");
 
+        private static string s_DeviceName = Environment.GetEnvironmentVariable("DEVICE_NAME");
+
 
 
         // Invoke the direct method on the device, passing the payload
@@ -32,7 +34,7 @@ namespace back_end_application
             methodInvocation.SetPayloadJson(period.ToString());
 
             // Invoke the direct method asynchronously and get the response from the simulated device.
-            var response = await s_serviceClient.InvokeDeviceMethodAsync("Poll", methodInvocation);
+            var response = await s_serviceClient.InvokeDeviceMethodAsync(s_DeviceName, methodInvocation);
 
             Console.WriteLine("Response status: {0}, payload:", response.Status);
             Console.WriteLine(response.GetPayloadAsJson());
