@@ -26,13 +26,13 @@ namespace back_end_application
 
 
         // Invoke the direct method on the device, passing the payload
-        private static async Task InvokeMethod()
+        private static async Task InvokeMethod(int period)
         {
             var methodInvocation = new CloudToDeviceMethod("SetTelemetryInterval") { ResponseTimeout = TimeSpan.FromSeconds(30) };
-            methodInvocation.SetPayloadJson("10");
+            methodInvocation.SetPayloadJson(period.ToString());
 
             // Invoke the direct method asynchronously and get the response from the simulated device.
-            var response = await s_serviceClient.InvokeDeviceMethodAsync("MyDotnetDevice", methodInvocation);
+            var response = await s_serviceClient.InvokeDeviceMethodAsync("Poll", methodInvocation);
 
             Console.WriteLine("Response status: {0}, payload:", response.Status);
             Console.WriteLine(response.GetPayloadAsJson());
@@ -40,13 +40,35 @@ namespace back_end_application
 
         private static void Main(string[] args)
         {
-            Console.WriteLine("IoT Hub Quickstarts #2 - Back-end application.\n");
-
             // Create a ServiceClient to communicate with service-facing endpoint on your hub.
             s_serviceClient = ServiceClient.CreateFromConnectionString(s_connectionString);
-            InvokeMethod().GetAwaiter().GetResult();
-            Console.WriteLine("Press Enter to exit.");
+
+            Console.WriteLine("IoT Hub Quickstarts #2 - Back-end application.\n");
+            
+            Console.WriteLine("Press Enter to continue when the Simulated-Device-2 is sending messages.");
             Console.ReadLine();
+            Console.WriteLine("1/4 Setting period to 10s");
+            InvokeMethod(10).GetAwaiter().GetResult();
+
+            Console.WriteLine("2/4 Press Enter to change period again(15s)");
+            Console.ReadLine();
+            InvokeMethod(15).GetAwaiter().GetResult();
+
+            Console.WriteLine("3/4 Press Enter to change period again (5s)");
+            Console.ReadLine();
+            InvokeMethod(5).GetAwaiter().GetResult();
+            
+            Console.WriteLine("4/4 Press Enter to change period again (2s)");
+            Console.ReadLine();
+            InvokeMethod(2).GetAwaiter().GetResult();
+            
+            Console.WriteLine("Done: Press Enter signal device to close.");
+            Console.ReadLine();
+            InvokeMethod(0).GetAwaiter().GetResult();
+
+            Console.WriteLine("Done: Press Enter to exit.");
+            Console.ReadLine();
+
         }
     }
 }

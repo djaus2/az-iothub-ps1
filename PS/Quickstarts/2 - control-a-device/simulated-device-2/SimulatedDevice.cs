@@ -49,7 +49,7 @@ namespace simulated_device
         }
 
         // Async method to send simulated telemetry
-        private static async void SendDeviceToCloudMessagesAsync()
+        private static async Task SendDeviceToCloudMessagesAsync()
         {
             // Initial telemetry values
             double minTemperature = 20;
@@ -78,6 +78,8 @@ namespace simulated_device
                 await s_deviceClient.SendEventAsync(message);
                 Console.WriteLine("{0} > Sending message: {1}", DateTime.Now, messageString);
 
+                if (s_telemetryInterval == 0)
+                    return;
                 await Task.Delay(s_telemetryInterval * 1000);
             }
         }
@@ -90,7 +92,9 @@ namespace simulated_device
 
             // Create a handler for the direct method call
             s_deviceClient.SetMethodHandlerAsync("SetTelemetryInterval", SetTelemetryInterval, null).Wait();
-            SendDeviceToCloudMessagesAsync();
+            SendDeviceToCloudMessagesAsync().GetAwaiter().GetResult();
+
+            Console.WriteLine("Done: Press Enter to exit.");
             Console.ReadLine();
         }
     }
