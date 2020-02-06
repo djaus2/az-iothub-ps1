@@ -82,7 +82,7 @@ function set-env{
     $cs = trimm($cs)
     $EventHubsCompatibleEndpoint = $cs.Replace('"','')
     write-host $EventHubsCompatibleEndpoint
-    $env:EVENT_THUBS_COMPATIBILITY_ENDPOINT = $EventHubsCompatibleEndpoint
+    $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT = $EventHubsCompatibleEndpoint
     
     # EventHubsCompatiblePath
     write-host 'Getting EventHubsCompatiblePath'
@@ -100,7 +100,7 @@ function set-env{
     $cs = trimm $cs
     $EventHubsSasKey = $cs
     write-host  $EventHubsSasKey
-    $envEVENT_HUBS_SAS_KEY=$EventHubsSasKey
+    $env:EVENT_HUBS_SAS_KEY=$EventHubsSasKey
 
     # EventHubsConnectionString
     write-host 'Calculating the Builtin Event Hub-Compatible Endpoint Connection String'
@@ -215,7 +215,7 @@ function write-env{
     $cs = trimm $cs
     $EventHubsCompatibleEndpoint = $cs
     write-host $EventHubsCompatibleEndpoint
-    $op = '$env:EVENT_THUBS_COMPATIBILITY_ENDPOINT = "' + $EventHubsCompatibleEndpoint +'"'
+    $op = '$env:EVENT_HUBS_COMPATIBILITY_ENDPOINT = "' + $EventHubsCompatibleEndpoint +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
     
     # EventHubsCompatiblePath
@@ -237,6 +237,7 @@ function write-env{
     write-host  $EventHubsSasKey
     $op = '$env:EVENT_HUBS_SAS_KEY = "' + $EventHubsSasKey +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
+
 
     # EventHubsConnectionString
     write-host 'Calculating the Builtin Event Hub-Compatible Endpoint Connection String'

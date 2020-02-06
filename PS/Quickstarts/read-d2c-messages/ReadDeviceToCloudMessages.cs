@@ -19,7 +19,7 @@ namespace read_d2c_messages
         // az iot hub show --query properties.eventHubEndpoints.events.endpoint --name {your IoT Hub name}
         ////private readonly static string s_eventHubsCompatibleEndpoint = "{your Event Hubs compatible endpoint}";
         
-        private  static string s_eventHubsCompatibleEndpoint = Environment.GetEnvironmentVariable("EVENT_THUBS_COMPATIBILITY_ENDPOINT");
+        private  static string s_eventHubsCompatibleEndpoint = Environment.GetEnvironmentVariable("EVENT_HUBS_COMPATIBILITY_ENDPOINT");
 
 
         // Event Hub-compatible name
