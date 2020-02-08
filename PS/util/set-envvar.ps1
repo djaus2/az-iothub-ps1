@@ -23,12 +23,17 @@ function trimm{
 
 function clear-env{
     $env:IOTHUB_DEVICE_CONN_STRING = $null
+    $env:IOTHUB_CONN_STRING_CSHARP = $null
     $env:REMOTE_HOST_NAME = $null
     $env:REMOTE_PORT = $null
-    $env:IOTHUB_CONN_STRING_CSHARP = $null
+    $env:DEVICE_NAME = $nul
     $env:DEVICE_ID = $null
     $env:SHARED_ACCESS_KEY_NAME =$null
-    $env:DEVICE_NAME = $null
+    $env:EVENT_HUBS_COMPATIBILITY_PATH  = $null
+    $env:EVENT_HUBS_CONNECTION_STRING = $null
+    $env:EVENT_HUBS_SAS_KEY = $null
+    $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT  =$null
+    $env:SERVICE_CONNECTION_STRING = $null
 }
 
 function set-env{
@@ -154,6 +159,7 @@ function write-env{
     $menu2 = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
     $menu = {$menu2}.Invoke()
     $menu.Add( 'Quickstarts')
+    $menu.Add('ScriptHostRoot')
     [string]$itemslist =''
     foreach ($app in $menu) 
     {
@@ -165,16 +171,19 @@ function write-env{
     }
     $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
      
-    choose-selection $itemslist  'Quickstarts'  ''  ','
+    choose-selection $itemslist  'Write Envs to File'  ''  ','
     $answer = $global:retVal
     if ($answer -eq 'Back')
     {
         return $answer
     }
     
-    $PsScriptFile =  "$global:ScriptDirectory\Quickstarts\set-env.ps1"
-    if ($answer -ne 'Quickstarts'){
-        $PsScriptFile += "$global:ScriptDirectory\Quickstarts\$answer\set-env.ps1"
+    $PsScriptFile = "$global:ScriptDirectory\Quickstarts\$answer\set-env.ps1"
+    if ($answer -eq 'Quickstarts'){
+        $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.ps1"
+    }
+    elseif ($answer -eq 'ScriptHostRoot'){
+        $PsScriptFile += "$global:ScriptDirectory\set-env.ps1"
     }
 
     write-host 'Writing to:'
@@ -185,14 +194,14 @@ function write-env{
     #SharedAccesKeyName
     $SharedAccesKeyName = 'iothubowner'
     # $SharedAccesKeyName = 'service'
-    write-Host 'SharedAccesKeyName is: ' + $SharedAccesKeyName 
+    write-Host "1. SHARED_ACCESS_KEY_NAME = $SharedAccesKeyName" 
     $op = '$env:SHARED_ACCESS_KEY_NAME = "' + $SharedAccesKeyName +'"'
     Add-Content -Path $PsScriptFile     -Value $op 
 
 
     If (-not ([string]::IsNullOrEmpty($DeviceName )))
     {   
-        write-Host 'DeviceName is: ' + $DeviceName 
+        write-Host "2. DEVICE_NAME = $DeviceName"
         $op = '$env:DEVICE_NAME = "' + $DeviceName +'"'
         Add-Content -Path $PsScriptFile     -Value $op 
     }
@@ -207,11 +216,11 @@ function write-env{
         $IOTHUB_DEVICE_CONN_STRING = ($cs   | ConvertFrom-Json).connectionString
     }
     else{
-        $IOTHUB_DEVICE_CONN_STRING=$env:IOTHUB_DEVICE_CONN_STRIN
+        $IOTHUB_DEVICE_CONN_STRING=$env:IOTHUB_DEVICE_CONN_STRING
     }
-    write-Host $IOTHUB_DEVICE_CONN_STRING
+    write-Host "3. IOTHUB_DEVICE_CONN_STRING = $IOTHUB_DEVICE_CONN_STRING"
     $op = '$env:IOTHUB_DEVICE_CONN_STRING = "' + $IOTHUB_DEVICE_CONN_STRING +'"'
-    Add-Content -Path $PsScriptFile     -Value $op -
+    Add-Content -Path $PsScriptFile     -Value $op
  
 
 
@@ -225,7 +234,7 @@ function write-env{
     } else{
         $IOTHUB_CONN_STRING_CSHARP = $env:IOTHUB_CONN_STRING_CSHARP
     }
-    write-host $IOTHUB_CONN_STRING_CSHARP
+    write-host "4. IOTHUB_CONN_STRING_CSHARP =  $IOTHUB_CONN_STRING_CSHARP"
     $op = '$env:IOTHUB_CONN_STRING_CSHARP = "' +$IOTHUB_CONN_STRING_CSHARP +'"'
     Add-Content -Path  $PsScriptFile -Value $op
     
@@ -239,21 +248,20 @@ function write-env{
     } else{
         $SERVICE_CONNECTION_STRING = $env:SERVICE_CONNECTION_STRING
     }
-    write-host $SERVICE_CONNECTION_STRING
+    write-host "5. SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING"
     $op = '$env:SERVICE_CONNECTION_STRING = "' + $SERVICE_CONNECTION_STRING +'"'
     Add-Content -Path  $PsScriptFile -Value $op
 
     #DeviceID
-    write-host 'DEVICE_ID'
     $DEVICE_ID = $DeviceName
-    write-Host $DEVICE_ID
+    write-Host "6. DEVICE_ID = $DEVICE_ID"
     $op = '$env:DEVICE_ID = "' + $DEVICE_ID +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
 
 
 
     # EventHubsCompatibleEndpoint
-    If ([string]::IsNullOrEmpty($env:EventHubsCompatibleEndpoint ))
+    If ([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT ))
     {  
     write-host 'Getting EventHubsCompatibleEndpoint'
     $cs =  az iot hub show --query properties.eventHubEndpoints.events.endpoint --name $HubName --output json |out-string
@@ -262,27 +270,37 @@ function write-env{
     }else{
         $EventHubsCompatibleEndpoint =   $env:EventHubsCompatibleEndpoint 
     }
-    write-host $EventHubsCompatibleEndpoint
+    write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT =  $EventHubsCompatibleEndpoint"
     $op = '$env:EVENT_HUBS_COMPATIBILITY_ENDPOINT = "' + $EventHubsCompatibleEndpoint +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
     
     # EventHubsCompatiblePath
-    write-host 'Getting EventHubsCompatiblePath'
-    $cs = az iot hub show --query properties.eventHubEndpoints.events.path --name $HubName --output json  |out-string
-    $cs = trimm $cs
-    $EventHubsCompatiblePath = $cs
-    write-host $EventHubsCompatiblePath 
+    If ([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH ))
+    {  
+        write-host 'Getting EventHubsCompatiblePath'
+        $cs = az iot hub show --query properties.eventHubEndpoints.events.path --name $HubName --output json  |out-string
+        $cs = trimm $cs
+        $EventHubsCompatiblePath = $cs
+    } else {
+        $EventHubsCompatiblePath = $env:EVENT_HUBS_COMPATIBILITY_PATH
+    }
+    write-host "8. EventHubsCompatiblePath = $EventHubsCompatiblePath"
     $op = '$env:EVENT_HUBS_COMPATIBILITY_PATH = "' + $EventHubsCompatiblePath +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
 
 
     
     # EventHubsSasKey
-    write-host 'Getting EventHubsSasKey'
-    $cs = az iot hub policy show --name iothubowner --query primaryKey --hub-name $HubName   |out-string
-    $cs = trimm $cs
-    $EventHubsSasKey = $cs
-    write-host  $EventHubsSasKey
+    If ([string]::IsNullOrEmpty($env:EVENT_HUBS_SAS_KEY ))
+    {  
+        write-host 'Getting EventHubsSasKey'
+        $cs = az iot hub policy show --name iothubowner --query primaryKey --hub-name $HubName   |out-string
+        $cs = trimm $cs
+        $EventHubsSasKey = $cs
+    } else {
+        $EventHubsSasKey = $env:EVENT_HUBS_SAS_KEY 
+    }
+    write-host  "9. EVENT_HUBS_SAS_KEY  = $EventHubsSasKey"
     $op = '$env:EVENT_HUBS_SAS_KEY = "' + $EventHubsSasKey +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
 
@@ -292,7 +310,7 @@ function write-env{
     # Endpoint=sb://<FQDN>/;SharedAccessKeyName=<KeyName>;SharedAccessKey=<KeyValue>
     $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
     $EventHubsConnectionString = $cs
-    write-host $EventHubsConnectionString
+    write-host "10. EVENT_HUBS_CONNECTION_STRING = $EventHubsConnectionString"
     $op = '$env:EVENT_HUBS_CONNECTION_STRING = "' + $EventHubsConnectionString +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
 
@@ -303,15 +321,14 @@ function write-env{
     #write-host 'Next two are only required by Device Streaming SSH/RDP Proxy Quickstart.'
     #write-host " See https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-device-streams-proxy-csharp"
     #write-host 'REMOTE_HOST_NAME'
-    $REMOTE_HOST_NAME = "localhost"
-    #write-host $REMOTE_HOST_NAME
+    $REMOTE_HOST_NAME =  "localhost"
+    write-host "11. REMOTE_HOST_NAME =  $REMOTE_HOST_NAME"
     $op = '$env:REMOTE_HOST_NAME = "' + $REMOTE_HOST_NAME +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
-
     # Remote Port
     # write-host 'REMOTE_PORT'
     $REMOTE_PORT  =  2222
-    # write-host $REMOTE_PORT 
+    write-host "12. REMOTE_PORT = $REMOTE_PORT"
     $op =  '$env:REMOTE_PORT = ' + $REMOTE_PORT
     Add-Content -Path  $PsScriptFile -Value $op
 
@@ -327,6 +344,160 @@ function write-env{
     # Add-Content -Path  $PsScriptFile   -Value 'start-process dotnet run'
     # Add-Content -Path  $PsScriptFile   -Value 'cd ..'
     # get-anykey
+}
+
+function read-env{
+    param (
+    [string]$Subscription = '' ,
+    [string]$GroupName = '' ,
+    [string]$HubName = '' ,
+    [string]$DeviceName = '',
+    [string]$folder =''
+    )
+
+    $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
+    $list2 = $lst -split '\n'
+    $menu2 = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
+    $menu = {$menu2}.Invoke()
+    $menu.Add( 'Quickstarts')
+    $menu.Add( 'ScriptHostRoot')
+    [string]$itemslist =''
+    foreach ($app in $menu) 
+    {
+        $app2 = $app  -replace '"',''
+        if ($app2 -ne 'Common')
+        {
+            $itemslist += $app2 + ','
+        }
+    }
+    $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
+     
+    choose-selection $itemslist  'Read Env Vars from File'  ''  ','
+    $answer = $global:retVal
+    if ($answer -eq 'Back')
+    {
+        return $answer
+    }
+    
+    $PsScriptFile = "$global:ScriptDirectory\Quickstarts\$answer\set-env.ps1"
+    if ($answer -eq 'Quickstarts'){
+        $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.ps1"
+    }
+    elseif ($answer -eq 'ScriptHostRoot'){
+        $PsScriptFile += "$global:ScriptDirectory\set-env.ps1"
+    }
+
+    write-host 'Reading from:'
+    read-host $PsScriptFile
+
+    Try {
+        If (Test-Path $PsScriptFile) {
+            & $PsScriptFile
+        }
+        else {
+            write-Host "File $PsScriptFile not found. "
+        }
+    } catch {
+        Write-Host "Error tring to run set-env script." 
+        Write-Host $_
+    }
+
+
+ }
+
+ function show-env{
+    param (
+    [string]$Subscription = '' ,
+    [string]$GroupName = '' ,
+    [string]$HubName = '' ,
+    [string]$DeviceName = '',
+    [string]$folder =''
+    )
+    #SharedAccesKeyName
+    If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
+    {   
+        write-Host "1. SHARED_ACCESS_KEY_NAME = $env:SHARED_ACCESS_KEY_NAME" 
+    }
+
+
+    If (-not([string]::IsNullOrEmpty($env:DEVICE_NAME )))
+    {   
+        write-Host "2. DEVICE_NAME = $env:DEVICE_NAME"
+    }
+
+    # Device Connection String
+    #                             az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyDevice --output table
+    #                             az iot hub device-identity show-connection-string --hub-name $HubName --device-id $DeviceName --output table
+    If (-not([string]::IsNullOrEmpty($env:IOTHUB_DEVICE_CONN_STRING )))
+    {  
+        write-Host "3. IOTHUB_DEVICE_CONN_STRING = $env:IOTHUB_DEVICE_CONN_STRING"
+    }
+ 
+
+    # Hub Coonection String
+    #                             az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
+    If(-not ([string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP )))
+    {  
+        write-host "4. IOTHUB_CONN_STRING_CSHARP =  $env:IOTHUB_CONN_STRING_CSHARP"
+    }
+    
+    
+    # Service Connection string'
+    If (-not([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING )))
+    {  
+        write-host "5. SERVICE_CONNECTION_STRING = $env:SERVICE_CONNECTION_STRING"
+    }
+
+
+
+    #DeviceID
+    If (-not ([string]::IsNullOrEmpty($env:DEVICE_ID )))
+    { 
+        write-Host "6. DEVICE_ID = $env:DEVICE_ID"
+    }
+
+
+
+    # EventHubsCompatibleEndpoint
+    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
+    {  
+        write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT =  $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT"
+    }
+    
+    # EventHubsCompatiblePath
+    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH )))
+    {  
+        write-host "8. EventHubsCompatiblePath = $env:EVENT_HUBS_COMPATIBILITY_PATH"
+    }
+    
+    # EventHubsSasKey
+    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_SAS_KEY )))
+    {  
+        write-host  "9. EVENT_HUBS_SAS_KEY  = $env:EVENT_HUBS_SAS_KEY"
+    }
+
+    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_CONNECTION_STRING )))
+    { 
+        write-host "10. EVENT_HUBS_CONNECTION_STRING = $env:EVENT_HUBS_CONNECTION_STRING"
+    }
+
+    # The next two are only required by Device Streaming Proxy Hub
+
+    # Remote Host Name
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        write-host "11. REMOTE_HOST_NAME =  $env:REMOTE_HOST_NAME"
+    }
+
+    # Remote Port
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        write-host "12. REMOTE_PORT = $env:REMOTE_PORT"
+    }
+
+    get-anykey
+
+    
 }
 
 

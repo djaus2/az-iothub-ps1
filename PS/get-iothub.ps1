@@ -1,5 +1,3 @@
-util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta   -FG White
-
 # region Include required files
 #
 $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
@@ -39,13 +37,13 @@ catch {
 #endregion
 
 Show-Splashscreen
-
+util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
 $answer = ''
 [int]$current = 1
 $selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Generate Environment Variables,Run Quickstart Apps,Manage App Data,Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,Environment Variables,Run Quickstart Apps,Manage App Data,Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName

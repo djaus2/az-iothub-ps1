@@ -55,7 +55,7 @@ param (
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
 
-        $itemsList ='Generate Environment Variables,Clear Env Vars,Write Env Vars To File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Done'
+        $itemsList ='Show Environment Variables,Generate Env Vars,Clear Env Vars,Write Env Vars To File,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Done'
 
 
 
@@ -68,13 +68,15 @@ param (
 
         switch ($answer)
         {
-            'D1'    {  set-env $Subscription $GroupName $HubName $DeviceName }
-            'D2'    {  clear-env  }
-            'D3'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
-            'D4'    {  set-export $Subscription $GroupName $HubName $DeviceName }
-            'D5'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
-            'D6'    {  write-export $Subscription $GroupName $HubName $DeviceName }
-            'D7'    {  return 'Back' }
+            'D1'    {  show-env $Subscription $GroupName $HubName $DeviceName }
+            'D2'    {  set-env $Subscription $GroupName $HubName $DeviceName }
+            'D3'    {  clear-env  }
+            'D4'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
+            'D5'    {  read-env $Subscription $GroupName $HubName $DeviceName  }
+            'D6'    {  set-export $Subscription $GroupName $HubName $DeviceName }
+            'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
+            'D8'    {  write-export $Subscription $GroupName $HubName $DeviceName }
+            'D9'    {  return 'Back' }
         }  
     }  
     while ($true)
