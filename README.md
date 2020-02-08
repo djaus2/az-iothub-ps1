@@ -59,6 +59,6 @@ The script can...
 - The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
-Nb: Nothing new there yet on this ..coming.
+Nb: Couple of blogs there now on this plus this spage. Still writing.
 
 Enjoy!
