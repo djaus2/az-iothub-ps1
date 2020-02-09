@@ -3,6 +3,7 @@
 $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 write-Host $global:ScriptDirectory
 try {
+    . ("$global:ScriptDirectory\menu\qs.ps1")
     . ("$global:ScriptDirectory\util\settings.ps1")
     . ("$global:ScriptDirectory\resources\environ-varsmenu.ps1")
 

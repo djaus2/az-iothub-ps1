@@ -58,7 +58,6 @@ param (
         $itemsList ='Show Environment Variables,Generate Env Vars,Clear Env Vars,Write Env Vars To File,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Done'
 
 
-
         choose-selection $itemsList  'Action for IoT Hub Connection String Environment Variables'   '' ','
         $answer = $global:retVal1
         

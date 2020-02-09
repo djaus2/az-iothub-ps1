@@ -54,7 +54,7 @@ param (
         write-Host $Prompt
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
-
+        
         $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
         $list2 = $lst -split '\n'
         $menu = $list2 | ? {$_.Trim()} | Select-Object -Skip 1

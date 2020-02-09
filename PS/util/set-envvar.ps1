@@ -154,36 +154,52 @@ function write-env{
     [string]$folder =''
     )
 
-    $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
-    $list2 = $lst -split '\n'
-    $menu2 = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
-    $menu = {$menu2}.Invoke()
-    $menu.Add( 'Quickstarts')
-    $menu.Add('ScriptHostRoot')
-    [string]$itemslist =''
-    foreach ($app in $menu) 
+    show-quickstarts 'Quickstarts'  'ScriptHostRoot'
+
+    if (1 -eq 0)
     {
-        $app2 = $app  -replace '"',''
-        if ($app2 -ne 'Common')
+        $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
+        $list2 = $lst -split '\n'
+        $menu2 = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
+        $menu = {$menu2}.Invoke()
+        $menu.Add( 'Quickstarts')
+        $menu.Add('ScriptHostRoot')
+        [string]$itemslist =''
+        foreach ($app in $menu) 
         {
-            $itemslist += $app2 + ','
+            $app2 = $app  -replace '"',''
+            if ($app2 -ne 'Common')
+            {
+                $itemslist += $app2 + ','
+            }
+        }
+        $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
+        
+        choose-selection $itemslist  'Write Envs to File'  ''  ','
+    }
+        $answer = $global:retVal
+        if ($answer -eq 'Back')
+        {
+            return $answer
+        }
+    
+
+    if(1 -eq 0){
+        $PsScriptFile = "$global:ScriptDirectory\Quickstarts\$answer\set-env.ps1"
+        if ($answer -eq 'Quickstarts'){
+            $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.ps1"
+        }
+        elseif ($answer -eq 'ScriptHostRoot'){
+            $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"
         }
     }
-    $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
-     
-    choose-selection $itemslist  'Write Envs to File'  ''  ','
-    $answer = $global:retVal
-    if ($answer -eq 'Back')
-    {
-        return $answer
-    }
-    
-    $PsScriptFile = "$global:ScriptDirectory\Quickstarts\$answer\set-env.ps1"
+
+    $PsScriptFile = "$answer\set-env.ps1"
     if ($answer -eq 'Quickstarts'){
         $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.ps1"
     }
     elseif ($answer -eq 'ScriptHostRoot'){
-        $PsScriptFile += "$global:ScriptDirectory\set-env.ps1"
+        $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"
     }
 
     write-host 'Writing to:'
