@@ -1,9 +1,9 @@
 function show-quickstarts{
     param (
-    [string]$AltLocation1 = '' ,
-    [string]$AltLocation2 = '' 
+    [string] $Title = 'Quickstart',
+    [string] $AltLocations = ''
 )
-    $prompt = 'Select the Quickstart'
+    $prompt = "Select the $Title"
     write-Host $prompt
 
     $SelectionList1 =@()
@@ -35,20 +35,20 @@ function show-quickstarts{
             }
         }
     }
+    $numDirs = $i-1
 
-    If (-not([string]::IsNullOrEmpty($AltLocation1)) )
+    $alts = $null
+    If (-not([string]::IsNullOrEmpty($AltLocations)) )
     { 
-        write-host $i. $AltLocation1
-        $SelectionList.Add($i)
-        $i++
+        $alts = $AltLocations -split ','
+        foreach ($loc in $alts)
+        {
+            write-host $i. $loc
+            $SelectionList.Add($i)
+            $i++
+        }
     }
 
-    If (-not([string]::IsNullOrEmpty($AltLocation2)) )
-    { 
-        write-host $i. $AltLocation2
-        $SelectionList.Add($i)
-        $i++
-    }
 
     write-host ''
     write-host B. Back
@@ -136,22 +136,13 @@ function show-quickstarts{
     {
         $global:retVal= 'Back'
     }
-    elseif ($val -eq ($SelectionList.Count-2))
+    elseif ($val -le $numDirs)
     {
-        If (-not([string]::IsNullOrEmpty($AltLocation1)) )
-        { 
-            $global:retVal = $AltLocation1
-        } 
-    }
-    elseif ($val -eq ($SelectionList.Count-1))
-    {
-        If (-not([string]::IsNullOrEmpty($AltLocation2)) )
-        { 
-            $global:retVal = $AltLocation2
-        } 
-    }
-    if ($global:retVal -eq $null){
         $global:retVal= $dirsPaths[$val-1]
+    }
+    else 
+    {
+        $global:retVal = $alts[$val-$numDirs-1]
     }
     read-host $global:retVal
 
