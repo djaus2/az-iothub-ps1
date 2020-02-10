@@ -15,6 +15,7 @@ namespace read_d2c_messages
 {
     class ReadDeviceToCloudMessages
     {
+        private static bool show_system_properties = true;
         // Event Hub-compatible endpoint
         // az iot hub show --query properties.eventHubEndpoints.events.endpoint --name {your IoT Hub name}
         ////private readonly static string s_eventHubsCompatibleEndpoint = "{your Event Hubs compatible endpoint}";
@@ -34,7 +35,7 @@ namespace read_d2c_messages
         //private readonly static string s_iotHubSasKeyName = "service";
 
         private  static string s_iotHubSasKey = Environment.GetEnvironmentVariable("EVENT_HUBS_SAS_KEY");// "{your service primary key}";
-        private  static string s_iotHubSasKeyName = "iothubowner"; //Environment.GetEnvironmentVariable("");// "service";
+        private  static string s_iotHubSasKeyName = Environment.GetEnvironmentVariable("SHARED_ACCESS_KEY_NAME");// "service, iothubowner";
         
         
         
@@ -69,10 +70,13 @@ namespace read_d2c_messages
                   {
                     Console.WriteLine("  {0}: {1}", prop.Key, prop.Value);
                   }
-                  Console.WriteLine("System properties (set by IoT Hub):");
-                  foreach (var prop in eventData.SystemProperties)
+                  if(show_system_properties)
                   {
-                    Console.WriteLine("  {0}: {1}", prop.Key, prop.Value);
+                    Console.WriteLine("System properties (set by IoT Hub):");
+                    foreach (var prop in eventData.SystemProperties)
+                    {
+                        Console.WriteLine("  {0}: {1}", prop.Key, prop.Value);
+                    }
                   }
                 }
             }
@@ -84,7 +88,18 @@ namespace read_d2c_messages
             Console.WriteLine ("Using Env Var EVENT_HUBS_COMPATIBILITY_ENDPOINT = " + s_eventHubsCompatibleEndpoint );
             Console.WriteLine ("Using Env Var EVENT_HUBS_COMPATIBILITY_PATH = " + s_eventHubsCompatiblePath );
             Console.WriteLine ("Using Env Var EVENT_HUBS_SAS_KEY = " + s_iotHubSasKey );
-            Console.WriteLine ("Using Env Var s_iotHubSasKeyName = " + s_iotHubSasKeyName );
+            Console.WriteLine ("Using Env Var SHARED_ACCESS_KEY_NAME = " + s_iotHubSasKeyName );
+
+            Console.WriteLine("\nDo you want to Hide System Properties sent by IoT Hub? [Y]es Default No");
+            var ch = Console.ReadKey();
+            if ((ch.KeyChar=='Y')|| (ch.KeyChar=='y'))
+            {
+                show_system_properties = false;
+            }
+
+
+            Console.WriteLine("Press Enter to continue when the Simulated-Device is sending messages.");
+            Console.ReadLine();
 
             // Create an EventHubClient instance to connect to the
             // IoT Hub Event Hubs-compatible endpoint.

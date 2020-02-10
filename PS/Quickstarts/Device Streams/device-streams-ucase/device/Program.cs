@@ -38,6 +38,9 @@ namespace Microsoft.Azure.Devices.Client.Samples
             }
 
             Console.WriteLine("Device: Starting (Got parameters)");
+            Console.WriteLine ("Using Env Var IOTHUB_DEVICE_CONN_STRING = " + s_deviceConnectionString );
+            Console.WriteLine("Using TransportTyoe {0}",s_transportType );
+
             using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(s_deviceConnectionString, s_transportType))
             {
                 if (deviceClient == null)

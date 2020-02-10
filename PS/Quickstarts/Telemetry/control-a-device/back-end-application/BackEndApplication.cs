@@ -44,11 +44,16 @@ namespace back_end_application
         {
             // Create a ServiceClient to communicate with service-facing endpoint on your hub.
             s_serviceClient = ServiceClient.CreateFromConnectionString(s_connectionString);
+            
+
+
 
             Console.WriteLine("IoT Hub Quickstarts #2 - Back-end application.\n");
-            
+            Console.WriteLine ("Using Env Var IOTHUB_CONN_STRING_CSHARP = " + s_connectionString );
+            Console.WriteLine ("Using Env Var DEVICE_NAME (N.b.Same as DEVICE_ID) = " + s_DeviceName );         
             Console.WriteLine("Press Enter to continue when the Simulated-Device-2 is sending messages.");
             Console.ReadLine();
+            // Task.Delay(3000).Wait();
             Console.WriteLine("1/4 Setting period to 10s");
             InvokeMethod(10).GetAwaiter().GetResult();
 
