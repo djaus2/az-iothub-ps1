@@ -144,6 +144,5 @@ function show-quickstarts{
     {
         $global:retVal = $alts[$val-$numDirs-1]
     }
-    read-host $global:retVal
 
 }

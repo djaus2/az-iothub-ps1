@@ -81,6 +81,10 @@ namespace read_d2c_messages
         private static async Task Main(string[] args)
         {
             Console.WriteLine("IoT Hub Quickstarts - Read device to cloud messages. Ctrl-C to exit.\n");
+            Console.WriteLine ("Using Env Var EVENT_HUBS_COMPATIBILITY_ENDPOINT = " + s_eventHubsCompatibleEndpoint );
+            Console.WriteLine ("Using Env Var EVENT_HUBS_COMPATIBILITY_PATH = " + s_eventHubsCompatiblePath );
+            Console.WriteLine ("Using Env Var EVENT_HUBS_SAS_KEY = " + s_iotHubSasKey );
+            Console.WriteLine ("Using Env Var s_iotHubSasKeyName = " + s_iotHubSasKeyName );
 
             // Create an EventHubClient instance to connect to the
             // IoT Hub Event Hubs-compatible endpoint.

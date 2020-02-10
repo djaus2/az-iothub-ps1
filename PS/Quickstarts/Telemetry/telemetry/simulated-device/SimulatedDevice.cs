@@ -65,6 +65,7 @@ namespace simulated_device
         private static void Main(string[] args)
         {
             Console.WriteLine("IoT Hub Quickstarts #1 - Simulated device. Ctrl-C to exit.\n");
+            Console.WriteLine ("Using Env Var IOTHUB_DEVICE_CONN_STRING = " + s_connectionString );
 
             // Connect to the IoT hub using the MQTT protocol
             s_deviceClient = DeviceClient.CreateFromConnectionString(s_connectionString, TransportType.Mqtt);

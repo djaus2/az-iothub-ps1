@@ -54,33 +54,27 @@ param (
         write-Host $Prompt
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
-        
-        $lst = Get-ChildItem $global:ScriptDirectory\Quickstarts  | ?{ $_.PSIsContainer } | Select-Object Name | convertto-csv -NoTypeInformation
-        $list2 = $lst -split '\n'
-        $menu = $list2 | ? {$_.Trim()} | Select-Object -Skip 1
-        [string]$itemslist =''
-        foreach ($app in $menu) 
-        {
-            $app2 = $app  -replace '"',''
-            if ($app2 -ne 'Common')
-            {
-                $itemslist += $app2 + ','
-            }
-        }
-        $itemslist = $itemslist.Substring(0, $itemslist.Length-1)
- 
-        
 
-        
-
-        choose-selection $itemslist  'Quickstarts'  ''  ','
+        show-quickstarts "Quickstart/s to run"
+    
+        util\heading '  R U N   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
+    
         $answer = $global:retVal
         if ($answer -eq 'Back')
         {
             return $answer
         }
-        write-Host 'Enter .\run-apps run to run the apps simultaneously.'
-        write-Host 'Assumes that you have written env vars an run script to these apps.'
-        Set-Location -Path $global:ScriptDirectory\Quickstarts\$answer
+             
+        $PsScriptFile = $answer
+ 
+
+
+        Write-Host "Setting location to $PsScriptFile."
+        write-Host "There are a device and service app to run."
+        write-Host 'Enter ' -nonewline 
+        write-host '.\run-apps' -nonewline   -BackgroundColor Blue -ForegroundColor White
+        write-host ' to run the apps simultaneously.'
+        write-Host 'Assumes that Environment Variables have been set.'  -BackgroundColor DarkRed -ForegroundColor White
+        Set-Location -Path  $PsScriptFile
         return 'Exit'   
 }
