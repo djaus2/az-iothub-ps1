@@ -34,6 +34,7 @@ function clear-env{
     $env:EVENT_HUBS_SAS_KEY = $null
     $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT  =$null
     $env:SERVICE_CONNECTION_STRING = $null
+    show-env
 }
 
 function set-env{
@@ -43,6 +44,13 @@ function set-env{
     [string]$HubName = '' ,
     [string]$DeviceName = ''
     )
+
+    util\heading '  S E T   E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
+
+write-Host ''
+write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
+    write-Host ''
+
 
     #SharedAccesKeyName
     $SharedAccesKeyName = 'iothubowner'
@@ -142,6 +150,8 @@ function set-env{
     $REMOTE_PORT  =  2222
     write-host $REMOTE_PORT 
     $env:REMOTE_PORT = $REMOTE_PORT
+
+    write-Host 'Done'
     get-anykey
 }
 
@@ -154,7 +164,11 @@ function write-env{
     [string]$folder =''
     )
 
-    show-quickstarts 'Location to save Envs' 'Quickstarts,ScriptHostRoot'
+    util\heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
+
+    show-quickstarts 'Location to save set-env.ps1 to.' 'Quickstarts,ScriptHostRoot'
+
+    util\heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
     $answer = $global:retVal
     if ($answer -eq 'Back')
@@ -302,10 +316,6 @@ function write-env{
     # The next two are only required by Device Streaming Proxy Hub
 
     # Remote Host Name
-    #write-host ''
-    #write-host 'Next two are only required by Device Streaming SSH/RDP Proxy Quickstart.'
-    #write-host " See https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-device-streams-proxy-csharp"
-    #write-host 'REMOTE_HOST_NAME'
     $REMOTE_HOST_NAME =  "localhost"
     write-host "11. REMOTE_HOST_NAME =  $REMOTE_HOST_NAME"
     $op = '$env:REMOTE_HOST_NAME = "' + $REMOTE_HOST_NAME +'"'
@@ -318,17 +328,8 @@ function write-env{
     Add-Content -Path  $PsScriptFile -Value $op
 
     write-Host "Written PowerShell script to:  $PsScriptFile that will set the Hub connection strings as Env. Vars"
+    get-anykey
 
-
-    
-    # write-host 'Writing ps script to root of apps to simultaneously run both apps  as run-apps.ps1'
-    # Out-File -FilePath $PsScriptFile    -InputObject '.\set-env' -Encoding ASCII
-    # Add-Content -Path  $PsScriptFile   -Value 'cd device'
-    # Add-Content -Path  $PsScriptFile   -Value 'Start-process dotnet run'
-    # Add-Content -Path  $PsScriptFile   -Value 'cd ..\service' 
-    # Add-Content -Path  $PsScriptFile   -Value 'start-process dotnet run'
-    # Add-Content -Path  $PsScriptFile   -Value 'cd ..'
-    # get-anykey
 }
 
 function read-env{
@@ -340,7 +341,11 @@ function read-env{
     [string]$folder =''
     )
 
-    show-quickstarts 'Location of Envs file' 'Quickstarts,ScriptHostRoot'
+    util\heading '  R E A D   E N V I R O N M E N T  V A R S  F R O M  F I L E '  -BG DarkGreen   -FG White
+
+    show-quickstarts 'Location of set-env.ps1 file.' 'Quickstarts,ScriptHostRoot'
+
+    util\heading '  R E A D   E N V I R O N M E N T  V A R S  F R O M  F I L E '  -BG DarkGreen   -FG White
 
     $answer = $global:retVal
     if ($answer -eq 'Back')
@@ -372,7 +377,8 @@ function read-env{
         Write-Host "Error tring to run set-env script." 
         Write-Host $_
     }
-
+    write-Host 'Done'
+    get-anykey
 
  }
 
@@ -384,10 +390,17 @@ function read-env{
     [string]$DeviceName = '',
     [string]$folder =''
     )
+    util\heading '  S H O W   E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
+    write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
+    write-Host ''
     #SharedAccesKeyName
     If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
     {   
         write-Host "1. SHARED_ACCESS_KEY_NAME = $env:SHARED_ACCESS_KEY_NAME" 
+    }
+    else
+    {
+        write-Host 'No $env:SHARED_ACCESS_KEY_NAME' -ForeGroundColor DarkRed
     }
 
 
@@ -395,13 +408,20 @@ function read-env{
     {   
         write-Host "2. DEVICE_NAME = $env:DEVICE_NAME"
     }
+    else
+    {   
+        write-Host 'No $env:DEVICE_NAME'  -ForeGroundColor DarkRed
+    }
+
 
     # Device Connection String
-    #                             az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyDevice --output table
-    #                             az iot hub device-identity show-connection-string --hub-name $HubName --device-id $DeviceName --output table
     If (-not([string]::IsNullOrEmpty($env:IOTHUB_DEVICE_CONN_STRING )))
     {  
         write-Host "3. IOTHUB_DEVICE_CONN_STRING = $env:IOTHUB_DEVICE_CONN_STRING"
+    }
+    else
+    {  
+        write-Host 'No $env:IOTHUB_DEVICE_CONN_STRING'  -ForeGroundColor DarkRed
     }
  
 
@@ -411,12 +431,20 @@ function read-env{
     {  
         write-host "4. IOTHUB_CONN_STRING_CSHARP =  $env:IOTHUB_CONN_STRING_CSHARP"
     }
+   else
+    {  
+        write-host 'No $env:IOTHUB_CONN_STRING_CSHARP'  -ForeGroundColor DarkRed
+    }
     
     
     # Service Connection string'
     If (-not([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING )))
     {  
         write-host "5. SERVICE_CONNECTION_STRING = $env:SERVICE_CONNECTION_STRING"
+    }
+    else
+    {  
+        write-host 'No $env:SERVICE_CONNECTION_STRING'  -ForeGroundColor DarkRed
     }
 
 
@@ -426,6 +454,10 @@ function read-env{
     { 
         write-Host "6. DEVICE_ID = $env:DEVICE_ID"
     }
+    else
+    { 
+        write-Host 'No $env:DEVICE_ID'  -ForeGroundColor DarkRed
+    }
 
 
 
@@ -434,11 +466,19 @@ function read-env{
     {  
         write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT =  $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT"
     }
+    else
+    {  
+        write-host 'No $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT'  -ForeGroundColor DarkRed
+    }
     
     # EventHubsCompatiblePath
     If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH )))
     {  
         write-host "8. EventHubsCompatiblePath = $env:EVENT_HUBS_COMPATIBILITY_PATH"
+    }
+    else
+    {  
+        write-host 'No $env:EventHubsCompatiblePath'  -ForeGroundColor DarkRed
     }
     
     # EventHubsSasKey
@@ -446,10 +486,18 @@ function read-env{
     {  
         write-host  "9. EVENT_HUBS_SAS_KEY  = $env:EVENT_HUBS_SAS_KEY"
     }
+    else
+    {  
+        write-host  'No $env:EVENT_HUBS_SAS_KEY'  -ForeGroundColor DarkRed
+    }
 
     If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_CONNECTION_STRING )))
     { 
         write-host "10. EVENT_HUBS_CONNECTION_STRING = $env:EVENT_HUBS_CONNECTION_STRING"
+    }
+    else
+    { 
+        write-host 'No $env:EVENT_HUBS_CONNECTION_STRING'  -ForeGroundColor DarkRed
     }
 
     # The next two are only required by Device Streaming Proxy Hub
@@ -459,13 +507,21 @@ function read-env{
     { 
         write-host "11. REMOTE_HOST_NAME =  $env:REMOTE_HOST_NAME"
     }
+    else
+    { 
+        write-host 'No $env:REMOTE_HOST_NAME'  -ForeGroundColor DarkRed
+    }
 
     # Remote Port
     If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
     { 
         write-host "12. REMOTE_PORT = $env:REMOTE_PORT"
     }
-
+    else
+    { 
+        write-host 'No $env:REMOTE_PORT'  -ForeGroundColor DarkRed
+    }
+    write-Host 'Done reading Environment Variables'
     get-anykey
 
     

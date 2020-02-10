@@ -55,7 +55,7 @@ function Manage-AppData{
         {
             'D1'    {  save-appdata }
             'D2'    {  if ( Test-Path -Path "$global:ScriptDirectory\app-settings.ps1" ){
-                            app-settings 
+                            .\app-settings
                             write-host 'Done' 
                         }
                         else {

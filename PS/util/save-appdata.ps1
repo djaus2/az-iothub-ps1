@@ -1,5 +1,8 @@
 function Save-AppData{
 
+    util\heading '  S A V E   A P P   D A T A  '  -BG DarkGreen   -FG White
+    write-Host 'This saves current Subscription,Group,Hub and Device names, as well as Azure queries for listing of Subscription Groups, Hub etc'
+
     $PsScriptFile =  "$global:ScriptDirectory\app-settings.ps1"
 
     $prompt ='# get-iothub.ps1 app data' 
