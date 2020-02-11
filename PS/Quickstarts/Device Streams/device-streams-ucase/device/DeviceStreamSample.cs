@@ -49,8 +49,9 @@ namespace Microsoft.Azure.Devices.Client.Samples
                             string MsgOut = MsgIn.ToUpper();
                             byte[] sendBuffer = Encoding.UTF8.GetBytes(MsgOut);
 
-                            await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, receiveResult.Count), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
-                            Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, receiveResult.Count));
+                            await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, sendBuffer.Length), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
+                            Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
+
 
                             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationTokenSource.Token).ConfigureAwait(false);
                         }

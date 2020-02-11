@@ -57,31 +57,31 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                 switch (MsgIn.Substring(0, 3).ToLower())
                                 {
                                     case "tem":
-                                        MsgOut = "45 C";
+                                        MsgOut = "21 C";
                                         break;
                                     case "pre":
                                         MsgOut = "1034.0 hPa";
                                         break;
                                     case "hum":
-                                        MsgOut = "67%";
+                                        MsgOut = "67 percent";
                                         break;
                                     case "sta":
                                         MsgOut = string.Format("state = {0}", state);
                                         break;
                                     case "set":
                                         state = true;
-                                        MsgOut = string.Format("toggle = {0}", state);
+                                        MsgOut = string.Format("state = {0}", state);
                                         break;
                                     case "clr":
                                         state = false;
-                                        MsgOut = string.Format("toggle = {0}", state);
+                                        MsgOut = string.Format("state = {0}", state);
                                         break;
                                     case "tog":
                                         state = !state;
-                                        MsgOut = string.Format("toggle = {0}", state);
+                                        MsgOut = string.Format("state = {0}", state);
                                         break;
                                     case "hel":
-                                        MsgOut = "Help: Commands are temp,press,hum,state,set,clr,toggle,help,close";
+                                        MsgOut = "Help: Commands are:\ntemperature,pressure,humidity,state,set,clr,toggle,help,close\nOnly first 3 letters of cmd matter.";
                                         break;
                                     case "clo":
                                         MsgOut = "Device Closing";
@@ -92,9 +92,10 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                 }
 
                                 byte[] sendBuffer = Encoding.UTF8.GetBytes(MsgOut);
+                                
 
-                                await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, receiveResult.Count), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
-                                Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, receiveResult.Count));
+                                await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, sendBuffer.Length), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
+                                Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
                             } while (MsgIn.ToLower() != "close");
 
                             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationTokenSource.Token).ConfigureAwait(false);
