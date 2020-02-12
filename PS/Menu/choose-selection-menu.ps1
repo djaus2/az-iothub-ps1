@@ -9,7 +9,7 @@ param (
      [int]$ItemsPerLine=1,
      $ColWidth=1
  )
- If (-not ([string]::IsNullOrEmpty($global:IsRedirected)))
+ If (-not ([string]::IsNullOrEmpty($env:IsRedirected)))
  {
     choose-selection-redirected $ListString $Title $CurrentSelection $Sep $AdditionalMenuOptions $ItemsPerLine $ColWidth
  }

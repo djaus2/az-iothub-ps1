@@ -28,9 +28,11 @@ function show-quickstarts{
                     $dirsPaths.Add($dpath2)
                     $dpath2 = $dpath2.Replace($ScriptDirectory2,'')
                     $dirprops = $dpath2 -split '\\'
-                    write-Host $i. $dirprops[0] - $dirprops[1]
-                    $SelectionList.Add($i)
-                    $i++
+                    if($dirprops[1].ToLower() -ne 'common'){
+                        write-Host $i. $dirprops[0] - $dirprops[1]
+                        $SelectionList.Add($i)
+                        $i++
+                    }
                 }
             }
         }
@@ -63,9 +65,26 @@ function show-quickstarts{
     {
         # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
         # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
-        $KeyPress = [System.Console]::ReadKey($true)
-        $K = $KeyPress.Key
-        $KK = $KeyPress.KeyChar
+
+        If  ([string]::IsNullOrEmpty($env:IsRedirected))
+        {
+            $KeyPress = [System.Console]::ReadKey($true)
+            $K = $KeyPress.Key
+            $KK = $KeyPress.KeyChar
+        } else {
+            $response = Read-Host
+            If  ([string]::IsNullOrEmpty($response))
+            {
+               $k ={Enter}
+            } else{   
+                if ($response -match '^\d+$')  {   
+                    $K= 'D'+ $response[0]
+                } else{
+                    $K = $response[0]
+                }
+            }
+   
+        }
     
         $val=-10
         switch ( $k )

@@ -77,7 +77,7 @@ param (
     $noEntities = $lines.Length 
 
 
-    if ( ($noEntities -lt 10) -and   ( -not ([string]::IsNullOrEmpty($global:IsRedirected))))
+    if ( ($noEntities -lt 10) -and   ( -not ([string]::IsNullOrEmpty($env:IsRedirected))))
     {
         parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 
     }

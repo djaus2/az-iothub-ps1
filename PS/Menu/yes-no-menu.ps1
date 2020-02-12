@@ -15,8 +15,22 @@ param (
      
      write-Host $Prompt
 
-     $KeyPress = [System.Console]::ReadKey($true)
-     $K = $KeyPress.Key
+
+
+     If  ([string]::IsNullOrEmpty($env:IsRedirected))
+     {
+         $KeyPress = [System.Console]::ReadKey($true)
+         $K = $KeyPress.Key
+     } else {
+         $response = Read-Host
+         If  ([string]::IsNullOrEmpty($response))
+         {
+            $k =' '
+         } else{   
+            $K = $response[0]
+         }
+
+     }
 
      $global:retVal = $Default
      switch ($K)

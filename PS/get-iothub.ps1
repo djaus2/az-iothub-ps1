@@ -40,7 +40,8 @@ catch {
 #endregion
 
 Show-Splashscreen
-If  (-not([string]::IsNullOrEmpty($global:IsRedirected)))
+
+If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
 {
     Clear-Host
     write-Host ''
@@ -114,7 +115,7 @@ do
     
     if ($GetKey -eq $true)
     {
-        If  ([string]::IsNullOrEmpty($global:IsRedirected))
+        If  ([string]::IsNullOrEmpty($env:IsRedirected))
         {
             $KeyPress = [System.Console]::ReadKey($true)
             $K = $KeyPress.Key

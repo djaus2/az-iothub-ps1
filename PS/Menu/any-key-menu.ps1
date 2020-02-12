@@ -7,7 +7,7 @@ param (
     {
         If  ( -not ([string]::IsNullOrEmpty( $Mode  )))
         {
-            If   ([string]::IsNullOrEmpty( $global:IsRedirected  ))
+            If   ([string]::IsNullOrEmpty( $env:IsRedirected  ))
             {
                 $prompt = ' Press any key to ' + $Mode +'.'
             }
@@ -17,7 +17,7 @@ param (
         }
         else
         {
-            If  ([string]::IsNullOrEmpty( $global:IsRedirected  ))
+            If  ([string]::IsNullOrEmpty( $env:IsRedirected  ))
             {
                 $prompt = ' Press any key to return.'
             }
@@ -33,7 +33,7 @@ param (
    
     write-Host $prompt
 
-    If ([string]::IsNullOrEmpty( $global:IsRedirected  ))
+    If ([string]::IsNullOrEmpty( $env:IsRedirected  ))
     {
     [System.Console]::ReadKey($true)
     }

@@ -261,7 +261,7 @@ param (
                 }
             }
             Enter { 
-                If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
+                if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
                 {
                     $KK = $selns[$NextNo-1]
                 } 

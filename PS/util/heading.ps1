@@ -7,10 +7,10 @@ param (
    $FG
 )
 [Console]::ResetColor()
-#If ( -not ([string]::IsNullOrEmpty($global:DontClearOnHeading )) )
-#{
-  #  Clear-Host
-#}
+If  ([string]::IsNullOrEmpty($env:DebugIoTPS)) 
+{
+    Clear-Host
+}
 $prompt2 =  '  A Z U R E  I o T  H U B  ' 
 write-Host $prompt2 -BackgroundColor  DarkMagenta  -ForegroundColor   White  -NoNewline
 [Console]::ResetColor()
