@@ -12,6 +12,7 @@ try {
     . ("$global:ScriptDirectory\menu\parse-list-menu.ps1")
     . ("$global:ScriptDirectory\menu\parse-shortlist-menu.ps1")
     . ("$global:ScriptDirectory\menu\choose-selection-menu.ps1")
+    . ("$global:ScriptDirectory\menu\choose-selection-menu-redirected.ps1")
 
 
     . ("$global:ScriptDirectory\resources\res-subscription.ps1")
@@ -39,6 +40,19 @@ catch {
 #endregion
 
 Show-Splashscreen
+If  (-not([string]::IsNullOrEmpty($global:IsRedirected)))
+{
+    Clear-Host
+    write-Host ''
+    write-Host ''
+    write-Host ''
+    write-Host ''
+    write-Host ''
+    write-Host ''
+    write-Host "Note that because redirection is inplay, menu selections [1,2,3...X,B etc] require [Enter] afterwards."
+    read-Host "Please press [Enter] to continue."
+
+}
 util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
 $answer = ''
 [int]$current = 1
@@ -100,8 +114,25 @@ do
     
     if ($GetKey -eq $true)
     {
-        $KeyPress = [System.Console]::ReadKey($true)
-        $K = $KeyPress.Key
+        If  ([string]::IsNullOrEmpty($global:IsRedirected))
+        {
+            $KeyPress = [System.Console]::ReadKey($true)
+            $K = $KeyPress.Key
+        } else {
+            $response = Read-Host
+            If  ([string]::IsNullOrEmpty($response))
+            {
+                $k ={Enter}
+            } else{   
+                if ($response -match '^\d+$')   
+                {       
+                $K= 'D'+ $response[0]
+                } else{
+                    $K = $response[0]
+                }
+            }
+
+        }
     }
     $GetKey = $true
     if  ( $selectionList -contains $K)
