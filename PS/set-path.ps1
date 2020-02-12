@@ -18,7 +18,7 @@ write-Host ' using PowerShell'
 write-Host ''
 If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
 {
-    $dnp ='c:\Data\dotnet-sdk-3.1.100-preview2-014569-win-arm'
+    $dnp ='c:\Data\dnc'
     $addPath=$dnp
     if (Test-Path $addPath){
         $regexAddPath = [regex]::Escape($addPath)

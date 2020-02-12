@@ -70,11 +70,14 @@ param (
 
 
         Write-Host "Setting location to $PsScriptFile."
-        write-Host "There are a device and service app to run."
+        write-Host "There are a device and a service app to run."
         write-Host 'Enter ' -nonewline 
         write-host '.\run-apps' -nonewline   -BackgroundColor Blue -ForegroundColor White
         write-host ' to run the apps simultaneously.'
         write-Host 'Assumes that Environment Variables have been set.'  -BackgroundColor DarkRed -ForegroundColor White
+        write-host 'To just run the device cd to  it then '  -nonewline  
+        write-host 'dotnet run' -BackgroundColor Blue -ForegroundColor White
         Set-Location -Path  $PsScriptFile
+        get-childitem -Directory | select-object name
         return 'Exit'   
 }
