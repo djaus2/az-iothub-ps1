@@ -14,6 +14,8 @@ set-env.ps1
 app-settings.ps
 
 PS/Quickstarts/*/set-env.ps1
+PS/Quickstarts/set-env.ps1
+PS/set-env.ps1
 PS/app-settings.ps1
 PS/DotNet
 
