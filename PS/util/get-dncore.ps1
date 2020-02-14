@@ -1,6 +1,15 @@
 function get-dotnetcore{
     util\heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
 
+    if (-not (Test-Path "$global:ScriptDirectory\quickstarts\dotnet"))
+    {
+        New-Item -Path "$global:ScriptDirectory\quickstarts\dotnet" -ItemType Directory
+    }
+    if (-not (Test-Path "$global:ScriptDirectory\temp"))
+    {
+        New-Item -Path "$global:ScriptDirectory\temp" -ItemType Directory
+    }
+
     $itemsList ='ARM32-Windows10,x64-Windows10,x86-Windows10,ARM32-Linux,ARM64-Linux,X64-Linux,Done'
 
     $WiNARM32 ="https://download.visualstudio.microsoft.com/download/pr/7363a148-a9e0-4393-b0f6-4e51ecba3e27/4b28aec090c9854d71925bb6d50c8314/dotnet-sdk-3.1.101-win-arm.zip"
@@ -43,9 +52,4 @@ function get-dotnetcore{
         read-host 'Linux Coming'
         # Invoke-WebRequest  -o "$global:ScriptDirectory\temp\$name" $url      
     }
-
-
-
-    
-
 }
