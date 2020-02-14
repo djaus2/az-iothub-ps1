@@ -44,7 +44,7 @@ _The **get-iothub** PowerShell scipt Main Menu_
 
 ## Creating an IoT and subservient Device
 
-- Start in PS folder an run ```.\set-path```
+- Start in PS folder and run ```.\set-path```
 - Run ```get-iothub```
 
 - Select the Subscription to use _(Normally only one option here)_

@@ -5,6 +5,7 @@ function Manage-AppData{
     try {
         . ("$global:ScriptDirectory\util\save-appdata.ps1")
         . ("$global:ScriptDirectory\util\get-dncore.ps1")
+        . ("$global:ScriptDirectory\util\get-dncore-existing.ps1")
     }
     catch {
         Write-Host "Error while loading supporting PowerShell Scripts" 
@@ -41,7 +42,7 @@ function Manage-AppData{
 
 
 
-        $itemsList ='Save App Data,Load App Data,Get .NET Core SDK and Runtime,Done'
+        $itemsList ='Save App Data,Load App Data,Get .NET Core SDK and Runtime,Get .NET Core from previous downlaod,Done'
 
 
 
@@ -65,7 +66,8 @@ function Manage-AppData{
                         get-anykey
                     }
             'D3'    {  get-dotnetcore }
-            'D4'    {  return 'Back' }
+            'D4'    {  get-existingdotnetcore }
+            'D5'    {  return 'Back' }
         }  
     }  
     while ($true)

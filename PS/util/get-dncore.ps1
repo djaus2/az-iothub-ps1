@@ -28,7 +28,7 @@ function get-dotnetcore{
 
     $url = $WiNARM32
     $name = "$global:retVal-dotnet"
-    read-host  $name
+    $name2= $name
 
     switch ($answer)
     {
@@ -42,13 +42,19 @@ function get-dotnetcore{
     }  
 
     if (($answer -eq 'D1') -or ($answer -eq 'D2') -or ($answer -eq 'D3')){
-        $name +='-dotnetsdk.zip'
+        $name +='-dotnetcoresdk.zip'
+        write-host 'Get SDK binary'
         Invoke-WebRequest -o "$global:ScriptDirectory\temp\$name" $url
+        write-host 'Remove Quickstarts\dotnet'
         remove-item -path "$global:ScriptDirectory\quickstarts\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
+        write-host 'Create Quickstarts\dotnet'
         New-Item -Path "$global:ScriptDirectory\quickstarts\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
         Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\quickstarts\dotnet"
+        write-host 'Please wait. Expanding archive.'
+        write-host"'Put note of current target in Quickstarts\dotnet as $name2.txt"
+        Out-File -FilePath "$global:ScriptDirectory\quickstarts\dotnet\$name2.txt"
     } else{
-        $name += '-dotnetsdk.tar.gz'
+        $name += '-dotnetcoresdk.tar.gz'
         read-host 'Linux Coming'
         # Invoke-WebRequest  -o "$global:ScriptDirectory\temp\$name" $url      
     }
