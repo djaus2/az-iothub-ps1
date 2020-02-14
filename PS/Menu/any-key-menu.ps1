@@ -35,7 +35,7 @@ param (
 
     If ([string]::IsNullOrEmpty( $env:IsRedirected  ))
     {
-    [System.Console]::ReadKey($true)
+    $keypress = [System.Console]::ReadKey($true)
     }
     else {
         read-Host

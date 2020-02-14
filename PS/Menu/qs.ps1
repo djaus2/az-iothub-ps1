@@ -25,13 +25,16 @@ function show-quickstarts{
             {
                 if ($dpath2 -ne '--------')
                 {
-                    $dirsPaths.Add($dpath2)
-                    $dpath2 = $dpath2.Replace($ScriptDirectory2,'')
-                    $dirprops = $dpath2 -split '\\'
-                    if($dirprops[1].ToLower() -ne 'common'){
-                        write-Host $i. $dirprops[0] - $dirprops[1]
-                        $SelectionList.Add($i)
-                        $i++
+                    $dpath3 = $dpath2.Replace($ScriptDirectory2,'')
+                    $dirprops = $dpath3 -split '\\'
+                    if ($dirprops[0].substring(0,'dotnet'.Length) -ne 'dotnet')
+                    {
+                        if($dirprops[1].ToLower() -ne 'common'){
+                            $dirsPaths.Add($dpath2)
+                            write-Host $i. $dirprops[0] - $dirprops[1]
+                            $SelectionList.Add($i)
+                            $i++
+                        }
                     }
                 }
             }

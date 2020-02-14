@@ -12,6 +12,7 @@
 
 PS/Quickstarts/*/set-env.ps1
 PS/app-settings.ps1
+PS/DotNet
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -33,6 +34,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+bin
+obj
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
