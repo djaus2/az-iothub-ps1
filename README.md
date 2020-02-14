@@ -31,8 +31,9 @@ A Device belongs to an IoT Hub.
 4. Devices
 5. Generate Environment Variables
 6. Run Quickstart Apps
-7. Manage App Data
-8. Done
+7. Clear Quickstart Apps
+8. Manage App Data
+9. Done
 
 R. Reset script globals<br>
 X. Exit<br>
@@ -43,10 +44,16 @@ _The **get-iothub** PowerShell scipt Main Menu_
 
 ## Creating an IoT and subservient Device
 
+- Start in PS folder an run ```.\set-path```
+- Run ```get-iothub```
+
 - Select the Subscription to use _(Normally only one option here)_
 - Create a Group ( or select an existing one)  _(Group option in Main Menu)_
 - Create an IoT Hub (or select an existing one) _(Hub option in Main Menu)_
 - Create a Device (or select an existing one) _(Device opton in Main Menu)_
+
+- Then Generate Environment Variables (Connection Strings)<br>
+  Note only persist for life of existing shell.
 
 ## The PS Script CanDos
 
@@ -56,7 +63,8 @@ The script can...
 - Place you in the folder to run a Quickstart (menu of them) with the environment variables set so as to be able to run the app/s.
     - You then just enter ```dontnet run``` to run the app/s.
     - There is also a script in some Quickstart folders to fork two processes for when a device and service are required (Eg Device Streaming).
-- The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables.
+    - The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables. Other mods and extra apps too.
+- Install the required version of .NET Core locally (PS\Quickstarts\dotnet) and add to path and set required environment variable to it.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
 Nb: Couple of blogs there now on this plus this spage. Still writing.
