@@ -2,7 +2,7 @@ Clear-Host
 
 If  ([string]::IsNullOrEmpty($env:IsRedirected))
 {
-    if(Test-Path "\IsEmbedded.txt")
+    if(Test-Path "\IsRemote.txt")
     {
         $env:IsRedirected ="Yes"
     }

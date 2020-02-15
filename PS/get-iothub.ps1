@@ -43,6 +43,9 @@ catch {
 Show-Splashscreen
 
 
+
+
+
 If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
 {
     Clear-Host
@@ -56,6 +59,20 @@ If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
     read-Host "Please press [Enter] to continue."
 
 }
+
+
+if (Test-Path "$global:ScriptDirectory\app-settings.ps1")
+{
+    & "$global:ScriptDirectory\app-settings"
+}
+
+if (Test-Path "$global:ScriptDirectory\set-env.ps1")
+{
+    & "$global:ScriptDirectory\set-env"
+}
+
+
+
 util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
 $answer = ''
 [int]$current = 1
