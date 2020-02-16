@@ -14,6 +14,29 @@ function get-existingdotnetcore{
 
     $itemsList ='ARM32-Windows10,x64-Windows10,x86-Windows10,ARM32-Linux,ARM64-Linux,X64-Linux,Done'
 
+
+    $items = Get-ChildItem  -File -path "$global:ScriptDirectory\temp\" | select Name|  out-string
+    $itemsList1= $items -split '\n' | Sort-Object -Descending
+    $itemsList = ""
+    foreach ($dpath in $itemsList1)
+    {
+        $dpath = $dpath.Trim()
+        If ([string]::IsNullOrEmpty($dpath ))
+        {
+            continue
+        }
+        elseif (($dpath -eq "Name") -or ($dpath -eq "----"))
+        {
+            continue
+        }
+        else {
+            $target = $dpath.Replace("-dotnetcoresdk.zip","")
+            if ($itemsList -ne ""){
+                $itemsList += ","
+            }
+            $itemsList += $target
+        }
+    }
     
     choose-selection $itemsList  'Manage App Data Action'   '' ','
     $answer = $global:retVal1
@@ -29,6 +52,7 @@ function get-existingdotnetcore{
 
     if (($answer -eq 'D1') -or ($answer -eq 'D2') -or ($answer -eq 'D3')){
         $name +='-dotnetcoresdk.zip'
+        read-host $name
         if (Test-Path "$global:ScriptDirectory\temp\$name")
         {
             write-host 'Remove Quickstarts\dotnet'
