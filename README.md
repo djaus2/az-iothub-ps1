@@ -30,10 +30,9 @@ A Device belongs to an IoT Hub.
 3. IoT Hubs
 4. Devices
 5. Generate Environment Variables
-6. Run Quickstart Apps
-7. Clear Quickstart Apps
-8. Manage App Data
-9. Done
+6. Quickstart Apps
+7. Manage App Data
+8. Done
 
 R. Reset script globals<br>
 X. Exit<br>
