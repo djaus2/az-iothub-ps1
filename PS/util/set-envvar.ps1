@@ -192,8 +192,6 @@ function write-env{
     read-host $PsScriptFile
     Out-File -FilePath $PsScriptFile    -InputObject "" -Encoding ASCII
 
-    write-Host $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
-    get-anykey
 
     $prompt =  'Do you want to include DOT references in env settings??'
     write-Host $prompt
@@ -310,7 +308,6 @@ function write-env{
     Add-Content -Path  $PsScriptFile  -Value $op
 
     # EventHubsCompatibleEndpoint
-    read-host $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
     If ([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT ))
     {  
     write-host 'Getting EventHubsCompatibleEndpoint'
@@ -318,7 +315,7 @@ function write-env{
     $cs = trimm $cs
     $EventHubsCompatibleEndpoint = $cs
     }else{
-        $EventHubsCompatibleEndpoint =   $env:EVENT_HUBS_COMPATIBILITY_ENDPOIN 
+        $EventHubsCompatibleEndpoint =   $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
     }
 
     write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT =  $EventHubsCompatibleEndpoint"
