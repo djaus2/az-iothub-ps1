@@ -17,7 +17,7 @@ PS/Quickstarts/*/set-env.ps1
 PS/Quickstarts/set-env.ps1
 PS/set-env.ps1
 PS/app-settings.ps1
-PS/Quickstartsdotnet
+PS/Quickstarts/dotnet
 PS/temp
 
 # User-specific files (MonoDevelop/Xamarin Studio)
