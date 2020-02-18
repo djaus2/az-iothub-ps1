@@ -228,7 +228,7 @@ function write-env{
             Add-Content -Path $PsScriptFile     -Value $op 
             $op = '     $env:Path = ($arrPath + $dnp) -join ";" '
             Add-Content -Path $PsScriptFile     -Value $op 
-            $op = '     $env:DOT_NET_ROOT = $dnp' 
+            $op = '     $env:DOTNET_ROOT = $dnp' 
             Add-Content -Path $PsScriptFile     -Value $op 
             
         $op = '} else {'

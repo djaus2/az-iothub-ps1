@@ -48,7 +48,7 @@ If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
         $arrPath = $env:Path -split ';' | Where-Object {$_ -notMatch "^$regexAddPath\\?"}
         $env:Path = ($arrPath + $addPath) -join ';'
         $env:Path -split ';'
-        $env:DOT_NET_ROOT = $dnp 
+        $env:DOTNET_ROOT = $dnp 
     } else {
         Throw "'$addPath' is not a valid path."
     }
