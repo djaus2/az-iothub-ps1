@@ -1,0 +1,123 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "dotnet-watch/3.1.1-servicing.19615.10": {
+        "dependencies": {
+          "Internal.AspNetCore.BuildTasks": "3.0.0-build-20190530.3",
+          "MicroBuild.Core": "0.3.0",
+          "Microsoft.DotNet.GenAPI": "1.0.0-beta.19607.3",
+          "Microsoft.Extensions.CommandLineUtils.Sources": "3.1.1-servicing.19614.4",
+          "Microsoft.Internal.Extensions.Refs": "3.1.0-rtm.19565.4",
+          "Microsoft.Net.Compilers.Toolset": "3.4.0-beta4-19569-03",
+          "Microsoft.SourceLink.GitHub": "1.0.0-beta2-19367-01",
+          "Microsoft.SourceLink.Vsts.Git": "1.0.0-beta2-19367-01"
+        },
+        "runtime": {
+          "dotnet-watch.dll": {}
+        }
+      },
+      "Internal.AspNetCore.BuildTasks/3.0.0-build-20190530.3": {},
+      "MicroBuild.Core/0.3.0": {},
+      "Microsoft.Build.Tasks.Git/1.0.0-beta2-19367-01": {},
+      "Microsoft.DotNet.GenAPI/1.0.0-beta.19607.3": {},
+      "Microsoft.Extensions.CommandLineUtils.Sources/3.1.1-servicing.19614.4": {},
+      "Microsoft.Internal.Extensions.Refs/3.1.0-rtm.19565.4": {},
+      "Microsoft.Net.Compilers.Toolset/3.4.0-beta4-19569-03": {},
+      "Microsoft.SourceLink.Common/1.0.0-beta2-19367-01": {},
+      "Microsoft.SourceLink.GitHub/1.0.0-beta2-19367-01": {
+        "dependencies": {
+          "Microsoft.Build.Tasks.Git": "1.0.0-beta2-19367-01",
+          "Microsoft.SourceLink.Common": "1.0.0-beta2-19367-01"
+        }
+      },
+      "Microsoft.SourceLink.Vsts.Git/1.0.0-beta2-19367-01": {
+        "dependencies": {
+          "Microsoft.Build.Tasks.Git": "1.0.0-beta2-19367-01",
+          "Microsoft.SourceLink.Common": "1.0.0-beta2-19367-01"
+        }
+      }
+    }
+  },
+  "libraries": {
+    "dotnet-watch/3.1.1-servicing.19615.10": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Internal.AspNetCore.BuildTasks/3.0.0-build-20190530.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CU705hF0Pj7+5BWlRoRvcWm+11ATz2is8bEn4l4C70v31oV2mH+UJuPb1PGlqbYgLMhEie2JqvMhIdGYpvjaJg==",
+      "path": "internal.aspnetcore.buildtasks/3.0.0-build-20190530.3",
+      "hashPath": "internal.aspnetcore.buildtasks.3.0.0-build-20190530.3.nupkg.sha512"
+    },
+    "MicroBuild.Core/0.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-71NxN8xP8+n08w7XuEOpbzuerL45QRodeLfrjs51qCT8LbjARyfPEcSE30YqLjFtFl3km5eH5Oaqnq2p1hQbAw==",
+      "path": "microbuild.core/0.3.0",
+      "hashPath": "microbuild.core.0.3.0.nupkg.sha512"
+    },
+    "Microsoft.Build.Tasks.Git/1.0.0-beta2-19367-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3kbkb7aUF41YuJnQzoCJRbjb6bgYY3KHlJ9GGJZ30Y5ytdFusLAC5o3/kfE+Vm6slvu4EBgIwMUknL6U+Pu9uA==",
+      "path": "microsoft.build.tasks.git/1.0.0-beta2-19367-01",
+      "hashPath": "microsoft.build.tasks.git.1.0.0-beta2-19367-01.nupkg.sha512"
+    },
+    "Microsoft.DotNet.GenAPI/1.0.0-beta.19607.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sl1s9n6/PLjAaoznFQjhoIvZ28b6XHtHI+g7cwpOSQ9NKCDvuDVbjh3j2Yxq/zOYacTa9oAo+JlIFvdZku/ZjA==",
+      "path": "microsoft.dotnet.genapi/1.0.0-beta.19607.3",
+      "hashPath": "microsoft.dotnet.genapi.1.0.0-beta.19607.3.nupkg.sha512"
+    },
+    "Microsoft.Extensions.CommandLineUtils.Sources/3.1.1-servicing.19614.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IjBk8Erb8yKSTWkKXsI6+tm9HuqkFZE72dysrNDtT4o6i3AuF0AuNU2wjeM42H4gk42ACIYD1d36OJYzttUXXg==",
+      "path": "microsoft.extensions.commandlineutils.sources/3.1.1-servicing.19614.4",
+      "hashPath": "microsoft.extensions.commandlineutils.sources.3.1.1-servicing.19614.4.nupkg.sha512"
+    },
+    "Microsoft.Internal.Extensions.Refs/3.1.0-rtm.19565.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r8d2IPImLntIs92XfoOCAHikr8ryBz6s4R4d9AqHjhDhtyTy0Dspg0nWW7C/pzmAir920UXWir3P49WO9lis/Q==",
+      "path": "microsoft.internal.extensions.refs/3.1.0-rtm.19565.4",
+      "hashPath": "microsoft.internal.extensions.refs.3.1.0-rtm.19565.4.nupkg.sha512"
+    },
+    "Microsoft.Net.Compilers.Toolset/3.4.0-beta4-19569-03": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+BX2+HztclT4cvh3LE28uWl5vXJJV90Po3augN9s3HSc5qCMkqy6f7z8UgOFxIbPsxcyHff8cka3R1NTe25T7Q==",
+      "path": "microsoft.net.compilers.toolset/3.4.0-beta4-19569-03",
+      "hashPath": "microsoft.net.compilers.toolset.3.4.0-beta4-19569-03.nupkg.sha512"
+    },
+    "Microsoft.SourceLink.Common/1.0.0-beta2-19367-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-T6ZEkbRgqcmDoTQDn0ES4FcXiq6uOiqPmbb+hCnKQ/i45W3WjM1+hfNGmsXvTK/e/AqEGiqtXJIi9ZtmbHnzHQ==",
+      "path": "microsoft.sourcelink.common/1.0.0-beta2-19367-01",
+      "hashPath": "microsoft.sourcelink.common.1.0.0-beta2-19367-01.nupkg.sha512"
+    },
+    "Microsoft.SourceLink.GitHub/1.0.0-beta2-19367-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+Zfc8EddeIPTy9w26xrMOqIL5k5fPICfoYGPMhvlCcmENVT0pslIvrOzRaEvv1UgUL1cjbGRO8SXa1HtoVEhPA==",
+      "path": "microsoft.sourcelink.github/1.0.0-beta2-19367-01",
+      "hashPath": "microsoft.sourcelink.github.1.0.0-beta2-19367-01.nupkg.sha512"
+    },
+    "Microsoft.SourceLink.Vsts.Git/1.0.0-beta2-19367-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vfYRwh2jIQ5XFmqk9BebaGnj3tL9p1hkZ270NMXutiE7jCGH1zMB+3HCPec6DpnC4V3XX1oWlwAXoxNtXB90pQ==",
+      "path": "microsoft.sourcelink.vsts.git/1.0.0-beta2-19367-01",
+      "hashPath": "microsoft.sourcelink.vsts.git.1.0.0-beta2-19367-01.nupkg.sha512"
+    }
+  }
+}

@@ -31,7 +31,7 @@ function get-existingdotnetcore{
         }
         else {
             $target = $dpath.Replace("-dotnetcoresdk.zip","")
-            $target = $dpath.Replace("-dotnetcoresdk.tar.gz","")
+            $target = $target.Replace("-dotnetcoresdk.tar.gz","")
             if ($itemsList -ne ""){
                 $itemsList += ","
             }
@@ -50,10 +50,9 @@ function get-existingdotnetcore{
     $name = "$global:retVal"
     $name2 = $name
 
-
-    if ($answer -like "*windows*" ){
+    
+    if ($name -like "*Windows*" ){
         $name +='-dotnetcoresdk.zip'
-        read-host $name
         if (Test-Path "$global:ScriptDirectory\temp\$name")
         {
             write-host 'Remove Quickstarts\dotnet'
@@ -67,7 +66,7 @@ function get-existingdotnetcore{
             get-anykey
         }
         else{
-            write-host "Archive  $global:ScriptDirectory\temp\$name doesn't exist"
+            write-host "Windows Archive  $global:ScriptDirectory\temp\$name doesn't exist"
             get-anykey
         }
     } else{
@@ -93,7 +92,7 @@ function get-existingdotnetcore{
             Out-File -FilePath "$global:ScriptDirectory\quickstarts\dotnet\$name2.txt" 
         }
         else{
-            write-host "Archive  $global:ScriptDirectory\temp\$name doesn't exist"
+            write-host "Linux Archive  $global:ScriptDirectory\temp\$name doesn't exist"
             get-anykey
         }     
     }
