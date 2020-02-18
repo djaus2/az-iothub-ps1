@@ -167,6 +167,7 @@ function write-env{
     util\heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
     show-quickstarts 'Location to save set-env.ps1 to.' 'Quickstarts,ScriptHostRoot'
+    $foldername =  $global:retVal1
 
     util\heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
@@ -175,6 +176,8 @@ function write-env{
     {
         return $answer
     }
+
+
     
 
     $PsScriptFile = "$answer\set-env.ps1"
@@ -188,6 +191,53 @@ function write-env{
     write-host 'Writing to:'
     read-host $PsScriptFile
     Out-File -FilePath $PsScriptFile    -InputObject "" -Encoding ASCII
+
+
+    $prompt =  'Do you want to include DOT references in env settings??'
+    write-Host $prompt
+    get-yesorno $true
+    $response = $global:retVal
+
+    if ($response)
+    {
+
+
+        $prompt = "# This script meant to run in the specific Quickstart folder: $foldername."
+        $op = '$dnp = "..\..\dotnet"'
+        switch ($global:retVal2)
+        {
+            8 {
+                $prompt = "# This script meant to run in PS."
+                $op = '$dnp ="$global:ScriptDirectory\quickstarts\dotnet"'
+            }
+            7 {
+                $prompt = "# This script is meant to run in Quickstarts."
+                $op = '$dnp ="$global:ScriptDirectory\dotnet"'
+            }
+        }
+        Add-Content -Path $PsScriptFile     -Value $prompt 
+        $opdir='$global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent'
+        Add-Content -Path $PsScriptFile     -Value $opdir
+        Add-Content -Path $PsScriptFile     -Value $op 
+        
+        $op = 'if (Test-Path $dnp){'
+        Add-Content -Path $PsScriptFile     -Value $op 
+            $op = '     $regexAddPath = [regex]::Escape($dnp)'
+            Add-Content -Path $PsScriptFile     -Value $op 
+            $op = '     $arrPath = $env:Path -split ";" | Where-Object {$_ -notMatch "^$regexAddPath\\?"}'
+            Add-Content -Path $PsScriptFile     -Value $op 
+            $op = '     $env:Path = ($arrPath + $dnp) -join ";" '
+            Add-Content -Path $PsScriptFile     -Value $op 
+            $op = '     $env:DOT_NET_ROOT = $dnp' 
+            Add-Content -Path $PsScriptFile     -Value $op 
+            
+        $op = '} else {'
+        Add-Content -Path $PsScriptFile     -Value $op 
+        $op = '    Throw "$dnp is not a valid path."'
+        Add-Content -Path $PsScriptFile     -Value $op 
+        $op ='}'
+        Add-Content -Path $PsScriptFile     -Value $op 
+    }
 
 
     #SharedAccesKeyName

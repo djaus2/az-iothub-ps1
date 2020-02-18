@@ -6,6 +6,8 @@ param (
     [string]$DeviceName=''
 )
 
+
+
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''

@@ -15,6 +15,8 @@ function show-quickstarts{
     $dirsList= $dirs -split '\n' | Sort-Object -Descending
     $dirsPathz = @()
     $dirsPaths = {$dirsPathz}.Invoke()
+    $FolderNamez = @()
+    $FolderNames = {$FolderNamez}.Invoke()
     [int] $i=1
     foreach ($dpath in $dirsList)
     {
@@ -31,6 +33,8 @@ function show-quickstarts{
                     {
                         if($dirprops[1].ToLower() -ne 'common'){
                             $dirsPaths.Add($dpath2)
+                            $folder ='Quickstarts\'+ $dirprops[0] + "\" + $dirprops[1] 
+                            $FolderNames.Add($folder)
                             write-Host $i. $dirprops[0] - $dirprops[1]
                             $SelectionList.Add($i)
                             $i++
@@ -153,6 +157,9 @@ function show-quickstarts{
         write-Host 'OK Now  ' 
     }
 
+    $global:retVal2 = $val
+ 
+
     $global:retVal=  $null
     if ($val -eq -1)
     {
@@ -161,10 +168,12 @@ function show-quickstarts{
     elseif ($val -le $numDirs)
     {
         $global:retVal= $dirsPaths[$val-1]
+        $global:retVal1= $FolderNames[$val-1]
     }
     else 
     {
         $global:retVal = $alts[$val-$numDirs-1]
+        $global:retVal1 = $alts[$val-$numDirs-1]
     }
 
 }
