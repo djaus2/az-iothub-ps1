@@ -26,13 +26,13 @@ function clear-env{
     $env:IOTHUB_CONN_STRING_CSHARP = $null
     $env:REMOTE_HOST_NAME = $null
     $env:REMOTE_PORT = $null
-    $env:DEVICE_NAME = $nul
+    $env:DEVICE_NAME = $null
     $env:DEVICE_ID = $null
-    $env:SHARED_ACCESS_KEY_NAME =$null
+    $env:SHARED_ACCESS_KEY_NAME = $null
     $env:EVENT_HUBS_COMPATIBILITY_PATH  = $null
     $env:EVENT_HUBS_CONNECTION_STRING = $null
     $env:EVENT_HUBS_SAS_KEY = $null
-    $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT  =$null
+    $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT  = $null
     $env:SERVICE_CONNECTION_STRING = $null
     show-env
 }
@@ -263,8 +263,7 @@ function write-env{
         write-Host 'Getting IOTHUB_DEVICE_CONN_STRING'
         $cs = az iot hub device-identity show-connection-string --hub-name $HubName --device-id $DeviceName  --output json  | out-string
         $IOTHUB_DEVICE_CONN_STRING = ($cs   | ConvertFrom-Json).connectionString
-    }
-    else{
+    }else{
         $IOTHUB_DEVICE_CONN_STRING=$env:IOTHUB_DEVICE_CONN_STRING
     }
     write-Host "3. IOTHUB_DEVICE_CONN_STRING = $IOTHUB_DEVICE_CONN_STRING"
@@ -289,9 +288,9 @@ function write-env{
     
     
     # Service Connection string
-     write-host 'Getting Service Connection string'
     If ([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING ))
     {  
+        write-host 'Getting Service Connection string'
         $cs = az iot hub show-connection-string --policy-name service --name $HubName --output json | out-string
         $SERVICE_CONNECTION_STRING = ($cs   | ConvertFrom-Json).connectionString
     } else{
@@ -317,7 +316,6 @@ function write-env{
     }else{
         $EventHubsCompatibleEndpoint =   $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
     }
-
     write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT =  $EventHubsCompatibleEndpoint"
     $op = '$env:EVENT_HUBS_COMPATIBILITY_ENDPOINT = "' + $EventHubsCompatibleEndpoint +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
@@ -370,7 +368,6 @@ function write-env{
     $op = '$env:REMOTE_HOST_NAME = "' + $REMOTE_HOST_NAME +'"'
     Add-Content -Path  $PsScriptFile  -Value $op
     # Remote Port
-    # write-host 'REMOTE_PORT'
     $REMOTE_PORT  =  2222
     write-host "12. REMOTE_PORT = $REMOTE_PORT"
     $op =  '$env:REMOTE_PORT = ' + $REMOTE_PORT
