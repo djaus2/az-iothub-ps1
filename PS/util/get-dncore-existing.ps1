@@ -71,7 +71,7 @@ function get-existingdotnetcore{
         }
     } else{
         $name += '-dotnetcoresdk.tar.gz'
-        if (-not (Test-Path "$global:ScriptDirectory\temp\$name"))
+        if (Test-Path "$global:ScriptDirectory\temp\$name")
         {
             write-host "Using SDK binary $name  in $global:ScriptDirectory\temp\" 
             write-host 'Remove Quickstarts\dotnet'

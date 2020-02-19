@@ -200,13 +200,13 @@ function write-export{
         }
         Add-Content -Path $PsScriptFile     -Value $prompt 
         $opdir='$global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent'
-        Add-Content -Path $PsScriptFile     -Value $opdir
-        Add-Content -Path $PsScriptFile     -Value $op 
+        # Add-Content -Path $PsScriptFile     -Value $opdir
+        # Add-Content -Path $PsScriptFile     -Value $op 
         
   
-        $op='     export DOTNET_ROOT=$HOME/dotnet '
+        $op='export DOTNET_ROOT=$HOME/dotnet '
         Add-Content -Path $PsScriptFile     -Value $op 
-        $op='     export PATH=$PATH:$HOME/dotnet' 
+        $op='export PATH=$PATH:$HOME/dotnet' 
         Add-Content -Path $PsScriptFile     -Value $op  
     }
     
@@ -328,7 +328,7 @@ function write-export{
     $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
     $EventHubsConnectionString = $cs
     write-host "10. EVENT_HUBS_CONNECTION_STRING =$EventHubsConnectionString"
-    $op="'export EVENT_HUBS_CONNECTION_STRING='$EventHubsConnectionString'"
+    $op="export EVENT_HUBS_CONNECTION_STRING='$EventHubsConnectionString'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
     # The next two are only required by Device Streaming Proxy Hub
