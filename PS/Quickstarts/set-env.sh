@@ -1,6 +1,7 @@
 #!/bin/bash
-export DOTNET_ROOT=$HOME/dotnet
-export PATH=$PATH:$HOME/dotnet
+# Assumes run from Quickstarts
+export DOTNET_ROOT=$PWD/dotnet
+export PATH=$PATH:$PWD/dotnet
 export SHARED_ACCESS_KEY_NAME='iothubowner'
 export DEVICE_NAME='DSDevice'
 export IOTHUB_DEVICE_CONN_STRING='HostName=DSHub.azure-devices.net;DeviceId=DSDevice;SharedAccessKey=zmqi3bBMucAfxjckqeh69T7oVlqeC/cFOtW4OsFjbPY='
