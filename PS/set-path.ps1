@@ -31,17 +31,21 @@ If  ([string]::IsNullOrEmpty($env:IsRedirected))
     write-Host '  S E T   P A T H  to current PWD '  -BackgroundColor DarkGreen  -ForegroundColor Black
     write-Host ' using PowerShell'
     write-Host ''
-    write-host "Nb: DOTNET path is also set to $addPath\Quickstarts\DotNet if the file: "
+    write-host "Nb: DOTNET path is also set to $addPath\dotnet if the file: "
     write-host  "$drive" -BackgroundColor Yellow  -ForegroundColor Black -nonewline
     write-host ":\IsEmbedded.txt" -BackgroundColor Yellow  -ForegroundColor Black
     write-host '     exists.'
     write-host ''
 }
 
+if ( [Console]::IsInputRedirected)
+{
+    $env:IsRedirected ='yes'
+}
 
 If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
 {
-    $dnp ="$addPath\quickstarts\dotnet"
+    $dnp ="$addPath\dotnet"
     $addPath=$dnp
     if (Test-Path $addPath){
         $regexAddPath = [regex]::Escape($addPath)
@@ -55,7 +59,7 @@ If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
     write-Host ''
     write-Host 'Added PWD to path.'
     write-Host 'Also added DOTNET to path as well as setting DOT_NET_ROOT to it.'
-    write-host "Both at $addPath\Quickstarts\DotNet"
+    write-host "Both at $addPath\dotnet"
     write-host ' See last entries listed. These are only for this shell instance.'
     write-Host ''
     write-Host ' AZURE IOT HUB SETUP: ' -NoNewline

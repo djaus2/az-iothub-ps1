@@ -10,9 +10,9 @@ function Expand-Tar($tarFile, $dest) {
 function get-dotnetcore{
     util\heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
 
-    if (-not (Test-Path "$global:ScriptDirectory\quickstarts\dotnet"))
+    if (-not (Test-Path "$global:ScriptDirectory\dotnet"))
     {
-        New-Item -Path "$global:ScriptDirectory\quickstarts\dotnet" -ItemType Directory
+        New-Item -Path "$global:ScriptDirectory\dotnet" -ItemType Directory
     }
     if (-not (Test-Path "$global:ScriptDirectory\temp"))
     {
@@ -55,47 +55,47 @@ function get-dotnetcore{
         write-host "Downloading SDK binary as $name  to $global:ScriptDirectory\temp\"
         write-host "Please wait."
         Invoke-WebRequest -o "$global:ScriptDirectory\temp\$name" $url
-        write-host 'Remove Quickstarts\dotnet'
-        remove-item -path "$global:ScriptDirectory\quickstarts\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
-        write-host 'Create Quickstarts\dotnet'
-        New-Item -Path "$global:ScriptDirectory\quickstarts\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
-        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\quickstarts\dotnet"
+        write-host 'Remove folder dotnet'
+        remove-item -path "$global:ScriptDirectory\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
+        write-host 'Create folder dotnet'
+        New-Item -Path "$global:ScriptDirectory\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
+        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\dotnet"
         if (-not (Test-Path "$global:ScriptDirectory\temp\$name"))
         {
-            write-host "File not found : global:ScriptDirectory\temp\$name "
+            write-host "File not found : $global:ScriptDirectory\temp\$name "
             get-anykey
             return 'Back'
         }
-        Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\quickstarts\dotnet"
-        write-host"'Put note of current target in Quickstarts\dotnet as $name2.txt"
-        Out-File -FilePath "$global:ScriptDirectory\quickstarts\dotnet\$name2.txt"
+        Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\dotnet"
+        write-host"'Put note of current target in folder dotnet as $name2.txt"
+        Out-File -FilePath "$global:ScriptDirectory\dotnet\$name2.txt"
     } else{
         $name += '-dotnetcoresdk.tar.gz'
         write-host "Downloading SDK binary as $name  to $global:ScriptDirectory\temp\"
         write-host "Please wait."
         Invoke-WebRequest  -o "$global:ScriptDirectory\temp\$name" $url   
-        write-host 'Remove Quickstarts\dotnet'
-        remove-item -path "$global:ScriptDirectory\quickstarts\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
-        write-host 'Create Quickstarts\dotnet'
-        New-Item -Path "$global:ScriptDirectory\quickstarts\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
-        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\quickstarts\dotnet"
+        write-host 'Remove folder dotnet'
+        remove-item -path "$global:ScriptDirectory\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
+        write-host 'Create folder dotnet'
+        New-Item -Path "$global:ScriptDirectory\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
+        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\dotnet"
         write-host "Assuming running on Windows."
-        $ch = read-host "Press [Enter] to continue. If running Linux then exit here [N} then [Enter] and expand manually to $global:ScriptDirectory\quickstarts\dotnet"
+        $ch = read-host "Press [Enter] to continue. If running Linux then exit here [N} then [Enter] and expand manually to $global:ScriptDirectory\dotnet"
         if (-not ( [string]::IsNullOrEmpty($ch )))
         {
             return 'Back'
         }
         if (-not (Test-Path "$global:ScriptDirectory\temp\$name"))
         {
-            write-host "File not found : global:ScriptDirectory\temp\$name "
+            write-host "File not found : $global:ScriptDirectory\temp\$name "
             get-anykey
             return 'Back'
         }
-        set-location  "$global:ScriptDirectory\quickstarts\dotnet"
+        set-location  "$global:ScriptDirectory\dotnet"
         tar -xzf "$global:ScriptDirectory\temp\$name"  
         set-location "$global:ScriptDirectory"
-        write-host"'Put note of current target in Quickstarts\dotnet as $name2.txt"
-        Out-File -FilePath "$global:ScriptDirectory\quickstarts\dotnet\$name2.txt"
+        write-host"'Put note of current target in folder dotnet as $name2.txt"
+        Out-File -FilePath "$global:ScriptDirectory\dotnet\$name2.txt"
 
     }
 }

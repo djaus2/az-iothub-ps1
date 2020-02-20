@@ -89,7 +89,7 @@ function set-export{
     $cs = trimm($cs)
     $EventHubsCompatibleEndpoint = $cs.Replace('"','')
     write-host $EventHubsCompatibleEndpoint
-    export EVENT_THUBS_COMPATIBILITY_ENDPOINT = $EventHubsCompatibleEndpoint
+    export EVENT_HUBS_COMPATIBILITY_ENDPOINT = $EventHubsCompatibleEndpoint
     
     # EventHubsCompatiblePath
     write-host 'Getting EventHubsCompatiblePath'
@@ -210,17 +210,17 @@ function write-export{
             8 {
                 $prompt = "# This script meant to run in PS."
                 Add-Content -Path $PsScriptFile     -Value $prompt
-                $op='export DOTNET_ROOT=$PWD/Quickstarts//dotnet'
-                Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:$PWD/Qickstarts/dotnet' 
-                Add-Content -Path $PsScriptFile     -Value $op
-            }
-            7 {
-                $prompt = "# This script is meant to run in Quickstarts."
-                Add-Content -Path $PsScriptFile     -Value $prompt 
                 $op='export DOTNET_ROOT=$PWD/dotnet'
                 Add-Content -Path $PsScriptFile     -Value $op 
                 $op='export PATH=$PATH:$PWD/dotnet' 
+                Add-Content -Path $PsScriptFile     -Value $op
+            }
+            7 {
+                $prompt = "# This script is meant to run in Quickstarts. Assumed that is placed in /home/usr/"
+                Add-Content -Path $PsScriptFile     -Value $prompt 
+                $op='export DOTNET_ROOT=~/dotnet'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op='export PATH=$PATH:~/dotnet' 
                 Add-Content -Path $PsScriptFile     -Value $op
             }
             deault {
