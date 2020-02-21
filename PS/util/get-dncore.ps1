@@ -21,12 +21,21 @@ function get-dotnetcore{
 
     $itemsList ='ARM32-Windows10,x64-Windows10,x86-Windows10,ARM32-Linux,ARM64-Linux,X64-Linux,Done'
 
-    $WiNARM32 ="https://download.visualstudio.microsoft.com/download/pr/7363a148-a9e0-4393-b0f6-4e51ecba3e27/4b28aec090c9854d71925bb6d50c8314/dotnet-sdk-3.1.101-win-arm.zip"
-    $WiNx64 ="https://download.visualstudio.microsoft.com/download/pr/87955c8d-c571-471a-9d2d-90fd069cf1f2/9fbde37bbe8b156cec97a25b735f9465/dotnet-sdk-3.1.101-win-x64.zip"
-    $Winx86 = "https://download.visualstudio.microsoft.com/download/pr/961d2276-c171-4e2b-b74c-e5fbc71f308c/2590499670296b16c02fb38441053d79/dotnet-sdk-3.1.102-win-x86.zip"
-    $LinuxARM32="https://download.visualstudio.microsoft.com/download/pr/d52fa156-1555-41d5-a5eb-234305fbd470/173cddb039d613c8f007c9f74371f8bb/dotnet-sdk-3.1.101-linux-arm.tar.gz"
-    $LinuxARM64 = "https://download.visualstudio.microsoft.com/download/pr/cf54dd72-eab1-4f5c-ac1e-55e2a9006739/d66fc7e2d4ee6c709834dd31db23b743/dotnet-sdk-3.1.101-linux-arm64.tar.gz"
-    $Linuxx64 = "https://download.visualstudio.microsoft.com/download/pr/57e63f03-ebdf-4c22-96ff-2b85dc70cf7f/988576869e82a80f4a97ca5a733a5295/dotnet-sdk-3.1.102-linux-x64.tar.gz"
+    # $WiNARM32 ="https://download.visualstudio.microsoft.com/download/pr/7363a148-a9e0-4393-b0f6-4e51ecba3e27/4b28aec090c9854d71925bb6d50c8314/dotnet-sdk-3.1.101-win-arm.zip"
+      $WinARM32 ="https://download.visualstudio.microsoft.com/download/pr/36b067d5-6a4c-467c-8677-f2d00749a574/4f45950e15cd6b7b5bd010fcb64f140d/dotnet-sdk-3.1.102-win-arm.zip"
+      
+    # $WiNx64 = "https://download.visualstudio.microsoft.com/download/pr/87955c8d-c571-471a-9d2d-90fd069cf1f2/9fbde37bbe8b156cec97a25b735f9465/dotnet-sdk-3.1.101-win-x64.zip"
+
+    #  $Winx86 = "https://download.visualstudio.microsoft.com/download/pr/961d2276-c171-4e2b-b74c-e5fbc71f308c/2590499670296b16c02fb38441053d79/dotnet-sdk-3.1.102-win-x86.zip"
+
+      $LinuxARM32= "https://download.visualstudio.microsoft.com/download/pr/349f13f0-400e-476c-ba10-fe284b35b932/44a5863469051c5cf103129f1423ddb8/dotnet-sdk-3.1.102-linux-arm.tar.gz"
+    # $LinuxARM32= "https://download.visualstudio.microsoft.com/download/pr/d52fa156-1555-41d5-a5eb-234305fbd470/173cddb039d613c8f007c9f74371f8bb/dotnet-sdk-3.1.101-linux-arm.tar.gz"
+
+    # $LinuxARM64 = "https://download.visualstudio.microsoft.com/download/pr/cf54dd72-eab1-4f5c-ac1e-55e2a9006739/d66fc7e2d4ee6c709834dd31db23b743/dotnet-sdk-3.1.101-linux-arm64.tar.gz"
+      $LinuxARM64 = "https://download.visualstudio.microsoft.com/download/pr/2ea7ea69-6110-4c39-a07c-bd4df663e49b/5d60f17a167a5696e63904f7a586d072/dotnet-sdk-3.1.102-linux-arm64.tar.gz"
+
+      $Linuxx64 =  "https://download.visualstudio.microsoft.com/download/pr/57e63f03-ebdf-4c22-96ff-2b85dc70cf7f/988576869e82a80f4a97ca5a733a5295/dotnet-sdk-3.1.102-linux-x64.tar.gz"
+
 
     choose-selection $itemsList  'Manage App Data Action'   '' ','
     $answer = $global:retVal1
