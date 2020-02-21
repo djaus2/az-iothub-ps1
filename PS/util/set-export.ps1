@@ -165,7 +165,7 @@ function write-export{
 
     $PsScriptFile = "$answer\set-env.sh"
     if ($answer -eq 'Quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\qs-qs-apps\Quickstarts\set-env.sh"
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\Quickstarts\set-env.sh"
     }
     elseif ($answer -eq 'ScriptHostRoot'){
         $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
@@ -201,16 +201,16 @@ function write-export{
                 Add-Content -Path $PsScriptFile     -Value $prompt 
                 $op='export DOTNET_ROOT=~/qs-apps/dotnet'
                 Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:~/qs-apps//dotnet' 
+                $op='export PATH=$PATH:~/qs-apps/dotnet' 
                 Add-Content -Path $PsScriptFile     -Value $op
             }
             default {
                 $prompt = "# This script meant to run in the specific Quickstart folder: $foldername. Assumes qs-apps is in ~"
                 Add-Content -Path $PsScriptFile     -Value $prompt
                 # To do here got to get $PWD/../../../dotnet
-                $op='export DOTNET_ROOT=~/qs-apps//dotnet'
+                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
                 Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:~/qs-apps//dotnet' 
+                $op='export PATH=$PATH:~/qs-apps/dotnet' 
                 Add-Content -Path $PsScriptFile     -Value $op
             }
         } 

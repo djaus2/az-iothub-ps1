@@ -84,7 +84,7 @@ param (
                 'D4'    { 
                     $dnp ="$global:ScriptDirectory\qs-apps\quickstarts\dotnet"
                     $addPath=$dnp
-                    if (Test-Path $addPath){
+                    if (-not(Test-Path $addPath)){
                         New-Item -ItemType Directory -Force -Path $addPath
                     }                    
                     if (Test-Path $addPath){
