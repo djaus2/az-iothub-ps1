@@ -11,14 +11,22 @@
 *.sln.docstates
 
 set-env.ps1
+set-env.sh
 app-settings.ps
+
 PS/set-env.ps1
-PS/app-settings.ps
-PS/Quickstarts/*/set-env.ps1
-PS/Quickstarts/set-env.ps1
-PS/set-env.ps1
+PS/set-env.sh
 PS/app-settings.ps1
-PS/Quickstarts/[Dd]otnet
+PS/apps/Quickstarts/set-env.ps1
+PS/apps/Quickstarts/set-env.sh
+PS/apps/Quickstarts/*/set-env.ps1
+PS/apps/Quickstarts/*/set-env.sh
+PS/apps/Quickstarts/*/*/set-env.ps1
+PS/apps/Quickstarts/*/*/set-env.sh
+PS/apps/Quickstarts/*/*/*/set-env.ps1
+PS/apps/Quickstarts/*/*/*/set-env.sh
+
+PS/apps/[Dd]otnet
 PS/temp
 
 # User-specific files (MonoDevelop/Xamarin Studio)

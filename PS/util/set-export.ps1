@@ -165,7 +165,7 @@ function write-export{
 
     $PsScriptFile = "$answer\set-env.sh"
     if ($answer -eq 'Quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.sh"
+        $PsScriptFile = "$global:ScriptDirectory\apps\Quickstarts\set-env.sh"
     }
     elseif ($answer -eq 'ScriptHostRoot'){
         $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
@@ -176,7 +176,7 @@ function write-export{
     $op='#!/bin/bash'
     Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII
 
-    $prompt =  'Do you want to include DOT references in env settings??'
+    $prompt =  'Do you want to include DOTNET references in env settings??'
     write-Host $prompt
     get-yesorno $true
     $response = $global:retVal
@@ -185,48 +185,33 @@ function write-export{
     {
 
 
-        $prompt = "# This script meant to run in the specific Quickstart folder: $foldername."
-        $op='$dnp = "../../dotnet"'
-        switch ($global:retVal2)
-        {
-            8 {
-                $prompt = "# This script meant to run in PS."
-                $op='$dnp ="$global:ScriptDirectory/quickstarts/dotnet"'
-            }
-            7 {
-                $prompt = "# This script is meant to run in Quickstarts."
-                $op='$dnp ="$global:ScriptDirectory/dotnet"'
-            }
-        }
-        #Add-Content -Path $PsScriptFile     -Value $prompt 
-        #$opdir='$global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent'
-        # Add-Content -Path $PsScriptFile     -Value $opdir
-        # Add-Content -Path $PsScriptFile     -Value $op 
-        
-  
  
         switch ($global:retVal2)
         {
             8 {
                 $prompt = "# This script meant to run in PS."
                 Add-Content -Path $PsScriptFile     -Value $prompt
-                $op='export DOTNET_ROOT=$PWD/dotnet'
+                $op='export DOTNET_ROOT=$PWD/apps/dotnet'
                 Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:$PWD/dotnet' 
+                $op='export PATH=$PATH:$PWD/apps/dotnet' 
                 Add-Content -Path $PsScriptFile     -Value $op
             }
             7 {
-                $prompt = "# This script is meant to run in Quickstarts. Assumed that is placed in /home/usr/"
+                $prompt = "# This script is meant to run in Quickstarts."
                 Add-Content -Path $PsScriptFile     -Value $prompt 
-                $op='export DOTNET_ROOT=~/dotnet'
+                $op='export DOTNET_ROOT=$PWD/../dotnet'
                 Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:~/dotnet' 
+                $op='export PATH=$PATH:$PWD/../dotnet' 
                 Add-Content -Path $PsScriptFile     -Value $op
             }
-            deault {
+            default {
                 $prompt = "# This script meant to run in the specific Quickstart folder: $foldername."
                 Add-Content -Path $PsScriptFile     -Value $prompt
-                # To do here got ot get ..\..\dotnet
+                # To do here got to get $PWD/../../../dotnet
+                $op='export DOTNET_ROOT=$PWD/../../../dotnet'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op='export PATH=$PATH:$PWD/../../../dotnet' 
+                Add-Content -Path $PsScriptFile     -Value $op
             }
         } 
     }
