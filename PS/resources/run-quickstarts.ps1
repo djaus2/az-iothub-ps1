@@ -40,14 +40,17 @@ param (
         . ("$global:ScriptDirectory\util\set-export.ps1")
         . ("$global:ScriptDirectory\util\get-dncore.ps1")
         . ("$global:ScriptDirectory\util\get-dncore-existing.ps1")
+        . ("$global:ScriptDirectory\menu\select-subfolder.ps1")
     }
     catch {
         Write-Host "Error while loading supporting PowerShell Scripts" 
         Write-Host $_
     }
 
+    $done=$false
+    $singleapp = $false
     do{
-        util\heading '  R U N   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        util\heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '          Group :"' + $GroupName +'"'
@@ -58,7 +61,7 @@ param (
         write-Host $Prompt
 
 
-            $itemsList ='Run App/s,Clear App Builds,Set .NET Core,Get .NET Core,Using Existing .NET Core'
+            $itemsList ='Run both the Device and Service apps simultaneously,Run one of the Device and Serice apps,Clear App Builds,Set .NET Core,Get .NET Core,Using Existing .NET Core'
 
         
             choose-selection $itemsList  'Quickstarts Action'   '' ','
@@ -67,12 +70,18 @@ param (
                 return  'Back'
             }
 
-            $done=false
+ 
             switch ($answer)
             {
-                'D1'    {  $done = $true }
-                'D2'    {  $response = Clr-Apps $Subscription $GroupName $HubName $DeviceName }
-                'D3'    { 
+                'D1'    {  
+                    $done = $true
+                 }
+                'D2'    {  
+                    $done = $true 
+                    $singleapp=$true
+                }
+                'D3'    {  $response = Clr-Apps $Subscription $GroupName $HubName $DeviceName }
+                'D4'    { 
                     $dnp ="$global:ScriptDirectory\quickstarts\dotnet"
                     $addPath=$dnp
                     if (Test-Path $addPath){
@@ -87,15 +96,16 @@ param (
                         Throw "'$addPath' is not a valid path."
                     }
                  }
-                'D4'    {  get-dotnetcore }
-                'D5'    {  get-existingdotnetcore }
-                'D6'    {  return 'Back' }
+                'D5'    {  get-dotnetcore }
+                'D6'    {  get-existingdotnetcore }
+                'D7'    {  return 'Back' }
             }  
         } while (-not $done)
 
+
         show-quickstarts "Quickstart/s to run"
     
-        util\heading '  R U N   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        util\heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
     
         $answer = $global:retVal
         if ($answer -eq 'Back')
@@ -104,10 +114,34 @@ param (
         }
              
         $PsScriptFile = $answer
+        if ($singleapp)
+        {
+            select-subfolder $answer 'One app'
+            $answer = $global:retVal
+            if ($answer -eq 'Back')
+            {
+                return $answer
+            }
+            util\heading '  R U N  O N E  Q U I K S T A R T  I o T   H U B  A P P   '  -BG DarkBlue   -FG White
+            $PsScriptFile = $answer
+            Write-Host "Setting location to $PsScriptFile."
+            write-host ''
+            write-Host "There is a device or service app to run: "  -nonewline 
+            write-host  $global:retval1  -BackgroundColor Blue -ForegroundColor White
+            write-Host 'Enter ' -nonewline 
+            write-host 'dotnet run' -nonewline   -BackgroundColor Blue -ForegroundColor White
+            write-host ' to run the app.'
+            write-Host 'Assumes that Environment Variables have been set.'  -BackgroundColor DarkRed -ForegroundColor White
+            Set-Location -Path  $PsScriptFile
+            return 'Exit'
+        }
  
 
 
         Write-Host "Setting location to $PsScriptFile."
+        write-host ''
+        Write-Host "This is for the Quickstart pair of apps: " -nonewline 
+        write-Host $global:retVal1  -BackgroundColor Blue -ForegroundColor White
         write-Host "There are a device and a service app to run."
         write-Host 'Enter ' -nonewline 
         write-host '.\run-apps' -nonewline   -BackgroundColor Blue -ForegroundColor White
@@ -117,9 +151,6 @@ param (
         write-host 'dotnet run' -BackgroundColor Blue -ForegroundColor White
         Set-Location -Path  $PsScriptFile
         get-childitem -Directory | select-object name
-        if ($done)
-        {
-            return 'Exit' 
-        }
-        return 'Back'  
+
+        return 'Exit'  
 }

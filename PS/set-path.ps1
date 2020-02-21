@@ -45,7 +45,7 @@ if ( [Console]::IsInputRedirected)
 
 If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
 {
-    $dnp ="$addPath\dotnet"
+    $dnp ="$addPath\apps\dotnet"
     $addPath=$dnp
     if (Test-Path $addPath){
         $regexAddPath = [regex]::Escape($addPath)
@@ -59,7 +59,7 @@ If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
     write-Host ''
     write-Host 'Added PWD to path.'
     write-Host 'Also added DOTNET to path as well as setting DOT_NET_ROOT to it.'
-    write-host "Both at $addPath\dotnet"
+    write-host "Both at  PS\apps\dotnet"
     write-host ' See last entries listed. These are only for this shell instance.'
     write-Host ''
     write-Host ' AZURE IOT HUB SETUP: ' -NoNewline
