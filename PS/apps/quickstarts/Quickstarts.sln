@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "back-end-application", "control-a-device\back-end-application\back-end-application.csproj", "{F029ED62-3E01-429A-8E32-4862990A35E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "read-d2c-messages", "telemetryread-d2c-messages\read-d2c-messages.csproj", "{7701514F-DA48-4344-82FE-4C4A1E7577F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "read-d2c-messages", "telemetry\read-d2c-messages\read-d2c-messages.csproj", "{7701514F-DA48-4344-82FE-4C4A1E7577F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "simulated-device", "telemetry\simulated-device\simulated-device.csproj", "{C22BD1F5-D8A7-452A-96C4-FF0C0553EBF3}"
 EndProject
