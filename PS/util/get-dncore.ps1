@@ -10,9 +10,9 @@ function Expand-Tar($tarFile, $dest) {
 function get-dotnetcore{
     util\heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
 
-    if (-not (Test-Path "$global:ScriptDirectory\apps\dotnet"))
+    if (-not (Test-Path "$global:ScriptDirectory\qs-apps\dotnet"))
     {
-        New-Item -Path "$global:ScriptDirectory\apps\dotnet" -ItemType Directory
+        New-Item -Path "$global:ScriptDirectory\qs-apps\dotnet" -ItemType Directory
     }
     if (-not (Test-Path "$global:ScriptDirectory\temp"))
     {
@@ -55,13 +55,13 @@ function get-dotnetcore{
         write-host "Downloading SDK binary as $name  to $global:ScriptDirectory\temp\"
         write-host "Please wait."
         Invoke-WebRequest -o "$global:ScriptDirectory\temp\$name" $url
-        write-host 'Remove folder ps\apps\dotnet'
-        remove-item -path "$global:ScriptDirectory\apps\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
-        write-host 'Create folder ps\apps\dotnet'
-        New-Item -Path "$global:ScriptDirectory\apps\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
-        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\apps\dotnet"
+        write-host 'Remove folder ps\qs-apps\dotnet'
+        remove-item -path "$global:ScriptDirectory\qs-apps\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
+        write-host 'Create folder ps\qs-apps\dotnet'
+        New-Item -Path "$global:ScriptDirectory\qs-apps\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
+        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\qs-apps\dotnet"
         write-host "Assuming running on Windows."
-        $ch = read-host "Press [Enter] to continue. If running on Linux then exit here press N then [Enter] and expand manually to $global:ScriptDirectory\apps\dotnet"
+        $ch = read-host "Press [Enter] to continue. If running on Linux then exit here press N then [Enter] and expand manually to $global:ScriptDirectory\qs-apps\dotnet"
         if (-not ( [string]::IsNullOrEmpty($ch )))
         {
             return 'Back'
@@ -72,21 +72,21 @@ function get-dotnetcore{
             get-anykey
             return 'Back'
         }
-        Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\apps\dotnet"
-        write-host"'Put note of current target in folder ps\apps\dotnet as $name2.txt"
-        Out-File -FilePath "$global:ScriptDirectory\apps\dotnet\$name2.txt"
+        Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\qs-apps\dotnet"
+        write-host"'Put note of current target in folder ps\qs-apps\dotnet as $name2.txt"
+        Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt"
     } else{
         $name += '-dotnetcoresdk.tar.gz'
         write-host "Downloading SDK binary as $name  to $global:ScriptDirectory\temp\"
         write-host "Please wait."
         Invoke-WebRequest  -o "$global:ScriptDirectory\temp\$name" $url   
-        write-host 'Remove folder ps\apps\dotnet'
-        remove-item -path "$global:ScriptDirectory\apps\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
-        write-host 'Create folder ps\apps\dotnet'
-        New-Item -Path "$global:ScriptDirectory\apps\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
-        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\apps\dotnet"
+        write-host 'Remove folder ps\qs-apps\dotnet'
+        remove-item -path "$global:ScriptDirectory\qs-apps\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
+        write-host 'Create folder ps\qs-apps\dotnet'
+        New-Item -Path "$global:ScriptDirectory\qs-apps\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
+        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\qs-apps\dotnet"
         write-host "Assuming running on Windows."
-        $ch = read-host "Press [Enter] to continue. If running Linux then exit here [N} then [Enter] and expand manually to $global:ScriptDirectory\apps\dotnet"
+        $ch = read-host "Press [Enter] to continue. If running Linux then exit here [N} then [Enter] and expand manually to $global:ScriptDirectory\qs-apps\dotnet"
         if (-not ( [string]::IsNullOrEmpty($ch )))
         {
             return 'Back'
@@ -97,11 +97,11 @@ function get-dotnetcore{
             get-anykey
             return 'Back'
         }
-        set-location  "$global:ScriptDirectory\apps\dotnet"
+        set-location  "$global:ScriptDirectory\qs-apps\dotnet"
         tar -xzf "$global:ScriptDirectory\temp\$name"  
         set-location "$global:ScriptDirectory"
-        write-host"'Put note of current target in folder ps\apps\dotnet as $name2.txt"
-        Out-File -FilePath "$global:ScriptDirectory\apps\dotnet\$name2.txt"
+        write-host"'Put note of current target in folder ps\qs-apps\dotnet as $name2.txt"
+        Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt"
 
     }
 }

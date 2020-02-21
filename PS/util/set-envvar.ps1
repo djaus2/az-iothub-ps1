@@ -182,7 +182,7 @@ function write-env{
 
     $PsScriptFile = "$answer\set-env.ps1"
     if ($answer -eq 'Quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.ps1"
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\set-env.ps1"
     }
     elseif ($answer -eq 'ScriptHostRoot'){
         $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"
@@ -208,7 +208,7 @@ function write-env{
         {
             8 {
                 $prompt = "# This script meant to run in PS."
-                $op = '$dnp ="$global:ScriptDirectory\quickstarts\dotnet"'
+                $op = '$dnp ="$global:ScriptDirectory\qs-apps\quickstarts\dotnet"'
             }
             7 {
                 $prompt = "# This script is meant to run in Quickstarts."
@@ -403,7 +403,7 @@ function read-env{
     
     $PsScriptFile = "$answer\set-env.ps1"
     if ($answer -eq 'Quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\Quickstarts\set-env.ps1"
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\set-env.ps1"
     }
     elseif ($answer -eq 'ScriptHostRoot'){
         $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"

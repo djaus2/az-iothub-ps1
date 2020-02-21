@@ -82,7 +82,7 @@ param (
                 }
                 'D3'    {  $response = Clr-Apps $Subscription $GroupName $HubName $DeviceName }
                 'D4'    { 
-                    $dnp ="$global:ScriptDirectory\quickstarts\dotnet"
+                    $dnp ="$global:ScriptDirectory\qs-apps\quickstarts\dotnet"
                     $addPath=$dnp
                     if (Test-Path $addPath){
                         New-Item -ItemType Directory -Force -Path $addPath

@@ -8,7 +8,7 @@ function clr-apps{
     {
         write-Host 'Clearing all bin and obj folders under Quickstarts'
         write-host "Before:"
-        gci  "$global:ScriptDirectory\apps\Quickstarts" -include bin,obj -recurse | write-host 
+        gci  "$global:ScriptDirectory\qs-apps\Quickstarts" -include bin,obj -recurse | write-host 
         $answer = read-host "Press [Enter] to continue....N then [Enter] to abort."
         If (-not([string]::IsNullOrEmpty($answer )))
         {
@@ -18,9 +18,9 @@ function clr-apps{
             }
         }
         # Ref: https://stackoverflow.com/questions/755382/i-want-to-delete-all-bin-and-obj-folders-to-force-all-projects-to-rebuild-everyt
-        gci "$global:ScriptDirectory\apps\Quickstarts" -include bin,obj -recurse | remove-item -force -recurse
+        gci "$global:ScriptDirectory\qs-apps\Quickstarts" -include bin,obj -recurse | remove-item -force -recurse
         write-host "After:"
-        gci  "$global:ScriptDirectory\apps\Quickstarts" -include bin,obj -recurse | write-host
+        gci  "$global:ScriptDirectory\qs-apps\Quickstarts" -include bin,obj -recurse | write-host
         write-host ''
         read-host 'Done. Pres [Enter] to return'
         $global:retVal ='Back'
@@ -59,7 +59,7 @@ function clr-apps{
         $PsScriptFile = $answer
  
         Write-Host "Setting location to $PsScriptFile."
-        write-Host "There are a device and a service appS here:"
+        write-Host "There are a device and a service apps here:"
         write-Host "clearing all bin and obj folders under $PsScriptFile."
         write-host "Before:"
         gci  "$PsScriptFile" -include bin,obj -recurse | write-host 

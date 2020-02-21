@@ -10,7 +10,7 @@ function show-quickstarts{
     # Ref: https://www.jonathanmedd.net/2014/01/adding-and-removing-items-from-a-powershell-array.html
     $SelectionList = {$SelectionList1}.Invoke()
 
-    $ScriptDirectory2 ="$ScriptDirectory\apps\quickstarts\"
+    $ScriptDirectory2 ="$ScriptDirectory\qs-apps\quickstarts\"
     $dirs = Get-ChildItem  -Directory -path $ScriptDirectory2\*\*  | select fullname|  out-string
     $dirsList= $dirs -split '\n' | Sort-Object -Descending
     $dirsPathz = @()
