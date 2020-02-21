@@ -67,6 +67,7 @@ param (
                 return  'Back'
             }
 
+            $done=false
             switch ($answer)
             {
                 'D1'    {  $done = $true }
@@ -116,5 +117,9 @@ param (
         write-host 'dotnet run' -BackgroundColor Blue -ForegroundColor White
         Set-Location -Path  $PsScriptFile
         get-childitem -Directory | select-object name
-        return 'Exit'   
+        if ($done)
+        {
+            return 'Exit' 
+        }
+        return 'Back'  
 }
