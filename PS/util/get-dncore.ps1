@@ -59,8 +59,12 @@ function get-dotnetcore{
         'D5'    {  return 'Back' }
     }  
 
-    if ($answer -like "*windows*" ){
-        $name +='-dotnetcoresdk.zip'
+    if ($answer -like "*.zip" ){
+        $parts = $url.Split('/')
+        $len = $parts.Length
+        $name = $parts[$len-1]
+        # $name +='-dotnet-sdk.zip'
+        read-host $name
         write-host "Downloading SDK binary as $name  to $global:ScriptDirectory\temp\"
         write-host "Please wait."
         Invoke-WebRequest -o "$global:ScriptDirectory\temp\$name" $url
@@ -84,8 +88,13 @@ function get-dotnetcore{
         Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\qs-apps\dotnet"
         write-host"'Put note of current target in folder ps\qs-apps\dotnet as $name2.txt"
         Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt"
+        get-anykey
     } else{
-        $name += '-dotnetcoresdk.tar.gz'
+        $parts = $url.Split('/')
+        $len = $parts.Length
+        $name = $parts[$len-1]
+        read-host $name
+        # $name += '-dotnet-sdk.tar.gz'
         write-host "Downloading SDK binary as $name  to $global:ScriptDirectory\temp\"
         write-host "Please wait."
         Invoke-WebRequest  -o "$global:ScriptDirectory\temp\$name" $url   
@@ -111,6 +120,7 @@ function get-dotnetcore{
         set-location "$global:ScriptDirectory"
         write-host"'Put note of current target in folder ps\qs-apps\dotnet as $name2.txt"
         Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt"
+        get-anykey
 
     }
 }

@@ -30,11 +30,12 @@ function get-existingdotnetcore{
             continue
         }
         else {
-            $target = $dpath.Replace("-dotnetcoresdk.zip","")
-            $target = $target.Replace("-dotnetcoresdk.tar.gz","")
+           #  $target = $dpath.Replace(".zip","")
+            # $target = $target.Replace(".tar.gz","")
             if ($itemsList -ne ""){
                 $itemsList += ","
             }
+            $target= $dpath
             $itemsList += $target
         }
     }
@@ -51,8 +52,8 @@ function get-existingdotnetcore{
     $name2 = $name
 
     
-    if ($name -like "*Windows*" ){
-        $name +='-dotnetcoresdk.zip'
+    if ($name -like "*.zip" ){
+        # $name +='-dotnetcoresdk.zip'
         if (Test-Path "$global:ScriptDirectory\temp\$name")
         {
             write-host 'Remove folder ps\qs-apps\dotnet'
@@ -76,7 +77,7 @@ function get-existingdotnetcore{
             get-anykey
         }
     } else{
-        $name += '-dotnetcoresdk.tar.gz'
+        #$name += '-dotnetcoresdk.tar.gz'
         if (Test-Path "$global:ScriptDirectory\temp\$name")
         {
             read-host "Using SDK binary $name  in $global:ScriptDirectory\temp\" 
@@ -96,6 +97,7 @@ function get-existingdotnetcore{
             set-location "$global:ScriptDirectory"
             write-host "'Put note of current target in ps\qs-apps\dotnet as $name2.txt"
             Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt" 
+            get-anykey
         }
         else{
             write-host "Linux Archive  $global:ScriptDirectory\temp\$name doesn't exist"

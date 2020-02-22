@@ -17,16 +17,16 @@ app-settings.ps
 PS/set-env.ps1
 PS/set-env.sh
 PS/app-settings.ps1
-PS/apps/Quickstarts/set-env.ps1
-PS/apps/Quickstarts/set-env.sh
-PS/apps/Quickstarts/*/set-env.ps1
-PS/apps/Quickstarts/*/set-env.sh
-PS/apps/Quickstarts/*/*/set-env.ps1
-PS/apps/Quickstarts/*/*/set-env.sh
-PS/apps/Quickstarts/*/*/*/set-env.ps1
-PS/apps/Quickstarts/*/*/*/set-env.sh
+PS/qs-apps/Quickstarts/set-env.ps1
+PS/qs-apps/Quickstarts/set-env.sh
+PS/qs-apps/Quickstarts/*/set-env.ps1
+PS/qs-apps/Quickstarts/*/set-env.sh
+PS/qs-apps/Quickstarts/*/*/set-env.ps1
+PS/qs-apps/Quickstarts/*/*/set-env.sh
+PS/qs-apps/Quickstarts/*/*/*/set-env.ps1
+PS/qs-apps/Quickstarts/*/*/*/set-env.sh
 
-PS/apps/[Dd]otnet
+PS/qs-apps/[Dd]otnet
 PS/temp
 
 # User-specific files (MonoDevelop/Xamarin Studio)
