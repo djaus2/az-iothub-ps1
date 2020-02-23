@@ -345,6 +345,8 @@ do
                         $global:DeviceName=$null
 
                         $global:Locations = $null
+
+                        $global:Urls =$null
                         
                         $Subscription = $global:Subscription
                         $GroupName = $Global:GroupName
