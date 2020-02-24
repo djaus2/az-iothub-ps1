@@ -68,6 +68,20 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
+    If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
+    {
+        $prompt = 'SpecificVersion =  "' + "$global:SpecificVersion" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+    else
+    {
+        $prompt = 'SpecificVersion =  "' + "3.1.102" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
+
     
     write-host 'Written app data as  ps script to script root as app-settings.ps1'
     write-host "Written to : $PsScriptFile"

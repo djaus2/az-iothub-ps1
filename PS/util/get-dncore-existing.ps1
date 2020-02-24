@@ -67,9 +67,11 @@ function get-existingdotnetcore{
             {
                 return 'Back'
             }
+            write-host "Please wait."
             Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\qs-apps\dotnet"
-            write-host "Put note of current target in folder ps\qs-apps\dotnet as $name2.txt"
-            Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt"
+            $RID = ((($name.Replace(".zip","")).Replace(".tar.gz","")).Replace("dotnet-sdk","")).Replace("-$global:SpecificVersion-","")
+            write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt" -o $name
+            Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$RID.txt" -InputObject $name -Encoding ASCII
             get-anykey
         }
         else{
@@ -93,10 +95,12 @@ function get-existingdotnetcore{
                 return 'Back'
             }
             set-location  "$global:ScriptDirectory\qs-apps\dotnet"
+            write-host "Please wait."
             tar -xzf "$global:ScriptDirectory\temp\$name"  
             set-location "$global:ScriptDirectory"
-            write-host "'Put note of current target in ps\qs-apps\dotnet as $name2.txt"
-            Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name2.txt" 
+            $RID = ((($name.Replace(".zip","")).Replace(".tar.gz","")).Replace("dotnet-sdk","")).Replace("-$global:SpecificVersion-","")
+            write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt" -o $name
+            Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$RID.txt" -InputObject $name -Encoding ASCII
             get-anykey
         }
         else{

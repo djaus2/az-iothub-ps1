@@ -65,6 +65,10 @@ if (Test-Path "$global:ScriptDirectory\app-settings.ps1")
 {
     & "$global:ScriptDirectory\app-settings"
 }
+else
+{
+    $global:SpecificVersion="3.1.102"
+}
 
 if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 {

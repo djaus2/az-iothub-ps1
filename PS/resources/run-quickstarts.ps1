@@ -61,7 +61,7 @@ param (
         write-Host $Prompt
 
 
-            $itemsList ='Run both the Device and Service apps simultaneously,Run one of the Device and Serice apps,Clear App Builds,Set .NET Core,Get .NET Core,Using Existing .NET Core'
+            $itemsList ='Run both the Device and Service apps simultaneously,Run one of the Device and Serice apps,Clear App Builds,Set .NET Core,Get .NET Core,Using Existing .NET Core,Set .NET Core Specific Version'
 
         
             choose-selection $itemsList  'Quickstarts Action'   '' ','
@@ -98,7 +98,15 @@ param (
                  }
                 'D5'    {  get-dotnetcore }
                 'D6'    {  get-existingdotnetcore }
-                'D7'    {  return 'Back' }
+                'D7'    { 
+                    write-host "Enter .NET Core Version. (3.n.xyz) Currently: "
+                    $SpecificVersion = read-host $global:SpecificVersion
+                    If (-not ([string]::IsNullOrEmpty($SpecificVersion)) )
+                    {
+                        $SpecificVersion=$SpecificVersion
+                    }
+                }
+                'D8'    {  return 'Back' }
             }  
         } while (-not $done)
 

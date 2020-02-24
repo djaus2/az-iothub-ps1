@@ -24,14 +24,23 @@ function get-dotnetcore{
         $links = (invoke-webrequest https://dotnet.microsoft.com/download/dotnet-core/3.1).Links
         $binaries = $links.where{($_.href).Contains("binaries")}
         $sdks= $binaries.where{($_.href).Contains("sdk")}
-        $global:urls=$sdks.where{($_.href).Contains("3.1.102")}
+        $global:urls=$sdks.where{($_.href).Contains($global:SpecificVersion)}
     }
     
 
     $itemsList ='windows-arm32,windows-x64,windows-x86,linux-arm32,linux-arm64,linux-x64,macos-x64,Done'
+    if ($false) { RIDs Ref: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
+        win-x64
+win-x86
+win-arm
+win-arm64
+linux-arm
+linux-x64
+osx.10.14-x64
+    }
 
 
-    choose-selection $itemsList  'Manage App Data Action'   '' ','
+    choose-selection $itemsList  ' .NET Core Target'   '' ','
     $answer = $global:retVal1
     if ( $global:retVal -eq 'Back'){
         return  'Back'
@@ -68,7 +77,7 @@ function get-dotnetcore{
         remove-item -path "$global:ScriptDirectory\qs-apps\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
         write-host 'Create folder ps\qs-apps\dotnet'
         New-Item -Path "$global:ScriptDirectory\qs-apps\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
-        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\qs-apps\dotnet"
+        write-host "Expanding archive. to $global:ScriptDirectory\qs-apps\dotnet"
         write-host "Assuming running on Windows."
         $ch = read-host "Press [Enter] to continue. If running on Linux then exit here press N then [Enter] and expand manually to $global:ScriptDirectory\qs-apps\dotnet"
         if (-not ( [string]::IsNullOrEmpty($ch )))
@@ -81,9 +90,11 @@ function get-dotnetcore{
             get-anykey
             return 'Back'
         }
+        write-host "Please wait."
         Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\qs-apps\dotnet"
-        write-host 'Put note of current target in folder ps\qs-apps\dotnet as $name.txt'
-        Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name.txt"
+        $RID = ((($name.Replace(".zip","")).Replace(".tar.gz","")).Replace("dotnet-sdk","")).Replace("-$global:SpecificVersion-","")
+        write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt" -o $name
+        Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$RID.txt" -InputObject $name -Encoding ASCII
         get-anykey
     } elseif ($url -like "*linux*" ){
         $parts = $url.Split('/')
@@ -98,7 +109,7 @@ function get-dotnetcore{
         remove-item -path "$global:ScriptDirectory\qs-apps\dotnet" -Force -Recurse -ErrorAction SilentlyContinue
         write-host 'Create folder ps\qs-apps\dotnet'
         New-Item -Path "$global:ScriptDirectory\qs-apps\dotnet" -ItemType Directory -ErrorAction SilentlyContinue
-        write-host "Please wait. Expanding archive. to $global:ScriptDirectory\qs-apps\dotnet"
+        write-host "Expanding archive. to $global:ScriptDirectory\qs-apps\dotnet"
         write-host "Assuming running on Windows."
         $ch = read-host "Press [Enter] to continue. If running Linux then exit here [N} then [Enter] and expand manually to $global:ScriptDirectory\qs-apps\dotnet"
         if (-not ( [string]::IsNullOrEmpty($ch )))
@@ -112,10 +123,12 @@ function get-dotnetcore{
             return 'Back'
         }
         set-location  "$global:ScriptDirectory\qs-apps\dotnet"
+        write-host "Please wait."
         tar -xzf "$global:ScriptDirectory\temp\$name"  
         set-location "$global:ScriptDirectory"
-        write-host 'Put note of current target in folder ps\qs-apps\dotnet as $name.txt'
-        Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$name.txt"
+        $RID = ((($name.Replace(".zip","")).Replace(".tar.gz","")).Replace("dotnet-sdk","")).Replace("-$global:SpecificVersion-","")
+        write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt"
+        Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$RID.txt" -InputObject $name -Encoding ASCII
         get-anykey
 
     } else{
