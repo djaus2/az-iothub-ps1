@@ -25,14 +25,14 @@ param (
     }
 
 
-    util\heading '  N E W  G R O U P  '   DarkGreen  White 
+    show-heading '  N E W  G R O U P  '   DarkGreen  White 
 
 
 
     # Need a group name
     if ([string]::IsNullOrEmpty($GroupName))
     {
-        $answer = util\get-name 'Resource Group'
+        $answer = get-name 'Resource Group'
         if ($answer -eq 'Back')
         {
             write-Host 'Returning'

@@ -1,5 +1,5 @@
 function get-existingdotnetcore{
-    util\heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
+    show-heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
 
     if (-not (Test-Path "$global:ScriptDirectory\qs-apps\dotnet"))
     {

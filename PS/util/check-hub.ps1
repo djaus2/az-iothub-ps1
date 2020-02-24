@@ -9,8 +9,8 @@ param (
     [boolean]$Refresh=$false
 )
 
-# $HubStrnIndex =3
-# $HubStrnDataIndex =3
+    # $HubStrnIndex =3
+    # $HubStrnDataIndex =3
     if ($Refresh -eq $true)
     {
         $Refresh

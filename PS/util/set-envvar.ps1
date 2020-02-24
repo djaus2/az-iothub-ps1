@@ -45,7 +45,7 @@ function set-env{
     [string]$DeviceName = ''
     )
 
-    util\heading '  S E T   E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
+    show-heading '  S E T   E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
 
 write-Host ''
 write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
@@ -164,12 +164,12 @@ function write-env{
     [string]$folder =''
     )
 
-    util\heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
+    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
     show-quickstarts 'Location to save set-env.ps1 to.' 'Quickstarts,ScriptHostRoot'
     $foldername =  $global:retVal1
 
-    util\heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
+    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
     $answer = $global:retVal
     if ($answer -eq 'Back')
@@ -387,11 +387,11 @@ function read-env{
     [string]$folder =''
     )
 
-    util\heading '  R E A D   E N V I R O N M E N T  V A R S  F R O M  F I L E '  -BG DarkGreen   -FG White
+    show-heading '  R E A D   E N V I R O N M E N T  V A R S  F R O M  F I L E '  -BG DarkGreen   -FG White
 
     show-quickstarts 'Location of set-env.ps1 file.' 'Quickstarts,ScriptHostRoot'
 
-    util\heading '  R E A D   E N V I R O N M E N T  V A R S  F R O M  F I L E '  -BG DarkGreen   -FG White
+    show-heading '  R E A D   E N V I R O N M E N T  V A R S  F R O M  F I L E '  -BG DarkGreen   -FG White
 
     $answer = $global:retVal
     if ($answer -eq 'Back')
@@ -436,7 +436,7 @@ function read-env{
     [string]$DeviceName = '',
     [string]$folder =''
     )
-    util\heading '  S H O W   E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
+    show-heading '  S H O W   E N V I R O N M E N T  V A R S   '  -BG DarkGreen   -FG White
     write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
     write-Host ''
     #SharedAccesKeyName

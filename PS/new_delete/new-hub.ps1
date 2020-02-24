@@ -33,14 +33,14 @@ param (
         $global:HubsStrn=$null
     }
 
-    util\heading '  N E W  I o T  H U B  '   DarkGreen  White 
+    show-heading '  N E W  I o T  H U B  '   DarkGreen  White 
 
 
 
     #Need a Hub name
     if ([string]::IsNullOrEmpty($HubName))
     {
-        $answer = util\get-name 'IoT Hub'
+        $answer = get-name 'IoT Hub'
         if ($answer-eq 'Back')
         {
             write-Host 'Returning'

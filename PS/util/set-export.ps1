@@ -44,7 +44,7 @@ function set-export{
     [string]$DeviceName=''
     )
 
-    util\heading '  S E T   E X P O R T  V A R S   '  -BG DarkGreen   -FG White
+    show-heading '  S E T   E X P O R T  V A R S   '  -BG DarkGreen   -FG White
 
     write-Host ''
     write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
@@ -147,12 +147,12 @@ function write-export{
     )
 
     
-    util\heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
+    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
     show-quickstarts 'Location to save set-env.sh to.' 'Quickstarts,ScriptHostRoot'
     $foldername =  $global:retVal1
 
-    util\heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
+    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  F I L E  '  -BG DarkGreen   -FG White
 
     $answer = $global:retVal
     if ($answer -eq 'Back')

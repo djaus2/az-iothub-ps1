@@ -1,4 +1,4 @@
-util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta   -FG White
+show-heading  -Prompt '  S E T U P  ' -BG DarkMagenta   -FG White
 
 # region Include required files
 #
@@ -289,6 +289,6 @@ do
             }
         }
     }
-    util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
+    show-heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
   
 } until ($false)

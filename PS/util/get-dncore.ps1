@@ -8,7 +8,7 @@ function Expand-Tar($tarFile, $dest) {
     # Expand with Expand-7Zip $tarFile $dest
 }
 function get-dotnetcore{
-    util\heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
+    show-heading '  G E T   . N E T   C O R E   '  -BG DarkMagenta   -FG White
 
     if (-not (Test-Path "$global:ScriptDirectory\qs-apps\dotnet"))
     {

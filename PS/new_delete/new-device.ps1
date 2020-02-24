@@ -45,16 +45,17 @@ param (
         $global:DevicesStrn=null
     }
 
-    util\heading '  N E W  D E V I C E   '   DarkGreen  White 
+    show-heading '  N E W  D E V I C E   '   DarkGreen  White 
 
 
     # Need a Device name
     if ([string]::IsNullOrEmpty($DeviceName))
     {
-        $answer = util\get-name 'Device'
+        $answer = get-name 'Device'
         if ($answer.ToUpper() -eq 'Back')
         {
             write-Host 'Returning'
+            get-anykey
             $global:retVal = 'Back'
             return
         }

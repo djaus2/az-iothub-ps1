@@ -11,7 +11,7 @@ function Manage-AppData{
     }
 
     do {
-        util\heading '  S A V E  A P P  D A T A   '  -BG DarkBlue   -FG White
+        show-heading '  S A V E  A P P  D A T A   '  -BG DarkBlue   -FG White
         If (-not([string]::IsNullOrEmpty($global:Subscription )))
         {
             $Prompt = '   $global:Subscription :"' + $global:Subscription +'"'

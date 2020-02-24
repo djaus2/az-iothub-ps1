@@ -6,6 +6,9 @@ try {
     . ("$global:ScriptDirectory\menu\qs.ps1")
     . ("$global:ScriptDirectory\util\settings.ps1")
     . ("$global:ScriptDirectory\resources\environ-varsmenu.ps1")
+    . ("$global:ScriptDirectory\util\get-name.ps1")
+    . ("$global:ScriptDirectory\util\show-heading.ps1")
+    #  Not used: . ("$global:ScriptDirectory\util\check-subscription.ps1")
 
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
     . ("$global:ScriptDirectory\menu\yes-no-menu.ps1")
@@ -77,7 +80,7 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 
 
 
-util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
+show-heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
 $answer = ''
 [int]$current = 1
 $selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','UpArrow','DownArrow','Enter','X','R')
@@ -329,7 +332,7 @@ do
 
             'D8' {exit}
             R    { 
-                    util\heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
+                    show-heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'
                     $answer = $global:retVal
                     if ($answer)
@@ -410,6 +413,6 @@ do
             }
         }
     }
-    util\heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
+    show-heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
   
 } until ($false)

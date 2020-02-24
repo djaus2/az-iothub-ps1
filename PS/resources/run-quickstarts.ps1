@@ -50,7 +50,7 @@ param (
     $done=$false
     $singleapp = $false
     do{
-        util\heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        show-heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '          Group :"' + $GroupName +'"'
@@ -113,7 +113,7 @@ param (
 
         show-quickstarts "Quickstart/s to run"
     
-        util\heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        show-heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
     
         $answer = $global:retVal
         if ($answer -eq 'Back')
@@ -130,7 +130,7 @@ param (
             {
                 return $answer
             }
-            util\heading '  R U N  O N E  Q U I K S T A R T  I o T   H U B  A P P   '  -BG DarkBlue   -FG White
+            show-heading '  R U N  O N E  Q U I K S T A R T  I o T   H U B  A P P   '  -BG DarkBlue   -FG White
             $PsScriptFile = $answer
             Write-Host "Setting location to $PsScriptFile."
             write-host ''
