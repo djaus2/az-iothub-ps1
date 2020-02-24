@@ -93,7 +93,7 @@ osx.10.14-x64
         write-host "Please wait."
         Expand-Archive -Force -LiteralPath "$global:ScriptDirectory\temp\$name" -DestinationPath "$global:ScriptDirectory\qs-apps\dotnet"
         $RID = ((($name.Replace(".zip","")).Replace(".tar.gz","")).Replace("dotnet-sdk","")).Replace("-$global:SpecificVersion-","")
-        write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt" -o $name
+        write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt, contents: $name."
         Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$RID.txt" -InputObject $name -Encoding ASCII
         get-anykey
     } elseif ($url -like "*linux*" ){
@@ -127,7 +127,7 @@ osx.10.14-x64
         tar -xzf "$global:ScriptDirectory\temp\$name"  
         set-location "$global:ScriptDirectory"
         $RID = ((($name.Replace(".zip","")).Replace(".tar.gz","")).Replace("dotnet-sdk","")).Replace("-$global:SpecificVersion-","")
-        write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt"
+        write-host "Put note of current target in folder ps\qs-apps\dotnet as $RID.txt, , contents: $name."
         Out-File -FilePath "$global:ScriptDirectory\qs-apps\dotnet\$RID.txt" -InputObject $name -Encoding ASCII
         get-anykey
 

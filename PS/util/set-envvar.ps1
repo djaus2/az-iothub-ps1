@@ -222,7 +222,7 @@ function write-env{
         
         $op = 'if (Test-Path $dnp){'
         Add-Content -Path $PsScriptFile     -Value $op 
-            $op = '     $regexAddPath = [regex]::Escape($dp)'
+            $op = '     $regexAddPath = [regex]::Escape($dnp)'
             Add-Content -Path $PsScriptFile     -Value $op 
             $op = '     $arrPath = $env:Path -split ";" | Where-Object {$_ -notMatch "^$regexAddPath\\?"}'
             Add-Content -Path $PsScriptFile     -Value $op 

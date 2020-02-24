@@ -33,7 +33,7 @@ If  ([string]::IsNullOrEmpty($env:IsRedirected))
     write-Host ''
     write-host "Nb: DOTNET path is also set to $addPath\dotnet if the file: "
     write-host  "$drive" -BackgroundColor Yellow  -ForegroundColor Black -nonewline
-    write-host ":\IsEmbedded.txt" -BackgroundColor Yellow  -ForegroundColor Black
+    write-host ":\IsRemote.txt" -BackgroundColor Yellow  -ForegroundColor Black
     write-host '     exists.'
     write-host ''
 }
@@ -58,7 +58,7 @@ If  (-not([string]::IsNullOrEmpty($env:IsRedirected)))
     }
     write-Host ''
     write-Host 'Added PWD to path.'
-    write-Host 'Also added DOTNET to path as well as setting DOT_NET_ROOT to it.'
+    write-Host 'Also added DOTNET to path as well as setting DOTNET_ROOT to it.'
     write-host "Both at  PS\qs-apps\dotnet"
     write-host ' See last entries listed. These are only for this shell instance.'
     write-Host ''
