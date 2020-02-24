@@ -12,6 +12,11 @@ It's here now.  You run the main PowerShell script **_get-iothub_** in the PS fo
 
 There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as   ```.\set-path``` ). You then can run the main script just by entering ```get-iothub``` as the PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
 
+# Major updates 25/02/2020
+- dotnet and quickstarst now are separate folders in ps/qas-apps<br>
+That way you can just copy quickstarts folder
+
+
 Within an Azure Subscription you have a Resource Group.
 An IoT Hub is an element of a Resource Group.
 A Device belongs to an IoT Hub.
@@ -63,9 +68,10 @@ The script can...
     - You then just enter ```dontnet run``` to run the app/s.
     - There is also a script in some Quickstart folders to fork two processes for when a device and service are required (Eg Device Streaming).
     - The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables. Other mods and extra apps too.
-- Install the required version of .NET Core locally (PS\Quickstarts\dotnet) and add to path and set required environment variable to it.
+- Install the required version of .NET Core locally (PS/qs-apps/dotnet) and add to path and set required environment variable to it.<br>
+  Can copy qs-apps folder via a share to a remote device. Quickstarts are in ps/qs-apps/quickstarts. Scripts can be placed in quickstarts folder to set enironmentvariables on remote device for conenction strings and dotnet.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
-Nb: Couple of blogs there now on this plus this spage. Still writing.
+Nb: A numbe of blogs there now on this plus this spage. Still writing.
 
 Enjoy!
