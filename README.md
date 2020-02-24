@@ -67,6 +67,6 @@ The script can...
    - Can copy qs-apps folder via a share to a remote device. Quickstarts are in ps/qs-apps/quickstarts. Scripts can be placed in quickstarts folder to set environment variables on remote device for connection strings and dotnet.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
-Nb: A numbe of blogs there now on this plus this spage. Still writing.
+Nb: A number of blogs there now. Still writing.
 
 Enjoy!
