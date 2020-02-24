@@ -12,11 +12,6 @@ It's here now.  You run the main PowerShell script **_get-iothub_** in the PS fo
 
 There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as   ```.\set-path``` ). You then can run the main script just by entering ```get-iothub``` as the PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
 
-# Major updates 25/02/2020
-- dotnet and quickstarst now are separate folders in ps/qas-apps<br>
-That way you can just copy quickstarts folder
-
-
 Within an Azure Subscription you have a Resource Group.
 An IoT Hub is an element of a Resource Group.
 A Device belongs to an IoT Hub.
