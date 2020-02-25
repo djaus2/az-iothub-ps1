@@ -62,7 +62,7 @@ param (
         }
 
 
-        parse-list $global:HubsStrn  'Hub'  $HubStrnIndex  $HubStrnDataIndex 1 22
+        parse-list $global:HubsStrn  'Hub' ''  $HubStrnIndex  $HubStrnDataIndex 1 22
         $answer = $global:retVal 
 
         If ([string]::IsNullOrEmpty($answer ))
@@ -99,6 +99,10 @@ param (
     $global:HubsStrn = $null
     $global:DeviceName = $null
     $global:DevicesStrn = $null
+
+    read-host $Subscription
+    read-host $GroupName
+    read-host $HubName
 
     if ( check-hub $Subscription $GroupName $HubName )
     {
