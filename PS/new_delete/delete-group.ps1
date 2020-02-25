@@ -7,8 +7,8 @@ param (
 )
 . ("$global:ScriptDirectory\Util\Check-Group.ps1")
 
-    $GroupStrnIndex =3
-    $GroupStrnDataIndex =3
+    $GroupStrnIndex =$globals:GroupStrnIndex
+    $GroupStrnDataIndex =$globals:GroupStrnDataIndex
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
@@ -50,7 +50,7 @@ param (
 	        return
         }
         
-        parse-list $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnIndex $GroupStrnIndex  3 36  ''
+        parse-list $global:GroupsStrn  '  G R O U P  ' 'B. Back'   $GroupStrnDataIndex $GroupStrnIndex  3 36  ''
         $answer = $global:retVal 
         If ([string]::IsNullOrEmpty($answer ))
         {

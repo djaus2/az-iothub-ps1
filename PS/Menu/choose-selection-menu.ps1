@@ -22,10 +22,6 @@ param (
         [string]$temp =  [string]$ColWidth
         $FormatStrn = '{0,-' + $temp + '}'
         
-
-        [boolean]$includeBack= $true
-        
-        
         $DefaultNo = -2
         
         # These two checks not required as both parameters are mandatory
@@ -84,9 +80,7 @@ param (
             else {       
                 $itemToList = $line
                 # Ref: https://stackoverflow.com/questions/25322636/powershell-convert-string-to-number
-                #[string]$num = [convert]::ToString($i)
-                #$n = $SelectionList.Add($num[0])
-                $n = $SelectionList.Add($i)        
+                $SelectionList.Add($i)    > $null    
             }
             [string]$prompt = [string]$i
             $prompt += '. '     

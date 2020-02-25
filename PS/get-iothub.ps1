@@ -80,7 +80,7 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 
 
 
-show-heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
+show-heading  -Prompt '  S E T U P  ' -BG Green  -FG Black
 $answer = ''
 [int]$current = 1
 $selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','UpArrow','DownArrow','Enter','X','R')
@@ -332,7 +332,7 @@ do
 
             'D8' {exit}
             R    { 
-                    show-heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG DarkRed  -FG White
+                    show-heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' -BG Magenta  -FG White
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'
                     $answer = $global:retVal
                     if ($answer)
@@ -413,6 +413,6 @@ do
             }
         }
     }
-    show-heading  -Prompt '  S E T U P  ' -BG DarkMagenta  -FG White
+    show-heading  -Prompt '  S E T U P  ' -BG Green  -FG Black
   
 } until ($false)

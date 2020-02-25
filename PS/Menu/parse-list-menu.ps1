@@ -131,8 +131,9 @@ param (
                 $prompt += '. '   
                 write-Host $prompt -NoNewline
                 $prompt = [string]::Format($FormatStrn,$itemToList )
-                write-Host $itemToList -BackgroundColor Blue -ForegroundColor Black -NoNewline
-                write-Host ' <-- Current/Default Selection [Enter]' -BackgroundColor Black -ForegroundColor Blue
+                
+                write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
+                write-Host ' <-- Previous/Default Selection [Enter]' -ForegroundColor DarkGreen
                 $col = 0
             }
             else 

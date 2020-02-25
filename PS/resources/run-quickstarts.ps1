@@ -50,7 +50,7 @@ param (
     $done=$false
     $singleapp = $false
     do{
-        show-heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        show-heading '  R U N   Q U I K S T A R T  I o T   H U B  A P P S   '  -BG Magenta   -FG White
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '          Group :"' + $GroupName +'"'
