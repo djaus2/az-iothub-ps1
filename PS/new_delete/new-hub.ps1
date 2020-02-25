@@ -56,8 +56,8 @@ param (
     if ([string]::IsNullOrEmpty($SKU))
     {
 
-        choose-selection $skus 'SKU' 'F1'
-        $answer = $global:retVal
+        $answer = choose-selection $skus 'SKU' 'F1'
+        # $answer = $global:retVal
 
         if ([string]::IsNullOrEmpty($answer))
         {
@@ -74,10 +74,8 @@ param (
 
     }
 
-    read-Host $SKU
-
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
-    write-Host $prompt
+    # $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
+    # write-Host $prompt
     if (check-hub  $Subscription $GroupName $HubName ) 
     {
         $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists.'

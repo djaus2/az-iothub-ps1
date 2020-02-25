@@ -30,14 +30,25 @@ param (
     {
         $prompt += ' ' + $Mode +'.'
     }
+    else{
+        
+        If  ([string]::IsNullOrEmpty( $env:IsRedirected  ))
+        {
+            $prompt += ' Press any key to return.'
+        }
+        else{
+            $prompt += ' Press [Enter] to  return.'
+        }
+    }
    
-    write-Host $prompt
+    
 
     If ([string]::IsNullOrEmpty( $env:IsRedirected  ))
     {
-    $keypress = [System.Console]::ReadKey($true)
+        write-Host $prompt
+        [System.Console]::ReadKey($true) >$null
     }
     else {
-        read-Host
+        read-Host $prompt >$null
     }
 }
