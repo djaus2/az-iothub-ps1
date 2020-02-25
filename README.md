@@ -63,9 +63,10 @@ The script can...
     - You then just enter ```dontnet run``` to run the app/s.
     - There is also a script in some Quickstart folders to fork two processes for when a device and service are required (Eg Device Streaming).
     - The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables. Other mods and extra apps too.
-- Install the required version of .NET Core locally (PS\Quickstarts\dotnet) and add to path and set required environment variable to it.
+- Install the required version of .NET Core locally (PS/qs-apps/dotnet) and add to path and set required environment variable to it.
+   - Can copy qs-apps folder via a share to a remote device. Quickstarts are in ps/qs-apps/quickstarts. Scripts can be placed in quickstarts folder to set environment variables on remote device for connection strings and dotnet.
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
-Nb: Couple of blogs there now on this plus this spage. Still writing.
+Nb: A number of blogs there now. Still writing.
 
 Enjoy!
