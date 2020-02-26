@@ -1,3 +1,6 @@
+# When az query is returned.
+# Strindex is index to what is displayed
+# StrnDataIndex is the data used. Only different for Group location
 $SubscriptionStrnIndex =3
 $SubscriptionStrnDataIndex =3
 $GroupStrnIndex =3
@@ -9,6 +12,7 @@ $DeviceStrnDataIndex =5
 $LocationsStrnIndex = 0 
 $LocationsStrnDataIndex = 4
 
+# These are the colors used in page headings, based upon level
 $headingfgColor_1="Black"
 $headingbgColor_1="Green"
 $headingfgColor_2="White"
