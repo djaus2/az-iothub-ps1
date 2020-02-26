@@ -8,3 +8,12 @@ $DeviceStrnIndex =5
 $DeviceStrnDataIndex =5
 $LocationsStrnIndex = 0 
 $LocationsStrnDataIndex = 4
+
+$headingfgColor_1="Black"
+$headingbgColor_1="Green"
+$headingfgColor_2="White"
+$headingbgColor_2="Magenta"
+$headingfgColor_3="Black"
+$headingbgColor_3="Yellow"
+$headingfgColor_4="White"
+$headingbgColor_4="DarkRed"

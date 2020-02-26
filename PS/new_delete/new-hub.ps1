@@ -33,7 +33,7 @@ param (
         $global:HubsStrn=$null
     }
 
-    show-heading '  N E W  I o T  H U B  '   DarkGreen  White 
+    show-heading '  N E W  I o T  H U B  '   3
 
 
 

@@ -24,7 +24,7 @@ param (
     }
 
 
-    show-heading  -Prompt '  S U B S C R I P T I O N  '   -BG Magenta  -FG White
+    show-heading  -Prompt '  S U B S C R I P T I O N  '  2
     $Prompt =  'Current Subscription :"' + $Current +'"'
     write-Host $Prompt
     if ($Refresh -eq $true)

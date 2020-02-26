@@ -1,5 +1,5 @@
 function clr-apps{
-    show-heading '  C L E A R   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
+    show-heading '  C L E A R   Q U I K S T A R T  I O T   H U B  A P P S   ' 3
     $prompt =  'Do you want to clear ALL bin and obj folders under Quickstarts?'
     write-Host $prompt
     get-yesorno $true
@@ -44,11 +44,11 @@ function clr-apps{
     }
 
 
-        show-heading '  C L E A R   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        show-heading '  C L E A R   Q U I K S T A R T  I O T   H U B  A P P S   ' 3
 
         show-quickstarts "Quickstart/s to run"
     
-        show-heading '  C L E A R   Q U I K S T A R T  I O T   H U B  A P P S   '  -BG DarkBlue   -FG White
+        show-heading '  C L E A R   Q U I K S T A R T  I O T   H U B  A P P S   '  3
     
         $answer = $global:retVal
         if ($answer -eq 'Back')

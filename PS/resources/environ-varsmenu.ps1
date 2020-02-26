@@ -47,7 +47,7 @@ param (
     }
 
     do {
-        show-heading '  S E T  E N V I R O N M E N T  V A R S   '  -BG Magenta   -FG White
+        show-heading '  S E T  E N V I R O N M E N T  V A R S   ' 2
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '          Group :"' + $GroupName +'"'

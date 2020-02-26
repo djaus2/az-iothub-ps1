@@ -25,7 +25,7 @@ param (
     }
 
 
-    show-heading '  N E W  G R O U P  '   DarkGreen  White 
+    show-heading '  N E W  G R O U P  '   3
 
 
 

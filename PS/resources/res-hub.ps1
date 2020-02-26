@@ -29,7 +29,7 @@ param (
 
 
 
-    show-heading '  I o T  H U B  '  -BG Magenta   -FG White
+    show-heading '  I o T  H U B  '  2
     $Prompt =  'Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '       Group :"' + $GroupName +'"'

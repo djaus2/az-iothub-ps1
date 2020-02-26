@@ -47,7 +47,7 @@ param (
         $global:DevicesStrn  = $null
     }
 
-    show-heading '  D E L E T E  D E V I C E  '   DarkRed  White
+    show-heading '  D E L E T E  D E V I C E  '   4
 
     # Need a Device name
     if ([string]::IsNullOrEmpty($DeviceName))

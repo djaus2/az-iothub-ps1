@@ -37,7 +37,7 @@ param (
 
 
 
-    show-heading '  D E V I C E   '  -BG Magenta   -FG White
+    show-heading '  D E V I C E   '  2
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'

@@ -19,7 +19,7 @@ param (
     # $GroupStrnDataIndex =3
 
 
-    show-heading '  G R O U P  '  Magenta   White
+    show-heading '  G R O U P  '  2
     $Prompt = ' Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = 'Current Group :"' + $Current +'"'

@@ -26,7 +26,7 @@ param (
         $global:GroupsStrn  = $null
     }
 
-    show-heading '  D E L E T E  G R O U P  '  DarkRed  White
+    show-heading '  D E L E T E  G R O U P  ' 4
 
     # Need a Group name
     if ([string]::IsNullOrEmpty($GroupName))

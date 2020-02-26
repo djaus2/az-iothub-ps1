@@ -45,7 +45,7 @@ param (
         $global:DevicesStrn=null
     }
 
-    show-heading '  N E W  D E V I C E   '   DarkGreen  White 
+    show-heading '  N E W  D E V I C E   '   3
 
 
     # Need a Device name

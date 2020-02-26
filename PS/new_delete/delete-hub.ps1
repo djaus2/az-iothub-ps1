@@ -37,7 +37,7 @@ param (
         $global:HubsStrn  = $null
     }
 
-    show-heading '  D E L E T E  I o T  H U B  '   DarkRed  White
+    show-heading '  D E L E T E  I o T  H U B  '   4
 
     # Need a Hub name
     if ([string]::IsNullOrEmpty($HubName))
