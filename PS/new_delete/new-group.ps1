@@ -57,7 +57,7 @@ param (
             get-anykey $prompt 'Exit'
             return
         }
-        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   0 4  3 40  ''
+        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   $LocationStrnIndex $LocationStrnSataIndex 4  3 40  ''
         $result = $global:retVal
 
         $prompt = 'Location "' + $result +'" returned'
