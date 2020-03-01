@@ -56,7 +56,7 @@ param (
     if ([string]::IsNullOrEmpty($SKU))
     {
 
-        $answer = choose-selection $skus 'SKU' 'F1'
+        $answer = choose-selection $skus 'SKU' 'S1'
         # $answer = $global:retVal
 
         if ([string]::IsNullOrEmpty($answer))

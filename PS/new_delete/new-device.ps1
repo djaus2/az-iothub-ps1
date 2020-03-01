@@ -13,7 +13,8 @@ param (
 
 . ("$global:ScriptDirectory\Util\Check-Device.ps1")
 
-    $DeviceName=$null
+
+show-heading '  N E W  D E V I C E   '   3
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
@@ -39,13 +40,23 @@ param (
         $global:retVal = 'Back'
         return 
     }
+    elseIf (-not ([string]::IsNullOrEmpty($DeviceName )))
+    {
+        write-Host ''
+        $prompt = "Do you want to use $DeviceName for the name of the new Device?"
+        get-yesorno $false $prompt
+        if (-not $global:retVal)
+        {
+            write-host "del"
+            $DeviceName =''
+        }
+    }
 
     if ($Refresh)
     {
         $global:DevicesStrn=null
     }
 
-    show-heading '  N E W  D E V I C E   '   3
 
 
     # Need a Device name

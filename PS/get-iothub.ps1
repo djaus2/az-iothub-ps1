@@ -10,6 +10,12 @@ try {
     . ("$global:ScriptDirectory\util\show-heading.ps1")
     #  Not used: . ("$global:ScriptDirectory\util\check-subscription.ps1")
 
+    . ("$global:ScriptDirectory\util\set-envvar.ps1")
+    . ("$global:ScriptDirectory\util\set-export.ps1")
+    . ("$global:ScriptDirectory\Util\Check-Group.ps1")
+    . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
+    . ("$global:ScriptDirectory\Util\Check-Device.ps1")
+
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
     . ("$global:ScriptDirectory\menu\yes-no-menu.ps1")
     . ("$global:ScriptDirectory\menu\parse-list-menu.ps1")
@@ -83,10 +89,10 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 show-heading  -Prompt '  S E T U P  ' 1
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Environment Variables,Quickstart Apps,Manage App Data,Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -330,7 +336,104 @@ do
                 }
             'D7' { Manage-AppData}
 
-            'D8' {exit}
+            'D8' {
+                    write-host "[1] Create New Group in Subscription: $Subscription then ..."
+                    write-host "[2] Create New Hub in Group then ..."
+                    write-host "[3] Create Device in Hub then ..."
+                    write-host "[4] Get connection strings"
+                    write-host "Continue?"
+                    get-yesorno $true
+                    $answer =  $global:retVal
+                    if ($answer)
+                    {
+                        $namesStrn = read-host Enter GroupName,HubName,DeviceName as CSV string
+                        write-host "Validating the CSV list"
+                        if ([string]::IsNullOrEmpty($namesStrn)) 
+                        {
+                            return 'Back 1'
+                        }
+                        $names = $namesStrn -split ','
+                        if ($names.Length -ne 3)
+                        {
+                            write-host $names.Length
+                            return 'Back 2'
+                        }
+                        foreach ($name in $names)
+                        {
+                            $name = $name.Trim()
+                            if ([string]::IsNullOrEmpty($name)) 
+                            {
+                                return 'Back 3'
+                            }
+                        }
+        
+                        write-Host "Checking names against existing entities in the Subscription: $Subscription"
+                        if   ( check-group $Subscription $names[0]  )
+                        {
+                            return 'Back 4'
+                        }
+                        if (check-hub  $Subscription $names[0] $names[1] )
+                        {
+                            return 'Back 5'
+                        }
+                        If ($false)
+                        {
+                            # Can't serach for devices without a hub
+                            # 2Do Get all hubs then search those for the device name
+                            if (check-device  $Subscription $names[0] $names[1] $names[2] )
+                            {
+                                return 'Back 6'
+                            }
+                        }
+                        $grp = $names[0]
+                        $hb = $names[1]
+                        $dev =$names[2]
+                        write-host "[1] Create New Group $grp in Subscription: $Subscription then ..."
+                        write-host "[2] Create New Hub $hb in Group then ..."
+                        write-host "[3] Create Device $dev in Hub then ..."
+                        write-host "[4] Get connection strings"
+                        get-yesorno $true "Continue?"
+                        $answer = $global:retVal
+                        if (-not $answer)
+                        {
+                            return 'Back'
+                        }
+        
+                        [boolean]$success=$false
+                        $lev=0
+                        write-host "[1] Create New Group in Subscription: $Subscription"
+                        new-group $Subscription $grp
+                        if   ( check-group $Subscription $grp  )
+                        {
+                            $lev++
+                            write-host "[2] Create New Hub in Group"
+                            new-hub $Subscription $grp $hb
+                            if (check-hub  $Subscription $grp $hb )
+                            {
+                                $lev++
+                                write-host "[3] Create Device in Hub"
+                                new-device $Subscription $grp $hb $dev
+                                if (check-device  $Subscription $grp $hb $dev )
+                                {
+                                    $lev++
+                                    write-host "[4] Get connection strings."
+                                    get-all  $Subscription $grp $hb $dev
+        
+                                    $success = $true
+                                }
+                            }
+                        }
+                        if ($success)
+                        {
+                            write-host "Creation succeeded."
+                        }
+                        else {
+                            write-host "Failed: $lev"
+                        }
+                        get-anykey        
+                    }
+                }
+            'D9' {exit}
             R    { 
                     show-heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' 2
                     get-yesorno $false 'Clear script globals variables? [Yes] [No]'

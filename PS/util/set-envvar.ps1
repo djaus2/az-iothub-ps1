@@ -37,6 +37,23 @@ function clear-env{
     show-env
 }
 
+function Get-All{
+    param (
+        [string]$Subscription = '' ,
+        [string]$GroupName = '' ,
+        [string]$HubName = '' ,
+        [string]$DeviceName = ''
+        )
+
+        write-host "[4] Get connection strings."
+        set-env  $Subscription $GroupName $HubName $DeviceName
+        show-env  $Subscription $GroupName $HubName $DeviceNam
+        write-host [4.1] Write to PS script in Quickstarts folder
+        write-env  $Subscription $GroupName $HubName $DeviceNam 'quickstarts'
+        write-host [4.2] Write to Bash script in Quickstarts folder
+        write-export  $Subscription $grp $hb $dev 'quickstarts'
+}
+
 function set-env{
     param (
     [string]$Subscription = '' ,
@@ -45,12 +62,13 @@ function set-env{
     [string]$DeviceName = ''
     )
 
+
+
     show-heading '  S E T   E N V I R O N M E N T  V A R S   '  3
 
 write-Host ''
 write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
     write-Host ''
-
 
     #SharedAccesKeyName
     $SharedAccesKeyName = 'iothubowner'
@@ -161,30 +179,33 @@ function write-env{
     [string]$GroupName = '' ,
     [string]$HubName = '' ,
     [string]$DeviceName = '',
-    [string]$folder =''
+    [string]$foldername =''
     )
 
-    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  3
+    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S  F I L E  '  3
 
-    show-quickstarts 'Location to save set-env.ps1 to.' 'Quickstarts,ScriptHostRoot'
-    $foldername =  $global:retVal1
+    $answer = $foldername
+    If  ([string]::IsNullOrEmpty($foldername))
+    {
+        show-quickstarts 'Location to save set-env.ps1 to.' 'Quickstarts,ScriptHostRoot'
+        $foldername =  $global:retVal1
+        $answer = $global:retVal
 
-    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  F I L E  '  3
+        show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S   F I L E  '  3
+    }
 
-    $answer = $global:retVal
+    
     if ($answer -eq 'Back')
     {
         return $answer
     }
-
-
     
 
-    $PsScriptFile = "$answer\set-env.ps1"
-    if ($answer -eq 'Quickstarts'){
+    $PsScriptFile = "$foldername\set-env.ps1"
+    if ($answer.ToLower() -eq 'quickstarts'){
         $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\set-env.ps1"
     }
-    elseif ($answer -eq 'ScriptHostRoot'){
+    elseif ($answer.ToLower() -eq 'scriptHostRoot'){
         $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"
     }
 
@@ -203,7 +224,7 @@ function write-env{
 
 
         $prompt = "# This script meant to run in the specific Quickstart folder: $foldername."
-        $op = '$dnp = "..\..\dotnet"'
+        $op = '$dnp = "..\dotnet"'
         switch ($global:retVal2)
         {
             8 {

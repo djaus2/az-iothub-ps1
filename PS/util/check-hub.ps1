@@ -17,12 +17,12 @@ param (
         $global:HubsStrn  = $null
     }
 
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" exists.'
+    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Subscription "' + $Subscripton + '" exists.'
     write-Host $prompt
     If([string]::IsNullOrEmpty($global:HubsStrn )) 
     { 
         write-Host 'Getting Hubs from Azure'
-        $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
+        $global:HubsStrn =  az iot hub list --subscription $Subscription  -o tsv | Out-String
     }
     If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
     {   

@@ -5,7 +5,15 @@ param (
     [string]$GroupName='',
     [string]$Location=''
 )
-    . ("$global:ScriptDirectory\Util\Check-Group.ps1")
+
+    
+    try {
+        . ("$global:ScriptDirectory\Util\Check-Group.ps1")
+    }
+    catch {
+        Write-Host "Error while loading supporting PowerShell Scripts" 
+        Write-Host $_
+    }
     
     $GroupeName=$null
 
@@ -57,7 +65,7 @@ param (
             get-anykey $prompt 'Exit'
             return
         }
-        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   $LocationStrnIndex $LocationStrnSataIndex 4  3 40  ''
+        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   $LocationStrnIndex $LocationStrnDataIndex 3  40  ''
         $result = $global:retVal
 
         $prompt = 'Location "' + $result +'" returned'

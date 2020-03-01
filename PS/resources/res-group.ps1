@@ -6,6 +6,21 @@ param (
 )
 
 
+ if ($false)  {
+    try {
+        . ("$global:ScriptDirectory\util\set-envvar.ps1")
+        . ("$global:ScriptDirectory\util\set-export.ps1")
+        . ("$global:ScriptDirectory\Util\Check-Group.ps1")
+        . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
+        . ("$global:ScriptDirectory\Util\Check-Device.ps1")
+    }
+    catch {
+        Write-Host "Error while loading supporting PowerShell Scripts" 
+        Write-Host $_
+    }
+}
+
+
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''

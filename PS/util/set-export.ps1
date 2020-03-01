@@ -143,18 +143,23 @@ function write-export{
     [string]$GroupName='' ,
     [string]$HubName='' ,
     [string]$DeviceName='',
-    [string]$folder =''
+    [string]$foldername =''
     )
 
+    $answer=$foldername
     
-    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  F I L E  ' 3
+    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  ' 3
+    
+    If  ([string]::IsNullOrEmpty($foldername))
+    {
+        show-quickstarts 'Location to save set-env.sh to.' 'Quickstarts,ScriptHostRoot'
+        $foldername =  $global:retVal1
+        $answer = $global:retVal
 
-    show-quickstarts 'Location to save set-env.sh to.' 'Quickstarts,ScriptHostRoot'
-    $foldername =  $global:retVal1
+        show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  '  3
+    }
 
-    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  F I L E  '  3
-
-    $answer = $global:retVal
+    
     if ($answer -eq 'Back')
     {
         return $answer
@@ -164,10 +169,10 @@ function write-export{
     
 
     $PsScriptFile = "$answer\set-env.sh"
-    if ($answer -eq 'Quickstarts'){
+    if ($answer.ToLower() -eq 'quickstarts'){
         $PsScriptFile = "$global:ScriptDirectory\qs-apps\Quickstarts\set-env.sh"
     }
-    elseif ($answer -eq 'ScriptHostRoot'){
+    elseif ($answer.ToLower() -eq 'scriptHostRoot'){
         $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
     }
 

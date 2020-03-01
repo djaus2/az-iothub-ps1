@@ -38,4 +38,5 @@ param (
          Y { $global:retVal = $true} 
          N { $global:retVal =  $false}
      }
+     # return $global:retVal
 }

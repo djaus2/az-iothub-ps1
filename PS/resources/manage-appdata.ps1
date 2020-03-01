@@ -36,6 +36,11 @@ function Manage-AppData{
             $Prompt = '     $global:DeviceName :"' + $global:DeviceName +'"'
             write-Host $Prompt
         }
+        If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
+        {
+            $Prompt = '     $global:SpecificVersion :"' + $global:SpecificVersion +'"'
+            write-Host $Prompt
+        }
 
 
 

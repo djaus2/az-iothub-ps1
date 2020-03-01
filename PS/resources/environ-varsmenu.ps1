@@ -57,7 +57,7 @@ param (
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
 
-        $itemsList ='Show Environment Variables,Generate Env Vars,Clear Env Vars,Write Env Vars To File,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Done'
+        $itemsList ='Show Environment Variables,Generate Env Vars,Clear Env Vars,Write Env Vars To File,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File,Do all'
 
 
         choose-selection $itemsList  'Action for IoT Hub Connection String Environment Variables'   '' ','
@@ -71,13 +71,16 @@ param (
         {
             'D1'    {  show-env $Subscription $GroupName $HubName $DeviceName }
             'D2'    {  set-env $Subscription $GroupName $HubName $DeviceName }
-            'D3'    {  clear-env  }
+            'D3'    {  clr-env  }
             'D4'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
             'D5'    {  read-env $Subscription $GroupName $HubName $DeviceName  }
             'D6'    {  set-export $Subscription $GroupName $HubName $DeviceName }
             'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
-            'D8'    {  write-export $Subscription $GroupName $HubName $DeviceName }
-            'D9'    {  return 'Back' }
+            'D8'    {  write-export ubscription $GroupName $HubName $DeviceName }
+            'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
+            'D9'    {  get-all $Subscription $GroupName $HubName $DeviceName }
+            'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
+            
         }  
     }  
     while ($true)

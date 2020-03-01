@@ -31,7 +31,7 @@ param (
     {
         $global:SubscriptionsStrn = $null
     }
-# Assume there is atleast one subscription
+# Assume there is at least one subscription
 
     If  ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     {   
@@ -47,6 +47,7 @@ param (
     {
         $prompt = 'No Subscriptions found. Have you run Az Login?'
         get-anykey $prompt 
+        return 'Back'
         
     }
 

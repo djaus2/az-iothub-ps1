@@ -71,13 +71,13 @@ function Save-AppData{
 
     If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
     {
-        $prompt = 'SpecificVersion =  "' + "$global:SpecificVersion" +'"'
+        $prompt = '$global:SpecificVersion =  "' + "$global:SpecificVersion" +'"'
         write-Host $prompt
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
     else
     {
-        $prompt = 'SpecificVersion =  "' + "3.1.102" +'"'
+        $prompt = '$global:SpecificVersion =  "' + "3.1.102" +'"'
         write-Host $prompt
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
