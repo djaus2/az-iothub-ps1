@@ -89,3 +89,78 @@ function Save-AppData{
     get-anykey
         
 }
+
+function clear-appData
+{ 
+    show-heading  -Prompt '  C L E A R   A P P   V A L U E S  ' 2
+    get-yesorno $false 'Clear script globals variables? [Yes] [No]'
+    $answer = $global:retVal
+    if ($answer)
+    {
+        
+        If (-not([string]::IsNullOrEmpty($global:Subscription )))
+        {
+            remove-variable Subscription -Scope Global
+        }
+
+    
+        If (-not([string]::IsNullOrEmpty($global:GroupName )))
+        {
+            remove-variable GroupName   -Scope Global
+        }
+    
+        If (-not([string]::IsNullOrEmpty($global:HubName )))
+        {
+            remove-variable HubName  -Scope Global
+        }
+        
+        If (-not([string]::IsNullOrEmpty($global:DeviceName )))
+        {
+            remove-variable DeviceName  -Scope Global
+        }
+    
+        If (-not([string]::IsNullOrEmpty($global:SubscriptionsStrn )))
+        {
+            remove-variable SubscriptionsStrn  -Scope Global
+        }
+    
+        If (-not([string]::IsNullOrEmpty($global:GroupsStrn )))
+        {
+            remove-variable GroupsStrn  -Scope Global
+        }
+    
+    
+        If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
+        {
+            remove-variable HubsStrn  -Scope Global
+        }
+        
+        If (-not([string]::IsNullOrEmpty($global:DevicesStrn )))
+        {
+            remove-variable DevicesStrn  -Scope Global
+        }
+    
+        If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
+        {
+            remove-variable SpecificVersion  -Scope Global
+        }
+        If (-not([string]::IsNullOrEmpty($global:retVal )))
+        {
+            remove-variable retVal  -Scope Global
+        }
+        If (-not([string]::IsNullOrEmpty($global:retVal1 )))
+        {
+            remove-variable retVal1  -Scope Global
+        }
+        If (-not([string]::IsNullOrEmpty($global:retVal2 )))
+        {
+            remove-variable retVal2  -Scope Global
+        }
+
+        
+        $PsScriptFile = "$global:ScriptDirectory\set-env.*"
+        Remove-Item  $PsScriptFile -ErrorAction SilentlyContinue
+
+
+    }
+}

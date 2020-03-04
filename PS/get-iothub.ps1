@@ -435,36 +435,9 @@ do
                 }
             'D9' {exit}
             R    { 
-                    show-heading  -Prompt '  C L E A R   G L O B A L  V A L U E S  ' 2
-                    get-yesorno $false 'Clear script globals variables? [Yes] [No]'
-                    $answer = $global:retVal
-                    if ($answer)
-                    {
-                        
-                        $global:DoneLogin = $null
-                        $global:DontClearOnHeading = $null
-
-                        $global:SubscriptionStrn = $null
-                        $global:GroupsStrn =$null
-                        $global:HubsStrn=$null
-                        $global:DevicesStrn=$null
-
-                        $global:Subscription = $null
-                        $global:GroupName = $null
-                        $global:HubName= $null
-                        $global:DeviceName=$null
-
-                        $global:Locations = $null
-
-                        $global:Urls =$null
-                        
-                        $Subscription = $global:Subscription
-                        $GroupName = $Global:GroupName
-                        $HubName = $global:HubName
-                        $DeviceName = $global:DeviceName
-                        [boolean] $GetKey = $true
-                        $Current=1
-                    }
+                    clear-appData
+                    [boolean] $GetKey = $true
+                    $Current=1
                 }
 
             X       {  exit }

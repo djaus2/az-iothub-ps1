@@ -46,7 +46,7 @@ function Manage-AppData{
 
 
 
-        $itemsList ='Save App Data,Load App Data,Get ,Done'
+        $itemsList ='Save App Data,Clear AppData,Load App Data,Get'
 
 
 
@@ -60,7 +60,8 @@ function Manage-AppData{
         switch ($answer)
         {
             'D1'    {  save-appdata }
-            'D2'    {  if ( Test-Path -Path "$global:ScriptDirectory\app-settings.ps1" ){
+            'D2'    {clear-appData }
+            'D3'    {  if ( Test-Path -Path "$global:ScriptDirectory\app-settings.ps1" ){
                             .\app-settings
                             write-host 'Done' 
                         }
@@ -69,7 +70,7 @@ function Manage-AppData{
                         }
                         get-anykey
                     }
-            'D3'    {  return 'Back' }
+            'D4'    {  return 'Back' }
         }  
     }  
     while ($true)

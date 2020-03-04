@@ -1,3 +1,12 @@
+
+    try {
+        . ("$global:ScriptDirectory\util\save-appdata.ps1")
+    }
+    catch {
+        Write-Host "Error while loading supporting PowerShell Scripts" 
+        Write-Host $_
+    }
+
 function trimm{
     param (
     [string]$line = '' 
@@ -22,6 +31,95 @@ function trimm{
 }
 
 function clear-env{
+
+
+
+    
+    If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
+    {   
+        REG delete HKCU\Environment /F /V   SHARED_ACCESS_KEY_NAME 
+    }
+
+
+    If (-not([string]::IsNullOrEmpty($env:DEVICE_NAME )))
+    {   
+        REG delete HKCU\Environment /F /V   DEVICE_NAME
+    }
+
+
+
+    # Device Connection String
+    If (-not([string]::IsNullOrEmpty($env:IOTHUB_DEVICE_CONN_STRING )))
+    {  
+        REG delete HKCU\Environment /F /V   IOTHUB_DEVICE_CONN_STRING
+    }
+ 
+
+   If(-not ([string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP )))
+    {  
+        REG delete HKCU\Environment /F /V   IOTHUB_CONN_STRING_CSHARP
+    }
+
+    
+    
+    # Service Connection string'
+    If (-not([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING )))
+    {  
+        REG delete HKCU\Environment /F /V   SERVICE_CONNECTION_STRING
+    }
+
+
+
+
+    #DeviceID
+    If (-not ([string]::IsNullOrEmpty($env:DEVICE_ID )))
+    { 
+        REG delete HKCU\Environment /F /V   DEVICE_ID
+    }
+
+
+
+
+    # EventHubsCompatibleEndpoint
+    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
+    {  
+        REG delete HKCU\Environment /F /V   EVENT_HUBS_COMPATIBILITY_ENDPOINT 
+    }
+
+    # EventHubsCompatiblePath
+    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH )))
+    {  
+        REG delete HKCU\Environment /F /V   EventHubsCompatiblePath
+    }
+
+    
+    # EventHubsSasKey
+    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_SAS_KEY )))
+    {  
+        REG delete HKCU\Environment /F /V   EVENT_HUBS_SAS_KEY
+    }
+
+
+    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_CONNECTION_STRING )))
+    { 
+        REG delete HKCU\Environment /F /V   EVENT_HUBS_CONNECTION_STRING
+    }
+
+
+
+    # Remote Host Name
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        REG delete HKCU\Environment /F /V   REMOTE_HOST_NAME  -Scope Local
+    }
+
+
+    # Remote Port
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        REG delete HKCU\Environment /F /V   REMOTE_PORT  -Scope Local
+    }
+
     $env:IOTHUB_DEVICE_CONN_STRING = $null
     $env:IOTHUB_CONN_STRING_CSHARP = $null
     $env:REMOTE_HOST_NAME = $null
@@ -34,7 +132,195 @@ function clear-env{
     $env:EVENT_HUBS_SAS_KEY = $null
     $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT  = $null
     $env:SERVICE_CONNECTION_STRING = $null
-    show-env
+
+
+
+  
+    If  (-not([string]::IsNullOrEmpty($SHARED_ACCESS_KEY_NAME )))
+    {   
+        remove-variable  SHARED_ACCESS_KEY_NAME  -Scope Local 
+    }
+
+
+    If (-not([string]::IsNullOrEmpty($DEVICE_NAME )))
+    {   
+        remove-variable  DEVICE_NAME  -Scope Local
+    }
+
+
+
+    # Device Connection String
+    If (-not([string]::IsNullOrEmpty($IOTHUB_DEVICE_CONN_STRING )))
+    {  
+        remove-variable  IOTHUB_DEVICE_CONN_STRING   -Scope Local
+    }
+ 
+
+   If(-not ([string]::IsNullOrEmpty($IOTHUB_CONN_STRING_CSHARP )))
+    {  
+        remove-variable  IOTHUB_CONN_STRING_CSHARP  -Scope Local
+    }
+
+    
+    
+    # Service Connection string'
+    If (-not([string]::IsNullOrEmpty($SERVICE_CONNECTION_STRING )))
+    {  
+        remove-variable  SERVICE_CONNECTION_STRING  -Scope Local
+    }
+
+
+
+
+    #DeviceID
+    If (-not ([string]::IsNullOrEmpty($DEVICE_ID )))
+    { 
+        remove-variable  DEVICE_ID  -Scope Local
+    }
+
+
+
+
+    # EventHubsCompatibleEndpoint
+    If (-not([string]::IsNullOrEmpty($EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
+    {  
+        remove-variable  EVENT_HUBS_COMPATIBILITY_ENDPOINT    -Scope Local
+    }
+
+    # EventHubsCompatiblePath
+    If (-not([string]::IsNullOrEmpty($EVENT_HUBS_COMPATIBILITY_PATH )))
+    {  
+        remove-variable  EventHubsCompatiblePath  -Scope Local
+    }
+
+    
+    # EventHubsSasKey
+    If (-not ([string]::IsNullOrEmpty($EVENT_HUBS_SAS_KEY )))
+    {  
+        remove-variable  EVENT_HUBS_SAS_KEY  -Scope Local
+    }
+
+
+    If (-not ([string]::IsNullOrEmpty($EVENT_HUBS_CONNECTION_STRING )))
+    { 
+        remove-variable  EVENT_HUBS_CONNECTION_STRING  -Scope Local
+    }
+
+
+
+    # Remote Host Name
+    If (-not ([string]::IsNullOrEmpty($REMOTE_HOST_NAME )))
+    { 
+        remove-variable  REMOTE_HOST_NAME  -Scope Local
+    }
+
+
+    # Remote Port
+    If (-not ([string]::IsNullOrEmpty($REMOTE_HOST_NAME )))
+    { 
+        remove-variable  REMOTE_PORT  -Scope Local
+    }
+
+    ########################
+
+
+
+    If  (-not([string]::IsNullOrEmpty($global:SHARED_ACCESS_KEY_NAME )))
+    {   
+        remove-variable  SHARED_ACCESS_KEY_NAME  -Scope Global 
+    }
+
+
+    If (-not([string]::IsNullOrEmpty($global:DEVICE_NAME )))
+    {   
+        remove-variable  DEVICE_NAME  -Scope global
+    }
+
+
+
+    # Device Connection String
+    If (-not([string]::IsNullOrEmpty($global:IOTHUB_DEVICE_CONN_STRING )))
+    {  
+        remove-variable  IOTHUB_DEVICE_CONN_STRING   -Scope global
+    }
+ 
+
+   If(-not ([string]::IsNullOrEmpty($global:IOTHUB_CONN_STRING_CSHARP )))
+    {  
+        remove-variable  IOTHUB_CONN_STRING_CSHARP  -Scope global
+    }
+
+    
+    
+    # Service Connection string'
+    If (-not([string]::IsNullOrEmpty($global:SERVICE_CONNECTION_STRING )))
+    {  
+        remove-variable  SERVICE_CONNECTION_STRING  -Scope global
+    }
+
+
+
+
+    #DeviceID
+    If (-not ([string]::IsNullOrEmpty($global:DEVICE_ID )))
+    { 
+        remove-variable  DEVICE_ID  -Scope global
+    }
+
+
+
+
+    # EventHubsCompatibleEndpoint
+    If (-not([string]::IsNullOrEmpty($global:EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
+    {  
+        remove-variable  EVENT_HUBS_COMPATIBILITY_ENDPOINT    -Scope global
+    }
+
+    # EventHubsCompatiblePath
+    If (-not([string]::IsNullOrEmpty($global:EVENT_HUBS_COMPATIBILITY_PATH )))
+    {  
+        remove-variable  EventHubsCompatiblePath  -Scope global
+    }
+
+    
+    # EventHubsSasKey
+    If (-not ([string]::IsNullOrEmpty($global:EVENT_HUBS_SAS_KEY )))
+    {  
+        remove-variable  EVENT_HUBS_SAS_KEY  -Scope global
+    }
+
+
+    If (-not ([string]::IsNullOrEmpty($global:EVENT_HUBS_CONNECTION_STRING )))
+    { 
+        remove-variable  EVENT_HUBS_CONNECTION_STRING  -Scope global
+    }
+
+
+
+    # Remote Host Name
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        remove-variable  REMOTE_HOST_NAME  -Scope Local
+    }
+
+
+    # Remote Port
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        remove-variable  REMOTE_PORT  -Scope Local
+    }
+
+    #########################
+
+    
+    
+    $PsScriptFile =  "$global:ScriptDirectory\app-settings.ps1"
+    Remove-Item  $PsScriptFile  -ErrorAction SilentlyContinue
+    
+    clear-appData
+
+    get-anykey 'Done'
+
 }
 
 function Get-All{
@@ -66,8 +352,9 @@ function set-env{
 
     show-heading '  S E T   E N V I R O N M E N T  V A R S   '  3
 
-write-Host ''
-write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
+    write-Host ''
+    write-Host Note: Environment Variables only exist for the life of the current Shell -BackGroundColor DarkRed -ForeGroundColor White
+    write-Host 'Use 3. Permanently Set Env Vars, on previous menu to lock them in'
     write-Host ''
 
     #SharedAccesKeyName
@@ -596,7 +883,113 @@ function read-env{
 }
 
 
+function set-permanent{
+    param (
+    [string]$Subscription = '' ,
+    [string]$GroupName = '' ,
+    [string]$HubName = '' ,
+    [string]$DeviceName = '',
+    [string]$folder =''
+    )
+    show-heading '  S E T   E N V I R O N M E N T  V A R S  P E R M A N E N T ' 3
+    
+    write-Host Note: This will set the variables to User Environment Vars permanently -BackGroundColor DarkRed -ForeGroundColor White
+    write-Host 'It does not regenerate the temporary values.'
+    write-host ''
+    #SharedAccesKeyName
+    If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
+    {   
+        setx  SHARED_ACCESS_KEY_NAME  $env:SHARED_ACCESS_KEY_NAME 
+    }
 
+
+
+    If (-not([string]::IsNullOrEmpty($env:DEVICE_NAME )))
+    {   
+        setx DEVICE_NAME  $env:DEVICE_NAME
+    }
+
+
+
+    # Device Connection String
+    If (-not([string]::IsNullOrEmpty($env:IOTHUB_DEVICE_CONN_STRING )))
+    {  
+        setx  IOTHUB_DEVICE_CONN_STRING  $env:IOTHUB_DEVICE_CONN_STRING
+    }
+
+ 
+
+   If(-not ([string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP )))
+    {  
+        setx IOTHUB_CONN_STRING_CSHARP $env:IOTHUB_CONN_STRING_CSHARP
+    }
+
+    
+    # Service Connection string'
+    If (-not([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING )))
+    {  
+        setx SERVICE_CONNECTION_STRING $env:SERVICE_CONNECTION_STRING
+    }
+
+
+
+
+    #DeviceID
+    If (-not ([string]::IsNullOrEmpty($env:DEVICE_ID )))
+    { 
+        setx  DEVICE_ID $env:DEVICE_ID
+    }
+
+
+
+
+    # EventHubsCompatibleEndpoint
+    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
+    {  
+        setx  EVENT_HUBS_COMPATIBILITY_ENDPOINT   $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
+    }
+
+    
+    # EventHubsCompatiblePath
+    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH )))
+    {  
+        setx EventHubsCompatiblePath $env:EVENT_HUBS_COMPATIBILITY_PATH
+    }
+
+    
+    # EventHubsSasKey
+    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_SAS_KEY )))
+    {  
+        setx EVENT_HUBS_SAS_KEY  $env:EVENT_HUBS_SAS_KEY
+    }
+
+
+    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_CONNECTION_STRING )))
+    { 
+       setx EVENT_HUBS_CONNECTION_STRING $env:EVENT_HUBS_CONNECTION_STRING
+    }
+
+
+    # The next two are only required by Device Streaming Proxy Hub
+
+    # Remote Host Name
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        setx  REMOTE_HOST_NAME  $env:REMOTE_HOST_NAME
+    }
+
+    # Remote Port
+    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+    { 
+        setx  REMOTE_PORT $env:REMOTE_PORT
+    }
+
+
+    write-Host 'Done setting Environment Variables in User'
+    get-anykey
+
+    
+}
 
 
 
