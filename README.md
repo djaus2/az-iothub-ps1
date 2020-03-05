@@ -3,6 +3,7 @@
 # Azure IoT Hub PowerShell Scripts
 
 <hr>
+<hr>
 There is an option on main menu 8. to do everything. Now ..<br> <br>
 It's now gone mega. Run get-iothub once to select your Subscription.<br>
 then run <br>
@@ -11,7 +12,8 @@ then run <br>
 - And it will auto generate all 3!<br>
 - Also optionally add pause (in seconds) on end and where Y is the default for a prompt (or any key) it will auto-continue after that pause!
 - Only two required prompts during this sequnece: Group Location and SKU for Hub.
-
+<hr>
+<hr>
 
 In the [Azure IoT Hub Quickstarts](https://docs.microsoft.com/en-us/azure/iot-hub/). _take the Quickstart link in the sidebar on left_, a list of steps are repeated on most pages for creating a new Azure IoT Hub from scratch as well as for getting the required Hub connection meta-data. This meta-data is required to be provided as environment variables for the [Quickstart .NET Core Sample apps](https://github.com/Azure-Samples/azure-iot-samples-csharp/archive/master.zip), _(n.b. this is a zip file)_, or provided as command line parameters for the apps. The Quickstart tutorials use the **Azure Cli** (Az Cli) in a **PowerShell** terminal. The UWP app **Azure IoT Hub Toolbox** simplifies this a little, as available as source [GitHub](https://github.com/djaus2/Azure.IoTHub.Toolbox) as well as a ready to run app on the [Microsoft Store](https://www.microsoft.com/en-au/p/azureiothubtoolbox/9pmcf9clttwz?activetab=pivot:overviewtab), with the app's Settings page stepping you through the Hub creation and collection of the meta-data to be used in-app. The Toolbox also requires a PowerShell Az Cli terminal as it supplies the required Az Cli commands on the clipboard.
 
