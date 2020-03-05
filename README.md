@@ -3,7 +3,7 @@
 # Azure IoT Hub PowerShell Scripts
 
 <hr>
-Ther is an option on main menu 8. to do everything. Now ..<br> br>
+There is an option on main menu 8. to do everything. Now ..<br> <br>
 Its now gone mega. Run get-iothub once to select your Subscription.<br>
 then run ```get-iothub <GroupName> <HubName> <DeviceName>`` <br>
 And it will auto generate all 3!<br>
