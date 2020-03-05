@@ -9,7 +9,7 @@ then run <br>
 &nbsp;<b>get-iothub GroupName,HubName,DeviceName</b>
 <br>
 And it will auto generate all 3!<br>
-Also optionally add pause (in seconds) on end and where Y is the default it will do it and only pause for that time.
+Also optionally add pause (in seconds) on end and where Y is the default for a prompt (or any key) it will auto-continue after that pause!
 Only two required prompts during this sequnece: Group Location and SKU for Hub.
 <hr>
 
