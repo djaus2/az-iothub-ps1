@@ -157,7 +157,7 @@ function clear-appData
             remove-variable retVal2  -Scope Global
         }
 
-        If (-not([string]::IsNullOrEmpty($global:yesnowait2 )))
+        If (-not([string]::IsNullOrEmpty($global:yesnowait )))
         {
             remove-variable yesnowait  -Scope Global
         }
