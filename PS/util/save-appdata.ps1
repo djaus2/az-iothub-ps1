@@ -157,9 +157,14 @@ function clear-appData
             remove-variable retVal2  -Scope Global
         }
 
+        If (-not([string]::IsNullOrEmpty($global:yesnowait2 )))
+        {
+            remove-variable yesnowait  -Scope Global
+        }
+
         
-        $PsScriptFile = "$global:ScriptDirectory\set-env.*"
-        Remove-Item  $PsScriptFile -ErrorAction SilentlyContinue
+        $PsScriptFile = "$global:ScriptDirectory\app-settings.ps1"
+        Remove-Item  $PsScriptFile 
 
 
     }

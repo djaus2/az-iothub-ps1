@@ -16,11 +16,26 @@ param (
      write-Host $Prompt
 
 
+     $K=$null
 
      If  ([string]::IsNullOrEmpty($env:IsRedirected))
      {
-         $KeyPress = [System.Console]::ReadKey($true)
-         $K = $KeyPress.Key
+        If (-not ([string]::IsNullOrEmpty($global:yesnowait )))
+         {
+             if ($default)
+             {
+                Write-Host "Pausing for $global:yesnowait secs" 
+                start-sleep $global:yesnowait    
+             }
+             else{
+                $KeyPress = [System.Console]::ReadKey($true)
+                $K = $KeyPress.Key
+             }          
+         }
+         else {
+            $KeyPress = [System.Console]::ReadKey($true)
+            $K = $KeyPress.Key
+        }
      } else {
          $response = Read-Host
          If  ([string]::IsNullOrEmpty($response))
@@ -33,10 +48,14 @@ param (
      }
 
      $global:retVal = $Default
-     switch ($K)
-     {
-         Y { $global:retVal = $true} 
-         N { $global:retVal =  $false}
-     }
+
+     If (-not ([string]::IsNullOrEmpty($K )))
+     {  
+        switch ($K)
+        {
+            Y { $global:retVal = $true} 
+            N { $global:retVal =  $false}
+        }
+    }
      # return $global:retVal
 }

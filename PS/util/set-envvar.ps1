@@ -314,8 +314,11 @@ function clear-env{
 
     
     
-    $PsScriptFile =  "$global:ScriptDirectory\app-settings.ps1"
-    Remove-Item  $PsScriptFile  -ErrorAction SilentlyContinue
+    $PsScriptFile =  "$global:ScriptDirectory\set-env.ps1"
+    Remove-Item  $PsScriptFile 
+
+    $PsScriptFile =  "$global:ScriptDirectory\set-env.sh"
+    Remove-Item  $PsScriptFile 
     
     clear-appData
 

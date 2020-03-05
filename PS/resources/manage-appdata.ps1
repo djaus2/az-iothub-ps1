@@ -46,7 +46,7 @@ function Manage-AppData{
 
 
 
-        $itemsList ='Save App Data,Clear AppData,Load App Data,Get'
+        $itemsList ='Save App Data,Clear AppData,Load App Data,Get,Set prompt pause to 5 sec,Clear prompt pause'
 
 
 
@@ -71,6 +71,10 @@ function Manage-AppData{
                         get-anykey
                     }
             'D4'    {  return 'Back' }
+            'D5'    { 
+                $global:yesnowait = 5
+             }
+            'D6'    {  $global:yesnowait = $null }
         }  
     }  
     while ($true)

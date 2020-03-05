@@ -67,7 +67,7 @@ param (
         write-Host $Prompt
         $Prompt ='Do you want to create a new Group for the Subscription "'+ $Subscription +'"?'
         write-Host $prompt
-        get-yesorno $false
+        get-yesorno $true
         $answer =  $global:retVal
         if ($answer )
         {

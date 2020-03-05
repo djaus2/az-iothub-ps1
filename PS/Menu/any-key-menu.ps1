@@ -46,7 +46,15 @@ param (
     If ([string]::IsNullOrEmpty( $env:IsRedirected  ))
     {
         write-Host $prompt
-        [System.Console]::ReadKey($true) >$null
+       
+        If (-not ([string]::IsNullOrEmpty($global:yesnowait )))
+        {
+               Write-Host "Pausing for $global:yesnowait secs" 
+               start-sleep $global:yesnowait           
+        }
+        else {
+            [System.Console]::ReadKey($true) >$null
+       }
     }
     else {
         read-Host $prompt >$null

@@ -49,6 +49,26 @@ catch {
 
 #endregion
 
+if ($($args.Count) -ne 0)
+{
+    switch ($args.Count)
+    {
+        1{
+            # Assume a csv of 3
+            $names = $($args[0]) -split ','
+        }
+        2{ 
+            #assume a CSV of 3 and sleepparam
+        }
+        3{ 
+            # assum space sep of 3
+        }
+        4 {
+            # assum space sep of 3  and sleepparam
+        }
+    }
+}
+
 Show-Splashscreen
 
 
