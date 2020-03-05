@@ -5,8 +5,8 @@
 <hr>
 <hr>
 There is an option on main menu 8. to do everything. Now ..<br> <br>
-It's now gone mega. Run get-iothub once to select your Subscription.<br>
-then run <br>
+It's now gone mega.<br>
+Just run: <br>
 &nbsp;<b>get-iothub GroupName,HubName,DeviceName</b>
 
 - And it will auto generate all 3!<br>
