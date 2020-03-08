@@ -499,8 +499,9 @@ function write-env{
         $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"
     }
 
-    write-host 'Writing to:'
-    read-host $PsScriptFile
+    write-host "Writing Env Vars to: $PsScriptFile"
+    get-anykey $prompt, 'Continue'
+
     Out-File -FilePath $PsScriptFile    -InputObject "" -Encoding ASCII
 
 

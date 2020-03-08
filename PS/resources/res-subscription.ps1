@@ -4,7 +4,8 @@ param (
    [boolean]$Refresh = $false
 )
 
-    clear-host
+show-heading  -Prompt '  S U B S C R I P T I O N  '  2
+
     If ([string]::IsNullOrEmpty($global:DoneLogin)) 
     { 
         write-Host 'Have you run "az login" to access your accounts?'
@@ -30,6 +31,16 @@ param (
     if ($Refresh -eq $true)
     {
         $global:SubscriptionsStrn = $null
+    }
+    elseif(-not([string]::IsNullOrEmpty($current)))
+    {
+        get-yesorno $True "Do you want to use the current subscription?"
+        $answer = $global:retVal
+        if  ( $answer)
+        {
+            $global:retVal ='Back'
+            return $current
+        }
     }
 # Assume there is at least one subscription
 

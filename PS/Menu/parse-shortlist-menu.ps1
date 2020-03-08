@@ -95,9 +95,9 @@ param (
         return
     }  
 
-    $lines =$ListString  -split '\n'
-    $noEntities = ($lines.Count)
-    
+    # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
+    $lines= $ListString:subscriptionsstrn.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
+    $noEntities = $lines.Count
     write-Host 'No. of entities: ' -NoNewLine
     write-Host $noEntities
     
@@ -212,85 +212,94 @@ param (
     $NextNo = $DefaultNo
 
     $KK = ' '
-    do 
+
+    if ($NumActualEntries -eq 1)
     {
-        if (-not([string]::IsNullOrEmpty($NextSelection)))
+        write-host "Selecting the one Subscription listed"
+        get-anykey
+        $KK = 1
+    }
+    else {
+        do 
         {
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            [string]$prompt = [string]$NextNo
-            $prompt += '. '   
-            write-Host $prompt -NoNewline
-            write-Host $NextSelection -BackgroundColor Yellow -ForegroundColor Black -NoNewline
-            write-Host ' <-- Current Selection [Enter]                      ' -BackgroundColor Black -ForegroundColor Yellow  -NoNewline
-        }
-        # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-        # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
-        $KeyPress = [System.Console]::ReadKey($true)
-        $K = $KeyPress.Key
-        $KK = $KeyPress.KeyChar
-
-        switch ( $k )
-        {
-
-            UpArrow  {
-                if ($NextNo -gt 1)
-                {
-                    $NextNo--
-                }
-                $line =($ListString-split '\n')[$NextNo-1]
-                $NextSelection =  ($line -split '\t')[$CodeIndex] 
+            if (-not([string]::IsNullOrEmpty($NextSelection)))
+            {
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                [string]$prompt = [string]$NextNo
+                $prompt += '. '   
+                write-Host $prompt -NoNewline
+                write-Host $NextSelection -BackgroundColor Yellow -ForegroundColor Black -NoNewline
+                write-Host ' <-- Current Selection [Enter]                      ' -BackgroundColor Black -ForegroundColor Yellow  -NoNewline
             }
-            DownArrow  { 
-                if ($NextNo -lt $NumActualEntries)
-                {
-                    $NextNo++
+            # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
+            # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
+            $KeyPress = [System.Console]::ReadKey($true)
+            $K = $KeyPress.Key
+            $KK = $KeyPress.KeyChar
+
+            switch ( $k )
+            {
+
+                UpArrow  {
+                    if ($NextNo -gt 1)
+                    {
+                        $NextNo--
+                    }
                     $line =($ListString-split '\n')[$NextNo-1]
                     $NextSelection =  ($line -split '\t')[$CodeIndex] 
                 }
-            }
-            Enter { 
-                if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
-                {
-                    $KK = $selns[$NextNo-1]
-                } 
-            }
-            B {
-                If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
-                {
-                    # Previous value supplied return that with Back
-                    $KK=[string]$DefaultNo
+                DownArrow  { 
+                    if ($NextNo -lt $NumActualEntries)
+                    {
+                        $NextNo++
+                        $line =($ListString-split '\n')[$NextNo-1]
+                        $NextSelection =  ($line -split '\t')[$CodeIndex] 
+                    }
                 }
-                else {
-                    # Just Back
+                Enter { 
+                    if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
+                    {
+                        $KK = $selns[$NextNo-1]
+                    } 
                 }
-            }
-            Default
-            {
-                if ( $Selns -notcontains $KK){
-                    if ($first){
-                        write-Host '  --Invalid' -NoNewLine
-                        $first = $false
+                B {
+                    If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
+                    {
+                        # Previous value supplied return that with Back
+                        $KK=[string]$DefaultNo
+                    }
+                    else {
+                        # Just Back
+                    }
+                }
+                Default
+                {
+                    if ( $Selns -notcontains $KK){
+                        if ($first){
+                            write-Host '  --Invalid' -NoNewLine
+                            $first = $false
+                        }
                     }
                 }
             }
-        }
 
-        ## $resp = [string]$val
-    # Ref: https://www.computerperformance.co.uk/powershell/contains/
-    #} while ( $SelectionList -notcontains $val) ##  $resp)foreach 
-    } while ( $Selns -notcontains $KK) 
+            ## $resp = [string]$val
+        # Ref: https://www.computerperformance.co.uk/powershell/contains/
+        #} while ( $SelectionList -notcontains $val) ##  $resp)foreach 
+        } while ( $Selns -notcontains $KK) 
+    }
 
     if ($first -eq $false)
     {

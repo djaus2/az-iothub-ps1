@@ -6,8 +6,9 @@ function Save-AppData{
 
     $PsScriptFile =  "$global:ScriptDirectory\app-settings.ps1"
 
-    $prompt ='# get-iothub.ps1 app data' 
-    write-Host $prompt
+    $prompt ="Writing app data (The Subscription name, Group name etc their Az queries) to $PsScriptFile"
+    get-anykey $prompt, 'Continue'
+
     Out-File -FilePath $PsScriptFile    -InputObject $prompt -Encoding ASCII
     
 

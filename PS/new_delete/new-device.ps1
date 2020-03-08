@@ -44,10 +44,10 @@ show-heading '  N E W  D E V I C E   '   3
     {
         write-Host ''
         $prompt = "Do you want to use $DeviceName for the name of the new Device?"
-        get-yesorno $false $prompt
+        get-yesorno $true $prompt
         if (-not $global:retVal)
         {
-            write-host "del"
+            write-host "New"
             $DeviceName =''
         }
     }
@@ -85,7 +85,7 @@ show-heading '  N E W  D E V I C E   '   3
         $EdgeEnabled = $false
 
         $prompt = 'Do you want it to be Edge Enabled? Not required for IoT Hub SDK Quickstarts.'
-        $answer= menu\yes-no $prompt 'N'
+        $answer= get-yesno $false $prompt
         If ($answer)
         {
             $EdgeEnabled = true

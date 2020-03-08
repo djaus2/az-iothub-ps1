@@ -176,8 +176,9 @@ function write-export{
         $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
     }
 
-    write-host 'Writing to:'
-    read-host $PsScriptFile    
+    write-host "Writing Env Vars to: $PsScriptFile"
+    get-anykey $prompt, 'Continue'
+   
     $op='#!/bin/bash'
     Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII
 

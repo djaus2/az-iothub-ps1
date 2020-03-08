@@ -79,10 +79,26 @@ param (
         return 
     }  
 
-    $lines =$ListString  -split '\n'
-    $noEntities = $lines.Length 
 
+    # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
+    $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
 
+    $noEntities = $lines.Count 
+
+    if  ($noEntities -eq 1) 
+    {
+        $prompt = $itemToList = ($ines[0] -split '\t')[$DisplayIndex]
+        $prompt = [string]::Format($FormatStrn,$prompt )
+        $prompt = "Only one item to select $prompt. Do you want to select that?"
+        get-yesorno $true, $prompt
+        $answer = $global:retVal
+        if  ( $answer)
+        {
+            $global:retVal ='Back'
+            return $current
+        }
+    }
+    
     if ( ($noEntities -lt 10) -and   ( -not ([string]::IsNullOrEmpty($env:IsRedirected))))
     {
         parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 
