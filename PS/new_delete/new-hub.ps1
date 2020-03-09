@@ -50,7 +50,7 @@ param (
         $HubName = $answer
     }
 
-
+if($false) {
     #Need an SKU
     $skus = 'B1,B2,B3,F1,S1,S2,S3'
     if ([string]::IsNullOrEmpty($SKU))
@@ -73,6 +73,42 @@ param (
         $SKU = $answer
 
     }
+}
+
+
+    if([string]::IsNullOrEmpty($global:SKU))
+    {
+        $global:SKU = get-SKU
+        $result = $global:retVal
+
+        $prompt = 'SKU for Hub is "' + $result +'"'
+        write-Host $prompt
+
+        if ([string]::IsNullOrEmpty($result))
+        {
+            $global:retVal=  'Back'
+            return 'Back'
+        }
+        elseif ($result -eq 'Back')
+        {
+            $global:retVal=  'Back'
+            return 'Back'
+        }
+        elseif ($result -eq 'Error')
+        {
+            $global:retVal=  'Error'
+            return 'Error'
+        }
+        elseif ($result -eq 'Exit')
+        {
+            $global:retVal=  'Exit'
+            return 'Exit'
+        }
+        $global:SKU = $result
+    }
+
+    $SKU= $global:SKU
+
 
     # $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
     # write-Host $prompt

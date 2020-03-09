@@ -27,7 +27,7 @@ param (
     }
 
     [Console]::ResetColor()
-    If  ([string]::IsNullOrEmpty($env:LogAzIoTPS)) 
+    If  ([string]::IsNullOrEmpty($global:LogAzIoTPS)) 
     {
         Clear-Host
     }

@@ -11,10 +11,37 @@ function get-allinone
 
     )
 
-    write-host "[1] Create New Group in Subscription: $Subscription then ..."
-    write-host "[2] Create New Hub in Group then ..."
-    write-host "[3] Create Device in Hub then ..."
-    write-host "[4] Get connection strings"
+    show-heading  -Prompt '  D O  A L L  ' 2
+
+    write-host "[1] Create New Group in Subscription: "  -NoNewline
+    write-host $Subscription -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+    if (-not([string]::IsNullOrEmpty($global:Location)) )
+    {
+        write-host " in Location: " -NoNewline
+        write-host $global:Location -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+    }
+    write-host " then ..."
+    
+    if (-not([string]::IsNullOrEmpty($global:SKU)) )
+    {
+        write-host "[2] Create New Hub with SKU " -NoNewline
+        write-host $global:SKU -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+    }
+    else{
+        write-host "[2] Create New Hub in Group"  -NoNewline
+    }
+    write-host " then ..."
+
+  
+    write-host "[3] Create New Device for Hub then ..."
+    
+    write-host "[4] Get connection strings and Save to shell script."
+    write-host ''
+    write-host "Entity Names " -nonewline
+    write-host "(Group,Hub and Device)" -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+    write-host " are:" 
+    $namesStrn -split ','
+    write-host ''
     write-host "Continue?"
     get-yesorno $true
     $answer =  $global:retVal
@@ -81,10 +108,35 @@ function get-allinone
         $grp = $names[0]
         $hb = $names[1]
         $dev =$names[2]
-        write-host "[1] Create New Group $grp in Subscription: $Subscription then ..."
-        write-host "[2] Create New Hub $hb in Group then ..."
-        write-host "[3] Create Device $dev in Hub then ..."
-        write-host "[4] Get connection strings"
+
+        show-heading  -Prompt '  D O  A L L  ' 2
+
+        write-host "[1] Create New Group '$grp' in Subscription: "  -NoNewline
+        write-host $Subscription -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        if (-not([string]::IsNullOrEmpty($global:Location)) )
+        {
+            write-host " in Location: " -NoNewline
+            write-host $global:Location -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        }
+        write-host " then ..."
+        
+        if (-not([string]::IsNullOrEmpty($global:SKU)) )
+        {
+            write-host "[2] Create New Hub '$hb' with SKU " -NoNewline
+            write-host $global:SKU -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        }
+        else{
+            write-host "[2] Create New Hub '$hb' in Group"  -NoNewline
+        }
+        write-host " then ..."
+    
+      
+        write-host "[3] Create New Device '$dev' for Hub then ..."
+        
+        write-host "[4] Get connection strings and Save to shell script."
+        write-host ''
+
+
         get-yesorno $true "Continue?"
         $answer = $global:retVal
         if (-not $answer)

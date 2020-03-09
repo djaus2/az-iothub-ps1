@@ -163,6 +163,21 @@ function clear-appData
             remove-variable yesnowait  -Scope Global
         }
 
+        If (-not([string]::IsNullOrEmpty($global:Location )))
+        {
+            remove-variable Location  -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:SKU )))
+        {
+            remove-variable SKU  -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:LogAzIoTPS )))
+        {
+            remove-variable LogAzIoTPS  -Scope Global
+        }
+
         
         $PsScriptFile = "$global:ScriptDirectory\app-settings.ps1"
         Remove-Item  $PsScriptFile 

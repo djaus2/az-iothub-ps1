@@ -16,6 +16,9 @@ try {
     . ("$global:ScriptDirectory\Util\Check-Group.ps1")
     . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
     . ("$global:ScriptDirectory\Util\Check-Device.ps1")
+    . ("$global:ScriptDirectory\Util\get-location.ps1")
+    . ("$global:ScriptDirectory\Util\get-SKU.ps1")
+
 
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
     . ("$global:ScriptDirectory\menu\yes-no-menu.ps1")
@@ -52,37 +55,42 @@ catch {
 
 if ($($args.Count) -ne 0)
 {
+    $global:yesnowait= $null
+    $global:Location= $null
+    $global:SKU= $null
     # Setup delay first
-    switch ($args.Count)
-    {
-        1{
-            # Assume a csv of 3
-            [string]$arg0 = [string]$($args[0]) 
-            $arg0 = $arg0.Replace(' ',',')
-            get-allinone $arg0
-        }
-        2{ 
-            [string]$yesnodelay = [string] $($args[1])
-            if (-not([string]::IsNullOrEmpty($yesnodelay)) )
-            {
-                [int]$global:yesnowait= [int]$yesnodelay
-                write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
+    if ($false){
+        switch ($args.Count)
+        {
+            1{
+                # Assume a csv of 3
+                [string]$arg0 = [string]$($args[0]) 
+                $arg0 = $arg0.Replace(' ',',')
+                get-allinone $arg0
             }
-        }
-        3{ 
-            # assum space sep of 3
-            $arg0= $($args[0])+' '+$($args[1])+ ' '+$($args[2]) 
-            $arg0 = $arg0.Replace(' ',',')
-            get-allinone $arg0
-        }
-        4 {
-            # assum space sep of 3  and sleepparam
-            [string]$yesnodelay = [string] $($args[3])
-            if (-not([string]::IsNullOrEmpty($yesnodelay)) )
-            {
-                [int]$global:yesnowait= [int]$yesnodelay
-                write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
-            }y
+            2{ 
+                [string]$yesnodelay = [string] $($args[1])
+                if (-not([string]::IsNullOrEmpty($yesnodelay)) )
+                {
+                    [int]$global:yesnowait= [int]$yesnodelay
+                    write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
+                }
+            }
+            3{ 
+                # assum space sep of 3
+                $arg0= $($args[0])+' '+$($args[1])+ ' '+$($args[2]) 
+                $arg0 = $arg0.Replace(' ',',')
+                get-allinone $arg0
+            }
+            4 {
+                # assum space sep of 3  and sleepparam
+                [string]$yesnodelay = [string] $($args[3])
+                if (-not([string]::IsNullOrEmpty($yesnodelay)) )
+                {
+                    [int]$global:yesnowait= [int]$yesnodelay
+                    write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
+                }y
+            }
         }
     }
     If (-not ([string]::IsNullOrEmpty($global:SubscriptionsStrn)))
@@ -92,8 +100,64 @@ if ($($args.Count) -ne 0)
     else{
         Get-Subscription
     }
+
     
     $Subscription = $global:Subscription
+
+    $global:Location = get-Location
+    $result = $global:retVal
+
+    $prompt = 'Location for Resource Group is "' + $result +'"'
+    write-Host $prompt
+
+    if ([string]::IsNullOrEmpty($result))
+    {
+        $global:Location=$null
+    }
+    elseif ($result -eq 'Back')
+    {
+        $global:Location=$null
+    }
+    elseif ($result -eq 'Error')
+    {
+        exit
+    }
+    elseif ($result -eq 'Exit')
+    {
+        exit
+    }
+    $global:Location = $result
+
+
+
+    $global:SKU = get-SKU
+    $result = $global:retVal
+
+    $prompt = 'SKU for Hub is "' + $result +'"'
+    write-Host $prompt
+
+    if ([string]::IsNullOrEmpty($result))
+    {
+        $global:SKU=$null
+    }
+    elseif ($result -eq 'Back')
+    {
+        $global:SKU=$null
+    }
+    elseif ($result -eq 'Error')
+    {
+        exit
+    }
+    elseif ($result -eq 'Exit')
+    {
+        exit
+    }
+    $global:SKU = $result
+
+    
+
+
+
     switch ($args.Count)
     {
         1{
@@ -123,6 +187,9 @@ if ($($args.Count) -ne 0)
             get-allinone $arg0 $delay
         }
     }
+    $global:yesnowait= $null
+    $global:Location =$null
+    $global:SKU=$null
 }
 else {
     Show-Splashscreen

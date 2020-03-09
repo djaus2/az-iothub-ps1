@@ -9,6 +9,7 @@ param (
     
     try {
         . ("$global:ScriptDirectory\Util\Check-Group.ps1")
+        . ("$global:ScriptDirectory\Util\get-location.ps1")
     }
     catch {
         Write-Host "Error while loading supporting PowerShell Scripts" 
@@ -49,52 +50,33 @@ param (
         $GroupName = $answer
     }
 
+    $location = get-Location
+    $result = $global:retVal
 
-    # Need a location
-    # Get list from Azure
-    if ([string]::IsNullOrEmpty($Location))
+    $prompt = 'Location for Resource Group is "' + $result +'"'
+    write-Host $prompt
+
+    if ([string]::IsNullOrEmpty($result))
     {
-        if ([string]::IsNullOrEmpty($global:LocationsStrn))
-        {
-            $global:LocationsStrn = az account list-locations  -o tsv | Out-String
-        }
-        if ([string]::IsNullOrEmpty($global:LocationsStrn))
-        {
-            $prompt = 'Error getting Resource Group Location List.'
-            $global:retVal = 'Error'
-            get-anykey $prompt 'Exit'
-            return
-        }
-        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   $LocationStrnIndex $LocationStrnDataIndex 3  40  ''
-        $result = $global:retVal
-
-        $prompt = 'Location "' + $result +'" returned'
-        write-Host $prompt
-
-        if ([string]::IsNullOrEmpty($result))
-        {
-            $global:retVal = 'Back'
-	    return
-        }
-        elseif ($result -eq 'Back')
-        {
-            $global:retVal = 'Back'
-	    return
-        }
-        elseif ($result -eq 'Error')
-        {
-            $global:retVal = 'Error'
-	    return
-        }
-        elseif ($result -eq 'Exit')
-        {
-	   $global:retVal ='Exit'
-            return
-        }
-        $Location = $result
+        $global:retVal = 'Back'
+        return
     }
-
-
+    elseif ($result -eq 'Back')
+    {
+        $global:retVal = 'Back'
+        return
+    }
+    elseif ($result -eq 'Error')
+    {
+        $global:retVal = 'Error'
+        return
+    }
+    elseif ($result -eq 'Exit')
+    {
+        $global:retVal ='Exit'
+        return
+    }
+    $Location = $result
 
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" exists.' + '" at location "' + $Location +'"'
     write-Host $prompt

@@ -17,7 +17,7 @@ param (
         $global:HubsStrn  = $null
     }
 
-    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Subscription "' + $Subscripton + '" exists.'
+    $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Subscription "' + $Subscription + '" exists.'
     write-Host $prompt
     If([string]::IsNullOrEmpty($global:HubsStrn )) 
     { 
