@@ -11,7 +11,7 @@ Just run: <br>
 
 - And it will auto generate all 3!<br>
 - Also optionally add pause (in seconds) on end and where Y is the default for a prompt (or any key) it will auto-continue after that pause!
-- Only two required prompts during this sequnece: Group Location and SKU for Hub.
+- Only three required prompts during at start: Confirm or select Subscription, Select Group Location and SKU for Hub.
 <hr>
 <hr>
 
