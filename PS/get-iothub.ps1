@@ -55,44 +55,15 @@ catch {
 
 if ($($args.Count) -ne 0)
 {
-    $global:yesnowait= $null
+    If (-not([string]::IsNullOrEmpty($global:yesnowait )))
+    {
+        remove-variable yesnowait  -Scope Global
+    }
+
     $global:Location= $null
     $global:SKU= $null
-    # Setup delay first
-    if ($false){
-        switch ($args.Count)
-        {
-            1{
-                # Assume a csv of 3
-                [string]$arg0 = [string]$($args[0]) 
-                $arg0 = $arg0.Replace(' ',',')
-                get-allinone $arg0
-            }
-            2{ 
-                [string]$yesnodelay = [string] $($args[1])
-                if (-not([string]::IsNullOrEmpty($yesnodelay)) )
-                {
-                    [int]$global:yesnowait= [int]$yesnodelay
-                    write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
-                }
-            }
-            3{ 
-                # assum space sep of 3
-                $arg0= $($args[0])+' '+$($args[1])+ ' '+$($args[2]) 
-                $arg0 = $arg0.Replace(' ',',')
-                get-allinone $arg0
-            }
-            4 {
-                # assum space sep of 3  and sleepparam
-                [string]$yesnodelay = [string] $($args[3])
-                if (-not([string]::IsNullOrEmpty($yesnodelay)) )
-                {
-                    [int]$global:yesnowait= [int]$yesnodelay
-                    write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
-                }y
-            }
-        }
-    }
+
+   
     If (-not ([string]::IsNullOrEmpty($global:SubscriptionsStrn)))
     {
         Get-Subscription $global:Subscription
@@ -187,9 +158,20 @@ if ($($args.Count) -ne 0)
             get-allinone $arg0 $delay
         }
     }
-    $global:yesnowait= $null
-    $global:Location =$null
-    $global:SKU=$null
+    If (-not([string]::IsNullOrEmpty($global:yesnowait )))
+    {
+        remove-variable yesnowait  -Scope Global
+    }
+    If (-not([string]::IsNullOrEmpty($global:Location )))
+    {
+        remove-variable Location  -Scope Global
+    }
+
+    If (-not([string]::IsNullOrEmpty($global:SKU )))
+    {
+        remove-variable SKU  -Scope Global
+    }
+
 }
 else {
     Show-Splashscreen

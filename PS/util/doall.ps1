@@ -13,53 +13,51 @@ function get-allinone
 
     show-heading  -Prompt '  D O  A L L  ' 2
 
-    write-host "[1] Create New Group in Subscription: "  -NoNewline
-    write-host $Subscription -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-    if (-not([string]::IsNullOrEmpty($global:Location)) )
-    {
-        write-host " in Location: " -NoNewline
-        write-host $global:Location -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-    }
-    write-host " then ..."
-    
-    if (-not([string]::IsNullOrEmpty($global:SKU)) )
-    {
-        write-host "[2] Create New Hub with SKU " -NoNewline
-        write-host $global:SKU -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-    }
-    else{
-        write-host "[2] Create New Hub in Group"  -NoNewline
-    }
-    write-host " then ..."
+    if($false){
+        write-host "[1] Create New Group in Subscription: "  -NoNewline
+        write-host $Subscription -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        if (-not([string]::IsNullOrEmpty($global:Location)) )
+        {
+            write-host " in Location: " -NoNewline
+            write-host $global:Location -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        }
+        write-host " then ..."
+        
+        if (-not([string]::IsNullOrEmpty($global:SKU)) )
+        {
+            write-host "[2] Create New Hub with SKU " -NoNewline
+            write-host $global:SKU -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        }
+        else{
+            write-host "[2] Create New Hub in Group"  -NoNewline
+        }
+        write-host " then ..."
 
-  
-    write-host "[3] Create New Device for Hub then ..."
     
-    write-host "[4] Get connection strings and Save to shell script."
-    write-host ''
-    write-host "Entity Names " -nonewline
-    write-host "(Group,Hub and Device)" -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-    write-host " are:" 
-    $namesStrn -split ','
-    write-host ''
-    write-host "Continue?"
-    get-yesorno $true
-    $answer =  $global:retVal
+        write-host "[3] Create New Device for Hub then ..."
+        
+        write-host "[4] Get connection strings and Save to shell script."
+        write-host ''
+        write-host "Entity Names " -nonewline
+        write-host "(Group,Hub and Device)" -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        write-host " are:" 
+        $namesStrn -split ','
+        write-host ''
+        write-host "Continue?"
+        get-yesorno $true
+        $answer =  $global:retVal
+    }
 
+    $answer =$true
 
     if ($answer)
     {
-        if (-not([string]::IsNullOrEmpty($yesnodelay)) )
+
+        If (-not([string]::IsNullOrEmpty($global:yesnowait )))
         {
-            [int]$global:yesnowait= [int]$yesnodelay
-            write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
-        }
-        else {
-            $global:yesnowait= $null
-            write-host "No YesNo and GetAnyKey Pause. Will wait."
+            remove-variable yesnowait  -Scope Global
         }
 
-        
 
         if ([string]::IsNullOrEmpty($namesStrn)) 
         {
@@ -111,38 +109,59 @@ function get-allinone
 
         show-heading  -Prompt '  D O  A L L  ' 2
 
-        write-host "[1] Create New Group '$grp' in Subscription: "  -NoNewline
-        write-host $Subscription -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+        write-host "[1] Create New Group " -NoNewline
+        write-host  " $grp "  -BackgroundColor Yellow  -ForegroundColor   Black  -NoNewline
+        write-host " in Subscription: "  -NoNewline
+        write-host " $Subscription " -BackgroundColor DarkRed  -ForegroundColor   Black  -NoNewline
         if (-not([string]::IsNullOrEmpty($global:Location)) )
         {
             write-host " in Location: " -NoNewline
-            write-host $global:Location -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+            write-host " $global:Location " -BackgroundColor DarkGreen  -ForegroundColor   Black  -NoNewline
         }
         write-host " then ..."
         
         if (-not([string]::IsNullOrEmpty($global:SKU)) )
         {
-            write-host "[2] Create New Hub '$hb' with SKU " -NoNewline
-            write-host $global:SKU -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
+            write-host "[2] Create New Hub " -nonewline
+            write-host " $hb "  -BackgroundColor Yellow   -ForegroundColor   Black  -NoNewline
+            write-host " with SKU " -NoNewline
+            write-host " $global:SKU " -BackgroundColor DarkGreen  -ForegroundColor   Black  -NoNewline
+            write-host " in that Group"  -NoNewline
         }
         else{
-            write-host "[2] Create New Hub '$hb' in Group"  -NoNewline
+            write-host "[2] Create New Hub "  -NoNewline
+            write-host " $hb "   -BackgroundColor Yellow  -ForegroundColor   Black  -NoNewline
+            write-host " in that Group"  -NoNewline
         }
         write-host " then ..."
     
       
-        write-host "[3] Create New Device '$dev' for Hub then ..."
+        write-host "[3] Create New Device " -NoNewline
+        write-host " $dev " -BackgroundColor Yellow   -ForegroundColor   Black  -NoNewline
+        write-host " for that Hub then ..."
         
         write-host "[4] Get connection strings and Save to shell script."
         write-host ''
 
 
-        get-yesorno $true "Continue?"
+        get-yesorno $true "Continue? (Y/N)"
+
         $answer = $global:retVal
         if (-not $answer)
         {
             return 'Back'
         }
+
+        if (-not([string]::IsNullOrEmpty($yesnodelay)) )
+        {
+            [int]$global:yesnowait= [int]$yesnodelay
+            write-host "YesNo and GetAnyKey Pause =  $global:yesnowait"
+        }
+        else {
+            $global:yesnowait= $null
+            write-host "No YesNo and GetAnyKey Pause. Will wait."
+        }
+        
 
         [boolean]$success=$false
         $lev=0
@@ -175,6 +194,12 @@ function get-allinone
         else {
             write-host "Failed: $lev"
         }
-        get-anykey        
+        get-anykey   
+        
+        If (-not([string]::IsNullOrEmpty($global:yesnowait )))
+        {
+            remove-variable yesnowait  -Scope Global
+        }
+     
     }
 }

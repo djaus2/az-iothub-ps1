@@ -173,9 +173,9 @@ function clear-appData
             remove-variable SKU  -Scope Global
         }
 
-        If (-not([string]::IsNullOrEmpty($global:LogAzIoTPS )))
+        If (-not([string]::IsNullOrEmpty($global:Log )))
         {
-            remove-variable LogAzIoTPS  -Scope Global
+            remove-variable Log  -Scope Global
         }
 
         
