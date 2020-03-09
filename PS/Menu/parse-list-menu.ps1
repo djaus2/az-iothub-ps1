@@ -87,24 +87,28 @@ param (
 
     if  ($noEntities -eq 1) 
     {
-        $prompt = $itemToList = ($ines[0] -split '\t')[$DisplayIndex]
-        $prompt = [string]::Format($FormatStrn,$prompt )
-        $prompt = "Only one item to select $prompt. Do you want to select that?"
-        get-yesorno $true, $prompt
+        $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
+        $prompt = [string]::Format($FormatStrn,$prompt1 )
+        write-host "Only one item to select $prompt."
+        $prompt = "Do you want to select that?"
+        get-yesorno $true $prompt
         $answer = $global:retVal
         if  ( $answer)
         {
-            $global:retVal ='Back'
-            return $current
+            $global:retVal = $prompt1
+            return $prompt1
         }
     }
-    
-    if ( ($noEntities -lt 10) -and   ( -not ([string]::IsNullOrEmpty($env:IsRedirected))))
+
+
+
+    if ( ($noEntities -lt 10) -and    ([string]::IsNullOrEmpty($env:IsRedirected)))
     {
         parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 
     }
     else 
     {
+        write-Host "Using Long Menu"
         [int] $i=1
         write-Host ''
         write-Host 'Select a '  -NoNewline

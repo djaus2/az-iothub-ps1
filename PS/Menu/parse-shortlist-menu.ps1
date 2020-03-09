@@ -11,7 +11,7 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
-    write-Host 'Using Short Menu'
+    write-host 'Using Short Menu'    
 
     $baseMenu =@()
     $Selns={$baseMenu}.Invoke()
@@ -96,7 +96,7 @@ param (
     }  
 
     # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
-    $lines= $ListString:subscriptionsstrn.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
+    $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
     $noEntities = $lines.Count
     write-Host 'No. of entities: ' -NoNewLine
     write-Host $noEntities
@@ -201,7 +201,7 @@ param (
     # [int]$selection =1
     #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
     #}
-    $prompt ="Please make a (numerical) selection .. Or just [Enter] if required selection is highlighted BELOW"
+    $prompt ="Please make a (single digit) selection .. Or just [Enter] if required selection is highlighted BELOW"
     write-Host $prompt
     # $SelectionList =@('1','2','3','4','-1','-2','-3')
     $first = $true
@@ -215,7 +215,7 @@ param (
 
     if ($NumActualEntries -eq 1)
     {
-        write-host "Selecting the one Subscription listed"
+        write-host "Selecting the one $Title listed"
         get-anykey
         $KK = 1
     }
