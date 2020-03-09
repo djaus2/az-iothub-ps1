@@ -11,6 +11,8 @@ $DeviceStrnIndex =5
 $DeviceStrnDataIndex =5
 $LocationsStrnIndex = 0 
 $LocationsStrnDataIndex = 4
+$DefaultSKU = "B1"
+$DefaultRegion = "Australia Southeast"
 
 # These are the colors used in page headings, based upon level
 $headingfgColor_1="Black"

@@ -89,7 +89,8 @@ param (
     {
         $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
         $prompt = [string]::Format($FormatStrn,$prompt1 )
-        write-host "Only one item to select $prompt."
+        write-host "Only one item to select: " -nonewline
+        write-host " $prompt1 ". -backgroundcolor Yellow  -foregroundcolor black
         $prompt = "Do you want to select that?"
         get-yesorno $true $prompt
         $answer = $global:retVal

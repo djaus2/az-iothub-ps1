@@ -189,13 +189,7 @@ param (
         }
     }
 
-    if (-not([string]::IsNullOrEmpty($CurrentSelection))){
-        write-Host 'B. Back (Use Previous Selection)'
-    }
-    else {
-        write-Host 'B. Back'
-        $Selns.Add('B')
-    }
+   
     write-Host ''
 
     # [int]$selection =1
@@ -222,27 +216,7 @@ param (
     else {
         do 
         {
-            if (-not([string]::IsNullOrEmpty($NextSelection)))
-            {
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                write-Host `b`b`b`b`b`b`b -NoNewLine
-                [string]$prompt = [string]$NextNo
-                $prompt += '. '   
-                write-Host $prompt -NoNewline
-                write-Host $NextSelection -BackgroundColor Yellow -ForegroundColor Black -NoNewline
-                write-Host ' <-- Current Selection [Enter]                      ' -BackgroundColor Black -ForegroundColor Yellow  -NoNewline
-            }
+
             # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
             # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
             $KeyPress = [System.Console]::ReadKey($true)
@@ -252,22 +226,6 @@ param (
             switch ( $k )
             {
 
-                UpArrow  {
-                    if ($NextNo -gt 1)
-                    {
-                        $NextNo--
-                    }
-                    $line =($ListString-split '\n')[$NextNo-1]
-                    $NextSelection =  ($line -split '\t')[$CodeIndex] 
-                }
-                DownArrow  { 
-                    if ($NextNo -lt $NumActualEntries)
-                    {
-                        $NextNo++
-                        $line =($ListString-split '\n')[$NextNo-1]
-                        $NextSelection =  ($line -split '\t')[$CodeIndex] 
-                    }
-                }
                 Enter { 
                     if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
                     {

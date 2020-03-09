@@ -7,7 +7,7 @@ function get-sku
     if ([string]::IsNullOrEmpty($SKU))
     {
 
-        $answer = choose-selection $skus 'SKU' 'S1'
+        $answer = choose-selection $skus 'SKU' $DefaultSKU
         # $answer = $global:retVal
 
         if ([string]::IsNullOrEmpty($answer))
