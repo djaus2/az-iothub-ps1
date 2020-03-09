@@ -272,18 +272,7 @@ param (
             elseif ($answer.ToUpper() -eq 'B')
             {
                 if ($includeBack){
-                    if (-not([string]::IsNullOrEmpty($CurrentSelection))){
-                        if ($DefaultNo -gt 1){
-                            $Selection= $DefaultNo
-                        }
-                        else{
-                            $selection = $i+3
-                        }
-                    }
-                    else {
                         $selection = $i+3
-                    }
-                    
                 }
                 else {
                     $selection=0
@@ -431,30 +420,36 @@ param (
         elseif ($selection -eq -1)
         {
             $output = $CurrentSelection
+            $promptFinal = "Current $Title selected."
         }
         elseif ($selection -eq  $i+3)
         {
             $output = 'Back'
+            $promptFinal = $output +" selected."
         }
         elseif ($selection -eq  $i+4)
         {
             $output = 'Exit'
+            $promptFinal = $output +" selected."
         }
         elseif ($selection -eq  $i+2)
         {
             $output = 'Delete'
+            $promptFinal = $output +" selected."
         }
         elseif ($selection -eq  $i+1)
         {
             $output = 'New'
+            $promptFinal = $output +" selected."
         }
         else 
         {          
             $lines2 =($ListString-split '\n')[$selection-1]
-            $output =  ($lines2-split '\t')[$CodeIndex]   
+            $output =  ($lines2-split '\t')[$CodeIndex]  
+            $promptFinal = $Title +' "' +  $output + '" selected' 
         }
         write-Host ''
-        $promptFinal = $Title +' "' +  $output + '" selected'
+        
         write-Host $promptFinal
         $global:retVal = $output
 

@@ -202,8 +202,6 @@ param (
 
     # write-Host 'Valid Keys: ' -NoNewline
     # foreach ($n in $Selns) {write-Host $n -NoNewline; write-Host ' ' -NoNewline}
-    $NextSelection = $CurrentSelection
-    $NextNo = $DefaultNo
 
     $KK = ' '
 
@@ -227,10 +225,10 @@ param (
             {
 
                 Enter { 
-                    if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
+                    if ( -not ([string]::IsNullOrEmpty($CurrentSelection)))
                     {
-                        $KK = $selns[$NextNo-1]
-                    } 
+                        $KK=[string]$DefaultNo
+                    } x
                 }
                 B {
                     If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
@@ -269,14 +267,17 @@ param (
     if ($KK -eq 'B')
     {
         $output = 'Back'
+        $promptFinal =$output + " selecetd."
     }
     elseif ($KK -eq 'D')
     {
         $output = 'Delete'
+        $promptFinal =$output + " selecetd."
     }
     elseif ($KK -eq 'N')
     {
         $output =  'New'
+        $promptFinal =$output + " selecetd."
     }
     else 
     {     
@@ -284,16 +285,18 @@ param (
         if ( [int]::TryParse($KK,[ref] $indx))
         {
             $line =($ListString-split '\n')[$indx-1]
-            $output =  ($line -split '\t')[$CodeIndex]   
+            $output =  ($line -split '\t')[$CodeIndex]  
+            $promptFinal = $Title +' "' +  $output + '" selected' 
         }
         else
         {
             write-Host 'Error'
             $output =  'Error'
+            $promptFinal =$output +" occured."
         }
     }
     write-Host ''
-    $promptFinal = $Title +' "' +  $output + '" selected'
+    
     write-Host $promptFinal
     $global:retVal= $output
 }

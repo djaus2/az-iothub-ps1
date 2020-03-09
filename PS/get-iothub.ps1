@@ -83,11 +83,11 @@ if ($($args.Count) -ne 0)
 
     if ([string]::IsNullOrEmpty($result))
     {
-        $global:Location=$null
+        exit
     }
     elseif ($result -eq 'Back')
     {
-        $global:Location=$null
+        exit
     }
     elseif ($result -eq 'Error')
     {
@@ -109,11 +109,11 @@ if ($($args.Count) -ne 0)
 
     if ([string]::IsNullOrEmpty($result))
     {
-        $global:SKU=$null
+        exit
     }
     elseif ($result -eq 'Back')
     {
-        $global:SKU=$null
+        exit
     }
     elseif ($result -eq 'Error')
     {

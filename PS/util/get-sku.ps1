@@ -1,7 +1,9 @@
 function get-sku
 {
+    write-host ''
     $prompt =  "IoT Hub SKUs Ref: https://azure.microsoft.com/en-us/pricing/details/iot-hub/"
-    get-anykey $prompt "Continue"
+    write-host  $prompt
+    write-host ''
     #Need an SKU
     $skus = 'B1,B2,B3,F1,S1,S2,S3'
     if ([string]::IsNullOrEmpty($SKU))

@@ -42,6 +42,17 @@ param (
     {
         $global:HubsStrn = null
     }
+    elseif(-not([string]::IsNullOrEmpty($current)))
+    {
+        get-yesorno $True "Do you want to use the Current Hub? (Y/N)"
+        $answer = $global:retVal
+        if  ( $answer)
+        {
+            $global:retVal ='Back'
+            return $current
+        }
+    }
+
     [boolean]$skip = $false
     if  ($global:HubsStrn -eq '')
     {

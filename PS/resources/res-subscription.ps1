@@ -34,11 +34,11 @@ show-heading  -Prompt '  S U B S C R I P T I O N  '  2
     }
     elseif(-not([string]::IsNullOrEmpty($current)))
     {
-        get-yesorno $True "Do you want to use the current subscription?"
+        get-yesorno $True "Do you want to use the Current Subscription? (Y/N)"
         $answer = $global:retVal
         if  ( $answer)
         {
-            $global:retVal ='Back'
+            $global:retVal = 'Back'
             return $current
         }
     }

@@ -45,6 +45,18 @@ param (
     {
         $global:GroupsStrn = null
     }
+    elseif(-not([string]::IsNullOrEmpty($current)))
+    {
+        get-yesorno $True "Do you want to use the Current Group? (Y/N)"
+        $answer = $global:retVal
+        if  ( $answer)
+        {
+            $global:retVal =$current
+            return 'Back'
+        }
+    }
+
+
     [boolean]$skip = $false
     if ($global:GroupsStrn -eq '')
     {
