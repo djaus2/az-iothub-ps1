@@ -13,41 +13,6 @@ function get-allinone
 
     show-heading  -Prompt '  D O  A L L  ' 2
 
-    if($false){
-        write-host "[1] Create New Group in Subscription: "  -NoNewline
-        write-host $Subscription -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-        if (-not([string]::IsNullOrEmpty($global:Location)) )
-        {
-            write-host " in Location: " -NoNewline
-            write-host $global:Location -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-        }
-        write-host " then ..."
-        
-        if (-not([string]::IsNullOrEmpty($global:SKU)) )
-        {
-            write-host "[2] Create New Hub with SKU " -NoNewline
-            write-host $global:SKU -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-        }
-        else{
-            write-host "[2] Create New Hub in Group"  -NoNewline
-        }
-        write-host " then ..."
-
-    
-        write-host "[3] Create New Device for Hub then ..."
-        
-        write-host "[4] Get connection strings and Save to shell script."
-        write-host ''
-        write-host "Entity Names " -nonewline
-        write-host "(Group,Hub and Device)" -BackgroundColor DarkRed  -ForegroundColor   White  -NoNewline
-        write-host " are:" 
-        $namesStrn -split ','
-        write-host ''
-        write-host "Continue?"
-        get-yesorno $true
-        $answer =  $global:retVal
-    }
-
     $answer =$true
 
     if ($answer)
@@ -107,7 +72,6 @@ function get-allinone
         $hb = $names[1]
         $dev =$names[2]
 
-        show-heading  -Prompt '  D O  A L L  ' 2
 
         write-host "[1] Create New Group " -NoNewline
         write-host  " $grp "  -BackgroundColor Yellow  -ForegroundColor   Black  -NoNewline
@@ -149,7 +113,8 @@ function get-allinone
         $answer = $global:retVal
         if (-not $answer)
         {
-            return 'Back'
+            $global:retVal = 'Exit'
+            return 'Exit'
         }
 
         if (-not([string]::IsNullOrEmpty($yesnodelay)) )
@@ -161,12 +126,14 @@ function get-allinone
             $global:yesnowait= $null
             write-host "No YesNo and GetAnyKey Pause. Will wait."
         }
-        
+
+        start-time        
 
         [boolean]$success=$false
         $lev=0
         write-host "[1] Create New Group in Subscription: $Subscription"
         new-group $Subscription $grp
+        show-time
         if   ( check-group $Subscription $grp  )
         {
             $lev++
@@ -182,7 +149,6 @@ function get-allinone
                     $lev++
                     write-host "[4] Get connection strings."
                     get-all  $Subscription $grp $hb $dev
-
                     $success = $true
                 }
             }
@@ -200,6 +166,7 @@ function get-allinone
         {
             remove-variable yesnowait  -Scope Global
         }
+        stop-time
      
     }
 }

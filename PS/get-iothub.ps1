@@ -18,6 +18,7 @@ try {
     . ("$global:ScriptDirectory\Util\Check-Device.ps1")
     . ("$global:ScriptDirectory\Util\get-location.ps1")
     . ("$global:ScriptDirectory\Util\get-SKU.ps1")
+    . ("$global:ScriptDirectory\Util\show-time.ps1")
 
 
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
@@ -158,6 +159,8 @@ if ($($args.Count) -ne 0)
             get-allinone $arg0 $delay
         }
     }
+
+
     If (-not([string]::IsNullOrEmpty($global:yesnowait )))
     {
         remove-variable yesnowait  -Scope Global
@@ -170,6 +173,11 @@ if ($($args.Count) -ne 0)
     If (-not([string]::IsNullOrEmpty($global:SKU )))
     {
         remove-variable SKU  -Scope Global
+    }
+
+    if ($global:retVal -eq 'Exit')
+    {
+        exit
     }
 
 }

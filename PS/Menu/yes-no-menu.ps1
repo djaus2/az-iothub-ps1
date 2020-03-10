@@ -13,9 +13,9 @@ param (
         $prompt += ' (Default No)'
     }
      
-     write-Host $Prompt
+     
 
-
+    show-time
      $K=$null
 
      If  ([string]::IsNullOrEmpty($env:IsRedirected))
@@ -24,19 +24,22 @@ param (
          {
              if ($default)
              {
-                Write-Host "Pausing for $global:yesnowait secs" 
+                Write-Host "Pausing for $global:yesnowait secs. Taking Yes as the answer." 
                 start-sleep $global:yesnowait    
              }
              else{
+                write-Host $Prompt
                 $KeyPress = [System.Console]::ReadKey($true)
                 $K = $KeyPress.Key
              }          
          }
          else {
+            write-Host $Prompt
             $KeyPress = [System.Console]::ReadKey($true)
             $K = $KeyPress.Key
         }
      } else {
+        write-Host $Prompt
          $response = Read-Host
          If  ([string]::IsNullOrEmpty($response))
          {

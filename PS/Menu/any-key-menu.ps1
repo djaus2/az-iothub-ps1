@@ -3,6 +3,8 @@ param (
 [string]$Prompt = '',
 [string]$Mode =''
 )
+    $promptParam = $prompt
+    show-time
     If  (  ([string]::IsNullOrEmpty( $Prompt  )))
     {
         If  ( -not ([string]::IsNullOrEmpty( $Mode  )))
@@ -45,14 +47,19 @@ param (
 
     If ([string]::IsNullOrEmpty( $env:IsRedirected  ))
     {
-        write-Host $prompt
+        
        
         If (-not ([string]::IsNullOrEmpty($global:yesnowait )))
         {
-               Write-Host "Pausing for $global:yesnowait secs" 
-               start-sleep $global:yesnowait           
+            If  ( -not ([string]::IsNullOrEmpty( $Mode  )))
+            {
+                write-host $promptParam
+            }
+            Write-Host "Pausing for $global:yesnowait secs" 
+            start-sleep $global:yesnowait           
         }
         else {
+            write-Host $prompt
             [System.Console]::ReadKey($true) >$null
        }
     }
