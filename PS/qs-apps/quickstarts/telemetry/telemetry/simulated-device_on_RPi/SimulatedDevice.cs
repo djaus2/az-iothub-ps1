@@ -72,6 +72,9 @@ namespace simulated_device
                     i2cBmp280.SetSampling(Sampling.Standard);
                     Console.WriteLine("Using BMP100");   
                 }
+                else{
+                    Console.WriteLine("Not using hardware");
+                }
 
                 //Only DH12 can use DH12:
                 /*I2cConnectionSettings settings = new I2cConnectionSettings(1, DhtSensor.DefaultI2cAddressDht12);
@@ -155,7 +158,7 @@ namespace simulated_device
 
                     }
                     else{
-                        switch (SensorIn.Substring(3))
+                        switch (SensorIn.Substring(0,3))
                         {
                             case "DHT":
                             //Temp and Pressure
