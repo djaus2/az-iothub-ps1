@@ -52,6 +52,11 @@ catch {
     Write-Host $_
 }
 
+If (-not([string]::IsNullOrEmpty($global:Time )))
+{
+    remove-variable Time  -Scope Global
+}
+
 #endregion
 
 if ($($args.Count) -ne 0)

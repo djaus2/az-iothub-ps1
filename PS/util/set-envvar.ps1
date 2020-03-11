@@ -500,7 +500,7 @@ function write-env{
     }
 
     $prompt =  "Writing Env Vars to: $PsScriptFile"
-    get-anykey $prompt 'Continue'
+    get-anykey $prompt 'Continue' $false
 
     Out-File -FilePath $PsScriptFile    -InputObject "" -Encoding ASCII
 

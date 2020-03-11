@@ -1,10 +1,14 @@
 function get-anykey{
 param (
 [string]$Prompt = '',
-[string]$Mode =''
+[string]$Mode ='',
+[boolean]$TimeStamp =$true
 )
     $promptParam = $prompt
-    show-time
+    if ($TimeStamp)
+    {
+        show-time
+    }
     If  (  ([string]::IsNullOrEmpty( $Prompt  )))
     {
         If  ( -not ([string]::IsNullOrEmpty( $Mode  )))

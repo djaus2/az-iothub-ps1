@@ -38,5 +38,6 @@ param (
     write-Host $prompt -BackgroundColor $bg -ForegroundColor $fg -NoNewline
     [Console]::ResetColor()
     write-Host ' using PowerShell AND Azure CLI'
+    show-time
     write-Host ''
 }

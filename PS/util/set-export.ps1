@@ -177,7 +177,7 @@ function write-export{
     }
 
     $prompt =  "Writing Env Vars to: $PsScriptFile"
-    get-anykey $prompt 'Continue'
+    get-anykey $prompt 'Continue' $false
    
     $op='#!/bin/bash'
     Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII

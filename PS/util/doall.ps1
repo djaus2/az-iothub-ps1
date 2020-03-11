@@ -72,6 +72,7 @@ function get-allinone
         $hb = $names[1]
         $dev =$names[2]
 
+        show-heading  -Prompt '  D O  A L L  ' 2
 
         write-host "[1] Create New Group " -NoNewline
         write-host  " $grp "  -BackgroundColor Yellow  -ForegroundColor   Black  -NoNewline
@@ -107,7 +108,7 @@ function get-allinone
         write-host "[4] Get connection strings and Save to shell script."
         write-host ''
 
-
+        write-host "Entity mames are unused so good to go ..."
         get-yesorno $true "Continue? (Y/N)"
 
         $answer = $global:retVal
@@ -133,7 +134,6 @@ function get-allinone
         $lev=0
         write-host "[1] Create New Group in Subscription: $Subscription"
         new-group $Subscription $grp
-        show-time
         if   ( check-group $Subscription $grp  )
         {
             $lev++
@@ -155,17 +155,21 @@ function get-allinone
         }
         if ($success)
         {
+            show-heading  -Prompt '  D O  A L L : DONE ' 2
             write-host "Creation succeeded."
         }
         else {
+            show-heading  -Prompt '  D O  A L L : FAILED ' 2
             write-host "Failed: $lev"
         }
-        get-anykey   
+    
         
         If (-not([string]::IsNullOrEmpty($global:yesnowait )))
         {
             remove-variable yesnowait  -Scope Global
         }
+        get-anykey
+        
         stop-time
      
     }

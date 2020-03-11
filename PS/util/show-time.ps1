@@ -12,10 +12,11 @@ function show-time{
     If (-not([string]::IsNullOrEmpty($global:Time )))
     {
         $CurrentTime = $Time.Elapsed
-        write-host $([string]::Format(" `rTime: {0:d2}:{1:d2}:{2:d2} ",
+        write-host " `rTime: " -NoNewline
+        write-host $([string]::Format(" {0:d2}:{1:d2}:{2:d2} ",
         $CurrentTime.hours,
         $CurrentTime.minutes,
-        $CurrentTime.seconds)) -nonewline -BackgroundColor Yellow  -ForegroundColor   Black  -NoNewline
+        $CurrentTime.seconds)) -BackgroundColor Yellow  -ForegroundColor   Black  -NoNewline
         write-host " $prompt "
     }
 }

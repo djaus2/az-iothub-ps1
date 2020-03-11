@@ -15,7 +15,7 @@ param (
      
      
 
-    show-time
+    # show-time
      $K=$null
 
      If  ([string]::IsNullOrEmpty($env:IsRedirected))
