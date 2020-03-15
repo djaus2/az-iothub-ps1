@@ -3,7 +3,7 @@
 # Azure IoT Hub PowerShell Scripts
 
 <hr>
-There is now a device app under Telemetry that uses DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg Setup, see the repo: https://github.com/djaus2/DNETCoreGPIO
+There is now a device app under Telemetry that uses DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg Setup, see the repo: https://github.com/djaus2/DNETCoreGPIO  Look for the app _quickstarts\telemetry\telemetry_**\simulated-device_on_RPi** here.
 <hr>
 There is an option on main menu 8. to do everything. Now ..<br> <br>
 It's now gone mega.<br>
