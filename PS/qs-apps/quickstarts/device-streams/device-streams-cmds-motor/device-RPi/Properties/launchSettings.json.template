@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeviceStreamSample": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "IOTHUB_DEVICE_CONN_STRING": "HostName=DSHub.azure-devices.net;DeviceId=DSDevice;SharedAccessKey=zmqi3bBMucAfxjckqeh69T7oVlqeC/cFOtW4OsFjbPY="
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ function Save-AppData{
     $prompt ="Writing app data (The Subscription name, Group name etc their Az queries) to $PsScriptFile"
     get-anykey $prompt, 'Continue'
 
-    Out-File -FilePath $PsScriptFile    -InputObject $prompt -Encoding ASCII
+    Out-File -FilePath $PsScriptFile    -InputObject '' -Encoding ASCII
     
 
     If (-not([string]::IsNullOrEmpty($global:Subscription )))
