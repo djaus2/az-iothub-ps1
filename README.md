@@ -6,7 +6,7 @@
 There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg setup, see the repo: https://github.com/djaus2/DNETCoreGPIO  Run the app quickstarts\telemetry\telemetry\simulated-device_on_RPi app from here on the RPi.  Run themirroring app quickstarts\telemetry\telemetry\read-d2c-messagess on the desktop.
 <br>
 <br>
-Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\device-RPI. The quickstarts\device-streams\device-streams-cmds\service (run on desktop) will now get real live data from this device app when running on the RPi, upon request (send tem or hum). This also uses the DHT22 on the RPi running Raspbian.
+Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\device-RPI. The quickstarts\device-streams\device-streams-cmds\service (run on desktop) will now get real live data from this device app when running on the RPi, upon request (send tem or hum). This also uses the DHT22 on the RPi running Raspbian.<br>You can also control a motor remotely using Device Streaming. Look in  quickstarts\device-streams\device-streams-cmds-motor.
 <hr>
 
 There is an option on main menu 8. to do everything. Now ..<br> <br>
