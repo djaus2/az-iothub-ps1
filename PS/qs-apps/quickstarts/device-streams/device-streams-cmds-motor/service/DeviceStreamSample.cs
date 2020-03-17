@@ -37,7 +37,7 @@ namespace Microsoft.Azure.Devices.Samples
 
                 if (result.IsAccepted)
                 {
-                    using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(1)))
+                    using (var cancellationTokenSource = new CancellationTokenSource(100000))//TimeSpan.FromMinutes(1)))
                     using (var stream = await DeviceStreamingCommon.GetStreamingClientAsync(result.Url, result.AuthorizationToken, cancellationTokenSource.Token).ConfigureAwait(false))
                     {
                         Console.WriteLine();
@@ -54,19 +54,20 @@ namespace Microsoft.Azure.Devices.Samples
                         string MsgOut = "";
                         do
                         {
-                            Console.Write(" Enter cmd to send: ");
+                            Console.Write("Enter cmd to send: ");
                             var key = Console.ReadKey(false);
                             char ch = key.KeyChar;
                             byte[] sendBuffer = Encoding.UTF8.GetBytes(ch.ToString());
                             byte[] receiveBuffer = new byte[1024];
 
                             await stream.SendAsync(sendBuffer, WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
-
-                            Console.WriteLine("Service: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
+                            Console.WriteLine();
+                            Console.WriteLine("    Service: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
 
                             var receiveResult = await stream.ReceiveAsync(receiveBuffer, cancellationTokenSource.Token).ConfigureAwait(false);
 
-                            Console.WriteLine("Service: Received stream data: {0}", Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count));
+                            Console.WriteLine("        Service: Received stream data: {0}", Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count));
+                            Console.WriteLine();
                         } while (MsgOut.ToLower() != "close");
                         await stream.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).ConfigureAwait(true);
                     }

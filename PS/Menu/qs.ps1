@@ -38,6 +38,7 @@ function show-quickstarts{
                             write-Host $i. $dirprops[0] - $dirprops[1]
                             $SelectionList.Add($i)
                             $i++
+                            
                         }
                     }
                 }
@@ -52,9 +53,17 @@ function show-quickstarts{
         $alts = $AltLocations -split ','
         foreach ($loc in $alts)
         {
+            if ($i -ne 10)
+            {
             write-host $i. $loc
             $SelectionList.Add($i)
             $i++
+            }
+            else {
+                write-host "0. $loc"
+                $SelectionList.Add($i)
+                $i++
+            }
         }
     }
 
@@ -97,6 +106,7 @@ function show-quickstarts{
         switch ( $k )
         {
             # Numerical Keys 0 to 9
+            'D0'  {$val = 10 }
             'D1'  {$val = 0  }
             'D1'  {$val = 1  }
             'D2'  {$val = 2  }
@@ -118,6 +128,12 @@ function show-quickstarts{
                     2 { $Default = 1}
                     3 { $Default = 2}
                     4 { $Default = 3}
+                    5 { $Default = 4}
+                    6 { $Default = 5}
+                    7 { $Default = 6}
+                    8 { $Default = 7}
+                    9 { $Default = 8}
+                    10 { $Default = 9}
                 } 
             }
             DownArrow  { 
@@ -127,6 +143,12 @@ function show-quickstarts{
                     2 { $Default= 3}
                     3 { $Default= 4}
                     4 { $Default= 5}
+                    5 { $Default = 6}
+                    6 { $Default = 7}
+                    7 { $Default = 8}
+                    8 { $Default = 9}
+                    9 { $Default = 10}
+                    10 { $Default = 10}
                 } 
             }
             Enter { 
@@ -164,6 +186,11 @@ function show-quickstarts{
     if ($val -eq -1)
     {
         $global:retVal= 'Back'
+    }
+    elseif ($val -eq 0)
+    {
+        $global:retVal= $dirsPaths[9]
+        $global:retVal1= $FolderNames[9]
     }
     elseif ($val -le $numDirs)
     {

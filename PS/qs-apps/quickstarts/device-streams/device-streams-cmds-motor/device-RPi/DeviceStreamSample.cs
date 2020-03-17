@@ -10,7 +10,15 @@ using System.Threading.Tasks;
 
 //using Iot.Device.CpuTemperature;
 using System.Device.I2c;
-using Iot.Device.DHTxx;
+
+
+// To get the dotnet/io packages:
+// install-Package System.Device.Gpio -Version 1.1.0-prerelease.20153
+// Install-Package Iot.Device.Bindings -Version 1.1.0-prerelease.20153.1
+using System.Device.Gpio;
+using Iot.Device;
+
+
 
 namespace Microsoft.Azure.Devices.Client.Samples
 {
@@ -30,9 +38,6 @@ namespace Microsoft.Azure.Devices.Client.Samples
 
         public static bool state = false;
 
-        public enum Sensors  {none,DHT11,DHT22,BMP180,BMP280,BME280};
-        public static Sensors Sensor = Sensors.none;
-
         public async Task RunSampleAsync(bool acceptDeviceStreamingRequest)
         {
 
@@ -46,6 +51,7 @@ namespace Microsoft.Azure.Devices.Client.Samples
             //Nb: if pinFwd=pinRev hi or lo then its brake
 
             Console.WriteLine($"Let's control a DC motor!");
+            try{
             using (GpioController controller = new GpioController())
             {
                 controller.OpenPin(pinEn, PinMode.Output);
@@ -59,7 +65,9 @@ namespace Microsoft.Azure.Devices.Client.Samples
                 controller.Write(pinFwd, PinValue.Low);
                 controller.Write(pinRev, PinValue.Low);
 
-                using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5)))
+                bool exitNow = false;
+
+                using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(10)))
                 {
                     Console.WriteLine("Device: Looking for Stream Request.");
                     DeviceStreamRequest streamRequest = await _deviceClient.WaitForDeviceStreamRequestAsync(cancellationTokenSource.Token).ConfigureAwait(false);
@@ -82,9 +90,6 @@ namespace Microsoft.Azure.Devices.Client.Samples
 
                                     MsgIn = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
 
-                                    double currentTemperature = minTemperature + rand.NextDouble() * 15;
-                                    double currentHumidity = minHumidity + rand.NextDouble() * 20;
-
 
                                     string MsgOut = "CMD OK";
                                     if (MsgIn=="")
@@ -93,13 +98,17 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                     }
                                     else{
                                         char ch = MsgIn[0];
+                                        bool fwdState = (bool)controller.Read(pinFwd);
+                                        bool revState = (bool)controller.Read(pinRev);
                                         switch (char.ToUpper(ch))
                                         {
                                             case '0':
                                                 controller.Write(pinFwd, PinValue.Low);
+                                                Console.WriteLine("Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 break;
                                             case '1':
                                                 controller.Write(pinFwd, PinValue.High);
+                                                Console.WriteLine("Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 break;
                                             case '2':
                                                 controller.Write(pinRev, PinValue.Low);
@@ -189,9 +198,9 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                             case 'Q':
                                                 exitNow = true;
                                                 break;
-                                            case default:
-                                                MsgOut = "Invalid command";
-                                                break;
+                                            //case default:
+                                            //    MsgOut = "Invalid command";
+                                            //    break;
                                         }                             
                                     }
 
@@ -200,7 +209,182 @@ namespace Microsoft.Azure.Devices.Client.Samples
 
                                     await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, sendBuffer.Length), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
                                     Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
-                                } while (MsgIn.ToLower() != "close");
+                                } while (!exitNow);
+
+                                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationTokenSource.Token).ConfigureAwait(false);
+                            }
+                        }
+                        else
+                        {
+                            await _deviceClient.RejectDeviceStreamRequestAsync(streamRequest, cancellationTokenSource.Token).ConfigureAwait(false);
+                        }
+                    }
+
+                    await _deviceClient.CloseAsync().ConfigureAwait(false);
+                }
+            }
+            } catch (Exception)
+            {
+                Console.WriteLine("Hardware not available");
+                bool exitNow = false;
+                using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(10)))
+                {
+                    Console.WriteLine("Device: Looking for Stream Request.");
+                    DeviceStreamRequest streamRequest = await _deviceClient.WaitForDeviceStreamRequestAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+
+                    if (streamRequest != null)
+                    {
+                        if (acceptDeviceStreamingRequest)
+                        {
+                            Console.WriteLine("Device: Accepting Stream Request.");
+                            string MsgIn = "";
+                        
+                            await _deviceClient.AcceptDeviceStreamRequestAsync(streamRequest, cancellationTokenSource.Token).ConfigureAwait(false);
+
+                            using (ClientWebSocket webSocket = await DeviceStreamingCommon.GetStreamingClientAsync(streamRequest.Url, streamRequest.AuthorizationToken, cancellationTokenSource.Token).ConfigureAwait(false))
+                            {
+                                bool fwdState = false;;
+                                bool revState = false;
+                                do
+                                {
+                                    WebSocketReceiveResult receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, 0, buffer.Length), cancellationTokenSource.Token).ConfigureAwait(false);
+                                    Console.WriteLine("Device: Received stream data: {0}", Encoding.UTF8.GetString(buffer, 0, receiveResult.Count));
+
+                                    MsgIn = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
+
+
+                                    string MsgOut = "CMD OK";
+                                    if (MsgIn=="")
+                                    {
+                                        MsgOut = "Empty command";
+                                    }
+                                    else{
+                                        char ch = MsgIn[0];
+                                        string PinValueLow ="Lo";
+                                        string PinValueHigh = "Hi";
+                                        switch (char.ToUpper(ch))
+                                        {
+                                            case '0':
+                                                Console.WriteLine("    pinFwd " + PinValueLow);
+                                                fwdState = false;
+                                                break;
+                                            case '1':
+                                                Console.WriteLine("    pinFwd " + PinValueHigh);
+                                                fwdState = true;
+                                                break;
+                                            case '2':
+                                                Console.WriteLine("    pinRev" + PinValueLow);
+                                                revState=false;
+                                                break;
+                                            case '3':
+                                                Console.WriteLine("    pinRev" + PinValueHigh);
+                                                revState=false;
+                                                break;
+                                            case '4':
+                                                Console.WriteLine("    pinEn" + PinValueLow);
+                                                break;
+                                            case '5':
+                                                Console.WriteLine("    pinEn" + PinValueHigh);
+                                                break;
+
+                                            case 'F': //Forward
+                                                //Fwd: Take action so as to eliminate undesirable intermediate state/s
+                                                if (fwdState && revState)
+                                                {
+                                                    //Is braked (hi)
+                                                    Console.WriteLine("    pinRev " + PinValueLow);
+                                                    revState=false;
+                                                }
+                                                else if (!fwdState && revState)
+                                                {
+                                                    //Is Rev. Brake first
+                                                    Console.WriteLine("    pinRev " + PinValueLow);
+                                                    Console.WriteLine("    pinFwd " + PinValueHigh);
+                                                    fwdState = true;
+                                                    revState=false;
+                                                }
+                                                else if (!fwdState && !revState)
+                                                {
+                                                    //Is braked (lo)
+                                                    Console.WriteLine("    pinFwd " + PinValueHigh);
+                                                    fwdState = true;
+                                                }
+                                                else if (fwdState && !revState)
+                                                {
+                                                    //Is fwd
+                                                }
+
+                                                break;
+                                            case 'R': // Reverse
+                                                if (fwdState && revState)
+                                                {
+                                                    //Is braked (hi)
+                                                    Console.WriteLine("    pinFwd " + PinValueLow);
+                                                    fwdState = false;
+                                                }
+                                                else if (!fwdState && revState)
+                                                {
+                                                    //Is reverse
+                                                }
+                                                else if (!fwdState && !revState)
+                                                {
+                                                    //Is braked (lo)
+                                                    Console.WriteLine("    pinRev " + PinValueHigh);
+                                                    revState=true;
+                                                }
+                                                else if (fwdState && !revState)
+                                                {
+                                                    //Is fwd: Brake first
+                                                    Console.WriteLine("    pinFwd " + PinValueLow);
+                                                    Console.WriteLine("    pinRev " + PinValueHigh);
+                                                    fwdState = false;
+                                                    revState=true;
+                                                }
+                                                break;
+                                            case 'B': //Brake
+                                                if (fwdState && revState)
+                                                {
+                                                    //Is braked (hi)
+                                                }
+                                                else if (!fwdState && revState)
+                                                {
+                                                    //Is Rev: Brake lo
+                                                    Console.WriteLine("    pinRev " + PinValueLow);
+                                                    revState=false;;
+                                                }
+                                                else if (!fwdState && !revState)
+                                                {
+                                                    //Is braked (lo)
+                                                }
+                                                else if (fwdState && !revState)
+                                                {
+                                                    //Is fwd: Brake lo
+                                                    Console.WriteLine("    pinFwd " + PinValueLow);
+                                                    fwdState = false;
+                                                }
+                                                break;
+                                            case 'E': //Enable
+                                                Console.WriteLine("    pinEn " + PinValueHigh);
+                                                break;
+                                            case 'D': //Disable
+                                                Console.WriteLine("    pinEn " + PinValueLow);
+                                                break;
+                                            case 'Q':
+                                                exitNow = true;
+                                                break;
+                                            //case default:
+                                            //    MsgOut = "Invalid command";
+                                            //    break;
+                                        }                             
+                                    }
+
+                                    byte[] sendBuffer = Encoding.UTF8.GetBytes(MsgOut);
+                                    
+
+                                    await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, sendBuffer.Length), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
+                                    Console.WriteLine("        Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
+                                    Console.WriteLine();
+                                } while (!exitNow);
 
                                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationTokenSource.Token).ConfigureAwait(false);
                             }

@@ -436,11 +436,20 @@ function set-env{
     # EventHubsConnectionString
     write-host 'Calculating the Builtin Event Hub-Compatible Endpoint Connection String'
     # Endpoint=sb://<FQDN>/;SharedAccessKeyName=<KeyName>;SharedAccessKey=<KeyValue>
-    $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
-    $cs = trimm $cs
-    $EventHubsConnectionString = $cs
+    # $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
+    # $cs = trimm $cs
+    # $EventHubsConnectionString = $cs
+
+
+    
+    $EventHubsConnectionString="$EventHubsCompatibleEndpoint;SharedAccessKeyName=$SharedAccesKeyName;SharedAccessKey=$EventHubsSasKey;EntityPath=$EventHubsCompatiblePath"
     write-host $EventHubsConnectionString
     $env:EVENT_HUBS_CONNECTION_STRING = $EventHubsConnectionString
+
+    # $uri = new Uri $EventHubsCompatibleEndpoint   $EventHubsCompatiblePath  $otHubKeyName $EventHubsSasKey
+
+    # $EventHubConnectionString = new Microsoft.Azure.EventHubs::EventHubsConnectionStringBuilder $uri
+        
 
     # The next two are only required by Device Streaming Proxy Hub
 
@@ -502,7 +511,7 @@ function write-env{
     $prompt =  "Writing Env Vars to: $PsScriptFile"
     get-anykey $prompt 'Continue' $false
 
-    Out-File -FilePath $PsScriptFile    -InputObject "" -Encoding ASCII
+    Out-File -FilePath $PsScriptFile    -InputObject '# Connection Details' -Encoding ASCII
 
 
     $prompt =  'Do you want to include DOT references in env settings??'

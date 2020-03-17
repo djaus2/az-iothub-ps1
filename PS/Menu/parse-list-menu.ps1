@@ -102,7 +102,6 @@ param (
     }
 
 
-
     if ( ($noEntities -lt 10) -and    ([string]::IsNullOrEmpty($env:IsRedirected)))
     {
         parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 

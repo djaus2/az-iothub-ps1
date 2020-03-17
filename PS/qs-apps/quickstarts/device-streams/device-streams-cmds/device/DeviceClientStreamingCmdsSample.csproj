@@ -16,4 +16,8 @@
   <ItemGroup>
 	<PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.29.0-preview-004" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>

@@ -41,9 +41,11 @@ function select-subfolder{
                         $dirsPaths.Add($dpath2)
                         $folder =$dpath3
                         $FolderNames.Add($folder)
-                        write-Host $i. $dpath3
+
+                        write-Host "$i. $dpath3"
                         $SelectionList.Add($i)
                         $i++
+
                     }
                     
                 }
@@ -58,9 +60,17 @@ function select-subfolder{
         $alts = $AltLocations -split ','
         foreach ($loc in $alts)
         {
+            if ($i -ne 10)
+            {
             write-host $i. $loc
             $SelectionList.Add($i)
             $i++
+            }
+            else {
+                write-host "0. $loc"
+                $SelectionList.Add($i)
+                $i++
+            }
         }
     }
 
@@ -72,6 +82,7 @@ function select-subfolder{
     $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
     # $SelectionList =@('1','2','3','4','-1','-2','-3')
     write-Host $prompt
+
     $first = $true
 
     do 
@@ -103,6 +114,7 @@ function select-subfolder{
         switch ( $k )
         {
             # Numerical Keys 0 to 9
+            'D0'  {$val = 10  }
             'D1'  {$val = 0  }
             'D1'  {$val = 1  }
             'D2'  {$val = 2  }
@@ -124,6 +136,12 @@ function select-subfolder{
                     2 { $Default = 1}
                     3 { $Default = 2}
                     4 { $Default = 3}
+                    5 { $Default = 4}
+                    6 { $Default = 5}
+                    7 { $Default = 6}
+                    8 { $Default = 7}
+                    9 { $Default = 8}
+                    0 { $Default = 9}
                 } 
             }
             DownArrow  { 
@@ -133,6 +151,12 @@ function select-subfolder{
                     2 { $Default= 3}
                     3 { $Default= 4}
                     4 { $Default= 5}
+                    5 { $Default = 6}
+                    6 { $Default = 7}
+                    7 { $Default = 8}
+                    8 { $Default = 9}
+                    9 { $Default = 0}
+                    0 { $Default = 0}
                 } 
             }
             Enter { 

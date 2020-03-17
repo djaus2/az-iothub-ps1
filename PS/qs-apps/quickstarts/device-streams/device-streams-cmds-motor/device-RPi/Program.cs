@@ -37,12 +37,11 @@ namespace Microsoft.Azure.Devices.Client.Samples
                 return 1;
             }
 
-            DeviceStreamSample.Sensor = DeviceStreamSample.Sensors.DHT22;
 
             Console.WriteLine("Device: Starting (Got parameters)");
             Console.WriteLine ("Using Env Var IOTHUB_DEVICE_CONN_STRING = " + s_deviceConnectionString );
             Console.WriteLine("Using TransportTyoe {0}",s_transportType );
-            Console.WriteLine ("Using sensor {0}",DeviceStreamSample.Sensor);
+            Console.WriteLine ("Using H Bridge");
 
 
             using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(s_deviceConnectionString, s_transportType))
