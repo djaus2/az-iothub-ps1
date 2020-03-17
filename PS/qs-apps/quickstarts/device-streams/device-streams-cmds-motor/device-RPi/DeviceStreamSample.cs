@@ -91,15 +91,16 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                     MsgIn = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
 
 
-                                    string MsgOut = "CMD OK";
+                                    string MsgOut = "CMD NOT OK";
                                     if (MsgIn=="")
                                     {
-                                        MsgOut = "Empty command";
+                                        MsgOut = "Empty CMD";
                                     }
                                     else{
                                         char ch = MsgIn[0];
                                         bool fwdState = (bool)controller.Read(pinFwd);
                                         bool revState = (bool)controller.Read(pinRev);
+                                        bool enState = (bool) controller.Read(pinEn);
                                         switch (char.ToUpper(ch))
                                         {
                                             case '0':
@@ -124,7 +125,7 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 break;
                                             case '5':
                                                 controller.Write(pinEn, PinValue.High);
-                                                Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(piEnd));
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(pinEn));
                                                 break;
 
                                             case 'F': //Forward
@@ -153,7 +154,10 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is fwd
                                                 }
-
+                                                if (enState)
+                                                    MsgOut ="Motor going fwd";
+                                                else
+                                                    MsgOut = "Fwd but not enabled";
                                                 break;
                                             case 'R': // Reverse
                                                 if (fwdState && revState)
@@ -180,6 +184,10 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                     Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                     Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 }
+                                                 if (enState)
+                                                    MsgOut ="Motor going rev";
+                                                else
+                                                    MsgOut = "Rev but not enabled";
                                                 break;
                                             case 'B': //Brake
                                                 if (fwdState && revState)
@@ -202,16 +210,23 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                     controller.Write(pinFwd, PinValue.Low);
                                                     Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 }
+                                                if (enState)
+                                                    MsgOut ="Motor is braked";
+                                                else
+                                                    MsgOut = "Braked but not enabled";;
                                                 break;
                                             case 'E': //Enable
                                                 controller.Write(pinEn, PinValue.High);
                                                 Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(pinEn));
+                                                MsgOut = "Motor Enabled";
                                                 break;
                                             case 'D': //Disable
                                                 controller.Write(pinEn, PinValue.Low);
                                                 Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(pinEn));
+                                                MsgOut ="Motor Disabled";
                                                 break;
                                             case 'Q':
+                                                MsgOut ="Exiting";
                                                 exitNow = true;
                                                 break;
                                             //case default:
@@ -243,7 +258,7 @@ namespace Microsoft.Azure.Devices.Client.Samples
             } catch (Exception)
             {
                 Console.WriteLine("Hardware not available");
-                bool exitNow = false;
+               
                 using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(10)))
                 {
                     Console.WriteLine("Device: Looking for Stream Request.");
@@ -262,6 +277,8 @@ namespace Microsoft.Azure.Devices.Client.Samples
                             {
                                 bool fwdState = false;;
                                 bool revState = false;
+                                bool enState = false;
+                                bool exitNow = false;
                                 do
                                 {
                                     WebSocketReceiveResult receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, 0, buffer.Length), cancellationTokenSource.Token).ConfigureAwait(false);
@@ -270,10 +287,10 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                     MsgIn = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
 
 
-                                    string MsgOut = "CMD OK";
+                                    string MsgOut = "CMD NOT OK";
                                     if (MsgIn=="")
                                     {
-                                        MsgOut = "Empty command";
+                                        MsgOut = "Empty CMD";
                                     }
                                     else{
                                         char ch = MsgIn[0];
@@ -284,24 +301,30 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                             case '0':
                                                 Console.WriteLine("    pinFwd " + PinValueLow);
                                                 fwdState = false;
+                                                MsgOut = "Fwd lo";
                                                 break;
                                             case '1':
                                                 Console.WriteLine("    pinFwd " + PinValueHigh);
                                                 fwdState = true;
+                                                MsgOut = "Fwd hi";
                                                 break;
                                             case '2':
                                                 Console.WriteLine("    pinRev" + PinValueLow);
                                                 revState=false;
+                                                MsgOut = "Rev lo";
                                                 break;
                                             case '3':
                                                 Console.WriteLine("    pinRev" + PinValueHigh);
-                                                revState=false;
+                                                revState=true;
+                                                MsgOut = "Rev hi";
                                                 break;
                                             case '4':
                                                 Console.WriteLine("    pinEn" + PinValueLow);
+                                                MsgOut = "En lo";
                                                 break;
                                             case '5':
                                                 Console.WriteLine("    pinEn" + PinValueHigh);
+                                                MsgOut = "En Hi";
                                                 break;
 
                                             case 'F': //Forward
@@ -330,7 +353,10 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is fwd
                                                 }
-
+                                                if (enState)
+                                                    MsgOut ="Motor going fwd";
+                                                else
+                                                    MsgOut = "Fwd but not enabled";
                                                 break;
                                             case 'R': // Reverse
                                                 if (fwdState && revState)
@@ -357,6 +383,10 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                     fwdState = false;
                                                     revState=true;
                                                 }
+                                                if (enState)
+                                                    MsgOut ="Motor going rev";
+                                                else
+                                                    MsgOut = "Rev but not enabled";
                                                 break;
                                             case 'B': //Brake
                                                 if (fwdState && revState)
@@ -379,21 +409,30 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                     Console.WriteLine("    pinFwd " + PinValueLow);
                                                     fwdState = false;
                                                 }
+                                                if (enState)
+                                                    MsgOut ="Motor braked";
+                                                else
+                                                    MsgOut = "Braked but not enabled";
                                                 break;
                                             case 'E': //Enable
+                                                enState = true;
                                                 Console.WriteLine("    pinEn " + PinValueHigh);
+                                                MsgOut ="Motor enabled";
                                                 break;
                                             case 'D': //Disable
+                                                enState = false;
                                                 Console.WriteLine("    pinEn " + PinValueLow);
+                                                MsgOut ="Motor disabled";
                                                 break;
                                             case 'Q':
+                                                MsgOut ="Exiting";
                                                 exitNow = true;
                                                 break;
                                             //case default:
                                             //    MsgOut = "Invalid command";
                                             //    break;
                                         }                             
-                                    }
+                                    } 
 
                                     byte[] sendBuffer = Encoding.UTF8.GetBytes(MsgOut);
                                     

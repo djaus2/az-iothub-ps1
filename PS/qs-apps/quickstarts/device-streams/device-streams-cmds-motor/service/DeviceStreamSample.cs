@@ -51,12 +51,15 @@ namespace Microsoft.Azure.Devices.Samples
                         Console.WriteLine("Fwd, Rev and Brake don't apply  until enabled.");
                         Console.WriteLine("Q: Quit");
                         Console.WriteLine();
-                        string MsgOut = "";
+                        // string MsgOut = "";
+                        string MsgIn = "";
+                        bool exitNow = false;
                         do
                         {
                             Console.Write("Enter cmd to send: ");
                             var key = Console.ReadKey(false);
                             char ch = key.KeyChar;
+                            ch = char.ToUpper(ch);
                             byte[] sendBuffer = Encoding.UTF8.GetBytes(ch.ToString());
                             byte[] receiveBuffer = new byte[1024];
 
@@ -65,10 +68,11 @@ namespace Microsoft.Azure.Devices.Samples
                             Console.WriteLine("    Service: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
 
                             var receiveResult = await stream.ReceiveAsync(receiveBuffer, cancellationTokenSource.Token).ConfigureAwait(false);
-
-                            Console.WriteLine("        Service: Received stream data: {0}", Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count));
+                            MsgIn = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
+                            exitNow = (MsgIn.ToLower() == "exiting");
+                            Console.WriteLine("        Service: Received stream data: {0}", MsgIn);
                             Console.WriteLine();
-                        } while (MsgOut.ToLower() != "close");
+                        } while (!exitNow);
                         await stream.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).ConfigureAwait(true);
                     }
                 }
