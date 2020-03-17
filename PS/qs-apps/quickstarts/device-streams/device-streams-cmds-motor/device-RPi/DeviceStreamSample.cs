@@ -104,23 +104,27 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                         {
                                             case '0':
                                                 controller.Write(pinFwd, PinValue.Low);
-                                                Console.WriteLine("Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 break;
                                             case '1':
                                                 controller.Write(pinFwd, PinValue.High);
-                                                Console.WriteLine("Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 break;
                                             case '2':
                                                 controller.Write(pinRev, PinValue.Low);
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 break;
                                             case '3':
                                                 controller.Write(pinRev, PinValue.High);
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 break;
                                             case '4':
                                                 controller.Write(pinEn, PinValue.Low);
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(pinEn));
                                                 break;
                                             case '5':
                                                 controller.Write(pinEn, PinValue.High);
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(piEnd));
                                                 break;
 
                                             case 'F': //Forward
@@ -129,17 +133,21 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is braked (hi)
                                                     controller.Write(pinRev, PinValue.Low);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 }
                                                 else if (!fwdState && revState)
                                                 {
                                                     //Is Rev. Brake first
                                                     controller.Write(pinRev, PinValue.Low);
                                                     controller.Write(pinFwd, PinValue.High);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 }
                                                 else if (!fwdState && !revState)
                                                 {
                                                     //Is braked (lo)
                                                     controller.Write(pinFwd, PinValue.High);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 }
                                                 else if (fwdState && !revState)
                                                 {
@@ -152,6 +160,7 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is braked (hi)
                                                     controller.Write(pinFwd, PinValue.Low);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 }
                                                 else if (!fwdState && revState)
                                                 {
@@ -161,12 +170,15 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is braked (lo)
                                                     controller.Write(pinRev, PinValue.High);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 }
                                                 else if (fwdState && !revState)
                                                 {
                                                     //Is fwd: Brake first
                                                     controller.Write(pinFwd, PinValue.Low);
                                                     controller.Write(pinRev, PinValue.High);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 }
                                                 break;
                                             case 'B': //Brake
@@ -178,6 +190,7 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is Rev: Brake lo
                                                     controller.Write(pinRev, PinValue.Low);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinRev, controller.Read(pinRev));
                                                 }
                                                 else if (!fwdState && !revState)
                                                 {
@@ -187,13 +200,16 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                                 {
                                                     //Is fwd: Brake lo
                                                     controller.Write(pinFwd, PinValue.Low);
+                                                    Console.WriteLine("    Pin: {0} State: {1}", pinFwd, controller.Read(pinFwd));
                                                 }
                                                 break;
                                             case 'E': //Enable
                                                 controller.Write(pinEn, PinValue.High);
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(pinEn));
                                                 break;
                                             case 'D': //Disable
                                                 controller.Write(pinEn, PinValue.Low);
+                                                Console.WriteLine("    Pin: {0} State: {1}", pinEn, controller.Read(pinEn));
                                                 break;
                                             case 'Q':
                                                 exitNow = true;
@@ -208,7 +224,8 @@ namespace Microsoft.Azure.Devices.Client.Samples
                                     
 
                                     await webSocket.SendAsync(new ArraySegment<byte>(sendBuffer, 0, sendBuffer.Length), WebSocketMessageType.Binary, true, cancellationTokenSource.Token).ConfigureAwait(false);
-                                    Console.WriteLine("Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
+                                    Console.WriteLine("        Device: Sent stream data: {0}", Encoding.UTF8.GetString(sendBuffer, 0, sendBuffer.Length));
+                                    Console.WriteLine();
                                 } while (!exitNow);
 
                                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationTokenSource.Token).ConfigureAwait(false);
