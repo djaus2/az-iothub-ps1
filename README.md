@@ -3,7 +3,7 @@
 # Azure IoT Hub PowerShell Scripts
 
 <hr>
-<b>Quickstart Apps Updates</b>
+<u><b>Quickstart Apps Updates</b></u>
 There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg setup, see the repo: https://github.com/djaus2/DNETCoreGPIO  Run the app quickstarts\telemetry\telemetry\simulated-device_on_RPi app from here on the RPi.  Run the mirroring app quickstarts\telemetry\telemetry\read-d2c-messages on the desktop.<br><b>Coming:</b> control-a-motor variant on control-a-device based upon the motor code in device-streams-cmds-motor.
 <br>
 <br>
