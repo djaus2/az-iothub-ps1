@@ -180,7 +180,42 @@ function clear-appData
 
         
         $PsScriptFile = "$global:ScriptDirectory\app-settings.ps1"
-        Remove-Item  $PsScriptFile 
+        if (Test-Path $PsScriptFile) 
+        {
+            Remove-Item $PsScriptFile
+        }
+
+        $PsScriptFile =  "$global:ScriptDirectory\set-env.ps1"
+        if (Test-Path $PsScriptFile) 
+        {
+            Remove-Item $PsScriptFile
+        }
+    
+        $PsScriptFile =  "$global:ScriptDirectory\set-env.sh"
+        if (Test-Path $PsScriptFile) 
+        {
+            Remove-Item $PsScriptFile
+        }
+    
+        $PsScriptFile =  "$global:ScriptDirectory\launchSettings.json"
+        if (Test-Path $PsScriptFile) 
+        {
+            Remove-Item $PsScriptFile
+        }
+
+        $count = (Get-ChildItem -Path $global:ScriptDirectory\qs-apps\quickstarts -Include set-env.*,launchSettings.json  -recurse).count
+        $prompt = "Cleaning up quickstarts folders by removing all set-env.* and launchsettings.json folders. Thats $count files"
+        write-Host $prompt
+        $answ = get-yesorno 
+        if ($global:retVal )
+        {
+            Get-ChildItem -Path $global:ScriptDirectory\qs-apps\quickstarts -Include set-env.*,launchSettings.json  -recurse |  Remove-Item -force
+            $count = (Get-ChildItem -Path $global:ScriptDirectory\qs-apps\quickstarts -Include set-env.*,launchSettings.json  -recurse).count
+            $prompt = "There are now $count such files"
+            write-Host $prompt
+            get-anykey
+        }
+
 
 
     }

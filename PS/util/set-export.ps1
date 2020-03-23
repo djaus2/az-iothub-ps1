@@ -152,9 +152,36 @@ function write-export{
     
     If  ([string]::IsNullOrEmpty($foldername))
     {
-        show-quickstarts 'Location to save set-env.sh to.' 'Quickstarts,ScriptHostRoot'
+        show-quickstarts 'Master Project folder.' 'Quickstarts,ScriptHostRoot'
         $foldername =  $global:retVal1
         $answer = $global:retVal
+    
+        if ($answer -eq 'Back')
+        {
+            return $answer
+        }
+    
+    
+        if ($answer.ToLower() -eq 'quickstarts'){
+            $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\set-env.sh"
+        }
+        elseif ($answer.ToLower() -eq 'scripthostroot'){
+            $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
+        } else {
+    
+            select-subfolder $answer 'One app'
+            $answer = $global:retVal
+            if ($answer -eq 'Back')
+            {
+                return $answer
+            }
+    
+            $foldername =  $global:retVal1
+            $answer = $global:retVal
+    
+            $PsScriptFile = "$answer\set-env.sh"
+    
+        }
 
         show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  '  3
     }
@@ -166,18 +193,10 @@ function write-export{
     }
 
 
-    
 
-    $PsScriptFile = "$answer\set-env.sh"
-    if ($answer.ToLower() -eq 'quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\qs-apps\Quickstarts\set-env.sh"
-    }
-    elseif ($answer.ToLower() -eq 'scriptHostRoot'){
-        $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
-    }
 
     $prompt =  "Writing Env Vars to: $PsScriptFile"
-    get-anykey $prompt 'Continue' $false
+    get-anykey $prompt 'Press any key to Continue' $false
    
     $op='#!/bin/bash'
     Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII

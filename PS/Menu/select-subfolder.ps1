@@ -14,6 +14,7 @@ function select-subfolder{
     $prompt = "Select the $Title"
     write-Host $prompt
     write-Host $Location
+    
 
     $SelectionList1 =@()
     # Ref: https://www.jonathanmedd.net/2014/01/adding-and-removing-items-from-a-powershell-array.html

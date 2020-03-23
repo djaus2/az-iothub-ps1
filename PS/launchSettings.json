@@ -1,0 +1,13 @@
+# Connection Details
+$env:SHARED_ACCESS_KEY_NAME = "iothubowner"
+$env:DEVICE_NAME = "StreamedDevice"
+$env:IOTHUB_DEVICE_CONN_STRING = "HostName=StreamsAway.azure-devices.net;DeviceId=StreamedDevice;SharedAccessKey=GL9NTxXsu2pK7SzBc0wzgoIzqw1Jrk82hZgLdPdoOHw="
+$env:IOTHUB_CONN_STRING_CSHARP = "HostName=StreamsAway.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=+9Kw/ToJQpSN4NQnwP+Yr6ihYjkHXOxlwORPeyjw22Q="
+$env:SERVICE_CONNECTION_STRING = "HostName=StreamsAway.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=9Nhsar5mDKJVEQhiOeaMZuMnwloBCt2bRvvgRGGvO5A="
+$env:DEVICE_ID = "StreamedDevice"
+$env:EVENT_HUBS_COMPATIBILITY_ENDPOINT = "sb://ihsuproddmres009dednamespace.servicebus.windows.net/"
+$env:EVENT_HUBS_COMPATIBILITY_PATH = "iothub-ehub-streamsawa-3084208-33bf988232"
+$env:EVENT_HUBS_SAS_KEY = "+9Kw/ToJQpSN4NQnwP+Yr6ihYjkHXOxlwORPeyjw22Q="
+$env:EVENT_HUBS_CONNECTION_STRING = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
+$env:REMOTE_HOST_NAME = "localhost"
+$env:REMOTE_PORT = 2222

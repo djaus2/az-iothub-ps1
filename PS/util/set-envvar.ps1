@@ -32,93 +32,105 @@ function trimm{
 
 function clear-env{
 
+  try {       
+       If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
+        {   
+            REG delete HKCU\Environment /F /V   SHARED_ACCESS_KEY_NAME 
+        }} 
+    catch {}
+
+    try {       
+        If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
+        {   
+            REG delete HKCU\Environment /F /V   SHARED_ACCESS_KEY_NAME 
+        }}
+     catch {}
+
+     try {       
+        If  (-not([string]::IsNullOrEmpty($env:DEVICE_NAME )))
+        {   
+            REG delete HKCU\Environment /F /V   DEVICE_NAME
+        }}
+     catch {}
+
+     try {       
+        If  (-not([string]::IsNullOrEmpty($env:IOTHUB_DEVICE_CONN_STRING )))
+        {   
+            REG delete HKCU\Environment /F /V   IOTHUB_DEVICE_CONN_STRING
+        }}
+     catch {}
 
 
-    
-    If  (-not([string]::IsNullOrEmpty($env:SHARED_ACCESS_KEY_NAME )))
-    {   
-        REG delete HKCU\Environment /F /V   SHARED_ACCESS_KEY_NAME 
-    }
+
+     try {       
+        If  (-not([string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP )))
+        {   
+            REG delete HKCU\Environment /F /V   IOTHUB_CONN_STRING_CSHARP
+        }}
+     catch {}
+
+     try {       
+        If  (-not([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING )))
+        {   
+            REG delete HKCU\Environment /F /V   SERVICE_CONNECTION_STRING
+        }}
+     catch {}
 
 
-    If (-not([string]::IsNullOrEmpty($env:DEVICE_NAME )))
-    {   
-        REG delete HKCU\Environment /F /V   DEVICE_NAME
-    }
-
-
-
-    # Device Connection String
-    If (-not([string]::IsNullOrEmpty($env:IOTHUB_DEVICE_CONN_STRING )))
-    {  
-        REG delete HKCU\Environment /F /V   IOTHUB_DEVICE_CONN_STRING
-    }
  
-
-   If(-not ([string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP )))
-    {  
-        REG delete HKCU\Environment /F /V   IOTHUB_CONN_STRING_CSHARP
-    }
-
-    
-    
-    # Service Connection string'
-    If (-not([string]::IsNullOrEmpty($env:SERVICE_CONNECTION_STRING )))
-    {  
-        REG delete HKCU\Environment /F /V   SERVICE_CONNECTION_STRING
-    }
+    try {       
+        If  (-not([string]::IsNullOrEmpty($env:DEVICE_ID )))
+        {   
+            REG delete HKCU\Environment /F /V   DEVICE_ID
+        }}
+     catch {}
 
 
+    try{
+        If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
+        {  
+            REG delete HKCU\Environment /F /V   EVENT_HUBS_COMPATIBILITY_ENDPOINT 
+        }
+    } catch {}
+
+    try{
+        If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH )))
+        {  
+            REG delete HKCU\Environment /F /V   EVENT_HUBS_COMPATIBILITY_PATH 
+        }
+    } catch {}
 
 
-    #DeviceID
-    If (-not ([string]::IsNullOrEmpty($env:DEVICE_ID )))
-    { 
-        REG delete HKCU\Environment /F /V   DEVICE_ID
-    }
+    try{
+        If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_SAS_KEY )))
+        {  
+            REG delete HKCU\Environment /F /V   EVENT_HUBS_SAS_KEY
+        }
+    } catch {}
+
+    try{
+        If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_CONNECTION_STRING )))
+        { 
+            REG delete HKCU\Environment /F /V   EVENT_HUBS_CONNECTION_STRING
+        }
+    } catch {}
 
 
-
-
-    # EventHubsCompatibleEndpoint
-    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_ENDPOINT )))
-    {  
-        REG delete HKCU\Environment /F /V   EVENT_HUBS_COMPATIBILITY_ENDPOINT 
-    }
-
-    # EventHubsCompatiblePath
-    If (-not([string]::IsNullOrEmpty($env:EVENT_HUBS_COMPATIBILITY_PATH )))
-    {  
-        REG delete HKCU\Environment /F /V   EventHubsCompatiblePath
-    }
-
-    
-    # EventHubsSasKey
-    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_SAS_KEY )))
-    {  
-        REG delete HKCU\Environment /F /V   EVENT_HUBS_SAS_KEY
-    }
-
-
-    If (-not ([string]::IsNullOrEmpty($env:EVENT_HUBS_CONNECTION_STRING )))
-    { 
-        REG delete HKCU\Environment /F /V   EVENT_HUBS_CONNECTION_STRING
-    }
-
-
-
+    try{
     # Remote Host Name
-    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
-    { 
-        REG delete HKCU\Environment /F /V   REMOTE_HOST_NAME  -Scope Local
-    }
+        If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+        { 
+            REG delete HKCU\Environment /F /V   REMOTE_HOST_NAME  
+        }
+    } catch {}
 
-
+    try{
     # Remote Port
-    If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
-    { 
-        REG delete HKCU\Environment /F /V   REMOTE_PORT  -Scope Local
-    }
+        If (-not ([string]::IsNullOrEmpty($env:REMOTE_HOST_NAME )))
+        { 
+            REG delete HKCU\Environment /F /V   REMOTE_PORT  
+        }
+    } catch {}
 
     $env:IOTHUB_DEVICE_CONN_STRING = $null
     $env:IOTHUB_CONN_STRING_CSHARP = $null
@@ -313,12 +325,10 @@ function clear-env{
     #########################
 
     
-    
-    $PsScriptFile =  "$global:ScriptDirectory\set-env.ps1"
-    Remove-Item  $PsScriptFile 
 
-    $PsScriptFile =  "$global:ScriptDirectory\set-env.sh"
-    Remove-Item  $PsScriptFile 
+
+
+ 
     
     clear-appData
 
@@ -341,6 +351,9 @@ function Get-All{
         write-env  $Subscription $GroupName $HubName $DeviceNam 'quickstarts'
         write-host [4.2] Write to Bash script in Quickstarts folder
         write-export  $Subscription $grp $hb $dev 'quickstarts'
+        write-host [4.3] Write sample launchSettings.json in Quickstarts folder
+        write- host " - Needs app name correction on line 3."
+        write-json  $Subscription $grp $hb $dev 'quickstarts'
 }
 
 function set-env{
@@ -482,31 +495,41 @@ function write-env{
     )
 
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S  F I L E  '  3
-
-    $answer = $foldername
-    If  ([string]::IsNullOrEmpty($foldername))
-    {
-        show-quickstarts 'Location to save set-env.ps1 to.' 'Quickstarts,ScriptHostRoot'
-        $foldername =  $global:retVal1
-        $answer = $global:retVal
-
-        show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S   F I L E  '  3
-    }
-
     
+
+    show-quickstarts 'Master Project folder.' 'Quickstarts,ScriptHostRoot'
+    $foldername =  $global:retVal1
+    $answer = $global:retVal
+
     if ($answer -eq 'Back')
     {
         return $answer
     }
-    
 
-    $PsScriptFile = "$foldername\set-env.ps1"
+
     if ($answer.ToLower() -eq 'quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\set-env.ps1"
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\launchSettings.json"
     }
-    elseif ($answer.ToLower() -eq 'scriptHostRoot'){
-        $PsScriptFile = "$global:ScriptDirectory\set-env.ps1"
+    elseif ($answer.ToLower() -eq 'scripthostroot'){
+        $PsScriptFile = "$global:ScriptDirectory\launchSettings.json"
+    } else {
+
+        select-subfolder $answer 'One app'
+        $answer = $global:retVal
+        if ($answer -eq 'Back')
+        {
+            return $answer
+        }
+
+        $foldername =  $global:retVal1
+        $answer = $global:retVal
+
+        $PsScriptFile = "$answer\set-env.ps1"
+
     }
+
+
+    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S   F I L E  '  3
 
     $prompt =  "Writing Env Vars to: $PsScriptFile"
     get-anykey $prompt 'Continue' $false

@@ -190,6 +190,7 @@ param (
                 'D7'  {$val = 7  }
                 'D8'  {$val = 8  }
                 'D9'  {$val = 9  }
+                'D0'  {$val = 10  }
                 B {$val = -1}
                 D {$val = -2}
                 N {$val = -3}

@@ -40,6 +40,8 @@ param (
     try {
         . ("$global:ScriptDirectory\util\set-envvar.ps1")
         . ("$global:ScriptDirectory\util\set-export.ps1")
+        . ("$global:ScriptDirectory\util\set-json.ps1")
+        . ("$global:ScriptDirectory\menu\select-subfolder.ps1")
     }
     catch {
         Write-Host "Error while loading supporting PowerShell Scripts" 
@@ -57,7 +59,7 @@ param (
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
 
-        $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Write Env Vars To File,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Bash Env Vars to File'
+        $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json'
 
 
         choose-selection $itemsList  'Action for IoT Hub Connection String Environment Variables'   '' ','
@@ -73,11 +75,12 @@ param (
             'D2'    {  set-env $Subscription $GroupName $HubName $DeviceName }
             'D3'    {  set-permanent $Subscription $GroupName $HubName $DeviceName }
             'D4'    {  clear-env  }
-            'D5'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
-            'D6'    {  read-env $Subscription $GroupName $HubName $DeviceName  }
-            'D7'    {  set-export $Subscription $GroupName $HubName $DeviceName }
-            'D8'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
+            'D5'    {  read-env $Subscription $GroupName $HubName $DeviceName  }
+            'D6'    {  set-export $Subscription $GroupName $HubName $DeviceName }
+            'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
+            'D8'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
             'D9'    {  write-export $Subscription $GroupName $HubName $DeviceName }
+            'D0'    {  write-json $Subscription $GroupName $HubName $DeviceName }
 
             
             
