@@ -491,40 +491,57 @@ function write-env{
     [string]$GroupName = '' ,
     [string]$HubName = '' ,
     [string]$DeviceName = '',
-    [string]$foldername =''
+    [string]$foldernameIn =''
     )
 
+    
+    $answer=$foldernameIn
+    $folderName = $folderNameIn
+    $doingOuterFolder = $true
+    
+    do {
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S  F I L E  '  3
     
 
-    show-quickstarts 'Master Project folder.' 'Quickstarts,ScriptHostRoot'
-    $foldername =  $global:retVal1
-    $answer = $global:retVal
-
-    if ($answer -eq 'Back')
+    If  ([string]::IsNullOrEmpty($foldernameIn))
     {
-        return $answer
-    }
+        $foldernameIn ="" 
+        if ($doingOuterFolder)
+        {
+            show-quickstarts 'Quickstart Projects folder.' 'Quickstarts,ScriptHostRoot'
+            $foldernameMaster =  $global:retVal1
+            $answerMaster = $global:retVal
+        }
+        $foldername =  $foldernameMaster
+        $answer = $answerMaster
 
-
-    if ($answer.ToLower() -eq 'quickstarts'){
-        $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\launchSettings.json"
-    }
-    elseif ($answer.ToLower() -eq 'scripthostroot'){
-        $PsScriptFile = "$global:ScriptDirectory\launchSettings.json"
-    } else {
-
-        select-subfolder $answer 'One app'
-        $answer = $global:retVal
         if ($answer -eq 'Back')
         {
             return $answer
         }
 
-        $foldername =  $global:retVal1
-        $answer = $global:retVal
+        if ($answer.ToLower() -eq 'quickstarts'){
+            $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\launchSettings.json"
+        }
+        elseif ($answer.ToLower() -eq 'scripthostroot'){
+            $PsScriptFile = "$global:ScriptDirectory\launchSettings.json"
+        } else {
 
-        $PsScriptFile = "$answer\set-env.ps1"
+            $doingOuterFolder = $false
+            show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S  F I L E  '  3
+
+            select-subfolder $answer "app from the Quickstart: $folderName"
+            $answer = $global:retVal
+            if ($answer -eq 'Back')
+            {
+                return $answer
+            }
+
+            $foldername =  $global:retVal1
+            $answer = $global:retVal
+
+            $PsScriptFile = "$answer\set-env.ps1"
+        }
 
     }
 
@@ -719,6 +736,7 @@ function write-env{
 
     write-Host "Written PowerShell script to:  $PsScriptFile that will set the Hub connection strings as Env. Vars"
     get-anykey
+    } while (!$doingOuterFolder)
 
 }
 

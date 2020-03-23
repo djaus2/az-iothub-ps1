@@ -4,18 +4,27 @@ function write-json{
     [string]$GroupName='' ,
     [string]$HubName='' ,
     [string]$DeviceName='',
-    [string]$foldername =''
+    [string]$foldernameIn =''
     )
 
-    $answer=$foldername
+    $answer=$foldernameIn
+    $folderName = $folderNameIn
+    $doingOuterFolder = $true
     
-    show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  J S O N  F I L E  ' 3
+    do {
+    show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
     
-    If  ([string]::IsNullOrEmpty($foldername))
+    If  ([string]::IsNullOrEmpty($foldernameIn))
     {
-        show-quickstarts 'Master Project folder.' 'Quickstarts,ScriptHostRoot'
-        $foldername =  $global:retVal1
-        $answer = $global:retVal
+        $foldernameIn ="" 
+        if ($doingOuterFolder)
+        {
+            show-quickstarts 'Quickstart Projects folder.' 'Quickstarts,ScriptHostRoot'
+            $foldernameMaster =  $global:retVal1
+            $answerMaster = $global:retVal
+        }
+        $foldername =  $foldernameMaster
+        $answer = $answerMaster
 
         if ($answer -eq 'Back')
         {
@@ -29,7 +38,9 @@ function write-json{
             $PsScriptFile = "$global:ScriptDirectory\launchSettings.json"
         } else {
 
-            select-subfolder $answer 'One app'
+            $doingOuterFolder = $false
+            show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
+            select-subfolder $answer "app from the Quickstart: $folderName"
             $answer = $global:retVal
             if ($answer -eq 'Back')
             {
@@ -49,7 +60,7 @@ function write-json{
 
         }
 
-        show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  J S O N  F I L E  '  3
+        show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
     }
 
 
@@ -192,7 +203,6 @@ function write-json{
     $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
     $EventHubsConnectionString = $cs
     write-host "10. EVENT_HUBS_CONNECTION_STRING:$EventHubsConnectionString"
-    $op="EVENT_HUBS_CONNECTION_STRING:'$EventHubsConnectionString',"
     $op = '            "EVENT_HUBS_CONNECTION_STRING":"' +"$EventHubsConnectionString" +'",'
     Add-Content -Path  $PsScriptFile  -Value $op
 
@@ -221,6 +231,8 @@ function write-json{
 
     write-Host "Written Json file to:  $PsScriptFile that will set the Hub connection strings as Env. Vars"
     get-anykey
+
+    } while (!$doingOuterFolder)
 
 }
 

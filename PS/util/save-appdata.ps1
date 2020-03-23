@@ -204,7 +204,7 @@ function clear-appData
         }
 
         $count = (Get-ChildItem -Path $global:ScriptDirectory\qs-apps\quickstarts -Include set-env.*,launchSettings.json  -recurse).count
-        $prompt = "Cleaning up quickstarts folders by removing all set-env.* and launchsettings.json folders. Thats $count files"
+        $prompt = "Cleaning up quickstarts folders by removing all set-env.ps1, set-env.sh and launchsettings.json files. Thats $count files"
         write-Host $prompt
         $answ = get-yesorno 
         if ($global:retVal )

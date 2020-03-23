@@ -59,7 +59,8 @@ param (
         $Prompt = ' Current Device :"' + $DeviceName +'"'
         write-Host $Prompt
 
-        $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json'
+        # $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json'
+        $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json'
 
 
         choose-selection $itemsList  'Action for IoT Hub Connection String Environment Variables'   '' ','
@@ -69,6 +70,14 @@ param (
             return  'Back'
         }
 
+        if ($false){
+            # 'D6'    {  set-export $Subscription $GroupName $HubName $DeviceName }
+            # 'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
+            #'D8'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
+           # 'D9'    {  write-export $Subscription $GroupName $HubName $DeviceName }
+           # 'D0'    {  write-json $Subscription $GroupName $HubName $DeviceName }
+            }
+
         switch ($answer)
         {
             'D1'    {  show-env $Subscription $GroupName $HubName $DeviceName }
@@ -76,11 +85,11 @@ param (
             'D3'    {  set-permanent $Subscription $GroupName $HubName $DeviceName }
             'D4'    {  clear-env  }
             'D5'    {  read-env $Subscription $GroupName $HubName $DeviceName  }
-            'D6'    {  set-export $Subscription $GroupName $HubName $DeviceName }
-            'D7'    {  clear-export $Subscription $GroupName $HubName $DeviceName }
-            'D8'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
-            'D9'    {  write-export $Subscription $GroupName $HubName $DeviceName }
-            'D0'    {  write-json $Subscription $GroupName $HubName $DeviceName }
+
+            'D6'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
+            'D7'    {  write-export $Subscription $GroupName $HubName $DeviceName }
+            'D8'    {  write-json $Subscription $GroupName $HubName $DeviceName }
+            
 
             
             

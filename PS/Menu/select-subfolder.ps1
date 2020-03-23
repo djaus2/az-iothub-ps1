@@ -13,7 +13,6 @@ function select-subfolder{
     }
     $prompt = "Select the $Title"
     write-Host $prompt
-    write-Host $Location
     
 
     $SelectionList1 =@()
@@ -29,7 +28,9 @@ function select-subfolder{
     [int] $i=1
     foreach ($dpath in $dirsList)
     {
+        
         $dpath2 = $dpath.Trim()
+
         If (-not ([string]::IsNullOrEmpty($dpath2)) )
         { 
             if ($dpath2 -ne 'FullName')
@@ -37,8 +38,7 @@ function select-subfolder{
                 if ($dpath2 -ne '--------')
                 {
                     $dpath3 = $dpath2.Replace($Location+"\",'')
-                    $dpath
-                    if($dpath3 -ne 'common'){
+                    if($dpath3 -ne 'common') {
                         $dirsPaths.Add($dpath2)
                         $folder =$dpath3
                         $FolderNames.Add($folder)
@@ -53,6 +53,7 @@ function select-subfolder{
             }
         }
     }
+
     $numDirs = $i-1
 
     $alts = $null
