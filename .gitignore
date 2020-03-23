@@ -14,17 +14,21 @@ set-env.ps1
 set-env.sh
 app-settings.ps
 
+
 PS/set-env.ps1
 PS/set-env.sh
 PS/app-settings.ps1
+PS/launchSettings.json
 PS/qs-apps/Quickstarts/set-env.ps1
 PS/qs-apps/Quickstarts/set-env.sh
+PS/qs-apps/Quickstarts/launchSettings.json
 PS/qs-apps/Quickstarts/*/set-env.ps1
 PS/qs-apps/Quickstarts/*/set-env.sh
 PS/qs-apps/Quickstarts/*/*/set-env.ps1
 PS/qs-apps/Quickstarts/*/*/set-env.sh
 PS/qs-apps/Quickstarts/*/*/*/set-env.ps1
 PS/qs-apps/Quickstarts/*/*/*/set-env.sh
+PS/qs-apps/Quickstarts/*/*/*/Properties/launchSettings.json
 
 PS/qs-apps/[Dd]otnet
 PS/temp
