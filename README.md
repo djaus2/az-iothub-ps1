@@ -2,7 +2,7 @@
 
 # Azure IoT Hub PowerShell Scripts
 
-_**A PowerShell script that can create an Azure Group, IoT Hub and Device requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates hub connection meta-information and packages it into a ps, sh and json files for transparent use byteh Quickstart apps. The repository contains the Quickstart .NET Core apps that have been reworked, extended and added to.**_
+_**A PowerShell script that can create an Azure Group, IoT Hub and Device requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that have been reworked, extended and added to.**_
 
 **_N.b.: The .NET (Core C#) versions of the Quickstart apps are the focus here._**
 <hr>
@@ -20,10 +20,10 @@ It's here now.  You run the main PowerShell script **_get-iothub_** in the PS fo
 There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as   ```.\set-path``` ). You then can run the main script just by entering ```get-iothub``` as the PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
 
 - Within an Azure Subscription you have a Resource Group.
-- An IoT Hub is an element of a Resource Group.
+- An IoT Hub is an member of a Resource Group.
 - A Device belongs to an IoT Hub.
 - An IOT Hub and its device both have connection meta-information
-- The Quickstart apps(as in this repository) get that that from enviroment variables, and use it to connect to teh hub
+- The Quickstart apps(as in this repository) get that info from environment variables, and use it to connect to the hub
 
 <table border="1"  style="background-color:#FFFFE0;"><tr><td>
 
@@ -99,5 +99,18 @@ Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\de
 
 Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
 
+<hr>
+
+## The Env Vars scripts
+
+- You can now generate a launchsettings.json file and place it in the Properties folder on an app.<br>
+The app will read the variables form there at startup. <br>
+The set-env.ps1 and set-env.sh scripts can be copied to the device.
+- To set environment variables otherwise:
+  - Window context ```./set-env```   to run set-env.ps1
+  - On Linux (eg Raspian on the Pi)  ```source set-env.sh```
+
+<hr>
+  
 
 Enjoy!
