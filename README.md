@@ -111,8 +111,8 @@ The app will read the variables fromm there at startup.
 Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the device.
 
 - To set environment variables on the device:
-  - In a Window context ```./set-env```   to run set-env.ps1
-  - On Linux (eg Raspian on the Pi)  ```source set-env.sh```
+  - In a Window context ```.\set-env```   to run set-env.ps1
+  - On Linux (eg Raspian on the Pi)  ```source ./set-env.sh```
 
 <hr>
   
