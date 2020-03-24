@@ -117,7 +117,7 @@ Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the devic
 
 ## The Quickstart Projects and their apps
 
-```dotnetcli
+```
 az-iothub-ps\ps\qs-apps
 │
 ├───dotnet
