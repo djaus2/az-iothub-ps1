@@ -135,10 +135,24 @@ param (
             Write-Host "Setting location to $PsScriptFile."
             write-host ''
             write-Host "There is a device or service app to run: "  -nonewline 
+            
             write-host  $global:retval1  -BackgroundColor Blue -ForegroundColor White
+            write-host ''
             write-Host 'Enter ' -nonewline 
-            write-host 'dotnet run' -nonewline   -BackgroundColor Blue -ForegroundColor White
+            write-host 'dotnet run'   -BackgroundColor Blue -ForegroundColor White  -nonewline 
             write-host ' to run the app.'
+            write-host ''
+            write-host '     ' -nonewline 
+            write-host '  OR  ' -BackgroundColor Yellow -ForegroundColor Black
+            write-host ''
+            write-host 'dotnet publish --runtime linux-arm --framework 3.1 --self-contained true' -nonewline   -BackgroundColor Blue -ForegroundColor White
+            write-host ' to build the app for transfer to a device.'
+            write-host 'Change linux-arm to one of win-arm, win-x64, win-x86,linux-x64 etc.'
+            write-host 'Change self contained to false if .NET Core 3.1 is installed on the device.'
+            write-host 'On the device in this case enter: ' -nonewline
+            write-host  "$global:retval1  ./$global:retval1  or .\$global:retval1"   -BackgroundColor Blue -ForegroundColor White  -nonewline 
+            write-host ' depending upon the OS.'
+            write-host ''
             write-Host 'Assumes that Environment Variables have been set.'  -BackgroundColor DarkRed -ForegroundColor White
             Set-Location -Path  $PsScriptFile
             return 'Exit'
