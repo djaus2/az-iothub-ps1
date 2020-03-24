@@ -97,9 +97,7 @@ There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Onl
 Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\device-RPI. The quickstarts\device-streams\device-streams-cmds\service (run on desktop) will now get real live data from this device app when running on the RPi, upon request (send tem or hum). This also uses the DHT22 on the RPi running Raspbian.<br>You can also control a motor remotely using Device Streaming. Look in  quickstarts\device-streams\device-streams-cmds-motor.
 <hr>
 
-Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
 
-<hr>
 
 ## The Env Vars scripts
 
@@ -113,6 +111,10 @@ Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the devic
 - To set environment variables on the device:
   - In a Window context ```.\set-env```   to run set-env.ps1
   - On Linux (eg Raspian on the Pi)  ```source ./set-env.sh```
+
+<hr>
+
+Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
 
 <hr>
   
