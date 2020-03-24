@@ -95,9 +95,10 @@ There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Onl
 <br>
 <br>
 Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\device-RPI. The quickstarts\device-streams\device-streams-cmds\service (run on desktop) will now get real live data from this device app when running on the RPi, upon request (send tem or hum). This also uses the DHT22 on the RPi running Raspbian.<br>You can also control a motor remotely using Device Streaming. Look in  quickstarts\device-streams\device-streams-cmds-motor.
+
+See list of Quickstarts below.
+
 <hr>
-
-
 
 ## The Env Vars scripts
 
@@ -120,7 +121,7 @@ Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the devic
 az-iothub-ps\ps\qs-apps
 │
 ├───dotnet
-│   You can down a specific SDK or runtimne here for copying to teh device.
+│   You can down a specific SDK or runtimne here for copying to the device.
 │
 └──Quickstarts
     │
