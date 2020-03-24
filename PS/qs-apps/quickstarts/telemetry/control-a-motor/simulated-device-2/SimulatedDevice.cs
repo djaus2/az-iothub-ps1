@@ -44,16 +44,14 @@ namespace simulated_device
 
             // Check the payload is a single integer value
             if (Int32.TryParse(data, out s_telemetryInterval))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Telemetry interval set to {0} seconds", data);
-                Console.ResetColor();
-                //MsgIn = ((char)s_telemetryInterval).ToString();
-                //waitHandleIn.Set();             
+            {            
 
-                // Acknowlege the direct method call with a 200 success message
+                // Acknowledge the direct method call with a 200 success message
 
                 char cmd = (char)s_telemetryInterval;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Command received: {0}", cmd);
+                Console.ResetColor();
                 string MsgOut = HBridge.RunMotor(cmd, null);
 
                 string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
@@ -62,7 +60,7 @@ namespace simulated_device
             }
             else
             {
-                // Acknowlege the direct method call with a 400 error message
+                // Acknowledge the direct method call with a 400 error message
                 string result = "{\"result\":\"Invalid parameter\"}";
                 return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 400));
             }
@@ -78,17 +76,6 @@ namespace simulated_device
 
             while (!HBridge.ExitNow)
             {
-
-                //waitHandleOut.WaitOne();
-
-                // Create JSON message
-                //var telemetryDataPoint = HBridge.MotorState;
-                //var telemetryDataPoint = new
-                //{
-                //     fwdState = HBridge.FwdState,
-                //     revState = HBridge.RevState,
-                //     enState = HBridge.EnState
-                //};
                 var messageString = JsonConvert.SerializeObject(HBridge.MotorState);
                 //var messageString = JsonConvert.SerializeObject(telemetryDataPoint);
                 var message = new Message(Encoding.ASCII.GetBytes(messageString));

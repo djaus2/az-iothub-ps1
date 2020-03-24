@@ -19,11 +19,13 @@ It's here now.  You run the main PowerShell script **_get-iothub_** in the PS fo
 
 There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as   ```.\set-path``` ). You then can run the main script just by entering ```get-iothub``` as the PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
 
+## The get-iothub PowerShell script
+
 - Within an Azure Subscription you have a Resource Group.
-- An IoT Hub is an member of a Resource Group.
+- An IoT Hub is a member of a Resource Group.
 - A Device belongs to an IoT Hub.
-- An IOT Hub and its device both have connection meta-information
-- The Quickstart apps(as in this repository) get that info from environment variables, and use it to connect to the hub
+- An IOT Hub and its device both have connection meta-information need by the Quickstart apps.
+- The Quickstart apps(as in this repository) get that info from environment variables, and use it to connect to the hub when they run.
 
 <table border="1"  style="background-color:#FFFFE0;"><tr><td>
 
@@ -91,7 +93,7 @@ The script can...
 <hr>
 
 ## Quickstart Apps
-There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg setup, see the repo: https://github.com/djaus2/DNETCoreGPIO  Run the app quickstarts\telemetry\telemetry\simulated-device_on_RPi app from here on the RPi.  Run the mirroring app quickstarts\telemetry\telemetry\read-d2c-messages on the desktop.<br><b>New:</b> control-a-motor variant on control-a-device based upon the motor code in device-streams-cmds-motor. (Tested on the RPi win-arm)
+There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg setup, see the repo: https://github.com/djaus2/DNETCoreGPIO  Run the app quickstarts\telemetry\telemetry\simulated-device_on_RPi app from here on the RPi.  Run the mirroring app quickstarts\telemetry\telemetry\read-d2c-messages on the desktop.<br><b>New:</b> control-a-motor variant on control-a-device based upon the motor code in device-streams-cmds-motor. (Works on the RPi win-arm and linux-arm) Similar to the the Device Streaming motor app.
 <br>
 <br>
 Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\device-RPI. The quickstarts\device-streams\device-streams-cmds\service (run on desktop) will now get real live data from this device app when running on the RPi, upon request (send tem or hum). This also uses the DHT22 on the RPi running Raspbian.<br>You can also control a motor remotely using Device Streaming. Look in  quickstarts\device-streams\device-streams-cmds-motor.

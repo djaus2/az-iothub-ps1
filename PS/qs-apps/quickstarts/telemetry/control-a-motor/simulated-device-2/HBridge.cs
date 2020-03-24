@@ -42,6 +42,7 @@ namespace simulated_device
             MotorState = new _MotorState();
             try
             {
+                Console.WriteLine($"Let's control a DC motor!");
                 controller = new GpioController();
                 controller.OpenPin(pinEn, PinMode.Output);
                 Console.WriteLine($"GPIO pin enabled for use (Output:Enable): {pinEn}");
@@ -58,14 +59,16 @@ namespace simulated_device
                 MotorState.RevState = (bool)controller.Read(pinRev);
                 MotorState.EnState = (bool)controller.Read(pinEn);
                 UsingHW = true;
+                Console.WriteLine("Hardware is available");
             } catch (Exception ex)
             {
                 UsingHW = false;
                 MotorState.FwdState = false;
                 MotorState.RevState = false;
                 MotorState.EnState = false;
-
+                Console.WriteLine("Hardware not available");
             }
+                                
         }
         public static string RunMotor(char cmd, CancellationTokenSource cancellationTokenSource)
         {
@@ -77,7 +80,7 @@ namespace simulated_device
 
             //Nb: if pinFwd=pinRev hi or lo then its brake
 
-            Console.WriteLine($"Let's control a DC motor!");
+
             using (cancellationTokenSource)
             {
                 if (UsingHW)
@@ -231,7 +234,7 @@ namespace simulated_device
                 }
                 else
                 {
-                    Console.WriteLine("Hardware not available");
+
 
                     exitNow = false;
 
