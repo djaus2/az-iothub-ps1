@@ -114,9 +114,56 @@ Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the devic
 
 <hr>
 
-Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html) 
+## The Quickstart Projects and their apps
 
+```dotnetcli
+az-iothub-ps\ps\qs-apps
+│
+├───dotnet
+│   You can down a specific SDK or runtimne here for copying to teh device.
+│
+└──Quickstarts
+    │
+    ├───device-streams
+    │   │
+    │   ├───device-streams-cmds
+    │   │   ├───device
+    │   │   ├───device-RPi
+    │   │   └───service
+    │   │ 
+    │   ├───device-streams-cmds-motor
+    │   │   ├───device-RPi
+    │   │   └───service
+    │   │ 
+    │   ├───device-streams-echo
+    │   │   ├───device
+    │   │   └───service
+    │   │ 
+    │   ├───device-streams-cmds
+    │   │   ├───device
+    │   │   └───service
+    │   │ 
+    │   └───device-streams-ucase
+    │       ├───device
+    │       └───service
+    │
+    └───telemetry
+        ├───control-a-device
+        │   ├───back-end-application
+        │   └───simulated-device-2
+        │
+        ├───control-a-motor
+        │   ├───back-end-application
+        │   ├───read-d2c-messages
+        │   └───simulated-device-2
+        │
+        └───telemetry
+            ├───read-d2c-messages
+            ├───simulated-device
+            └───simulated-device_on_RPi
+```
 <hr>
-  
+
+Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html)   
 
 Enjoy!
