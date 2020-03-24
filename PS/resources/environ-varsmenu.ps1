@@ -6,6 +6,16 @@ param (
     [string]$DeviceName=''
 )
 
+    try{
+    . ("$global:ScriptDirectory\util\set-envvar.ps1")
+    . ("$global:ScriptDirectory\util\write-env.ps1")
+    . ("$global:ScriptDirectory\util\set-export.ps1")
+    . ("$global:ScriptDirectory\util\write-export.ps1")
+    . ("$global:ScriptDirectory\util\write-json.ps1")
+    } catch {
+        Write-Host "Error while loading supporting Env Vars PowerShell Scripts" 
+        Write-Host $_
+    }
 
 
     If ([string]::IsNullOrEmpty($Subscription ))

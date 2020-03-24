@@ -1,4 +1,4 @@
-function write-json{
+function write-export{
     param (
     [string]$Subscription='' ,
     [string]$GroupName='' ,
@@ -10,9 +10,20 @@ function write-json{
     $answer=$foldernameIn
     $folderName = $folderNameIn
     $doingOuterFolder = $true
+
+    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  ' 3
+    write-host ''
+
+    $prompt =  'Do you want to regenerate the environment variables?'
+    write-Host $prompt
+    get-yesorno $true
+    $response = $global:retVal
+    if ($response){
+        set-env $Subscription $GroupName $HubName $DeviceName 
+    }
     
-    do {
-    show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
+ do {
+    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  ' 3
     
     If  ([string]::IsNullOrEmpty($foldernameIn))
     {
@@ -25,76 +36,104 @@ function write-json{
         }
         $foldername =  $foldernameMaster
         $answer = $answerMaster
-
+    
         if ($answer -eq 'Back')
         {
             return $answer
         }
-
+    
+    
         if ($answer.ToLower() -eq 'quickstarts'){
-            $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\launchSettings.json"
+            $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\set-env.sh"
         }
         elseif ($answer.ToLower() -eq 'scripthostroot'){
-            $PsScriptFile = "$global:ScriptDirectory\launchSettings.json"
+            $PsScriptFile = "$global:ScriptDirectory\set-env.sh"
         } else {
 
             $doingOuterFolder = $false
-            show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
+            show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S  F I L E  '  3
+
             select-subfolder $answer "app from the Quickstart: $folderName"
             $answer = $global:retVal
             if ($answer -eq 'Back')
             {
                 return $answer
             }
-
+    
             $foldername =  $global:retVal1
             $answer = $global:retVal
-
-            $PsScriptFile = "$answer\Properties\launchSettings.json"
-            
-            $path = "$answer\Properties"
-            If (!(test-path $path ))
-            {
-                New-Item -ItemType Directory -Path $path
-            }
-
+    
+            $PsScriptFile = "$answer\set-env.sh"
+    
         }
 
-        show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
+
     }
-
-
 
     
 
+
+    show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  '  3
+
+
     $prompt =  "Writing Env Vars to: $PsScriptFile"
-    get-anykey $prompt 'Continue' $false
+    get-anykey $prompt 'Press any key to Continue' $false
    
-    $op= "{"
+    $op='#!/bin/bash'
     Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII
-    $op = '    "profiles": {'
-    Add-Content -Path $PsScriptFile     -Value $op
-    $op = '      "' + "$foldername" + '": {'
-    Add-Content -Path $PsScriptFile     -Value $op
-    $op = '        "commandName": "Project",'
-    Add-Content -Path $PsScriptFile     -Value $op
-    $op = '        "environmentVariables": {'
-    Add-Content -Path $PsScriptFile     -Value $op
+
+    $prompt =  'Do you want to include DOTNET references in env settings??'
+    write-Host $prompt
+    get-yesorno $true
+    $response = $global:retVal
+
+    if ($response)
+    {
 
 
+ 
+        switch ($global:retVal2)
+        {
+            8 {
+                $prompt = "# This script meant to run in PS.Assumes qs-apps is in ~"
+                Add-Content -Path $PsScriptFile     -Value $prompt
+                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op='export PATH=$PATH:~/qs-apps/dotnet' 
+                Add-Content -Path $PsScriptFile     -Value $op
+            }
+            7 {
+                $prompt = "# This script is meant to run in Quickstarts. Assumes qs-apps is in ~"
+                Add-Content -Path $PsScriptFile     -Value $prompt 
+                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op='export PATH=$PATH:~/qs-apps/dotnet' 
+                Add-Content -Path $PsScriptFile     -Value $op
+            }
+            default {
+                $prompt = "# This script meant to run in the specific Quickstart folder: $foldername. Assumes qs-apps is in ~"
+                Add-Content -Path $PsScriptFile     -Value $prompt
+                # To do here got to get $PWD/../../../dotnet
+                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op='export PATH=$PATH:~/qs-apps/dotnet' 
+                Add-Content -Path $PsScriptFile     -Value $op
+            }
+        } 
+    }
     
 
     #SharedAccesKeyName
     $SharedAccesKeyName='iothubowner'
     # $SharedAccesKeyName='service'
-    write-Host "1. SHARED_ACCESS_KEY_NAME:$SharedAccesKeyName" 
-    $op = '            "SHARED_ACCESS_KEY_NAME":"' +"$SharedAccesKeyName" +'",'
+    write-Host "1. SHARED_ACCESS_KEY_NAME = $SharedAccesKeyName" 
+    $op = "export SHARED_ACCESS_KEY_NAME='$SharedAccesKeyName'"
     Add-Content -Path $PsScriptFile     -Value $op
     
     If (-not ([string]::IsNullOrEmpty($DeviceName )))    
     {   
-        write-Host "2. DEVICE_NAME:$DeviceName"
-        $op = '            "DEVICE_NAME":"' +"$DeviceName" +'",'
+        write-Host "2. DEVICE_NAME = $DeviceName"
+        $op = "export DEVICE_NAME='$DeviceName'"
         Add-Content -Path $PsScriptFile     -Value $op 
     }    
     # Device Connection String
@@ -108,8 +147,8 @@ function write-json{
     }else{
         $IOTHUB_DEVICE_CONN_STRING=$env:IOTHUB_DEVICE_CONN_STRING
     }
-    write-Host "3. IOTHUB_DEVICE_CONN_STRING:$IOTHUB_DEVICE_CONN_STRING"
-    $op = '            "IOTHUB_DEVICE_CONN_STRING":"' +"$IOTHUB_DEVICE_CONN_STRING" +'",'
+    write-Host "3. IOTHUB_DEVICE_CONN_STRING = $IOTHUB_DEVICE_CONN_STRING"
+    $op = "export IOTHUB_DEVICE_CONN_STRING='$IOTHUB_DEVICE_CONN_STRING'"
     Add-Content -Path $PsScriptFile   -Value $op 
  
 
@@ -125,7 +164,7 @@ function write-json{
         $IOTHUB_CONN_STRING_CSHARP = $env:IOTHUB_CONN_STRING_CSHARP
     }
     write-host "4. IOTHUB_CONN_STRING_CSHARP =  $IOTHUB_CONN_STRING_CSHARP"
-    $op = '            "IOTHUB_CONN_STRING_CSHARP":"' +"$IOTHUB_CONN_STRING_CSHARP" +'",'
+    $op = "export IOTHUB_CONN_STRING_CSHARP='$IOTHUB_CONN_STRING_CSHARP'"
     Add-Content -Path  $PsScriptFile -Value $op
     
     
@@ -139,15 +178,14 @@ function write-json{
     } else{
         $SERVICE_CONNECTION_STRING = $env:SERVICE_CONNECTION_STRING
     }
-    write-host "5. SERVICE_CONNECTION_STRING:$SERVICE_CONNECTION_STRING"
-    $op = '            "SERVICE_CONNECTION_STRING":"' +"$SERVICE_CONNECTION_STRING" +'",'
+    write-host "5. SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING"
+    $op = "export SERVICE_CONNECTION_STRING='$SERVICE_CONNECTION_STRING'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
     #DeviceID
     $DEVICE_ID = $DeviceName
-    write-Host "6. DEVICE_ID:$DEVICE_ID"
-    $op = "DEVICE_ID:'$DEVICE_ID',"
-    $op = '            "DEVICE_ID":"' +"$DEVICE_ID" +'",'
+    write-Host "6. DEVICE_ID = $DEVICE_ID"
+    $op = "export DEVICE_ID='$DEVICE_ID'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
 
@@ -162,8 +200,8 @@ function write-json{
     }else{
         $EventHubsCompatibleEndpoint =   $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
     }
-    write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT:$EventHubsCompatibleEndpoint"
-    $op = '            "EVENT_THUBS_COMPATIBILITY_ENDPOINT":"' +"$EventHubsCompatibleEndpoint" +'",'
+    write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT =  $EventHubsCompatibleEndpoint"
+    $op = "export EVENT_THUBS_COMPATIBILITY_ENDPOINT='$EventHubsCompatibleEndpoint'"
     Add-Content -Path  $PsScriptFile  -Value $op
     
     # EventHubsCompatiblePath
@@ -176,8 +214,8 @@ function write-json{
     } else {
         $EventHubsCompatiblePath = $env:EVENT_HUBS_COMPATIBILITY_PATH
     }
-    write-host "8. EVENT_HUBS_COMPATIBILITY_PATH:$EventHubsCompatiblePath"
-    $op = '            "EVENT_HUBS_COMPATIBILITY_PATH":"' +"$EventHubsCompatiblePath" +'",'
+    write-host "8. EVENT_HUBS_COMPATIBILITY_PATH = $EventHubsCompatiblePath"
+    $op = "export EVENT_HUBS_COMPATIBILITY_PATH='$EventHubsCompatiblePath'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
 
@@ -192,9 +230,8 @@ function write-json{
     } else {
         $EventHubsSasKey = $env:EVENT_HUBS_SAS_KEY 
     }
-    write-host  "9. EVENT_HUBS_SAS_KEY:$EventHubsSasKey"
-    $op = '            "EVENT_HUBS_SAS_KEY":"' +"$EventHubsSasKey" +'",'
-    
+    write-host  "9. EVENT_HUBS_SAS_KEY  = $EventHubsSasKey"
+    $op = "export EVENT_HUBS_SAS_KEY='$EventHubsSasKey'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
     # EventHubsConnectionString
@@ -202,45 +239,26 @@ function write-json{
     # Endpoint=sb://<FQDN>/;SharedAccessKeyName=<KeyName>;SharedAccessKey=<KeyValue>
     $cs = "Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty"
     $EventHubsConnectionString = $cs
-    write-host "10. EVENT_HUBS_CONNECTION_STRING:$EventHubsConnectionString"
-    $op = '            "EVENT_HUBS_CONNECTION_STRING":"' +"$EventHubsConnectionString" +'",'
+    write-host "10. EVENT_HUBS_CONNECTION_STRING =$EventHubsConnectionString"
+    $op="export EVENT_HUBS_CONNECTION_STRING='$EventHubsConnectionString'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
     # The next two are only required by Device Streaming Proxy Hub
 
 
     $REMOTE_HOST_NAME = "localhost"
-    write-host "11. REMOTE_HOST_NAME:$REMOTE_HOST_NAME"
-    $op = '            "REMOTE_HOST_NAME":"'+ "$REMOTE_HOST_NAME" +'",'
+    write-host "11. REMOTE_HOST_NAME =  $REMOTE_HOST_NAME"
+    $op = "export REMOTE_HOST_NAME='$REMOTE_HOST_NAME'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
     # Remote Port
     $REMOTE_PORT  =  2222
     write-host "12. REMOTE_PORT = $REMOTE_PORT"
-    $op =  '            "REMOTE_PORT":"' +"$REMOTE_PORT" +'"'
+    $op =  "export REMOTE_PORT='$REMOTE_PORT'"
     Add-Content -Path  $PsScriptFile  -Value $op
 
-    $op = '      }'
-    Add-Content -Path $PsScriptFile     -Value $op
-    $op = '    }'
-    Add-Content -Path $PsScriptFile     -Value $op
-    $op = '  }'
-    Add-Content -Path $PsScriptFile     -Value $op
-    $op = '}'
-    Add-Content -Path $PsScriptFile     -Value $op
-
-    write-Host "Written Json file to:  $PsScriptFile that will set the Hub connection strings as Env. Vars"
+    write-Host "Written PowerShell script to:  $PsScriptFile that will set the Hub connection strings as Env. Vars"
     get-anykey
-
     } while (!$doingOuterFolder)
 
 }
-
-
-
-
-
-
-
-
-

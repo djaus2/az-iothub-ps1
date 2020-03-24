@@ -11,8 +11,8 @@ try {
     #  Not used: . ("$global:ScriptDirectory\util\check-subscription.ps1")
 
     . ("$global:ScriptDirectory\util\doall.ps1")
-    . ("$global:ScriptDirectory\util\set-envvar.ps1")
-    . ("$global:ScriptDirectory\util\set-export.ps1")
+
+
     . ("$global:ScriptDirectory\Util\Check-Group.ps1")
     . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
     . ("$global:ScriptDirectory\Util\Check-Device.ps1")
