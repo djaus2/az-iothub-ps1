@@ -103,12 +103,13 @@ Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.
 
 ## The Env Vars scripts
 
-If just running on the desktop then get-iothub can set temporarily set the enviroment variables for use of the apps on the desktop. If running on the device, you need to generate the variables there.
+If just running on the desktop then get-iothub can set temporarily set the environment variables for use by the apps on the desktop. If running on the device, you need to set the variables there.
 
-- You can now generate a launchsettings.json file and place it in the Properties folder on an app.<br>
+- You can now generate a launchsettings.json file and place it in the Properties folder of an app.<br>
 The app will read the variables fromm there at startup.
 <p>
 Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the device.
+
 - To set environment variables on the device:
   - In a Window context ```./set-env```   to run set-env.ps1
   - On Linux (eg Raspian on the Pi)  ```source set-env.sh```
