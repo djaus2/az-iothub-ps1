@@ -3,35 +3,38 @@ param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
     [string]$HubName = '' ,
-    [string]$DPSName = '' ,
     [string]$Current = '',
     [boolean]$Refresh=$false
 )
 
-If ([string]::IsNullOrEmpty($Subscription ))
-{
-    write-Host ''
-    $prompt =  'Need to select a Subscription first.'
-    get-anykey $prompt
-    $global:DPS =  'Back'
-    return
-}
-elseIf ([string]::IsNullOrEmpty($GroupName ))
-{
-    write-Host ''
-    $prompt = 'Need to select a Group first.'
-    get-anykey $prompt
-    $global:DPS =  'Back'
-    return
-}
-elseIf ([string]::IsNullOrEmpty($HubName ))
-{
-    write-Host ''
-    prompt =  'Need to select a Hub first.'
-    get-anykey $prompt
-    $global:DPS =  'Back'
-    return
-}
+    If ([string]::IsNullOrEmpty($Subscription ))
+    {
+        write-Host ''
+        $prompt =  'Need to select a Subscription first.'
+        get-anykey $prompt
+        $global:DPS =  'Back'
+        return
+    }
+    elseIf ([string]::IsNullOrEmpty($GroupName ))
+    {
+        write-Host ''
+        $prompt = 'Need to select a Group first.'
+        get-anykey $prompt
+        $global:DPS =  'Back'
+        return
+    }
+
+    $Location =""
+    If (-not [string]::IsNullOrEmpty($global:HubsStrn ))
+    {
+        try{
+        $Location =  ($global:HubsStrn -split '\t')[2] 
+        }
+        catch {
+            $Location = ''
+        }
+    }
+
 
     $DPSStrnIndex =3
     $DPSStrnDataIndex =5
@@ -103,9 +106,23 @@ elseIf ([string]::IsNullOrEmpty($HubName ))
         return
     }
 
-    parse-list $global:DPSStrn   '  D P S  '  'N. New,D. Delete,B. Back'  $DPSStrnIndex $DPSStrnIndex 2  22 $Current
+    $options = 'N. New,D. Delete,B. Back' 
+
+    If (-not [string]::IsNullOrEmpty($HubName ))
+    {
+        If (-not [string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP ))
+        {
+            If (-not [string]::IsNullOrEmpty($global:HubsStrn ))
+            {
+                If (-not [string]::IsNullOrEmpty($Current ))
+                {
+                    $options = 'N. New,D. Delete,C. Connect Hub to DPS,I. dIsconnect Hub from DPS,B. Back' 
+                }
+            }
+        }
+    }
+    parse-list $global:DPSStrn   '  D P S  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current
     $answer= $global:retVal
-    write-Host $answer
 
     If ([string]::IsNullOrEmpty($answer)) 
     {
@@ -123,6 +140,34 @@ elseIf ([string]::IsNullOrEmpty($HubName ))
     elseif ($answer -eq 'Delete')
     {
         write-Host 'Delete'
+    }
+    elseif ($answer -eq 'CONNECT_IOT_HUB_TO_DPS')
+    {
+        $DPSName = $Current
+        $global:DPSName = $Current 
+        $global:retVal =  $Current
+        write-host "About to run (Press [Enter] to continue):"
+        read-host "az iot dps linked-hub create --dps-name $DPSName --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location -o table"
+        az iot dps linked-hub create --dps-name $DPSName --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location  -o table
+        write-Host ''
+        write-Host "$DPSName :"
+        az iot dps show --name $DPSName -o table
+        get-anykey
+    }
+    elseif ($answer -eq 'DISCONNECT_IOT_HUB_FROM_DPS')
+    {
+        $DPSName = $Current
+        $global:DPSName = $Current 
+        $global:retVal =  $Current
+        $ExtenedHubName = "$HubName.azure-devices.net"
+        write-host "About to run (Press [Enter] to continue):"
+        read-host "az iot dps linked-hub delete --dps-name $DPSName --resource-group $GroupName --linked-hub $ExtenedHubName -o table"
+        $ExtenedHubName = "$HubName.azure-devices.net"
+        az iot dps linked-hub delete --dps-name $DPSName --resource-group $GroupName --linked-hub $ExtenedHubName -o table
+        write-Host ''
+        write-Host "$DPSName :"
+        az iot dps show --name $DPSName -o table
+        get-anykey
     }
     elseif ($answer -ne $global:DPSName)
     {

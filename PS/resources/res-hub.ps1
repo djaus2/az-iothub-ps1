@@ -89,7 +89,7 @@ param (
         return
     }
 
-    parse-list $global:HubsStrn   '  H U B  '  'N. New,D. Delete'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
+    parse-list $global:HubsStrn   '  H U B  '  'N. New,L. cLear Current,D. Delete'  $HubStrnIndex $HubStrnDataIndex 2  22 $Current
     $answer= $global:retVal
     write-Host $answer
 
@@ -110,11 +110,20 @@ param (
     {
         write-Host 'Delete'
     }
+    elseif ($answer -eq 'CLEAR_CURRENT_HUB')
+    {
+        write-Host 'CLEAR_CURRENT_HUB'
+        $global:HubName = $null
+        $global:HubsStrn=$null
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+        $global:retVal = ''
+    }
     elseif ($answer -ne $global:HubName)
     {
         $global:HubName = $answer 
         $global:DevicesStrn=$null
-        $global:Device=$null
+        $global:DeviceName=$null
         $global:retVal =  $answer
     }
     elseif ($answer -eq 'Error')

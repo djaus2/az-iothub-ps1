@@ -97,6 +97,13 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
+    If (-not([string]::IsNullOrEmpty($global:DPSName )))
+    {
+        $prompt = '$global:DPSName='+"$global:DPSName"
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
     If (-not([string]::IsNullOrEmpty($global:DPSUnits )))
     {
         $prompt = '$global:DPSUnits='+"$global:DPSUnits"
@@ -215,7 +222,12 @@ function clear-appData
             remove-variable Log  -Scope Global
         }
 
-        $global:DPS="1"
+        If (-not([string]::IsNullOrEmpty($global:DPSName )))
+        {
+            remove-variable DPSName  -Scope Global
+        }
+
+        $global:Units="1"
 
         
         $PsScriptFile = "$global:ScriptDirectory\app-settings.ps1"

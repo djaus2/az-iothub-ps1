@@ -274,6 +274,21 @@ param (
         $output =  'New'
         $promptFinal =$output + " selecetd."
     }
+    elseif ($KK -eq 'L')
+    {
+        $output =  'CLEAR_CURRENT_HUB'
+        $promptFinal =$output + " selected."
+    }
+    elseif ($KK -eq 'C')
+    {
+        $output =  'CONNECT_IOT_HUB_TO_DPS'
+        $promptFinal =$output + " selected."
+    }
+    elseif ($KK -eq 'I')
+    {
+        $output =  'DISCONNECT_IOT_HUB_FROM_DPS'
+        $promptFinal =$output + " selected."
+    }
     else 
     {     
         [int]$indx =-1  

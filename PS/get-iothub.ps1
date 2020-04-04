@@ -412,7 +412,7 @@ do
                     # read-Host $response
                     if (([string]::IsNullOrEmpty($response)) )
                     {
-
+                        read-Host $global:DeviceName
                     }
                     elseif ($response -eq 'New')
                     {
@@ -488,7 +488,7 @@ do
                 }
             'D5'  { 
                     $current = 5
-                    Get-DPS  $Subscription $GroupName $HubName $DeviceName $DPSName
+                    Get-DPS  $Subscription $GroupName $HubName $DPSName
                     $response = $global:retVal
                     if ( ([string]::IsNullOrEmpty($response)) )
                     {
