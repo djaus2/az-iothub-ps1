@@ -140,7 +140,7 @@ show-heading '  N E W  D E V I C E   '   3
         $prompt = 'Device was created.'
         get-anykey $prompt
         $global:DeviceName=$DeviceName
-        $global:retVal = $DeviceNamee
+        $global:retVal = $DeviceName
     }
     else 
     {

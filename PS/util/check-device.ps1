@@ -51,10 +51,4 @@ param (
         write-Host $prompt
         return $false
     }
-    else 
-    {
-        $prompt = 'No Devices found for Hub.'
-        write-Host $prompt
-        return false
-    }
 }

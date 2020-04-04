@@ -16,6 +16,7 @@ try {
     . ("$global:ScriptDirectory\Util\Check-Group.ps1")
     . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
     . ("$global:ScriptDirectory\Util\Check-Device.ps1")
+    . ("$global:ScriptDirectory\Util\Check-DPS.ps1")
     . ("$global:ScriptDirectory\Util\get-location.ps1")
     . ("$global:ScriptDirectory\Util\get-SKU.ps1")
     . ("$global:ScriptDirectory\Util\show-time.ps1")
@@ -32,6 +33,7 @@ try {
     . ("$global:ScriptDirectory\resources\res-subscription.ps1")
     . ("$global:ScriptDirectory\resources\res-group.ps1")
     . ("$global:ScriptDirectory\resources\res-hub.ps1")
+    . ("$global:ScriptDirectory\resources\res-dps.ps1")
     . ("$global:ScriptDirectory\resources\res-device.ps1")
     . ("$global:ScriptDirectory\resources\run-quickstarts.ps1")
     . ("$global:ScriptDirectory\resources\clr-quickstarts.ps1")
@@ -41,10 +43,14 @@ try {
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
      . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
     . ("$global:ScriptDirectory\new_delete\new-device.ps1")
+    . ("$global:ScriptDirectory\new_delete\new-dps.ps1")
 
     . ("$global:ScriptDirectory\new_delete\delete-group.ps1")
     . ("$global:ScriptDirectory\new_delete\delete-hub.ps1")
-     . ("$global:ScriptDirectory\new_delete\delete-device.ps1")
+    . ("$global:ScriptDirectory\new_delete\delete-device.ps1")
+    . ("$global:ScriptDirectory\new_delete\delete-dps.ps1")
+
+
      . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
 }
 catch {
@@ -56,6 +62,8 @@ If (-not([string]::IsNullOrEmpty($global:Time )))
 {
     remove-variable Time  -Scope Global
 }
+
+$global:DPSUnits=1
 
 #endregion
 
@@ -230,15 +238,16 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 show-heading  -Prompt '  S E T U P  ' 1
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','D0','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Done'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
 $HubName = $global:HubName
 $DeviceName = $global:DeviceName
+$DPSName =$global:DPSName
 [boolean] $GetKey = $true
 do
 {
@@ -246,6 +255,7 @@ do
     $GroupName = $Global:GroupName
     $HubName = $global:HubName
     $DeviceName = $global:DeviceName
+    $DPSName = $global:DPSName
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
@@ -254,12 +264,19 @@ do
     write-Host $Prompt
     $Prompt = '         Device :"' + $DeviceName +'"'
     write-Host $Prompt
+    $Prompt = '            DPS :"' + $DPSName +'"'
+    write-Host $Prompt
     write-Host ''
     $items =$ItemsList  -split ','
     $i=1
     foreach ($item in $items) 
     {
-        [string]$prompt = [string]$i
+        if ($i -eq 10)
+        {
+            [string]$prompt = "0"
+        } else{
+            [string]$prompt = [string]$i
+        }
         $prompt += '. '  
         write-Host $prompt  -NoNewline
         $prompt =  $item
@@ -309,6 +326,7 @@ do
         }
     }
     $GetKey = $true
+
     if  ( $selectionList -contains $K)
     {
         switch ( $k )
@@ -429,7 +447,7 @@ do
                     $current++
                 }
             'D4'  { 
-                    $current = 4
+                    $current = 5
                     Get-Device  $Subscription $GroupName $HubName $DeviceName
                     $response = $global:retVal
                     # read-Host $response
@@ -468,16 +486,55 @@ do
                         $DeviceName = $response
                     }
                 }
-            'D5' { Do-Envs $Subscription $GroupName $HubName $DeviceName }
-            'D6' { $response = Run-Apps $Subscription $GroupName $HubName $DeviceName
+            'D5'  { 
+                    $current = 5
+                    Get-DPS  $Subscription $GroupName $HubName $DeviceName $DPSName
+                    $response = $global:retVal
+                    if ( ([string]::IsNullOrEmpty($response)) )
+                    {
+                        $DPSName = $null
+                    }
+                    elseif ($response -eq 'New')
+                    {
+                        New-DPS $Subscription $GroupName 
+                    }
+                    elseif ($response -eq 'Delete')
+                    {                       
+                        If([string]::IsNullOrEmpty($DPSName )) 
+                        {
+                            Remove-DPS $Subscription $GroupName 
+                        }
+                        else {
+                            Remove-DPS  $Subscription $GroupName $DPSName
+                        }
+                    }
+                    elseif ($response -eq 'Back')
+                    {
+
+                    }
+                    elseif ($response -eq 'Exit')
+                    {
+                        exit
+                    } 
+                    elseif ($response -eq 'Error')
+                    {
+                        exit
+                    }
+                    else
+                    {
+                        $DPSName = $response
+                    }
+                }
+            'D6' { Do-Envs $Subscription $GroupName $HubName $DeviceName }
+            'D7' { $response = Run-Apps $Subscription $GroupName $HubName $DeviceName
                     if ($response -ne 'Back')
                     {
                         exit
                     }
                 }
-            'D7' { Manage-AppData}
+            'D8' { Manage-AppData}
 
-            'D8' {
+            'D9' {
                     get-allinone
                     if ($false){
                         write-host "[1] Create New Group in Subscription: $Subscription then ..."
@@ -577,7 +634,7 @@ do
                         }
                     }
                 }
-            'D9' {exit}
+            'D0' { exit}
             R    { 
                     clear-appData
                     [boolean] $GetKey = $true

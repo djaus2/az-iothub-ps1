@@ -1,0 +1,21 @@
+{
+    "profiles": {
+      "Quickstarts\telemetry\telemetry": {
+        "commandName": "Project",
+        "environmentVariables": {
+            "SHARED_ACCESS_KEY_NAME":"iothubowner",
+            "DEVICE_NAME":"Poll",
+            "IOTHUB_DEVICE_CONN_STRING":"HostName=qwerty.azure-devices.net;DeviceId=Poll;SharedAccessKey=84Oj3wSce1ZDbGknm8LM4YycDw7b/MoiXSaPass8uww=",
+            "IOTHUB_CONN_STRING_CSHARP":"HostName=qwerty.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=",
+            "SERVICE_CONNECTION_STRING":"HostName=qwerty.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=qK2aSbtW2xYLfj+bH2rvP7HFUSekPnmHhfQq4nkvahI=",
+            "DEVICE_ID":"Poll",
+            "EVENT_THUBS_COMPATIBILITY_ENDPOINT":"sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/",
+            "EVENT_HUBS_COMPATIBILITY_PATH":"qwerty",
+            "EVENT_HUBS_SAS_KEY":"kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=",
+            "EVENT_HUBS_CONNECTION_STRING":"Endpoint=sb://iothub-ns-qwerty-2862278-31b54ca8c2.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=kVFKa00TrE6ExALK1CRSviyppoioTXhp4A2O3j5jd4Q=;EntityPath=qwerty",
+            "REMOTE_HOST_NAME":"localhost",
+            "REMOTE_PORT":"2222"
+      }
+    }
+  }
+}

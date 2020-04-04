@@ -205,57 +205,52 @@ param (
 
     $KK = ' '
 
-    if ($NumActualEntries -eq 1)
+    # Nb : Single item has beem handled higher up
+
+    do 
     {
-        write-host "Selecting the one $Title listed"
-        get-anykey
-        $KK = 1
-    }
-    else {
-        do 
+
+        # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
+        # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
+        $KeyPress = [System.Console]::ReadKey($true)
+        $K = $KeyPress.Key
+        $KK = $KeyPress.KeyChar
+
+        switch ( $k )
         {
 
-            # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-            # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
-            $KeyPress = [System.Console]::ReadKey($true)
-            $K = $KeyPress.Key
-            $KK = $KeyPress.KeyChar
-
-            switch ( $k )
-            {
-
-                Enter { 
-                    if ( -not ([string]::IsNullOrEmpty($CurrentSelection)))
-                    {
-                        $KK=[string]$DefaultNo
-                    } x
-                }
-                B {
-                    If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
-                    {
-                        # Previous value supplied return that with Back
-                        $KK=[string]$DefaultNo
-                    }
-                    else {
-                        # Just Back
-                    }
-                }
-                Default
+            Enter { 
+                if ( -not ([string]::IsNullOrEmpty($CurrentSelection)))
                 {
-                    if ( $Selns -notcontains $KK){
-                        if ($first){
-                            write-Host '  --Invalid' -NoNewLine
-                            $first = $false
-                        }
+                    $KK=[string]$DefaultNo
+                } x
+            }
+            B {
+                If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
+                {
+                    # Previous value supplied return that with Back
+                    $KK=[string]$DefaultNo
+                }
+                else {
+                    # Just Back
+                }
+            }
+            Default
+            {
+                if ( $Selns -notcontains $KK){
+                    if ($first){
+                        write-Host '  --Invalid' -NoNewLine
+                        $first = $false
                     }
                 }
             }
+        }
 
-            ## $resp = [string]$val
-        # Ref: https://www.computerperformance.co.uk/powershell/contains/
-        #} while ( $SelectionList -notcontains $val) ##  $resp)foreach 
-        } while ( $Selns -notcontains $KK) 
-    }
+        ## $resp = [string]$val
+    # Ref: https://www.computerperformance.co.uk/powershell/contains/
+    #} while ( $SelectionList -notcontains $val) ##  $resp)foreach 
+    } while ( $Selns -notcontains $KK) 
+    
 
     if ($first -eq $false)
     {

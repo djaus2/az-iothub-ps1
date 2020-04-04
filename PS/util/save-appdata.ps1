@@ -41,6 +41,13 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
+    If (-not([string]::IsNullOrEmpty($global:DPSName )))
+    {
+        $prompt = '$global:DeviceName =  "' + "$global:DPSName" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
     If (-not([string]::IsNullOrEmpty($global:SubscriptionsStrn )))
     {
         $prompt = '$global:SubscriptionsStrn =  "' + "$global:SubscriptionsStrn" +'"'
@@ -70,6 +77,13 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
+    If (-not([string]::IsNullOrEmpty($global:DPSStrn )))
+    {
+        $prompt = '$global:DPSStrn =  "' + "$global:DPSStrn" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
     If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
     {
         $prompt = '$global:SpecificVersion =  "' + "$global:SpecificVersion" +'"'
@@ -79,6 +93,19 @@ function Save-AppData{
     else
     {
         $prompt = '$global:SpecificVersion =  "' + "3.1.102" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
+    If (-not([string]::IsNullOrEmpty($global:DPSUnits )))
+    {
+        $prompt = '$global:DPSUnits='+"$global:DPSUnits"
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+    else
+    {
+        $prompt = '$global:DPSUnits="1"'
         write-Host $prompt
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
@@ -98,6 +125,16 @@ function clear-appData
     $answer = $global:retVal
     if ($answer)
     {
+        If (-not([string]::IsNullOrEmpty($global:DPS )))
+        {
+            remove-variable DPS -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:DPSStrn )))
+        {
+            remove-variable DPSStrn -Scope Global
+        }
+
         
         If (-not([string]::IsNullOrEmpty($global:Subscription )))
         {
@@ -177,6 +214,8 @@ function clear-appData
         {
             remove-variable Log  -Scope Global
         }
+
+        $global:DPS="1"
 
         
         $PsScriptFile = "$global:ScriptDirectory\app-settings.ps1"
