@@ -88,16 +88,18 @@ param (
     if  ($noEntities -eq 1) 
     {
         $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
-        $prompt = [string]::Format($FormatStrn,$prompt1 )
-        write-host "Only one item to select: " -nonewline
-        write-host " $prompt1 ". -backgroundcolor Yellow  -foregroundcolor black
-        $prompt = "Do you want to select that?"
-        get-yesorno $true $prompt
-        $answer = $global:retVal
-        if  ( $answer)
+        if ($prompt1 -ne  $CurrentSelection)
         {
-            $global:retVal = $prompt1
-            return $prompt1
+            $prompt = [string]::Format($FormatStrn,$prompt1 )
+            write-host "Only one item to select: " -nonewline
+            write-host " $prompt1 ". -backgroundcolor Yellow  -foregroundcolor black
+            $prompt = "Do you want to select that?"
+            get-yesorno $true $prompt
+            $answer = $global:retVal
+            if  ( $answer)
+            {
+                $CurrentSelection = $prompt
+            }
         }
     }
 

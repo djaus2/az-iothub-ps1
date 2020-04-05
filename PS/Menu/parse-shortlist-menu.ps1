@@ -223,17 +223,10 @@ param (
                 if ( -not ([string]::IsNullOrEmpty($CurrentSelection)))
                 {
                     $KK=[string]$DefaultNo
-                } x
+                }
             }
             B {
-                If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
-                {
-                    # Previous value supplied return that with Back
-                    $KK=[string]$DefaultNo
-                }
-                else {
-                    # Just Back
-                }
+
             }
             Default
             {
@@ -262,31 +255,36 @@ param (
     if ($KK -eq 'B')
     {
         $output = 'Back'
-        $promptFinal =$output + " selecetd."
+        $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'D')
     {
         $output = 'Delete'
-        $promptFinal =$output + " selecetd."
+        $promptFinal =$output + " selected."
+    }
+    elseif ($KK -eq 'S')
+    {
+        $output =  'SHOW_DPS'
+        $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'N')
     {
         $output =  'New'
-        $promptFinal =$output + " selecetd."
+        $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'L')
     {
-        $output =  'CLEAR_CURRENT_HUB'
+        $output =  'CLEAR_CURRENT_HUB_CONNECTION_TO_DPS'
         $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'C')
     {
-        $output =  'CONNECT_IOT_HUB_TO_DPS'
+        $output =  'CONNECT_CURRENT_HUB_TO_CURRENT_DPS'
         $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'I')
     {
-        $output =  'DISCONNECT_IOT_HUB_FROM_DPS'
+        $output =  'DISCONNECT_CURRENT_IOT_HUB_FROM_DPS'
         $promptFinal =$output + " selected."
     }
     else 

@@ -494,20 +494,6 @@ do
                     {
                         $DPSName = $null
                     }
-                    elseif ($response -eq 'New')
-                    {
-                        New-DPS $Subscription $GroupName 
-                    }
-                    elseif ($response -eq 'Delete')
-                    {                       
-                        If([string]::IsNullOrEmpty($DPSName )) 
-                        {
-                            Remove-DPS $Subscription $GroupName 
-                        }
-                        else {
-                            Remove-DPS  $Subscription $GroupName $DPSName
-                        }
-                    }
                     elseif ($response -eq 'Back')
                     {
 
