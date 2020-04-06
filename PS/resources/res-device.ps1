@@ -6,7 +6,6 @@ param (
     [string]$Current='',
     [boolean]$Refresh=$false
 )
-
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
@@ -52,16 +51,7 @@ param (
     {
         $global:DevicesStrn = null
     }
-    elseif(-not([string]::IsNullOrEmpty($current)))
-    {
-        get-yesorno $True "Do you want to use the Current Device? (Y/N)"
-        $answer = $global:retVal
-        if  ( $answer)
-        {
-            $global:retVal ='Back'
-            return $current
-        }
-    }
+   
 
     [boolean]$skip = $false
     if  ($global:DevicesStrn -eq '')
@@ -99,34 +89,70 @@ param (
         return
     }
 
-    parse-list $global:DevicesStrn   '  D E V I C E  '  'N. New,D. Delete'  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
-    $answer =  $global:retVal
-    write-Host $answer
+    $DeviceName = $Current
+    do{
+        $Current=$DeviceName
+        show-heading '  D E V I C E   '  2
+        $Prompt = '   Subscription :"' + $Subscription +'"'
+        write-Host $Prompt
+        $Prompt = '          Group :"' + $GroupName +'"'
+        write-Host $Prompt
+        $Prompt = '            Hub :"' + $HubName +'"'
+        write-Host $Prompt
+        $Prompt = ' Current Device :"' + $Current +'"'
+        write-Host $Prompt
 
-    If ([string]::IsNullOrEmpty($answer)) 
-    {
-        write-Host 'Back'
-        $answer =  'Back'
-    }
-    elseif ($answer -eq 'Back')
-    {
-        write-Host 'Back'
-    }
-    elseif ($answer -eq 'New')
-    {
-        write-Host 'New'
-    }
-    elseif ($answer -eq 'Delete')
-    {
-        write-Host 'Delete'
-    }
-    elseif ($answer -ne $global:DeviceName)
-    {
-        $global:DeviceName = $answer 
-    }
-    elseif ($answer -eq 'Error')
-    {
-        write-Host 'Error'
-    }
+        $options = 'N. New'
+        If (-not [string]::IsNullOrEmpty($Current )){
+            $options = "$options,U. Unselect,D. Delete"
+        }
+
+        $options="$options,B. Back"
+
+        parse-list $global:DevicesStrn   '  D E V I C E  ' $options  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
+        $answer =  $global:retVal
+
+        If ([string]::IsNullOrEmpty($answer)) 
+        {
+            write-Host 'Back'
+            $answer =  'Back'
+        }
+        elseif ($answer -eq 'Back')
+        {
+            write-Host 'Back'
+        }
+        elseif ($answer -eq 'Unselect')
+        {
+            $Current=$null
+            $global:DeviceName = $null 
+            $DeviceName =$null
+        }
+        elseif ($answer -eq 'New')
+        {
+            New-Device $Subscription $GroupName $HubName
+            $DeviceName= $global:DeviceName
+        }
+        elseif ($answer -eq 'Delete')
+        {
+            Remove-Device  $Subscription $GroupName $HubName $DeviceName
+            $DeviceName = $null
+            $global:DeviceName = $null 
+        }
+        elseif ($answer -ne $global:DeviceName)
+        {
+
+            $global:DeviceName = $answer 
+            $DeviceName = $answer
+            if ($global:doneItem)
+            {
+                $answer='Back'             
+            }
+            $global:doneItem = $null
+        }
+        elseif ($answer -eq 'Error')
+        {
+            write-Host 'Error'
+        }
+    } while (($answer -ne 'Back') -and ($answer -ne 'Error'))
     $global:retval = $answer 
 }

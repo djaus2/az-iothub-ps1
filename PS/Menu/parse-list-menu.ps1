@@ -10,6 +10,10 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
+    if ($CurrentSelection -eq $null)
+    {
+        $CurrentSelection =''
+    }
 
     [boolean]$includeExit= $false
     [boolean]$includeBack= $true
@@ -87,6 +91,7 @@ param (
 
     $global:doneItem=$false
 
+
     if  ($noEntities -eq 1) 
     {
         $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
@@ -100,7 +105,7 @@ param (
             $alternatives= 'Select that instance and return,Select that instance and stay here,Ignore it'
 
 
-            $answer = choose-selection $alternatives $Title 
+            $answer = choose-selection $alternatives $Title 'Select that instance and return'
             switch ($answer){
                 'Select that instance and return'{
                     # If have made "new" selection then return
@@ -189,7 +194,7 @@ param (
                 $prompt = [string]::Format($FormatStrn,$itemToList )
                 
                 write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
-                write-Host ' <-- Previous/Default Selection [Enter]' -ForegroundColor DarkGreen
+                write-Host ' <-- Current Selection' -ForegroundColor DarkGreen
                 $col = 0
             }
             else 

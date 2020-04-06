@@ -192,9 +192,9 @@ param (
             $DPSName =$answer
             if ($global:doneItem)
             {
-                $answer='Back'
-                $global:doneItem = $null
+                $answer='Back'              
             }
+            $global:doneItem = $null
         }
         elseif ($answer -eq 'Error')
         {
