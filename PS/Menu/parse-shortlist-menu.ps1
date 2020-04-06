@@ -264,7 +264,7 @@ param (
     }
     elseif ($KK -eq 'S')
     {
-        $output =  'SHOW_DPS'
+        $output =  'Show'
         $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'N')
@@ -272,19 +272,19 @@ param (
         $output =  'New'
         $promptFinal =$output + " selected."
     }
-    elseif ($KK -eq 'L')
+    elseif ($KK -eq 'U')
     {
-        $output =  'CLEAR_CURRENT_HUB_CONNECTION_TO_DPS'
+        $output =  'Unselect'
         $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'C')
     {
-        $output =  'CONNECT_CURRENT_HUB_TO_CURRENT_DPS'
+        $output =  'Connect'
         $promptFinal =$output + " selected."
     }
-    elseif ($KK -eq 'I')
+    elseif ($KK -eq 'Z')
     {
-        $output =  'DISCONNECT_CURRENT_IOT_HUB_FROM_DPS'
+        $output =  'Disconnect'
         $promptFinal =$output + " selected."
     }
     else 

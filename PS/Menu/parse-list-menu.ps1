@@ -85,24 +85,48 @@ param (
 
     $noEntities = $lines.Count 
 
+    $global:doneItem=$false
+
     if  ($noEntities -eq 1) 
     {
         $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
         if ($prompt1 -ne  $CurrentSelection)
         {
+            write-host ''
             $prompt = [string]::Format($FormatStrn,$prompt1 )
             write-host "Only one item to select: " -nonewline
             write-host " $prompt1 ". -backgroundcolor Yellow  -foregroundcolor black
-            $prompt = "Do you want to select that?"
-            get-yesorno $true $prompt
-            $answer = $global:retVal
-            if  ( $answer)
-            {
-                $CurrentSelection = $prompt
+
+            $alternatives= 'Select that instance and return,Select that instance and stay here,Ignore it'
+
+
+            $answer = choose-selection $alternatives $Title 
+            switch ($answer){
+                'Select that instance and return'{
+                    # If have made "new" selection then return
+                    # It should then come back here (re-call this funstion) with updated menu options.
+                    $CurrentSelection = $prompt1
+                    $global:retVal = $CurrentSelection
+                    # Tell the current item to return to the main menu
+                    $global:doneItem=$true
+                    return  $CurrentSelection
+                }
+                'Select that instance and stay here'{
+                    # If have made "new" selection then return
+                    # It should then come back here (re-call this funstion) with updated menu options.
+                    $CurrentSelection = $prompt1
+                    $global:retVal = $CurrentSelection 
+                    $global:doneItem=$false
+                    return  $CurrentSelection
+                }
+                'Ignore it'{}
+                'Back' {
+                    $global:retVal='Back'
+                    return
+                }                
             }
         }
     }
-
 
     if ( ($noEntities -lt 10) -and    ([string]::IsNullOrEmpty($env:IsRedirected)))
     {

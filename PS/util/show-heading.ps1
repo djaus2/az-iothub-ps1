@@ -29,7 +29,7 @@ param (
     [Console]::ResetColor()
     If  ([string]::IsNullOrEmpty($global:Log)) 
     {
-        Clear-Host
+       #  Clear-Host
     }
     $prompt2 =  '  A Z U R E  I o T  H U B  ' 
     write-Host $prompt2 -BackgroundColor Red  -ForegroundColor   White  -NoNewline

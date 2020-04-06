@@ -30,11 +30,11 @@ param (
 
 
     show-heading '  I o T  H U B  '  2
-    $Prompt =  'Subscription :"' + $Subscription +'"'
+    $Prompt =  ' Subscription :"' + $Subscription +'"'
     write-Host $Prompt
-    $Prompt = '       Group :"' + $GroupName +'"'
+    $Prompt = ' Current Group :"' + $GroupName +'"'
     write-Host $Prompt
-    $Prompt = ' Current Hub :"' + $Current +'"'
+    $Prompt = '   Current Hub :"' + $Current +'"'
     write-Host $Prompt
 
 
@@ -42,16 +42,7 @@ param (
     {
         $global:HubsStrn = null
     }
-    elseif(-not([string]::IsNullOrEmpty($current)))
-    {
-        get-yesorno $True "Do you want to use the Current Hub? (Y/N)"
-        $answer = $global:retVal
-        if  ( $answer)
-        {
-            $global:retVal ='Back'
-            return $current
-        }
-    }
+
 
     [boolean]$skip = $false
     if  ($global:HubsStrn -eq '')

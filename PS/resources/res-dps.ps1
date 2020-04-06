@@ -106,16 +106,16 @@ param (
         show-heading '  D E V I C E  P R O V I S I O N I N G  S E R V I C E  (DPS)'  2
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
-        $Prompt = '          Group :"' + $GroupName +'"'
+        $Prompt = '  Current Group :"' + $GroupName +'"'
         write-Host $Prompt
-        $Prompt = '            Hub :"' + $HubName +'"'
+        $Prompt = '    Current Hub :"' + $HubName +'"'
         write-Host $Prompt
         $Prompt = '    Current DPS :"' + $Current +'"'
         write-Host $Prompt
 
         $options = 'N. New'
         If (-not [string]::IsNullOrEmpty($Current )){
-            $options = "$options,S. Show,D. Delete"
+            $options = "$options,S. Show,U. Unselect,D. Delete"
             If (-not [string]::IsNullOrEmpty($HubName ))
             {
                 If (-not [string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP ))
@@ -123,7 +123,7 @@ param (
                     If (-not [string]::IsNullOrEmpty($global:HubsStrn ))
                     {
 
-                        $options = "$options,C. Connect Hub to DPS,I. dIsconnect Hub from DPS" 
+                        $options = "$options,C. Connect Current Hub to DPS,Z. Disconnect Current Hub from DPS" 
                     }
                 }
             }
@@ -142,7 +142,13 @@ param (
         {
             write-Host 'Back'
         }
-        elseif ($answer -eq 'SHOW_DPS')
+        elseif ($answer-eq 'Unselect')
+        {
+            $Current=$null
+            $global:DPSName = $null 
+            $DPSName =$null
+        }
+        elseif ($answer -eq 'Show')
         {
             show-dps $Current
         }
@@ -155,8 +161,9 @@ param (
         {
             Remove-DPS  $Subscription $GroupName $DPSName
             $DPSName = $null
+            $global:DPSName = $null 
         }
-        elseif ($answer -eq 'CONNECT_CURRENT_HUB_TO_CURRENT_DPS')
+        elseif ($answer -eq 'Connect')
         {
             $DPSName = $Current
             $global:DPSName = $Current 
@@ -166,7 +173,7 @@ param (
             az iot dps linked-hub create --dps-name $DPSName --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location  -o table
             show-dps $Current
         }
-        elseif ($answer -eq 'DISCONNECT_CURRENT_IOT_HUB_FROM_DPS')
+        elseif ($answer -eq 'Disconnect')
         {
             $DPSName = $Current
             $global:DPSName = $Current 
@@ -183,6 +190,11 @@ param (
             $global:DPSName = $answer 
             $global:retVal =  $answer
             $DPSName =$answer
+            if ($global:doneItem)
+            {
+                $answer='Back'
+                $global:doneItem = $null
+            }
         }
         elseif ($answer -eq 'Error')
         {
@@ -203,8 +215,8 @@ param (
         write-Host "$DPSName (Wait):"
         az iot dps show --name $DPSName -o table
         write-Host ''
-        $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
         write-Host "Connected Hubs (Wait):"
+        $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
         foreach ($dps in $query) {$dps.Properties.iotHubs.name}
     }
     write-Host ''
