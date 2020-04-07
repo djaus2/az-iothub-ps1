@@ -100,9 +100,6 @@ param (
     $global:DeviceName = $null
     $global:DevicesStrn = $null
 
-    read-host $Subscription
-    read-host $GroupName
-    read-host $HubName
 
     if ( check-hub $Subscription $GroupName $HubName )
     {
@@ -129,7 +126,7 @@ param (
     	{
             $prompt = 'It was deleted.'
             get-anykey $prompt
-            $global:retVal = 'Back'
+            $global:retVal = 'Done'
     	}
     }
     else 

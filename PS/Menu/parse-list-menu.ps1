@@ -10,6 +10,7 @@ param (
     [int]$ColWidth=22 ,
     [string]$CurrentSelection='None'
 )
+
     if ($CurrentSelection -eq $null)
     {
         $CurrentSelection =''
@@ -83,52 +84,54 @@ param (
         return 
     }  
 
+    $noEntities =0
+    if($ListString -ne ' ' ){
+        # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
+        $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
 
-    # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
-    $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
+        $noEntities = $lines.Count 
 
-    $noEntities = $lines.Count 
-
-    $global:doneItem=$false
+        $global:doneItem=$false
 
 
-    if  ($noEntities -eq 1) 
-    {
-        $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
-        if ($prompt1 -ne  $CurrentSelection)
+        if  ($noEntities -eq 1) 
         {
-            write-host ''
-            $prompt = [string]::Format($FormatStrn,$prompt1 )
-            write-host "Only one item to select: " -nonewline
-            write-host " $prompt1 ". -backgroundcolor Yellow  -foregroundcolor black
+            $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
+            if ($prompt1 -ne  $CurrentSelection)
+            {
+                write-host ''
+                $prompt = [string]::Format($FormatStrn,$prompt1 )
+                write-host "Only one item to select: " -nonewline
+                write-host " $prompt1 ". -backgroundcolor Yellow  -foregroundcolor black
 
-            $alternatives= 'Select that instance and return,Select that instance and stay here,Ignore it'
+                $alternatives= 'Select that instance and return,Select that instance and stay here,Ignore it'
 
 
-            $answer = choose-selection $alternatives $Title 'Select that instance and return'
-            switch ($answer){
-                'Select that instance and return'{
-                    # If have made "new" selection then return
-                    # It should then come back here (re-call this funstion) with updated menu options.
-                    $CurrentSelection = $prompt1
-                    $global:retVal = $CurrentSelection
-                    # Tell the current item to return to the main menu
-                    $global:doneItem=$true
-                    return  $CurrentSelection
+                $answer = choose-selection $alternatives $Title 'Select that instance and return'
+                switch ($answer){
+                    'Select that instance and return'{
+                        # If have made "new" selection then return
+                        # It should then come back here (re-call this funstion) with updated menu options.
+                        $CurrentSelection = $prompt1
+                        $global:retVal = $CurrentSelection
+                        # Tell the current item to return to the main menu
+                        $global:doneItem=$true
+                        return  $CurrentSelection
+                    }
+                    'Select that instance and stay here'{
+                        # If have made "new" selection then return
+                        # It should then come back here (re-call this funstion) with updated menu options.
+                        $CurrentSelection = $prompt1
+                        $global:retVal = $CurrentSelection 
+                        $global:doneItem=$false
+                        return  $CurrentSelection
+                    }
+                    'Ignore it'{}
+                    'Back' {
+                        $global:retVal='Back'
+                        return
+                    }                
                 }
-                'Select that instance and stay here'{
-                    # If have made "new" selection then return
-                    # It should then come back here (re-call this funstion) with updated menu options.
-                    $CurrentSelection = $prompt1
-                    $global:retVal = $CurrentSelection 
-                    $global:doneItem=$false
-                    return  $CurrentSelection
-                }
-                'Ignore it'{}
-                'Back' {
-                    $global:retVal='Back'
-                    return
-                }                
             }
         }
     }

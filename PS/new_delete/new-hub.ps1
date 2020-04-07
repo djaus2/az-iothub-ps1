@@ -145,7 +145,7 @@ if($false) {
         $prompt = 'Hub was created.'
         get-anykey $prompt
         $global:HubName = $HubName
-        $global:retVal = 'Back'
+        $global:retVal = 'Done'
     }
     else 
     {

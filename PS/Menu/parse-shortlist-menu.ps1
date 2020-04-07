@@ -59,33 +59,8 @@ param (
     [boolean]$includeDelete= $true
 
 
-    # These two checks not required as both parameters are mandatory
-    if (([string]::IsNullOrEmpty($ListString)) -or ($ListString.ToUpper() -eq '--HELP') -or ($ListString.ToUpper() -eq '-H'))
-    {
-        $prompt = 'Usage: menu ListString Title [DisplayIndex] [CodeIndex] [ItemsPerLine] [ColWidth] [Current Selection]'
-        write-Host $prompt
-        write-Host ''
-        $prompt = 'ListString:       Required. A string of lines (new line separated). Each line is an entitiy to be listed in the menu.'
-        write-Host $prompt
-        $prompt = '                  Each line is a .tsv list of entity properties'
-        write-Host $prompt
-        $prompt = 'Title:            Required. The entity name'
-        write-Host $prompt
-        $prompt = 'DisplayIndex:     Optional. Zero based index to entity property to display. (Default 0)'
-        write-Host $prompt
-        $prompt = 'CodeIndex:        Optional. Zero based index to entity property to to be returned. (Default 0)'
-        write-Host $prompt    
-        $prompt = 'ItemsPerLine:     Optional. Number of items to be displayed per line. (Default 1)'
-        write-Host $prompt   
-        $prompt = 'ColWidth:         Optional. Space for each item name. (Default 22)'
-        write-Host $prompt   
-        $prompt = 'CurrentSelection: Optional. Current selection as property displayed. (Default blank) Exiting'
-        write-Host $prompt 
-        write-Host ''   
-
-        $global:retVal = $null
-        return
-    }  
+ 
+  
     if ([string]::IsNullOrEmpty($Title))
     {
         $prompt = 'No Title for menu supplied. Run menu --help for usage.'
@@ -95,86 +70,92 @@ param (
         return
     }  
 
-    # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
-    $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
-    $noEntities = $lines.Count
-    write-Host 'No. of entities: ' -NoNewLine
-    write-Host $noEntities
-    
-    [int] $i=1
     write-Host ''
-    $prompt = 'Select a ' + $Title
-    write-Host $prompt
+    write-host  'Select a ' -noNewLine
+    write-host $Title   -BackgroundColor DarkGreen  -ForegroundColor  Black -NoNewline
+    write-host ' or option'
     write-Host ''
-    $col=0
-    $NumActualEntries=0
-    foreach ($j in $lines) 
-    {
-        $line = $j.Trim()
 
-        if ([string]::IsNullOrEmpty($line))
-        {   
-            $i++        
-            break
-        }
-        else {       
-            $itemToList = ($line-split '\t')[$DisplayIndex]
-                $Selns.Add([string]$i)
-            $NumActualEntries++
-        }
-        [string]$prompt = [string]$i
-        $prompt += '. '     
-        $prompt +=  $itemToList
-        $prompt = [string]::Format($FormatStrn,$prompt )
-        if ($CurrentSelection -eq 'None')
-        {
-            write-Host $prompt -NoNewline
+    $noEntities =0
+    if ($ListString -ne ' '){
+        # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
+        $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
+        $noEntities = $lines.Count
+        write-Host 'No. of entities: ' -NoNewLine
+        write-Host $noEntities
         
+        [int] $i=1
 
-            if ($col -eq ($ItemsPerLine-1))
-            {
-                $col =0
-                write-Host ''
-            }
-            else 
-            {
-                $Tab = [char]9
-                write-Host $Tab -NoNewline
-                $col++
-            }
-        }
-        elseif ( $itemToList -eq $CurrentSelection)
+        $col=0
+        $NumActualEntries=0
+        foreach ($j in $lines) 
         {
-            $DefaultNo = $i
+            $line = $j.Trim()
 
+            if ([string]::IsNullOrEmpty($line))
+            {   
+                $i++        
+                break
+            }
+            else {       
+                $itemToList = ($line-split '\t')[$DisplayIndex]
+                    $Selns.Add([string]$i)
+                $NumActualEntries++
+            }
             [string]$prompt = [string]$i
-            $prompt += '. '   
-            write-Host $prompt -NoNewline
-            $prompt = [string]::Format($FormatStrn,$itemToList )
-            write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
-            write-Host ' <-- Current Selection' -ForegroundColor DarkGreen 
-            $col = 0
-        }
-        else 
-        {
-            
-            write-Host $prompt -NoNewline
-        
-
-            if ($col -eq ($ItemsPerLine-1))
+            $prompt += '. '     
+            $prompt +=  $itemToList
+            $prompt = [string]::Format($FormatStrn,$prompt )
+            if ($CurrentSelection -eq 'None')
             {
-                $col =0
-                write-Host ''
+                write-Host $prompt -NoNewline
+            
+
+                if ($col -eq ($ItemsPerLine-1))
+                {
+                    $col =0
+                    write-Host ''
+                }
+                else 
+                {
+                    $Tab = [char]9
+                    write-Host $Tab -NoNewline
+                    $col++
+                }
+            }
+            elseif ( $itemToList -eq $CurrentSelection)
+            {
+                $DefaultNo = $i
+
+                [string]$prompt = [string]$i
+                $prompt += '. '   
+                write-Host $prompt -NoNewline
+                $prompt = [string]::Format($FormatStrn,$itemToList )
+                write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
+                write-Host ' <-- Current Selection' -ForegroundColor DarkGreen 
+                $col = 0
             }
             else 
             {
-                $Tab = [char]9
-                write-Host $Tab -NoNewline
-                $col++
+                
+                write-Host $prompt -NoNewline
+            
+
+                if ($col -eq ($ItemsPerLine-1))
+                {
+                    $col =0
+                    write-Host ''
+                }
+                else 
+                {
+                    $Tab = [char]9
+                    write-Host $Tab -NoNewline
+                    $col++
+                }
             }
+            
+            $i++
         }
-        
-        $i++
     }
     write-Host ''
 
@@ -270,6 +251,11 @@ param (
     elseif ($KK -eq 'N')
     {
         $output =  'New'
+        $promptFinal =$output + " selected."
+    }
+    elseif ($KK -eq 'R')
+    {
+        $output =  'Refresh'
         $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'U')
