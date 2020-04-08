@@ -5,12 +5,20 @@ param (
     [string]$Current='',
     [boolean]$Refresh=$false
 )
+show-heading '  I o T   H U B  '  2
+$Prompt =  ' Subscription :"' + $Subscription +'"'
+write-Host $Prompt
+$Prompt = ' Current Group :"' + $GroupName +'"'
+write-Host $Prompt
+$Prompt = '   Current Hub :"' + $Current +'"'
+write-Host $Prompt
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
         $prompt =  'Need to select a Subscription first.'
-        get-anykey $prompt
+        write-host $prompt
+        get-anykey 
         $global:DeviceName =  'Back'
         return
     }
@@ -18,7 +26,8 @@ param (
     {
         write-Host ''
         $prompt = 'Need to select a Group first'
-        get-anykey $prompt
+        write-host $prompt
+        get-anykey
         $global:DeviceName =  'Back'
         return
     }
@@ -29,13 +38,7 @@ param (
 
 
 
-    show-heading '  I o T   H U B  '  2
-    $Prompt =  ' Subscription :"' + $Subscription +'"'
-    write-Host $Prompt
-    $Prompt = ' Current Group :"' + $GroupName +'"'
-    write-Host $Prompt
-    $Prompt = '   Current Hub :"' + $Current +'"'
-    write-Host $Prompt
+
 
 
 
@@ -69,11 +72,8 @@ param (
     {
         $Prompt = 'No Hubs found in Group "' + $GroupName + '".'
         write-Host $Prompt
-        $global:HubsStrn =' '
+        $global:HubsStrn ='Empty'
     }
-
-
-
 
         show-heading '  I O T   H U B   '  2
         $Prompt = '   Subscription :"' + $Subscription +'"'
@@ -103,12 +103,17 @@ param (
     {
         write-Host 'Back'
     }
+    elseif ($answer -eq 'Error')
+    {
+        write-Host 'Error'
+
+    }
     elseif ($answer -eq 'Unselect')
 	{
 	    $Current=$null
         write-Host 'CLEAR_CURRENT_HUB'
         $global:HubName = $null
-        $global:HubsStrn=$null
+	$HubName=$null   
         $global:DevicesStrn=$null
         $global:DeviceName=$null
 	}
@@ -143,6 +148,7 @@ param (
         if ($answer -eq 'Done')
         {
             $HubName=$null
+	    $global:HubName=$null
         }
         elseif($answer -eq 'Exists')
         {
@@ -171,11 +177,7 @@ param (
         }
     	$global:doneItem = $null
     }
-    elseif ($answer -eq 'Error')
-    {
-        write-Host 'Error'
 
-    }
     } while (($answer -ne 'Back') -and ($answer -ne 'Error'))
     $global:retval = $answer 
 }

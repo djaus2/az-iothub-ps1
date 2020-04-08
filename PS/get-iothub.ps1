@@ -287,7 +287,7 @@ do
         }
         elseif ( $Current -eq $i)
         {
-            write-Host $prompt -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
+            write-Host $prompt -ForegroundColor Yellow -NoNewline
             write-Host ' <-- Current Selection' -ForegroundColor DarkGreen 
         }
         else 
@@ -488,7 +488,7 @@ do
                 }
             'D5'  { 
                     $current = 5
-                    Get-DPS  $Subscription $GroupName $HubName $DPSName
+                    Get-DPS  $Subscription $GroupName $HubName $DPSName $DeviceName
                     $response = $global:retVal
                     if ( ([string]::IsNullOrEmpty($response)) )
                     {

@@ -6,10 +6,21 @@ param (
     [string]$Current='',
     [boolean]$Refresh=$false
 )
+
+show-heading '  D E V I C E   '  2
+$Prompt = '    Subscription :"' + $Subscription +'"'
+write-Host $Prompt
+$Prompt = '   Current Group :"' + $GroupName +'"'
+write-Host $Prompt
+$Prompt = '     Current Hub :"' + $HubName +'"'
+write-Host $Prompt
+$Prompt = '  Current Device :"' + $Current +'"'
+write-Host $Prompt
+
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
-        $prompt =  'Need to select a Subscription first.'
+        $prompt =  'Need to select a Subscription first.`n'
         get-anykey $prompt
         $global:DeviceName =  'Back'
         return
@@ -25,8 +36,9 @@ param (
     elseIf ([string]::IsNullOrEmpty($HubName ))
     {
         write-Host ''
-        prompt =  'Need to select a Hub first.'
-        get-anykey $prompt
+        $prompt =  'Need to select a Hub first.'
+        write-host $prompt
+        get-anykey 
         $global:DeviceName =  'Back'
         return
     }
@@ -36,30 +48,24 @@ param (
 
 
 
-    show-heading '  D E V I C E   '  2
-    $Prompt = '   Subscription :"' + $Subscription +'"'
-    write-Host $Prompt
-    $Prompt = '          Group :"' + $GroupName +'"'
-    write-Host $Prompt
-    $Prompt = '            Hub :"' + $HubName +'"'
-    write-Host $Prompt
-    $Prompt = ' Current Device :"' + $Current +'"'
-    write-Host $Prompt
 
 
+
+    $DeviceName = $Current
+    do{
     if ($Refresh -eq $true)
     {
         $global:DevicesStrn = null
+	$Refresh = $false
+    }
+    
+    if ($null -eq $DeviceName)
+    {
+            $HubName =''
     }
    
-
-    [boolean]$skip = $false
-    if  ($global:DevicesStrn -eq '')
-    {
-        # This allows for previously returned empty string
-        $skip = $true
-    }
-    If  (([string]::IsNullOrEmpty($global:DevicesStrn  ))  -and (-not $skip))
+    $Current =$DeviceName	
+    If  ([string]::IsNullOrEmpty($global:DevicesStrn  )) 
     {   
         write-Host 'Getting Devices from Azure'
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
@@ -73,25 +79,10 @@ param (
     {
         $Prompt = 'No Devices found in Hub "' + $HubName + '".'
         write-Host $Prompt
-        $Prompt ='Do you want to create a new Device for the Hub "'+ $Hub +'"?'
-        write-Host $prompt
-        get-yesorno $true
-        $answer =  $global:retVal
-        if ($answer)
-        {
-            write-Host 'New Device'
-            $global:retVal =  'New'
-        }
-        else {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-        }
-        return
+        $global:DeviceStrn ='Empty'
     }
 
-    $DeviceName = $Current
-    do{
-        $Current=$DeviceName
+
         show-heading '  D E V I C E   '  2
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
@@ -102,7 +93,7 @@ param (
         $Prompt = ' Current Device :"' + $Current +'"'
         write-Host $Prompt
 
-        $options = 'N. New'
+        $options = 'N. New.R. Refresh'
         If (-not [string]::IsNullOrEmpty($Current )){
             $options = "$options,U. Unselect,D. Delete"
         }
@@ -111,6 +102,7 @@ param (
 
         parse-list $global:DevicesStrn   '  D E V I C E  ' $options  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
         $answer =  $global:retVal
+	write-Host $answer
 
         If ([string]::IsNullOrEmpty($answer)) 
         {
@@ -124,20 +116,55 @@ param (
         elseif ($answer -eq 'Unselect')
         {
             $Current=$null
+	    write-Host 'CLEAR_CURRENT_DEVICE'
             $global:DeviceName = $null 
             $DeviceName =$null
         }
         elseif ($answer -eq 'New')
         {
+		 write-Host 'New'
             New-Device $Subscription $GroupName $HubName
-            $DeviceName= $global:DeviceName
+	        $answer = $global:retVal
+	        if ($answer -eq 'Done')
+	        {
+	            $answer  = $global:DeviceName
+	            $DeviceName=$answer
+	        }
+	        elseif($answer -eq 'Exists')
+	        {
+	        }
+	        elseif($answer -eq 'Back')
+	        {
+	        }
+	        elseif($answer -eq 'Error')
+	        {
+	        }
         }
         elseif ($answer -eq 'Delete')
         {
+	 write-Host 'Delete'
             Remove-Device  $Subscription $GroupName $HubName $DeviceName
-            $DeviceName = $null
-            $global:DeviceName = $null 
+	        $answer = $global:retVal
+	        if ($answer -eq 'Done')
+	        {
+		    $global:DeviceName=$null
+	            $DeviceName=$null
+	        }
+	        elseif($answer -eq 'Exists')
+	        {
+	        }
+	        elseif($answer -eq 'Back')
+	        {
+	        }
+	        elseif($answer -eq 'Error')
+	        {
+	        }
         }
+	    elseif ($answer -eq 'Refresh')
+	    {
+	        write-Host 'Refresh'
+	        $Refresh = $true
+	    }
         elseif ($answer -ne $global:DeviceName)
         {
 

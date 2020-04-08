@@ -4,14 +4,37 @@ param (
     [string]$GroupName = '' ,
     [string]$HubName = '' ,
     [string]$Current = '',
+    [string]$DeviceName='',
     [boolean]$Refresh=$false
 )
+
+
+
+show-heading '  D E V I C E  P R O V I S I O N I N G  S E R V I C E (DPS)  '  2
+$Prompt = '   Subscription :"' + $Subscription +'"'
+write-Host $Prompt
+$Prompt = '          Group :"' + $GroupName +'"'
+write-Host $Prompt
+$Prompt = '            Hub :"' + $HubName +'"'
+write-Host $Prompt
+$Prompt = ' Current Device :"' + $DeviceName +'"'
+write-Host $Prompt
+$Prompt = '    Current DPS :"' + $Current +'"'
+write-Host $Prompt
+
+    try{
+    . ("$global:ScriptDirectory\util\set-envvar.ps1")
+    } catch {
+        Write-Host "Error while loading supporting Env Vars PowerShell Scripts" 
+        Write-Host $_
+    }
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
         $prompt =  'Need to select a Subscription first.'
-        get-anykey $prompt
+        write-host $prompt
+        get-anykey 
         $global:DPS =  'Back'
         return
     }
@@ -19,7 +42,8 @@ param (
     {
         write-Host ''
         $prompt = 'Need to select a Group first.'
-        get-anykey $prompt
+        write-host $prompt
+        get-anykey 
         $global:DPS =  'Back'
         return
     }
@@ -42,30 +66,23 @@ param (
 
 
 
-    show-heading '  D E V I C E  P R O V I S I O N I N G  S E R V I C E (DPS)  '  2
-    $Prompt = '   Subscription :"' + $Subscription +'"'
-    write-Host $Prompt
-    $Prompt = '          Group :"' + $GroupName +'"'
-    write-Host $Prompt
-    $Prompt = '            Hub :"' + $HubName +'"'
-    write-Host $Prompt
-    $Prompt = '    Current DPS :"' + $Current +'"'
-    write-Host $Prompt
 
+   $DPSName=$Current
+    do{
 
     if ($Refresh -eq $true)
     {
         $global:DPSStrn = null
+	$Refresh=$false
     }
 
+  if ($null -eq $DPSName)
+        {
+            $DPSName =''
+        }
+        $Current=$DPSName
 
-    [boolean]$skip = $false
-    if  ($global:DPSStrn -eq '')
-    {
-        # This allows for previously returned empty string
-        $skip = $true
-    }
-    If  (([string]::IsNullOrEmpty($global:DPSStrn ))  -and (-not $skip))
+    If  ([string]::IsNullOrEmpty($global:DPSStrn )) 
     {   
         write-Host 'Getting DPS from Azure'
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
@@ -79,30 +96,9 @@ param (
     {
         $Prompt = 'No DPS found in Group "' + $GroupName + '".'
         write-Host $Prompt
-        $Prompt ='Do you want to create a new DPS for the Group "'+ $GroupName +'"?'
-        write-Host $prompt
-        get-yesorno $true
-	    $answer =  $global:retVal
-        if ($answer )
-        {
-            write-Host 'New DPS for the Group'
-            get-anykey
-            new-dps $Subscription $GroupName 
-            $result =  $global:retVal
-            if ($result -ne 'Error') {
-                $current = $result
-            }else{
-                $Current = $null
-            }
-        }
-        else {
-            $Current = $null
-        }
+        $global:DPSsStrn='EMPTY'
     }
-
-    $DPSName=$Current
-    do{
-        $Current=$DPSName
+       
         show-heading '  D E V I C E  P R O V I S I O N I N G  S E R V I C E  (DPS)'  2
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt
@@ -110,10 +106,12 @@ param (
         write-Host $Prompt
         $Prompt = '    Current Hub :"' + $HubName +'"'
         write-Host $Prompt
+        $Prompt = ' Current Device :"' + $DeviceName +'"'
+        write-Host $Prompt
         $Prompt = '    Current DPS :"' + $Current +'"'
         write-Host $Prompt
 
-        $options = 'N. New'
+        $options = 'N. New,R. Refresh'
         If (-not [string]::IsNullOrEmpty($Current )){
             $options = "$options,S. Show,U. Unselect,D. Delete"
             If (-not [string]::IsNullOrEmpty($HubName ))
@@ -123,7 +121,7 @@ param (
                     If (-not [string]::IsNullOrEmpty($global:HubsStrn ))
                     {
 
-                        $options = "$options,C. Connect Current Hub to DPS,Z. Disconnect Current Hub from DPS" 
+                        $options = "$options,G. Generate Env Vars for Hub Connection,C. Connect Current Hub to DPS,Z. Disconnect Current Hub from DPS" 
                     }
                 }
             }
@@ -132,6 +130,7 @@ param (
 
         parse-list $global:DPSStrn   '  D P S  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current
         $answer= $global:retVal
+	write-host $answer
 
         If ([string]::IsNullOrEmpty($answer)) 
         {
@@ -142,28 +141,69 @@ param (
         {
             write-Host 'Back'
         }
+	    elseif ($answer -eq 'Error')
+	    {
+	        write-Host 'Error'
+
+	    }
         elseif ($answer-eq 'Unselect')
         {
             $Current=$null
             $global:DPSName = $null 
             $DPSName =$null
         }
+
+        elseif ($answer -eq 'New')
+        {
+		write-Host 'New'
+	        New-DPS $Subscription $GroupName
+	        $answer = $global:retVal
+	        if ($answer -eq 'Done')
+	        {
+	            $answer  = $global:DPSName
+	            $DPSName=$answer
+	        }
+	        elseif($answer -eq 'Exists')
+	        {
+	        }
+	        elseif($answer -eq 'Back')
+	        {
+	        }
+	        elseif($answer -eq 'Error')
+	        {
+	        }
+
+        }
+        elseif ($answer -eq 'Delete')
+        {
+	    	write-Host 'Delete'
+            	Remove-DPS  $Subscription $GroupName $DPSName
+	        $answer = $global:retVal
+	        if ($answer -eq 'Done')
+	        {
+	            $DPSName=$null
+		    $global:DPSName=$null
+	        }
+	        elseif($answer -eq 'Exists')
+	        {
+	        }
+	        elseif($answer -eq 'Back')
+	        {
+	        }
+	        elseif($answer -eq 'Error')
+	        {
+	        }
+	}
+	elseif ($answer -eq 'Refresh')
+	    {
+	        write-Host 'Refresh'
+	        $Refresh = $true
+	    }
         elseif ($answer -eq 'Show')
         {
             show-dps $Current
         }
-        elseif ($answer -eq 'New')
-        {
-            New-DPS $Subscription $GroupName
-            $DPSName= $global:DPSName
-        }
-        elseif ($answer -eq 'Delete')
-        {
-            Remove-DPS  $Subscription $GroupName $DPSName
-            $DPSName = $null
-            $global:DPSName = $null 
-        }
-        elseif ($answer -eq 'Connect')
+	elseif ($answer -eq 'Connect')
         {
             $DPSName = $Current
             $global:DPSName = $Current 
@@ -184,7 +224,11 @@ param (
             $ExtenedHubName = "$HubName.azure-devices.net"
             az iot dps linked-hub delete --dps-name $DPSName --resource-group $GroupName --linked-hub $ExtenedHubName -o table
             show-dps $Current
-        }
+        } 
+        elseif ($answer -eq 'Generate')
+        {
+            set-env $Subscription $GroupName $HubName $DeviceName
+        } 
         elseif ($answer -ne $global:DPSName)
         {
             $global:DPSName = $answer 
@@ -196,10 +240,7 @@ param (
             }
             $global:doneItem = $null
         }
-        elseif ($answer -eq 'Error')
-        {
-            write-Host 'Error'
-        } 
+
     } while (($answer -ne 'Back') -and ($answer -ne 'Error'))
 
     $global:retval = $answer

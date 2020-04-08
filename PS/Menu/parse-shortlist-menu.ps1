@@ -77,7 +77,7 @@ param (
     write-Host ''
 
     $noEntities =0
-    if ($ListString -ne ' '){
+    if ($ListString -ne 'EMPTY'){
         # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
         $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
         $noEntities = $lines.Count
@@ -131,7 +131,7 @@ param (
                 $prompt += '. '   
                 write-Host $prompt -NoNewline
                 $prompt = [string]::Format($FormatStrn,$itemToList )
-                write-Host $itemToList -BackgroundColor Yellow -ForegroundColor Blue -NoNewline
+                write-Host $itemToList  -ForegroundColor Yellow -NoNewline
                 write-Host ' <-- Current Selection' -ForegroundColor DarkGreen 
                 $col = 0
             }
@@ -241,6 +241,11 @@ param (
     elseif ($KK -eq 'D')
     {
         $output = 'Delete'
+        $promptFinal =$output + " selected."
+    }
+    elseif ($KK -eq 'G')
+    {
+        $output =  'Generate'
         $promptFinal =$output + " selected."
     }
     elseif ($KK -eq 'S')
