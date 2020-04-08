@@ -5,6 +5,7 @@ param (
     [string]$Current='',
     [boolean]$Refresh=$false
 )
+
 show-heading '  I o T   H U B  '  2
 $Prompt =  ' Subscription :"' + $Subscription +'"'
 write-Host $Prompt
@@ -65,6 +66,7 @@ write-Host $Prompt
         {
             write-Host "Get Hubs Command:"
             write-host "$global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String "
+            get-anykey
         }
         $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
     }
@@ -168,9 +170,10 @@ write-Host $Prompt
     elseif ($answer -ne $global:HubName)
     {
         $global:HubName = $answer 
-	    $HubName=$answer
+	$HubName=$answer
         $global:DevicesStrn=$null
         $global:DeviceName=$null
+
         if ($global:doneItem)
             {
                 $answer='Back'             

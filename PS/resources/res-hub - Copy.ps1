@@ -57,6 +57,7 @@ param (
         {
             write-Host "Get Hubs Command:"
             write-host "$global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String "
+            get-anykey
         }
         $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
     }

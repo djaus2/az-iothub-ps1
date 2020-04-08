@@ -51,7 +51,7 @@ function Manage-AppData{
 
 
 
-        $itemsList ='Save App Data,Clear AppData,Load App Data,Get,Set prompt pause to 5 sec,Clear prompt pause'
+        $itemsList ='Save App Data,Clear AppData,Load App Data,Get,Set prompt pause to 5 sec,Clear prompt pause,Toggle Log,Toggle Show Az Queries'
 
 
 
@@ -80,6 +80,20 @@ function Manage-AppData{
                 $global:yesnowait = 5
              }
             'D6'    {  $global:yesnowait = $null }
+            'D7'   {  
+                If ([string]::IsNullOrEmpty($global:log )){
+                    $global:Log='Yes'
+                } else{
+                    $global:Log=$null
+                }
+        }
+            'D8'   {   
+                If ([string]::IsNullOrEmpty($global:echoCommands )){
+                    $global:echoCommands='Yes'
+                } else{
+                    $global:echoCommands=$null
+                }          
+            }
         }  
     }  
     while ($true)

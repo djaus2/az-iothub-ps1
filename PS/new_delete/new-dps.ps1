@@ -104,6 +104,7 @@ show-heading '  N E W  D P S   '   3
     {
         write-Host "Create DPS Command:"
         write-Host "az iot dps create --name $DPSName  --subscription $Subscription --resource-group $GroupName  --sku S1 --unit $global:DPSunits  -o Table"
+        get-anykey
     }
     az iot dps create --name $DPSName --subscription $Subscription  --resource-group $GroupName  --sku S1  --unit $global:DPSunits -o Table
 

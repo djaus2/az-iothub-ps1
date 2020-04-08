@@ -60,6 +60,7 @@ param (
             {
                 write-Host "Get Devices Command:"
                 write-host "$global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String "
+                get-anykey
             }
             $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String 
         }
@@ -114,6 +115,7 @@ param (
         {
             write-Host "Delete Device Command:"
             write-Host "az iot hub device-identity delete --device-id $DeviceName  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String"
+            get-anykey
         }
         az iot hub device-identity delete --device-id $DeviceName  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String
 

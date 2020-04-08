@@ -51,6 +51,7 @@ param (
             {
                 write-Host "Get DPS Command:"
                 write-host "$global:DPSStrn =  az iot dps list --subscription "$Subscription" --resource-group $GroupName -o tsv | Out-String "
+                get-anykey
             }
             $global:DPSStrn =  az iot dps list --subscription "$Subscription" --resource-group $GroupName -o tsv | Out-String
 
@@ -107,6 +108,7 @@ param (
         {
             write-Host "Delete DPS Command:"
             write-Host "az iot dps delete --name $DPSName --resource-group $GroupName --subscription "$Subscription" -o tsv | Out-String"
+            get-anykey
         }
         $global:echoCommands=$null
         az iot dps delete --name $DPSName --resource-group $GroupName --subscription "$Subscription" -o tsv | Out-String

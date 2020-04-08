@@ -133,6 +133,7 @@ if($false) {
     {
         write-Host "Create Hub Command:" -ForeGroundColor DarkGreen
         write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table" -ForeGroundColor DarkBlue
+        get-anykey
     }
     az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table
 

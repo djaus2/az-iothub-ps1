@@ -89,6 +89,7 @@ write-Host $Prompt
         {
             write-Host "Get DPS Command:"
             write-host "$global:DPSStrn =  az iot dps list --resource-group $GroupName  -o tsv | Out-String "
+            get-anykey
         }
         $global:DPSStrn =  az iot dps list --resource-group $GroupName   -o tsv | Out-String
     }

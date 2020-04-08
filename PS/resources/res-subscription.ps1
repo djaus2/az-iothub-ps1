@@ -51,6 +51,7 @@ show-heading  -Prompt '  S U B S C R I P T I O N  '  2
         {
             write-Host "Get Devices Command:"
             write-host "$global:SubscriptionsStrn  =  az account list  -o tsv | Out-String"
+            get-anykey
         }
         $global:SubscriptionsStrn  =  az account list  -o tsv | Out-String
     }

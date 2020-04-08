@@ -72,6 +72,7 @@ write-Host $Prompt
         {
             write-Host "Get Devices Command:"
             write-host "$global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String "
+            get-anykey
         }
         $global:DevicesStrn =  az iot hub device-identity list  --hub-name $HubName --resource-group $GroupName -o tsv | Out-String
     }

@@ -100,6 +100,7 @@ param (
     {
         write-Host "Create Device Command:"
         write-Host "az group create --name $GroupName --location $Location --subscription $Subscription  -o Table"
+        get-anykey
     }
     az group create --name $GroupName --location $Location --subscription $Subscription  -o Table 
 

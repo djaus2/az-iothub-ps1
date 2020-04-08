@@ -115,7 +115,8 @@ show-heading '  N E W  D E V I C E   '   3
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
             write-Host "Create Device Command:"
-            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o Table"
+            write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName  -o Table"
+            get-anykey
         }
         az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName --ee-o Table
     }
@@ -125,6 +126,7 @@ show-heading '  N E W  D E V I C E   '   3
         {
             write-Host "Create Device Command:"
             write-Host "az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName   -o Table"
+            get-anykey
         }
         az iot hub device-identity create -n $HubName -d  $DeviceName  --resource-group $GroupName  -o Table
     }

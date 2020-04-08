@@ -37,6 +37,7 @@ param (
             {
                 write-Host "Get Groups Command:"
                 write-host "$global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String"
+                get-anykey
             }
             $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
         }
@@ -93,6 +94,7 @@ param (
         {
             write-Host "Delete Group Command:"
             write-Host "az group delete --name  $GroupName"
+            get-anykey
         }
         az group delete --name $GroupName  
 

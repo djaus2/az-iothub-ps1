@@ -5,27 +5,18 @@ param (
     [boolean]$Refresh=$false
 )
 
-
- if ($false)  {
-    try {
-        . ("$global:ScriptDirectory\util\set-envvar.ps1")
-        . ("$global:ScriptDirectory\util\set-export.ps1")
-        . ("$global:ScriptDirectory\Util\Check-Group.ps1")
-        . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
-        . ("$global:ScriptDirectory\Util\Check-Device.ps1")
-    }
-    catch {
-        Write-Host "Error while loading supporting PowerShell Scripts" 
-        Write-Host $_
-    }
-}
+show-heading '  G R O U P  '  2
+$Prompt =  ' Subscription :"' + $Subscription +'"'
+write-Host $Prompt
+$Prompt = ' Current Group :"' + $GroupName +'"'
 
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
         write-Host ''
         $prompt =  'Need to select a Subscription first.'
-        get-anykey $prompt
+        write-host $prompt
+        get-anykey 
         $global:DeviceName =  'Back'
         return
     }
@@ -34,66 +25,55 @@ param (
     # $GroupStrnDataIndex =3
 
 
-    show-heading '  G R O U P  '  2
-    $Prompt = ' Subscription :"' + $Subscription +'"'
-    write-Host $Prompt
-    $Prompt = 'Current Group :"' + $Current +'"'
-    write-Host $Prompt
 
+   $GroupName = $Current
+    do{
 
     if ($Refresh -eq $true)
     {
         $global:GroupsStrn = null
     }
-    elseif(-not([string]::IsNullOrEmpty($current)))
-    {
-        get-yesorno $True "Do you want to use the Current Group? (Y/N)"
-        $answer = $global:retVal
-        if  ( $answer)
+    
+    
+  
+        if ($null -eq $GroupName)
         {
-            $global:retVal =$current
-            return 'Back'
+            $GroupName =''
         }
-    }
+        $Current=$GroupName
 
 
-    [boolean]$skip = $false
-    if ($global:GroupsStrn -eq '')
-    {
-        # This allows for previously returned empty string
-        $skip = $true
-    }
-    If (([string]::IsNullOrEmpty($global:GroupsStrn ))  -and (-not $skip))
+    If ([string]::IsNullOrEmpty($global:GroupsStrn )) 
     {   
         write-Host 'Getting Groups from Azure'
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
             write-Host "Get Groups Command:"
-            write-host "$global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String"
+            write-host "$global:GroupsStrn =  az group list --subscription  $Subscription -o tsv | Out-String"
+            get-anykey
         }
-        $global:GroupsStrn =  az group list --subscription  $global:Subscription -o tsv | Out-String
+        $global:GroupsStrn =  az group list --subscription  $Subscription -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     {
         $Prompt = 'No Groups found in Subscription "' + $Subscription + '".'
         write-Host $Prompt
-        $Prompt ='Do you want to create a new Group for the Subscription "'+ $Subscription +'"?'
-        write-Host $prompt
-        get-yesorno $true
-        $answer =  $global:retVal
-        if ($answer )
-        {
-            write-Host 'New Group'
-            $global:retVal = 'New'
-        }
-        else {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-        }
-        return
+        $global:GroupsStrn ='Empty'
     }
 
-    parse-list $global:GroupsStrn  '  G R O U P  ' 'N. New,D. Delete'   $GroupStrnIndex  $GroupStrnDataIndex  3 36  $Current
+	show-heading '  G R O U P  '  2
+	$Prompt =  ' Subscription :"' + $Subscription +'"'
+	write-Host $Prompt
+	$Prompt = ' Current Group :"' + $GroupName +'"'
+    
+
+       $options = 'N. New,R. Refresh'
+        If (-not [string]::IsNullOrEmpty($Current )){
+            $options = "$options,U. Unselect,D. Delete"
+        }
+
+        $options="$options,B. Back"
+    parse-list $global:GroupsStrn  '  G R O U P  ' $options  $GroupStrnIndex  $GroupStrnDataIndex  3 36  $Current
     $answer = $global:retVal
     write-Host $answer
 
@@ -106,26 +86,87 @@ param (
     {
         write-Host 'Back'
     }
+    elseif ($answer -eq 'Error')
+    {
+        write-Host 'Error'
+
+    }
+    elseif ($answer -eq 'Unselect')
+	{
+	    $Current=$null
+        write-Host 'CLEAR_CURRENT_GROUP'
+        $global:GroupName = $null
+	$GroupName=$null   
+	$global:HubsStrn = $null
+	$global:HubName = $null	
+        $global:DevicesStrn=$null
+        $global:DeviceName=$null
+	}
     elseif ($answer -eq 'New')
     {
         write-Host 'New'
+        new-Group $Subscription
+        $answer = $global:retVal
+        if ($answer -eq 'Done')
+        {
+            $answer  = $global:GroupName
+            $GroupName=$answer
+	    $global:HubsStrn=$null
+            $global:HubeName=$null
+            $global:DevicesStrn=$null
+            $global:DeviceName=$null
+        }
+        elseif($answer -eq 'Exists')
+        {
+        }
+        elseif($answer -eq 'Back')
+        {
+        }
+        elseif($answer -eq 'Error')
+        {
+        }
+
     }
     elseif ($answer -eq 'Delete')
     {
         write-Host 'Delete'
+       Remove-Group  $Subscription $GroupName
+        $answer = $global:retVal
+        if ($answer -eq 'Done')
+        {
+            $GroupName=$null
+	    $global:GroupName=$null
+        }
+        elseif($answer -eq 'Exists')
+        {
+        }
+        elseif($answer -eq 'Back')
+        {
+        }
+        elseif($answer -eq 'Error')
+        {
+        }
     }
-    elseif ($answer -ne $global:GroupName)
+    elseif ($answer -eq 'Refresh')
+    {
+        write-Host 'Refresh'
+        $Refresh = $true
+    }
+    elseif ($answer -ne $global:HubName)
     {
         $global:GroupName =  $answer
-
-        $global:HubsStrn=$null
+	$GroupName= =$answer
+	$global:HubsStrn=$null
+	$global:HubName = $null      
         $global:DevicesStrn=$null
-        $global:Hub = $null
-        $global:Device=$null
+	$global:DevicNamee=$null
+        
+    if ($global:doneItem)
+            {
+                $answer='Back'             
+        }
+       $global:doneItem = $null
     }
-    elseif ($answer -eq 'Error')
-    {
-        write-Host 'Error'
-    }
+ } while (($answer -ne 'Back') -and ($answer -ne 'Error'))
     $global:retVal =  $answer 
 }
