@@ -72,7 +72,7 @@ write-Host $Prompt
 
     if ($Refresh -eq $true)
     {
-        $global:DPSStrn = null
+        $global:DPSStrn = $null
 	$Refresh=$false
     }
 
@@ -93,13 +93,14 @@ write-Host $Prompt
         }
         $global:DPSStrn =  az iot dps list --resource-group $GroupName   -o tsv | Out-String
     }
+
+
     If ([string]::IsNullOrEmpty($global:DPSStrn ))
     {
         $Prompt = 'No DPS found in Group "' + $GroupName + '".'
         write-Host $Prompt
-        $global:DPSsStrn='EMPTY'
+        $global:DPSStrn='EMPTY'
     }
-       
         show-heading '  D E V I C E  P R O V I S I O N I N G  S E R V I C E  (DPS)'  2
         $Prompt = '   Subscription :"' + $Subscription +'"'
         write-Host $Prompt

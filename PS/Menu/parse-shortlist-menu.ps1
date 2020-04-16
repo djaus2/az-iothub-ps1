@@ -14,7 +14,7 @@ param (
     write-host 'Using Short Menu'    
 
     $baseMenu =@()
-    $Selns={$baseMenu}.Invoke()
+    $SelectionList={$baseMenu}.Invoke()
     function AddKey
     {
     param (
@@ -23,16 +23,16 @@ param (
     )
         switch ($no)
         {
-            0  {$Sselns.Add({D0}) }
-            1  {$Selns.Add({D1}) }
-            2  {$Selns.Add({D2}) }
-            3  {$Selns.Add({D3}) }
-            4  {$Selns.Add({D4}) }
-            5  {$Selns.Add({D5}) }
-            6  {$Selns.Add({D6}) }
-            7  {$Selns.Add({D7}) }
-            8  {$Selns.Add({D8}) }
-            9  {$Selns.Add({D9}) }
+            0  {$SelectionList.Add({D0}) }
+            1  {$SelectionList.Add({D1}) }
+            2  {$SelectionList.Add({D2}) }
+            3  {$SelectionList.Add({D3}) }
+            4  {$SelectionList.Add({D4}) }
+            5  {$SelectionList.Add({D5}) }
+            6  {$SelectionList.Add({D6}) }
+            7  {$SelectionList.Add({D7}) }
+            8  {$SelectionList.Add({D8}) }
+            9  {$SelectionList.Add({D9}) }
         }
     }
 
@@ -44,9 +44,9 @@ param (
     )
         switch ($ch)
         {
-            'B'  {$selns.Add('B') }
-            'N'  {$selns.Add({'N'}) }
-            'D'  {$selns.Add({'D'}) }
+            'B'  {$SelectionList.Add('B') }
+            'N'  {$SelectionList.Add({'N'}) }
+            'D'  {$SelectionList.Add({'D'}) }
         }
     }
 
@@ -99,7 +99,7 @@ param (
             }
             else {       
                 $itemToList = ($line-split '\t')[$DisplayIndex]
-                    $Selns.Add([string]$i)
+                    $SelectionList.Add([string]$i)
                 $NumActualEntries++
             }
             [string]$prompt = [string]$i
@@ -166,7 +166,7 @@ param (
         foreach ($option in $Options)
         {
             write-Host $option
-            $Selns.Add($option[0])
+            $SelectionList.Add($option[0])
         }
     }
 
@@ -182,7 +182,7 @@ param (
     $first = $true
 
     # write-Host 'Valid Keys: ' -NoNewline
-    # foreach ($n in $Selns) {write-Host $n -NoNewline; write-Host ' ' -NoNewline}
+    # foreach ($n in $SelectionList) {write-Host $n -NoNewline; write-Host ' ' -NoNewline}
 
     $KK = ' '
 
@@ -211,7 +211,7 @@ param (
             }
             Default
             {
-                if ( $Selns -notcontains $KK){
+                if ( $SelectionList -notcontains $KK){
                     if ($first){
                         write-Host '  --Invalid' -NoNewLine
                         $first = $false
@@ -223,7 +223,7 @@ param (
         ## $resp = [string]$val
     # Ref: https://www.computerperformance.co.uk/powershell/contains/
     #} while ( $SelectionList -notcontains $val) ##  $resp)foreach 
-    } while ( $Selns -notcontains $KK) 
+    } while ( $SelectionList -notcontains $KK) 
     
 
     if ($first -eq $false)
@@ -233,7 +233,12 @@ param (
     }
 
     $output = ''
-    if ($KK -eq 'B')
+    if ($KK -eq [string]$DefaultNo)
+    {
+        $output = 'Back'
+        $promptFinal =$output + " selected."
+    }
+    elseif ($KK -eq 'B')
     {
         $output = 'Back'
         $promptFinal =$output + " selected."

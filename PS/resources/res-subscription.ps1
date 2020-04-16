@@ -89,6 +89,8 @@ show-heading  -Prompt '  S U B S C R I P T I O N  '  2
         $global:GroupName = $null
         $global:HubName = $null
         $global:Device=$null
+        $global:DPSStrn= $null
+        $global:DPSName=$null
     }
     elseif ($answer -eq 'Error')
     {

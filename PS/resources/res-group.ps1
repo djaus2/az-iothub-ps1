@@ -96,9 +96,9 @@ $Prompt = ' Current Group :"' + $GroupName +'"'
 	    $Current=$null
         write-Host 'CLEAR_CURRENT_GROUP'
         $global:GroupName = $null
-	$GroupName=$null   
-	$global:HubsStrn = $null
-	$global:HubName = $null	
+	    $GroupName=$null   
+	    $global:HubsStrn = $null
+	    $global:HubName = $null	
         $global:DevicesStrn=$null
         $global:DeviceName=$null
 	}
@@ -111,7 +111,7 @@ $Prompt = ' Current Group :"' + $GroupName +'"'
         {
             $answer  = $global:GroupName
             $GroupName=$answer
-	    $global:HubsStrn=$null
+	        $global:HubsStrn=$null
             $global:HubeName=$null
             $global:DevicesStrn=$null
             $global:DeviceName=$null
@@ -152,18 +152,25 @@ $Prompt = ' Current Group :"' + $GroupName +'"'
         write-Host 'Refresh'
         $Refresh = $true
     }
-    elseif ($answer -ne $global:HubName)
+    elseif ($answer -eq $global:GroupName)
+    {
+        $answer ='Back'
+    }
+    elseif ($answer -ne $global:GroupName)
     {
         $global:GroupName =  $answer
-	$GroupName= =$answer
-	$global:HubsStrn=$null
-	$global:HubName = $null      
+        $Current = $answer
+	    $GroupName = $answer
+	    $global:HubsStrn=$null
+	    $global:HubName = $null      
         $global:DevicesStrn=$null
-	$global:DevicNamee=$null
+        $global:DevicNamee=$null
+        $global:DPSStrn= $null
+        $global:DPSName=$null
         
-    if ($global:doneItem)
-            {
-                $answer='Back'             
+        if ($global:doneItem)
+        {
+            $answer='Back'             
         }
        $global:doneItem = $null
     }

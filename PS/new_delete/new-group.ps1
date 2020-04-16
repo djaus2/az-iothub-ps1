@@ -49,13 +49,11 @@ param (
         }
         $GroupName = $answer
     }
-
-    $location = get-Location
+    $location = get-Location  
+    # $location is the name  $result is the encode location
     $result = $global:retVal
-
     $prompt = 'Location for Resource Group is "' + $result +'"'
     write-Host $prompt
-
     if ([string]::IsNullOrEmpty($result))
     {
         $global:retVal = 'Back'
@@ -76,8 +74,6 @@ param (
         $global:retVal ='Exit'
         return
     }
-    $Location = $result
-
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" exists.' + '" at location "' + $Location +'"'
     write-Host $prompt
     $global:GroupsStrn = $null
@@ -95,6 +91,9 @@ param (
     $global:DeviceName=$null
     $prompt = 'Creating new Azure Resource Group "' + $GroupName +'"'
     write-Host $prompt
+
+    # Use encoded location now
+    $Location = $result
     
     if(-not([string]::IsNullOrEmpty($global:echoCommands)))
     {

@@ -43,7 +43,7 @@ function Save-AppData{
 
     If (-not([string]::IsNullOrEmpty($global:DPSName )))
     {
-        $prompt = '$global:DeviceName =  "' + "$global:DPSName" +'"'
+        $prompt = '$global:DPSName =  "' + "$global:DPSName" +'"'
         write-Host $prompt
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
@@ -77,12 +77,7 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
-    If (-not([string]::IsNullOrEmpty($global:DPSStrn )))
-    {
-        $prompt = '$global:DPSStrn =  "' + "$global:DPSStrn" +'"'
-        write-Host $prompt
-        Add-Content -Path  $PsScriptFile   -Value $prompt
-    }
+
 
     If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
     {
@@ -97,12 +92,14 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
-    If (-not([string]::IsNullOrEmpty($global:DPSName )))
+
+    If (-not([string]::IsNullOrEmpty($global:DPSStrn )))
     {
-        $prompt = '$global:DPSName='+"$global:DPSName"
+        $prompt = '$global:DPSStrn =  "' + "$global:DPSStrn" +'"'
         write-Host $prompt
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
+
 
     If (-not([string]::IsNullOrEmpty($global:DPSUnits )))
     {
@@ -220,6 +217,11 @@ function clear-appData
         If (-not([string]::IsNullOrEmpty($global:Log )))
         {
             remove-variable Log  -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:DPSStrn )))
+        {
+            remove-variable DPSStrn  -Scope Global
         }
 
         If (-not([string]::IsNullOrEmpty($global:DPSName )))

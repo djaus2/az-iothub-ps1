@@ -170,9 +170,11 @@ write-Host $Prompt
     elseif ($answer -ne $global:HubName)
     {
         $global:HubName = $answer 
-	$HubName=$answer
+	     $HubName=$answer
         $global:DevicesStrn=$null
         $global:DeviceName=$null
+        $global:DPSStrn= $null
+        $global:DPSName=$null
 
         if ($global:doneItem)
             {

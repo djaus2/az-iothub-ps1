@@ -23,29 +23,7 @@ param (
     [boolean]$includeOther= $false
 
 
-    if ( -not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
-    {
-        if ($AdditionalMenuOptions -like '*Back*')
-        {
-            $includeBack=$true
-        }
-        if ($AdditionalMenuOptions -like '*Exit*')
-        {
-            $includeExit=$true
-        }
-        if ($AdditionalMenuOptions -like '*New*')
-        {
-            $includeNew=$true
-        }
-        if ($AdditionalMenuOptions -like '*Delete*')
-        {
-            $includeDelete=$true
-        }
-        if ($AdditionalMenuOptions -like '*_*')
-        {
-            $includeOther=$true
-        }
-    }
+
 
     [string]$temp =  [string]$ColWidth
     $FormatStrn = '{0,-' + $temp + '}'
@@ -139,9 +117,11 @@ param (
     if ( ($noEntities -lt 10) -and    ([string]::IsNullOrEmpty($env:IsRedirected)))
     {
         parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 
+        return $global:retVal
     }
     else 
     {
+
         write-Host "Using Long Menu"
         [int] $i=1
         write-Host ''
@@ -165,6 +145,7 @@ param (
             }
             else {       
                 $itemToList = ($j-split '\t')[$DisplayIndex]
+                $SelectionList.Add($i)
             }
             [string]$prompt = [string]$i
             $prompt += '. '     
@@ -221,271 +202,113 @@ param (
             
             $i++
         }
-        if ($includeNew)
-        {
-            write-Host ''
-            $prompt = 'N. '
-            $prompt +=  'New    ' + $Title
-            write-Host $prompt
-            
-        }
-        if ($includeDelete)
-        {
-            $prompt = 'D. '
-            $prompt +=  'Delete ' + $Title
-            write-Host $prompt
-        }
-        if ($includeExit)
-        {
-            $prompt = 'X. '
-            $prompt +=  'Exit '
-            write-Host $prompt
-        }
 
-        if ($includeBack)
+        If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
         {
-            write-Host 'B. Back'
-        }
-        if ($includeOther)
-        {
-            
-            $others = $AdditionalMenuOptions -split ','
-            $xx = $others.where{$_[0] -eq '_'}
-            # $xx.foreach([string])
-            foreach($option in $xx)
+            write-host ''
+            $Options = $AdditionalMenuOptions -split ','
+            write-Host ''
+            foreach ($option in $Options)
             {
-                $prompt =  $option.Replace("_","")
-                $key = $prompt.Substring(0,1)
-                $SelectionList.Add($key)
-                write-Host $prompt
+                write-Host $option
+                [char] $ch = [char] ($option.ToUpper()).Substring(0,1)
+                [int]$opcode = 128 + [int] $ch
+                $SelectionList.Add($opcode)
             }
         }
-
-
-
+        $SelectionList.Add(-1)
 
         write-Host ''
 
+        
 
-        [int]$selection =1
-        If ([string]::IsNullOrEmpty($CurrentSelection)){
-            $prompt ="Please make enter a number (or letter) to select then press [Enter]"
-        }
-        else{
-            $prompt ="Please make enter a number (or letter) to select then press [Enter].. Or just [Enter] for Current"
-        }
-        do 
-        {
-            [int] $selection = 0
+
+
+        do{
+	        if ([string]::IsNullOrEmpty($CurrentSelection)){
+                $prompt ="Please make enter a number (or letter) to select then press [Enter]"
+            }
+            else{
+                $prompt ="Please make enter a number (or letter) to select then press [Enter].. Or just [Enter] for Current"
+            }
+	        [int] $selection = 0
             $answer = read-host $prompt
-            [string]$ans = [string]$answer.ToUpper()
-            if (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
+            $answer = $answer.ToUpper()
+
+            if($answer -match '^\d+$')
             {
-                #Flag enter pressed so use $CurrentSelection
+                # All OK, is an integer
+                $Selection = [int]$answer
+                
+            }
+            elseif (([string]::IsNullOrEmpty($answer)) -AND( $CurrentSelection -ne ''))
+            {
+                #Flag enter pressed so use $CurrentSelection and return
                 $selection  = -1
             }
             elseif ([string]::IsNullOrEmpty($answer)) 
             {
                 $selection  = 0
             }
-            elseif($answer -eq '-1')
-            {
-                # Just in case the user enters -1!
-                $selection = 0
+            else{
+                [char] $ch = [char] ($answer.ToUpper()).Substring(0,1)
+                $selection = 128 + [int] $ch
             }
-            elseif ($answer.ToUpper() -eq 'X')
-            {
-                if ($includeExit){
-                    $selection = $i+4
-                }
-                else {
-                    $selection=o
-                }
-            }
-            elseif ($answer.ToUpper() -eq 'B')
-            {
-                if ($includeBack){
-                        $selection = $i+3
-                }
-                else {
-                    $selection=0
-                }
-            }
-            elseif ($answer.ToUpper() -eq 'D')
-            {
-                if ($includeDelete){
-                    $selection = $i+2
-                }
-                else {
-                    $selection=o
-                }
-            }
-            elseif ($answer.ToUpper() -eq 'N')
-            {
-                if ($includeNew){
-                    $selection = $i+1
-                }
-                else {
-                    $selection=o
-                }
-            }
-            elseif ($SelectionList -contains $ans)
-            {
-                $selection = $i+10
-            }
-            else 
-            {
-                $selection = [int]$answer
-            }
+        
             $prompt = "Please make a VALID selection."
-           
 
-        } until (`
-                ($selection -gt 0) -and (($selection  -le  $i+4) `
-                -and ($selection  -ne  ($i)) ) `
-                -or ($SelectionList -contains $ans) `
-                -OR ($selection -eq -1))
+        } until  ($SelectionList -contains $Selection) 
 
         $output = ''
-        # Got to update next section
-        if ($SelectionList -contains $ans)
+
+        if ($Selection -gt 128)
         {
-            write-host "[1] Create New Group in Subscription: $Subscription then ..."
-            write-host "[2] Create New Hub in Group then ..."
-            write-host "[3] Create Device in Hub then ..."
-            write-host "[4] Get connection strings"
-            write-host "Continue?"
-            get-yesorno $true
-            $answer =  $global:retVal
-            if ($answer)
+            $opcode = $Selection -128
+            $ch = [char] $opcode
+            if ($ch -eq  'B')
             {
-                $namesStrn = read-host Enter GroupName,HubName,DeviceName as CSV string
-                write-host "Validating the CSV list"
-                if ([string]::IsNullOrEmpty($namesStrn)) 
-                {
-                    return 'Back 1'
-                }
-                $names = $namesStrn -split ','
-                if ($names.Length -ne 3)
-                {
-                    write-host $names.Length
-                    return 'Back 2'
-                }
-                foreach ($name in $names)
-                {
-                    $name = $name.Trim()
-                    if ([string]::IsNullOrEmpty($name)) 
-                    {
-                        return 'Back 3'
-                    }
-                }
-
-                write-Host "Checking names against existing entities in the Subscription: $Subscription"
-                if   ( check-group $Subscription $names[0]  )
-                {
-                    return 'Back 4'
-                }
-                if (check-hub  $Subscription $names[0] $names[1] )
-                {
-                    return 'Back 5'
-                }
-                If ($false)
-                {
-                    # Can't serach for devices without a hub
-                    # 2Do Get all hubs then search those for the device name
-                    if (check-device  $Subscription $names[0] $names[1] $names[2] )
-                    {
-                        return 'Back 6'
-                    }
-                }
-                $grp = $names[0]
-                $hb = $names[1]
-                $dev =$names[2]
-                write-host "[1] Create New Group $grp in Subscription: $Subscription then ..."
-                write-host "[2] Create New Hub $hb in Group then ..."
-                write-host "[3] Create Device $dev in Hub then ..."
-                write-host "[4] Get connection strings"
-                get-yesorno $true "Continue?"
-                $answer = $global:retVal
-                if (-not $answer)
-                {
-                    return 'Back'
-                }
-
-                [boolean]$success=$false
-                $lev=0
-                write-host "[1] Create New Group in Subscription: $Subscription"
-                new-group $Subscription $grp
-                if   ( check-group $Subscription $grp  )
-                {
-                    $lev++
-                    write-host "[2] Create New Hub in Group"
-                    new-hub $Subscription $grp $hb
-                    if (check-hub  $Subscription $grp $hb )
-                    {
-                        $lev++
-                        write-host "[3] Create Device in Hub"
-                        new-device $Subscription $grp $hb $dev
-                        if (check-device  $Subscription $grp $hb $dev )
-                        {
-                            $lev++
-                            write-host "[4] Get connection strings."
-                            get-all  $Subscription $grp $hb $dev
-
-                            $sucess = $true
-                        }
-                    }
-                }
-                if ($sucess)
-                {
-                    write-host "Creation suceeded"
-                }
-                else {
-                    write-host "Failed: $lev"
-                }
-                get-anykey
-
+                $output = 'Back'
+                $promptFinal = $output +" selected."
             }
-            else{
-                return 'Back'
+            elseif ($ch -eq  'X')
+            {
+                $output = 'Exit'
+                $promptFinal = $output +" selected."
             }
+            elseif ($ch -eq  'D')
+            {
+                $output = 'Delete'
+                $promptFinal = $output +" selected."
+            }
+            elseif ($ch -eq 'N')
+            {
+                $output = 'New'
+                $promptFinal = $output +" selected."
+            }
+            elseif ($ch -eq  'R')
+            {
+                $output = 'Refresh'
+                $promptFinal = $output +" selected."
+            }
+            elseif ($ch -eq 'U')
+            {
+                $output = 'Unselect'
+                $promptFinal = $output +" selected."
+            } 
         }
-        elseif ($selection -eq -1)
-        {
+        elseif ($Selection -eq -1)  {
             $output = $CurrentSelection
             $promptFinal = "Current $Title selected."
-        }
-        elseif ($selection -eq  $i+3)
-        {
-            $output = 'Back'
-            $promptFinal = $output +" selected."
-        }
-        elseif ($selection -eq  $i+4)
-        {
-            $output = 'Exit'
-            $promptFinal = $output +" selected."
-        }
-        elseif ($selection -eq  $i+2)
-        {
-            $output = 'Delete'
-            $promptFinal = $output +" selected."
-        }
-        elseif ($selection -eq  $i+1)
-        {
-            $output = 'New'
-            $promptFinal = $output +" selected."
-        }
-        else 
-        {          
+            $output = $CurrentSelection
+        } else {
             $lines2 =($ListString-split '\n')[$selection-1]
             $output =  ($lines2-split '\t')[$CodeIndex]  
-            $promptFinal = $Title +' "' +  $output + '" selected' 
+            $promptFinal = $Title +' "' +  $output + '" selected'
         }
-        write-Host ''
-        
-        write-Host $promptFinal
-        $global:retVal = $output
 
     }
+    write-Host $promptFinal
+    $global:retVal = $output 
+    return $output
 }
 

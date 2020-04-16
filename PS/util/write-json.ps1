@@ -9,7 +9,7 @@ function write-json{
 
     $answer=$foldernameIn
     $folderName = $folderNameIn
-    $doingOuterFolder = $true
+    $doingOuterFolder = $false
 
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
     write-host ''
@@ -27,7 +27,7 @@ function write-json{
     If  ([string]::IsNullOrEmpty($foldernameIn))
     {
         $foldernameIn ="" 
-        if ($doingOuterFolder)
+        if (!$doingOuterFolder)
         {
             show-quickstarts 'Quickstart Projects folder.' 'Quickstarts,ScriptHostRoot'
             $foldernameMaster =  $global:retVal1
@@ -43,12 +43,15 @@ function write-json{
 
         if ($answer.ToLower() -eq 'quickstarts'){
             $PsScriptFile = "$global:ScriptDirectory\qs-apps\quickstarts\launchSettings.json"
+            $doingOuterFolder = $false
         }
         elseif ($answer.ToLower() -eq 'scripthostroot'){
             $PsScriptFile = "$global:ScriptDirectory\launchSettings.json"
+            $doingOuterFolder = $false
         } else {
 
-            $doingOuterFolder = $false
+
+            $doingOuterFolder = $true
             show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
             select-subfolder $answer "app from the Quickstart: $folderName"
             $answer = $global:retVal
@@ -75,7 +78,6 @@ function write-json{
 
 
 
-    
 
     $prompt =  "Writing Env Vars to: $PsScriptFile"
     get-anykey $prompt 'Continue' $false
@@ -242,7 +244,7 @@ function write-json{
     write-Host "Written Json file to:  $PsScriptFile that will set the Hub connection strings as Env. Vars"
     get-anykey
 
-    } while (!$doingOuterFolder)
+    } while ($doingOuterFolder)
 
 }
 

@@ -28,6 +28,7 @@ try {
     . ("$global:ScriptDirectory\menu\parse-shortlist-menu.ps1")
     . ("$global:ScriptDirectory\menu\choose-selection-menu.ps1")
     . ("$global:ScriptDirectory\menu\choose-selection-menu-redirected.ps1")
+    . ("$global:ScriptDirectory\menu\select-subfolder.ps1")
 
 
     . ("$global:ScriptDirectory\resources\res-subscription.ps1")

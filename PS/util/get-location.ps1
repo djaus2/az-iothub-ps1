@@ -15,9 +15,11 @@ function get-location
             get-anykey $prompt 'Exit'
             return
         }
-        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   $LocationStrnIndex $LocationStrnDataIndex 3  36  $DefaultRegion
+        parse-list $global:LocationsStrn  '  L O C A T I O N  ' 'B. Back'   $LocationStrnIndex $LocationStrnDataIndex 3  36  $null 
+        # $DefaultRegion
         
         $result = $global:retVal
+
 
         $prompt = 'Location "' + $result +'" returned'
         write-Host $prompt
