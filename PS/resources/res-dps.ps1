@@ -257,10 +257,15 @@ param (
         write-Host ''
         write-Host "$DPSName (Wait):"
         az iot dps show --name $DPSName -o table
+ 
         write-Host ''
-        write-Host "Connected Hubs (Wait):"
+        write-Host "Getting DPS: $DPSName info (Wait) :"
         $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
+        write-Host "DPS ID Scope:"
+        foreach ($dps in $query) {$dps.Properties.idScope}
+        write-Host "Connected Hubs:"
         foreach ($dps in $query) {$dps.Properties.iotHubs.name}
+
     }
     write-Host ''
     get-anykey

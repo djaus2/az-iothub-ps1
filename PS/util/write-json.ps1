@@ -175,7 +175,7 @@ function write-json{
         $EventHubsCompatibleEndpoint =   $env:EVENT_HUBS_COMPATIBILITY_ENDPOINT
     }
     write-host "7. EVENT_HUBS_COMPATIBILITY_ENDPOINT:$EventHubsCompatibleEndpoint"
-    $op = '            "EVENT_THUBS_COMPATIBILITY_ENDPOINT":"' +"$EventHubsCompatibleEndpoint" +'",'
+    $op = '            "EVENT_HUBS_COMPATIBILITY_ENDPOINT":"' +"$EventHubsCompatibleEndpoint" +'",'
     Add-Content -Path  $PsScriptFile  -Value $op
     
     # EventHubsCompatiblePath

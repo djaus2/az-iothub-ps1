@@ -55,7 +55,7 @@ write-Host $Prompt
     do{
     if ($Refresh -eq $true)
     {
-        $global:DevicesStrn = null
+        $global:DevicesStrn = $null
 	$Refresh = $false
     }
     
@@ -80,7 +80,7 @@ write-Host $Prompt
     {
         $Prompt = 'No Devices found in Hub "' + $HubName + '".'
         write-Host $Prompt
-        $global:DeviceStrn ='Empty'
+        $global:DevicesStrn ='Empty'
     }
 
 
@@ -94,7 +94,7 @@ write-Host $Prompt
         $Prompt = ' Current Device :"' + $Current +'"'
         write-Host $Prompt
 
-        $options = 'N. New.R. Refresh'
+        $options = 'N. New,R. Refresh'
         If (-not [string]::IsNullOrEmpty($Current )){
             $options = "$options,U. Unselect,D. Delete"
         }
