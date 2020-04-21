@@ -118,12 +118,13 @@ write-Host $Prompt
             $options = "$options,S. Show,U. Unselect,D. Delete"
             If (-not [string]::IsNullOrEmpty($HubName ))
             {
+                $options="$options,G. Generate Env Vars for Hub Connection"
                 If (-not [string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP ))
                 {
                     If (-not [string]::IsNullOrEmpty($global:HubsStrn ))
                     {
 
-                        $options = "$options,G. Generate Env Vars for Hub Connection,C. Connect Current Hub to DPS,Z. Disconnect Current Hub from DPS" 
+                        $options = "$options,C. Connect Current Hub to DPS,Z. Disconnect Current Hub from DPS" 
                     }
                 }
             }
