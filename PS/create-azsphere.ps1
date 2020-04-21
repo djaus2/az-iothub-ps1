@@ -1,10 +1,11 @@
-function create-dpscert{
+function create-azsphere{
     param (
         [string]$Subscription = '' ,
         [string]$GroupName = '' ,
         [string]$HubName = '' ,
         [string]$DPSName= '',
         [string]$DPSCertificateName= '',
+        [string]$EnrollmentGroupName='',
         [boolean]$Refresh=$false
     )
     show-heading '  N E W  D P S  C E R T I F I C A T E '  1
@@ -101,6 +102,28 @@ function create-dpscert{
     write-host "Go to the Azure Portal.`n- Go to Device Provisioning Services.`n- Choose $DPSName.`n- Select Certificates.`n- Select $DPSCertificateName.`n     Ignore Verification Code...Done that."
     write-host "- Upload the Validation Certificate: Click in last box at bottom 'Select a File' and browse to it."
     write-host "Then Verify the Certificate (Click on [Verify])." -BackgroundColor DarkRed  -ForegroundColor   Yellow
+
+    write-host ''
+    get-anykey "" "Continue when you have done that"
+   
+
+    if ([string]::IsNullOrEmpty($EnrollmentGroupName))
+    {
+        $answer = get-name 'DPS Enrollment Group Name'
+        if ($answer-eq 'Back')
+        {
+            write-Host 'Returning'
+            $global:retVal = 'Back'
+            return
+        }
+        $EnrollmentGroupName = $answer
+    }
+
+    write-host "`nCreating EnrollmentGroup (Wait)`n"
+    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
+    write-host "`nDone that.`n"
+    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
+
     if (Test-Path $CAcertificate)
     {
         Remove-Item $CAcertificate
@@ -126,4 +149,4 @@ $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -P
 . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
 $headingfgColor_1="Black"
 $headingbgColor_1="Green"
-create-dpscert $global:subscription $global:groupname $global:hubname $global:dpsname  "First"
+create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname  "First" "EnrollmeNow"
