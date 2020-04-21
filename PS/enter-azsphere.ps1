@@ -30,7 +30,7 @@ function enter-azSphere{
     
     # Nb: Change this if different. The cmd looks for it in registry. 
     # I found it is not in registry. Seems to just use the location of that script
-    $env:dp0="C:\ProgramFiles (x86)\Microsoft Azure Sphere SDK"
+    $env:dp0="C:\Program Files (x86)\Microsoft Azure Sphere SDK"
 
     $env:sysroots="$env:dp0\sysroots"
     $dirs = Get-ChildItem  -Directory -path $env:sysroots  | select-object name|  out-string
@@ -82,6 +82,13 @@ function enter-azSphere{
         {
             $env:Path -split ';'
         }
+        write-host ''
+        get-yesorno $true " Are you logged into azure Sphere?"
+
+        if (-not $global:retVal){
+           azsphere login
+        }
+        
     }
 }
 
