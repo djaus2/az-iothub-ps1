@@ -48,6 +48,13 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
+    If (-not([string]::IsNullOrEmpty($global:DPSidscope )))
+    {
+        $prompt = '$global:DPSidscope =  "' + "$global:DPSidscope" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    } 
+
     If (-not([string]::IsNullOrEmpty($global:SubscriptionsStrn )))
     {
         $prompt = '$global:SubscriptionsStrn =  "' + "$global:SubscriptionsStrn" +'"'
@@ -204,6 +211,11 @@ function clear-appData
         If (-not([string]::IsNullOrEmpty($global:TenantName )))
         {
             remove-variable TenantName  -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:DPSidscope )))
+        {
+            remove-variable DPSidscope  -Scope Global
         }
     
         If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))

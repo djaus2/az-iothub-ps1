@@ -18,6 +18,7 @@ function create-azsphere{
     $Prompt = '    Current DPS :"' + $DPSName +'"'
     write-Host $Prompt
 
+    read-host 1
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
@@ -56,6 +57,8 @@ function create-azsphere{
         return
     }
 
+    read-host 2
+
 	$CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
     $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
     
@@ -70,6 +73,8 @@ function create-azsphere{
         }
         $DPSCertificateName = $answer
     }
+
+    read-host 3
 
     write-host "Getting CACertificate from azsphere (Wait)"
     azsphere tenant download-CA-certificate --output $CAcertificate

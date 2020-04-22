@@ -133,7 +133,7 @@ function create-azsphere{
         remove-item $ValidationCertificationCertificate
     }
 }
-
+<#
 # # Test by entering .\create-dps-cert
 
 # show-heading calls this. Make a dummy call here:
@@ -150,3 +150,4 @@ $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -P
 $headingfgColor_1="Black"
 $headingbgColor_1="Green"
 create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname  "First" "EnrollmeNow"
+#>
