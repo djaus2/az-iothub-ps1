@@ -233,6 +233,7 @@ param (
     }
 
     $output = ''
+    
     if ($KK -eq [string]$DefaultNo)
     {
         $output = 'Back'
@@ -242,6 +243,12 @@ param (
     {
         $output = 'Back'
         $promptFinal =$output + " selected."
+    }
+    elseif ($Title -eq '   A Z U R E  S P H E R E  ')
+    {
+        $output = "AzSpehere Action: $kk"
+        $promptFinal =$output + " selected."
+        $global:kk = $kk
     }
     elseif ($KK -eq 'D')
     {

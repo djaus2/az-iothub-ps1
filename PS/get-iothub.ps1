@@ -42,7 +42,7 @@ try {
 
 
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
-     . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
+    . ("$global:ScriptDirectory\new_delete\new-hub.ps1")
     . ("$global:ScriptDirectory\new_delete\new-device.ps1")
     . ("$global:ScriptDirectory\new_delete\new-dps.ps1")
 
@@ -51,8 +51,10 @@ try {
     . ("$global:ScriptDirectory\new_delete\delete-device.ps1")
     . ("$global:ScriptDirectory\new_delete\delete-dps.ps1")
 
+    . ("$global:ScriptDirectory\azsphere\res-azsphere.ps1")
+    . ("$global:ScriptDirectory\azsphere\enter-azsphere.ps1")
 
-     . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
+    . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
 }
 catch {
     Write-Host "Error while loading supporting PowerShell Scripts" 
@@ -242,13 +244,15 @@ $answer = ''
 $selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','D0','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Done'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
 $HubName = $global:HubName
 $DeviceName = $global:DeviceName
 $DPSName =$global:DPSName
+$Tenant = $global:Tenant
+$TenantName = $global:TenantName
 [boolean] $GetKey = $true
 do
 {
@@ -257,6 +261,8 @@ do
     $HubName = $global:HubName
     $DeviceName = $global:DeviceName
     $DPSName = $global:DPSName
+    $Tenant = $global:Tenant
+    $TenantName = $global:TenantName
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
@@ -266,6 +272,8 @@ do
     $Prompt = '         Device :"' + $DeviceName +'"'
     write-Host $Prompt
     $Prompt = '            DPS :"' + $DPSName +'"'
+    write-Host $Prompt
+    $Prompt = '         Tenant :"' + $TenantName +'"'
     write-Host $Prompt
     write-Host ''
     $items =$ItemsList  -split ','
@@ -621,7 +629,9 @@ do
                         }
                     }
                 }
-            'D0' { exit}
+            'D0' { 
+                get-azsphere $Subscription $GroupName $HubName $DPSName $Tenant $TenantName
+                }
             R    { 
                     clear-appData
                     [boolean] $GetKey = $true

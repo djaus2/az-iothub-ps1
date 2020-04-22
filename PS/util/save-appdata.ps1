@@ -100,6 +100,20 @@ function Save-AppData{
         Add-Content -Path  $PsScriptFile   -Value $prompt
     }
 
+    If (-not([string]::IsNullOrEmpty($global:Tenant )))
+    {
+        $prompt = '$global:Tenant =  "' + "$global:Tenant" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
+    If (-not([string]::IsNullOrEmpty($global:TenantName )))
+    {
+        $prompt = '$global:TenantName =  "' + "$global:TenantName" +'"'
+        write-Host $prompt
+        Add-Content -Path  $PsScriptFile   -Value $prompt
+    }
+
 
     If (-not([string]::IsNullOrEmpty($global:DPSUnits )))
     {
@@ -180,6 +194,16 @@ function clear-appData
         If (-not([string]::IsNullOrEmpty($global:DevicesStrn )))
         {
             remove-variable DevicesStrn  -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:Tenant )))
+        {
+            remove-variable Tenant  -Scope Global
+        }
+
+        If (-not([string]::IsNullOrEmpty($global:TenantName )))
+        {
+            remove-variable TenantName  -Scope Global
         }
     
         If (-not([string]::IsNullOrEmpty($global:SpecificVersion )))
