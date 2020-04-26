@@ -67,7 +67,7 @@ $data= @"
       Out-File -FilePath $PsScriptFile    -InputObject '' -Encoding ASCII
       Add-Content -Path  $PsScriptFile   -Value $data
 }
-function get-azsphere{
+function get-azsphereDPS{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
@@ -165,7 +165,7 @@ param (
         $Prompt = ' IOT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
 
-        $options ='P. Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,D. Enable Debugging,W. Check Wifi Status,U. Check Update Status,C. Create Certificate,E. New Enrollment Group,I. Get DPS ID Scope,A. Write app_manifest.json'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,D. Enable Debugging,W. Check Wifi Status,U. Check Update Status,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,I. Create a Certificate on IoT Central and verify it,D. Get DPS ID Scope,W. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
@@ -192,7 +192,7 @@ param (
             $global:kk = $null
             switch ($kk)
             {
-                'P' {   enter-azsphere}
+                'A' {   enter-azsphere}
                 'L' {
                         azsphere login
                     }
@@ -274,8 +274,10 @@ param (
                 'C' {
                         create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname 
                     }
-                'E' {}
-                'I' {
+                'E' {
+                        create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname 
+                    }
+                'D' {
                         write-Host ''
                         write-Host "Getting DPS: $DPSName info (Wait) :"
                         $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
@@ -286,7 +288,7 @@ param (
                         $global:DPSidscope = $DPSidscope
                     }
 
-                'A' {
+                'M' {
                         write-app_manifest $DPSidscope $HubName $Tenant
                     }
                 'D' {

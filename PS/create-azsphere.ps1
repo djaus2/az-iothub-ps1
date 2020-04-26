@@ -1,3 +1,44 @@
+
+function create-enrolmentgroup{
+    param (
+        [string]$Subscription = '' ,
+        [string]$GroupName = '' ,
+        [string]$HubName = '' ,
+        [string]$DPSName= '',
+        [string]$DPSCertificateName= '',
+        [string]$EnrollmentGroupName='',
+        [boolean]$Refresh=$false
+    )
+    show-heading '  C R E A T E   E N R O L M E N T   G R O U P '  1
+    $Prompt = '   Subscription :"' + $Subscription +'"'
+    write-Host $Prompt
+    $Prompt = '          Group :"' + $GroupName +'"'
+    write-Host $Prompt
+    $Prompt = '            Hub :"' + $HubName +'"'
+    write-Host $Prompt
+    $Prompt = '    Current DPS :"' + $DPSName +'"'
+    write-Host $Prompt
+
+    read-host 1
+
+    if ([string]::IsNullOrEmpty($EnrollmentGroupName))
+    {
+        $answer = get-name 'DPS Enrollment Group Name'
+        if ($answer-eq 'Back')
+        {
+            write-Host 'Returning'
+            $global:retVal = 'Back'
+            return
+        }
+        $EnrollmentGroupName = $answer
+    }
+
+    write-host "`nCreating EnrollmentGroup (Wait)`n"
+    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
+    write-host "`nDone that.`n"
+    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
+}
+
 function create-azsphere{
     param (
         [string]$Subscription = '' ,
@@ -110,25 +151,8 @@ function create-azsphere{
 
     write-host ''
     get-anykey "" "Continue when you have done that"
+    read-host "Now yoiu can run Create New Enrolment Group."
    
-
-    if ([string]::IsNullOrEmpty($EnrollmentGroupName))
-    {
-        $answer = get-name 'DPS Enrollment Group Name'
-        if ($answer-eq 'Back')
-        {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-            return
-        }
-        $EnrollmentGroupName = $answer
-    }
-
-    write-host "`nCreating EnrollmentGroup (Wait)`n"
-    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
-    write-host "`nDone that.`n"
-    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
-
     if (Test-Path $CAcertificate)
     {
         Remove-Item $CAcertificate
@@ -137,7 +161,8 @@ function create-azsphere{
     {
         remove-item $ValidationCertificationCertificate
     }
-}
+
+  }
 <#
 # # Test by entering .\create-dps-cert
 

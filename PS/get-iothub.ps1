@@ -1,7 +1,7 @@
 # region Include required files
 #
 $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-write-Host $global:ScriptDirectory
+
 try {
     . ("$global:ScriptDirectory\menu\qs.ps1")
     . ("$global:ScriptDirectory\util\settings.ps1")
@@ -52,6 +52,8 @@ try {
     . ("$global:ScriptDirectory\new_delete\delete-dps.ps1")
 
     . ("$global:ScriptDirectory\azsphere\res-azsphere.ps1")
+    . ("$global:ScriptDirectory\azsphere\res-azsphere-dps.ps1")
+    . ("$global:ScriptDirectory\azsphere\res-azsphere-iot-central.ps1")
     . ("$global:ScriptDirectory\azsphere\enter-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-azsphere.ps1")
 
@@ -61,6 +63,9 @@ catch {
     Write-Host "Error while loading supporting PowerShell Scripts" 
     Write-Host $_
 }
+
+
+# & "$global:ScriptDirectory\app-settings"
 
 If (-not([string]::IsNullOrEmpty($global:Time )))
 {
@@ -242,10 +247,10 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 show-heading  -Prompt '  S E T U P  ' 1
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','D0','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','B','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere DPS,Azure Sphere IoT Central'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -281,9 +286,10 @@ do
     $i=1
     foreach ($item in $items) 
     {
-        if ($i -eq 10)
+        if ($i -gt 9)
         {
-            [string]$prompt = "0"
+            [char] $ch = [char] (65 + $i-10)
+            [string]$prompt = "$ch"
         } else{
             [string]$prompt = [string]$i
         }
@@ -337,8 +343,10 @@ do
     }
     $GetKey = $true
 
+
     if  ( $selectionList -contains $K)
     {
+
         switch ( $k )
         {
             'D1'   { 
@@ -630,7 +638,7 @@ do
                         }
                     }
                 }
-            'D0' { 
+            'A' { 
                 get-azsphere $Subscription $GroupName $HubName $DPSName $Tenant $TenantName
                 }
             R    { 
