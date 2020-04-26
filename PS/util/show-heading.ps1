@@ -3,7 +3,8 @@ param (
    [Parameter(Mandatory)]
    [string]$Prompt ,
    [Parameter(Mandatory)]
-   $Level
+   $Level,
+   [string]$SubPrompt
 )
     $fg="White"
     $bg="blue"
@@ -36,6 +37,13 @@ param (
     [Console]::ResetColor()
     write-Host ' '  -NoNewline
     write-Host $prompt -BackgroundColor $bg -ForegroundColor $fg -NoNewline
+
+    If (-not ([string]::IsNullOrEmpty($SubPrompt)))
+    {
+        write-Host ' '  -NoNewline
+        write-Host $SubPrompt -BackgroundColor DarkGreen -ForegroundColor Black -NoNewline
+    }
+
     [Console]::ResetColor()
     write-Host ' using PowerShell AND Azure CLI'
     show-time

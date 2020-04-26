@@ -97,7 +97,7 @@ param (
         write-Host $Prompt
 
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,I. Connect via IoT Hub,C. Connect Via IoT Central'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 
@@ -126,6 +126,8 @@ param (
             $global:kk = $null
             switch ($kk)
             {
+                'I' {get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
+                'C' {get-azsphereIOTCentral $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
                 'A' { enter-azsphere}
                 'L' { azsphere login}
                 'T' {
@@ -237,28 +239,36 @@ param (
 
                 }
                 'W' {
-                    $options='W. Get WifI Status,A. Add WiFi Network,L. List Access Points,B.Back'
-                    parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
-                    switch ($kk){
-                        'W' {
-                            write-host 'Getting Wifi Status (Wait)'
-                            azsphere device wifi show-status
-                            get-anykey '' 'Continue'
+                    do {
+
+                        show-heading '  A Z U R E  S P H E R E  '  3  'WiFi'
+                        $options='W. Get WifI Status,A. Add WiFi Network,L. List Access Points,B. Back'
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        $kk = [char]::ToUpper($global:kk)
+                        $global:kk = $null
+                        switch ($kk){
+                            'W' {
+                                write-host 'Getting Wifi Status (Wait)'
+                                azsphere device wifi show-status
+                                get-anykey '' 'Continue'
+                            }
+                            'A' {
+                                write-host 'Getting Wifi Access Points (Wait)'
+                                azsphere device wifi scan
+                                get-anykey '' 'Continue'
+                                write-host 'Getting Wifi Status (Wait)'
+                                write-host "azsphere device wifi add --ssid '<yourSSID>' --psk '<yourNetworkKey>'"
+                                get-anykey '' 'Continue'
+                            }
+                            'L' {
+                                write-host 'Getting Wifi Access Points (Wait)'
+                                azsphere device wifi scan
+                                get-anykey '' 'Continue'
+                            }
+                            'B' {
+                            }
                         }
-                        'A' {
-                            write-host 'Getting Wifi Access Points (Wait)'
-                            azsphere device wifiscan
-                            get-anykey '' 'Continue'
-                            write-host 'Getting Wifi Status (Wait)'
-                            write-host "azsphere device wifi add --ssid '<yourSSID>' --psk '<yourNetworkKey>'"
-                            get-anykey '' 'Continue'
-                        }
-                        'L' {
-                            write-host 'Getting Wifi Access Points (Wait)'
-                            azsphere device wifiscan
-                            get-anykey '' 'Continue'
-                        }
-                    }
+                    } while  ($kk -ne 'B')
                 }
                 'U' {
                     $options='O. Show OS Version,E. Get Update Status,R. Restart Device,,B.Back'

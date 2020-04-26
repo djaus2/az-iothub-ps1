@@ -1,3 +1,15 @@
+
+function get-azsphereIOTCentral{
+param (
+    [string]$Subscription = '' ,
+    [string]$GroupName = '' ,
+    [string]$HubName = '' ,
+    [string]$DPSName = '',
+    [string]$Tenant='',
+    [String]$TenantName='',
+    [boolean]$Refresh=$false
+)
+
 function write-app_manifest{
     param (
     [string]$ComID = '' ,
@@ -67,19 +79,9 @@ $data= @"
       Out-File -FilePath $PsScriptFile    -InputObject '' -Encoding ASCII
       Add-Content -Path  $PsScriptFile   -Value $data
 }
-function get-azsphereIOTCentral{
-param (
-    [string]$Subscription = '' ,
-    [string]$GroupName = '' ,
-    [string]$HubName = '' ,
-    [string]$DPSName = '',
-    [string]$Tenant='',
-    [String]$TenantName='',
-    [boolean]$Refresh=$false
-)
 
 
-    show-heading '  A Z U R E  S P E R E  '  2
+    show-heading '  A Z U R E  S P H E R E  ' 3 'Connect via IoT Central ' 
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
@@ -129,6 +131,25 @@ param (
         $global:DPS =  'Back'
         return
     }
+    elseIf ([string]::IsNullOrEmpty($Tenant ))
+    {
+        write-Host ''
+        $prompt = 'Need to get Tenant first.'
+        write-host $prompt
+        get-anykey 
+        $global:DPS =  'Back'
+        return
+    }
+    elseIf ([string]::IsNullOrEmpty($TenantName ))
+    {
+        write-Host ''
+        $prompt = 'Need to get Tenant first.'
+        write-host $prompt
+        get-anykey 
+        $global:DPS =  'Back'
+        return
+    }
+
 
 
   
@@ -146,7 +167,7 @@ param (
         }
 
 
-        show-heading '  A Z U R E  S P H E R E  '  2
+        show-heading '  A Z U R E  S P H E R E  '  3 'Connect via IoT Central'
         $Prompt = '     Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '            Group :"' + $GroupName +'"'
@@ -165,13 +186,19 @@ param (
         $Prompt = ' IOT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
 
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,D. Enable Debugging,W. Check Wifi Status,U. Check Update Status,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,I. Create a Certificate on IoT Central and verify it,D. Get DPS ID Scope,W. Write app_Manifest.json'
+        $options ='I. Create a Certificate on IoT Central and verify it,C. Create an Enrolment Group on IoT Central with that Certificate,D. Get DPS ID Scope,W. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
+        write-host ''
+        write-host ' D O N O T   U S E   T H E S E   O P T I O N S  O N  T H I S   M E N U  Y E T !!! A work in progress!' -BackgroundColor YELLOW -ForegroundColor Black
+        write-host ''
+
         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current
         $answer= $global:retVal
-	    write-host $answer
+        write-host $answer
+        
+       
 
         If ([string]::IsNullOrEmpty($answer)) 
         {

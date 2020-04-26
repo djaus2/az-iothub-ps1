@@ -70,14 +70,22 @@ param (
         return
     }  
 
-    write-Host ''
-    write-host  'Select a ' -noNewLine
-    write-host $Title   -BackgroundColor DarkGreen  -ForegroundColor  Black -NoNewline
-    write-host ' or option'
-    write-Host ''
+
 
     $noEntities =0
-    if ($ListString -ne 'EMPTY'){
+    if ($ListString -eq 'EMPTY'){
+        write-Host ''
+        write-host  'Select a ' -noNewLine
+        write-host $Title   -BackgroundColor DarkGreen  -ForegroundColor  Black -NoNewline
+        write-host ' option:'
+    }
+    else{
+        write-Host ''
+        write-host  'Select a ' -noNewLine
+        write-host $Title   -BackgroundColor DarkGreen  -ForegroundColor  Black -NoNewline
+        write-host ' or option:'
+        write-Host ''
+
         # Ref: http://powershell-guru.com/powershell-tip-116-remove-empty-elements-from-an-array/
         $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
         $noEntities = $lines.Count
@@ -157,7 +165,6 @@ param (
             $i++
         }
     }
-    write-Host ''
 
     If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
     {
@@ -237,13 +244,14 @@ param (
     {
         $output = 'Back'
         $promptFinal =$output + " selected."
+
     }
     elseif ($KK -eq 'B')
     {
         $output = 'Back'
         $promptFinal =$output + " selected."
     }
-    elseif ($Title -eq '   A Z U R E  S P H E R E  ')
+    elseif ($Title.Substring(0,27) -eq '   A Z U R E  S P H E R E  ')
     {
         $output = "AzSpehere Action: $kk"
         $promptFinal =$output + " selected."
@@ -306,6 +314,8 @@ param (
         }
     }
     write-Host ''
+
+    $global:kk = $kk
     
     write-Host $promptFinal
     $global:retVal= $output

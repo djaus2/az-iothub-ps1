@@ -247,10 +247,10 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 show-heading  -Prompt '  S E T U P  ' 1
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','B','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','UpArrow','DownArrow','Enter','X','R')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere DPS,Azure Sphere IoT Central'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
