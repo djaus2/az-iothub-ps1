@@ -182,7 +182,7 @@ $data= @"
         write-Host $Prompt
         $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
         write-Host $Prompt
-        $Prompt = ' IOT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
 
         $options ='D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json'

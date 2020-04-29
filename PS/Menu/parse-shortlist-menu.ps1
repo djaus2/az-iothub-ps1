@@ -251,9 +251,9 @@ param (
         $output = 'Back'
         $promptFinal =$output + " selected."
     }
-    elseif ($Title.Substring(0,27) -eq '   A Z U R E  S P H E R E  ')
+    elseif ($Title -like '*A Z U R E  S P H E R E*')
     {
-        $output = "AzSpehere Action: $kk"
+        $output = "AzSphere Action: $kk"
         $promptFinal =$output + " selected."
         $global:kk = $kk
     }

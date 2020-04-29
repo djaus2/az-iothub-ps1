@@ -183,7 +183,7 @@ $data= @"
         write-Host $Prompt
         $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
         write-Host $Prompt
-        $Prompt = ' IOT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
 
         $options ='I. Create a Certificate on IoT Central and verify it,C. Create an Enrolment Group on IoT Central with that Certificate,D. Get DPS ID Scope,W. Write app_Manifest.json'
@@ -197,10 +197,15 @@ $data= @"
         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current
         $answer= $global:retVal
         write-host $answer
-        
-       
+      
 
-        If ([string]::IsNullOrEmpty($answer)) 
+       if($true)
+       {
+           # Shortcircuit this for the moment
+            write-Host 'Back'
+            $answer = 'Back'
+       }
+       elseIf ([string]::IsNullOrEmpty($answer)) 
         {
             write-Host 'Back'
             $answer = 'Back'

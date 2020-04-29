@@ -93,11 +93,11 @@ param (
         write-Host $Prompt
         $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
         write-Host $Prompt
-        $Prompt = ' IOT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
 
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,I. Connect via IoT Hub,C. Connect Via IoT Central'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 
@@ -126,16 +126,20 @@ param (
             $global:kk = $null
             switch ($kk)
             {
-                'I' {get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
+                'H' {get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
                 'C' {get-azsphereIOTCentral $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
                 'A' { enter-azsphere}
                 'L' { azsphere login}
                 'T' {
-                    $options='T. Get Tenant,L. List Tenants,S. Set Tenant,B.Back'
-                    parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
-                        switch($kk){
-                            'B' {Continue}
+                    do{
+                        show-heading '  A Z U R E  S P H E R E : Tenant '  4
+                        $options='T. Get Tenant,L. List Tenants,S. Set Tenant,B.Back'
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        $kk2 = [char]::ToUpper($global:kk)
+                        $global:kk = $null 
+                        switch($kk2){
                             'T'{
+                                show-heading '  A Z U R E  S P H E R E : Get Tenant '  3
                                 $Tenant=$null
                                 $TenantName=$null
                                 $getTenant = azsphere tenant show-selected
@@ -168,12 +172,13 @@ param (
                                 $global:TenantName = $TenantName
                             }
                             'L'{
+                                write-host 'Getting Tenant List (Wait):'
                                 azsphere tenant list 
                                 get-anykey '' 'Continue'
                             }
                             's'{
                                 # Should improve this
-                                show-heading '  A Z U R E  S P H E R E : Select Tenant '  3
+                                show-heading '  A Z U R E  S P H E R E : Select Tenant '  4
                                 write-host ''
                                 $tl= azsphere tenant list
                                 if ($tl.Length  -lt 3)
@@ -220,11 +225,16 @@ param (
                             }
 
                         }
+                    } while ($kk2 -ne 'B')
                 }
                 'D' {
-                    $options='E. Enable Development,D. Existing app sideload Delete,R. Restart Device,,B.Back'
-                    parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
-                        switch($kk){
+                    do{
+                        show-heading '  A Z U R E  S P H E R E : Development '  3
+                        $options='E. Enable Development,D. Existing app sideload Delete,R. Restart Device,,B.Back'
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        $kk2 = [char]::ToUpper($global:kk)
+                        $global:kk = $null
+                        switch($kk2){
                             'E'{
                                 write-host 'Enabling Development (Wait):'
                                 azsphere device enable-development
@@ -236,17 +246,18 @@ param (
                                 get-anykey '' 'Continue'
                             }
                         }
-
+                    }
+                    while ($kk2 -ne 'B')
                 }
                 'W' {
-                    do {
-
+                    do 
+                    {
                         show-heading '  A Z U R E  S P H E R E  '  3  'WiFi'
                         $options='W. Get WifI Status,A. Add WiFi Network,L. List Access Points,B. Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
-                        $kk = [char]::ToUpper($global:kk)
+                        $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
-                        switch ($kk){
+                        switch ($kk2){
                             'W' {
                                 write-host 'Getting Wifi Status (Wait)'
                                 azsphere device wifi show-status
@@ -268,28 +279,33 @@ param (
                             'B' {
                             }
                         }
-                    } while  ($kk -ne 'B')
+                    } while  ($kk2 -ne 'B')
                 }
                 'U' {
-                    $options='O. Show OS Version,E. Get Update Status,R. Restart Device,,B.Back'
-                    parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
-                    switch ($kk){
+                    do{
+                        show-heading '  A Z U R E  S P H E R E  '  3  'Updates'
+                        $options='O. Show OS Version,E. Get Update Status,R. Restart Device,,B.Back'
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        $kk2 = [char]::ToUpper($global:kk)
+                        $global:kk = $null
+                        switch ($kk2){
                         'U' {
-                            write-host 'Getting Update Status (Wait):'
-                            azsphere device show-deployment-status
-                            get-anykey '' 'Continue'
-                        }
+                                write-host 'Getting Update Status (Wait):'
+                                azsphere device show-deployment-status
+                                get-anykey '' 'Continue'
+                            }
                         'O' {
-                            write-host 'Getting OS Version (Wait):'
-                            azsphere device sshow os-version
-                            get-anykey '' 'Continue'
-                        }
+                                write-host 'Getting OS Version (Wait):'
+                                azsphere device sshow os-version
+                                get-anykey '' 'Continue'
+                            }
                         'R'{
-                            write-host 'Restarting device (Wait):'
-                            azsphere device enable-development
-                            get-anykey '' 'Continue'
+                                write-host 'Restarting device (Wait):'
+                                azsphere device enable-development
+                                get-anykey '' 'Continue'
+                            }
                         }
-                    }
+                    } while ($kk2 -ne 'B')
                 }
 
             }
