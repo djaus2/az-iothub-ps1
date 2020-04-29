@@ -166,7 +166,7 @@ $data= @"
         }
 
 
-        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub' 
+        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS' 
         $Prompt = '     Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '            Group :"' + $GroupName +'"'
@@ -219,7 +219,7 @@ $data= @"
                         create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
                     }
                 'D' {
-                        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub - Get DPS ID Scope' 
+                        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS - Get DPS ID Scope' 
                         write-Host ''
                         write-Host "Getting DPS: $DPSName info (Wait) :"
                         $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
