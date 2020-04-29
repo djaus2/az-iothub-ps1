@@ -59,7 +59,10 @@ param (
             {
                 write-host $promptParam
             }
-            Write-Host "Pausing for $global:yesnowait secs" 
+            if (-not $global:dontshowait)
+            {
+                Write-Host "Pausing for $global:yesnowait secs" 
+            }
             start-sleep $global:yesnowait           
         }
         else {

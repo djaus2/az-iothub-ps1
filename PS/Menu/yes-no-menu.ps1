@@ -59,6 +59,11 @@ param (
             Y { $global:retVal = $true} 
             N { $global:retVal =  $false}
         }
+
+        if ($global:recording)
+        {
+            start-sleep $global:recordingTime
+        }
     }
      # return $global:retVal
 }

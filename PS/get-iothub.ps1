@@ -56,7 +56,8 @@ try {
     . ("$global:ScriptDirectory\azsphere\res-azsphere-iot-central.ps1")
     . ("$global:ScriptDirectory\azsphere\enter-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-azsphere.ps1")
-
+    . ("$global:ScriptDirectory\azsphere\create-iotcentral.ps1")
+    
     . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
 }
 catch {

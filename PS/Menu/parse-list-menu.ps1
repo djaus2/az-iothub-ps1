@@ -309,6 +309,11 @@ param (
     }
     write-Host $promptFinal
     $global:retVal = $output 
+    
+    if ($global:recording)
+    {
+        start-sleep $global:recordingTime
+    }
     return $output
 }
 
