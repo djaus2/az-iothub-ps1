@@ -281,8 +281,8 @@ param (
                 }
                 'D' {
                     do{
-                        show-heading '  A Z U R E  S P H E R E : Development '  3
-                        $options='E. Enable Development,D. Existing app sideload Delete,R. Restart Device,,B.Back'
+                        show-heading '  A Z U R E  S P H E R E '  3 ' Development '
+                        $options='E. Enable Development,A. App Show Status,P. App Stop,S. App Start,D. Existing app sideload Delete,R. Restart Device,V. Show Security Services,T. Show Attached,G. Show Deployment Status,Y. Get Capability Configuration,B. Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
@@ -292,9 +292,44 @@ param (
                                 azsphere device enable-development
                                 get-anykey '' 'Continue'
                             }
+                            'A'{
+                                write-host 'App ... Getting Status (Wait):'
+                                azsphere device app start
+                                get-anykey '' 'Continue'
+                            }
+                            'P'{
+                                write-host 'Stopping current app (Wait):'
+                                azsphere device app stop
+                                get-anykey '' 'Continue'
+                            }
+                            'S'{
+                                write-host 'Stopping current app (Wait):'
+                                azsphere device app start
+                                get-anykey '' 'Continue'
+                            }
                             'D'{
                                 write-host 'Deleting existing sideloaded app (Wait):'
                                 azsphere device sideload delete
+                                get-anykey '' 'Continue'
+                            }
+                            'V'{
+                                write-host 'Getting AzS Security Service stores (Wait):'
+                                azsphere device show
+                                get-anykey '' 'Continue'
+                            }
+                            'T'{
+                                write-host 'Getting attached details (Wait):'
+                                azsphere device show-attached
+                                get-anykey '' 'Continue'
+                            }
+                            'G'{
+                                write-host 'Getting attached details (Wait):'
+                                azsphere device show-deployment-status
+                                get-anykey '' 'Continue'
+                            }
+                            'Y' {
+                                write-host 'Getting Capability Configuration (Wait):'
+                                azsphere device capability show-attached
                                 get-anykey '' 'Continue'
                             }
                         }
@@ -396,7 +431,7 @@ param (
                 'U' {
                     do{
                         show-heading '  A Z U R E  S P H E R E  '  3  'Updates'
-                        $options='O. Show OS Version,E. Get Update Status,R. Restart Device,,B.Back'
+                        $options='O. Show OS Version,U. Get Update Status,R. Restart Device,,B.Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
@@ -408,7 +443,7 @@ param (
                             }
                         'O' {
                                 write-host 'Getting OS Version (Wait):'
-                                azsphere device sshow os-version
+                                azsphere device show-os-version
                                 get-anykey '' 'Continue'
                             }
                         'R'{
