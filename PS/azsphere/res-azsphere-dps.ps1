@@ -209,7 +209,7 @@ $data= @"
         else {
             
             $kk2 = [char]::ToUpper($global:kk)
-            $global:kk2 = $null
+            $global:kk = $null
             switch ($kk2)
             {
                 'C' {

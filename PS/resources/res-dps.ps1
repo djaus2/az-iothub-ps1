@@ -207,7 +207,7 @@ write-Host $Prompt
             show-dps $Current
         }
 	elseif ($answer -eq 'Connect')
-        {
+        {        
             $DPSName = $Current
             $global:DPSName = $Current 
             $global:retVal =  $Current

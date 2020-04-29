@@ -213,6 +213,11 @@ function clear-appData
             remove-variable TenantName  -Scope Global
         }
 
+        If (-not([string]::IsNullOrEmpty($global:CanClaimDevice )))
+        {
+            remove-variable CanClaimDevice  -Scope Global
+        }
+
         If (-not([string]::IsNullOrEmpty($global:DPSidscope )))
         {
             remove-variable DPSidscope  -Scope Global

@@ -133,11 +133,21 @@ param (
                 'T' {
                     do{
                         show-heading '  A Z U R E  S P H E R E : Tenant '  4
-                        $options='T. Get Tenant,L. List Tenants,S. Set Tenant,B.Back'
+                        $options='T. Get Tenant,L. List Tenants,S. Set Tenant,V. Validate Tenant'
+                        If (-not([string]::IsNullOrEmpty($CanClaimDevice ))){
+                            $options += ',L. Create new Tenant,C. Claim Device'
+                        }
+                        $options +=",B. Back"
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null 
                         switch($kk2){
+                            'B' {
+                                If (-not([string]::IsNullOrEmpty($global:CanClaimDevice )))
+                                {
+                                    remove-variable CanClaimDevice  -Scope Global
+                                }                          
+                            }
                             'T'{
                                 show-heading '  A Z U R E  S P H E R E : Get Tenant '  3
                                 $Tenant=$null
@@ -223,6 +233,48 @@ param (
 
                                 }
                             }
+                            'V'{
+                                write-host 'Verify Tenant'
+                                write-host '============='
+                                write-Host "For an IoT Hub - DPS connection see 'H. Connect via IoT Hub'-->C. Create Certificate on DPS and Verify it."
+                                write-host " ... The current IoT Hub needs to be connected to the current DPS. See Main Menu-->5. DPS Menu then Options G. then C."
+                                write-host "For an IoT Central - Watch this space."
+                                get-anykey '' 'Continue'
+
+                            }
+                            'L'{
+                                If (-not([string]::IsNullOrEmpty($global:CanClaimDevice )))
+                                {
+                                    write-host 'Creating new Tenant'
+                                    $mytenant = read-host "Please enter the name for the new Tenant"
+                                    Set-Clipboard -Value "azsphere tenant create --name $mytenant"
+                                    write-host "Now please exit and run the command: azsphere tenant create --name $mytenant"
+                                    write-host "You can paste it at the azsphere prompt from the Clipbaord (Cntrl-V)"
+                                    get-anykey '' 'Continue'
+                                }
+                            }
+                            'C'{
+                                If (-not([string]::IsNullOrEmpty($global:CanClaimDevice )))
+                                    {
+                                    write-host 'Claiming Device'
+                                    get-yesorno  $false 'This is irreverable. Do you really want to do this?'
+                                    $answer = $global:retVal
+                                    if ($answer)
+                                    {
+                                        get-yesorno  $false 'One last time: This is NOT UNDOABLE in any way, but is required. Do you really want to do this?'
+                                        $answer = $global:retVal
+                                        if ($answer)
+                                        {
+                                            write-host 'Claiming Device:'
+                                            Set-Clipboard -Value "azsphere device claim"
+                                            write-host 'Now please exit and run command: azsphere device claim'
+                                            write-host "You can paste it at the azsphere prompt from the Clipbaord (Cntrl-V)"
+                                            get-anykey '' 'Continue'
+                                        }
+                                    } 
+                                    remove-variable CanClaimDevice  -Scope Global
+                                }
+                            }
 
                         }
                     } while ($kk2 -ne 'B')
@@ -250,33 +302,93 @@ param (
                     while ($kk2 -ne 'B')
                 }
                 'W' {
+                    [int]$id=-1
                     do 
                     {
                         show-heading '  A Z U R E  S P H E R E  '  3  'WiFi'
-                        $options='W. Get WifI Status,A. Add WiFi Network,L. List Access Points,B. Back'
+                        $options='W. Get WifI Status,S. Scan WiFi Networks,A. Add a WiFi Network,L. List and Select an added Wifi Network,F. Forget an added Wifi Network,E. Enable selected WiFi Network,D. Disable selected WiFi Network,B. Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
                         switch ($kk2){
+                            'L' {
+                                write-host 'Getting added Wifi List (Wait)'
+                                azsphere device wifi list
+                                $IdStrn = read-host 'Enter ID to select'
+                                if($IdStrn -match "^\d+$"){
+                                    [int]$Id = [int] $IdStrn
+                                    write-host "ID: $id"
+                                }
+                                else{
+                                    $Id = -1
+                                    write-host 'Invalid'
+                                    write-host "ID: $id"
+                                }
+                                get-anykey '' 'Continue'
+                            }
                             'W' {
                                 write-host 'Getting Wifi Status (Wait)'
                                 azsphere device wifi show-status
                                 get-anykey '' 'Continue'
                             }
+                            'E' {
+                                if ($id -lt 0)
+                                {
+                                    write-host "Please Select an Access Point ID first."
+                                    get-anykey '' "Continue"
+                                    Continue
+                                }
+                                write-host 'Enabling Wifi (Wait)'
+                                azsphere device wifi enable  -id $id
+                                $id = -1
+                                get-anykey '' 'Continue'
+                            }
+                            'D' {
+                                if ($id -lt 0)
+                                {
+                                    write-host "Please Select an Access Point ID first."
+                                    get-anykey '' "Continue"
+                                    Continue
+                                }
+                                write-host 'Disabling WiFi (Wait)'
+                                azsphere device wifi disable  -id $id
+                                get-anykey '' 'Continue'
+                                $id = -1
+                            }
+                            'F' {
+                                if ($id -lt 0)
+                                {
+                                    write-host "Please Select an Access Point ID first."
+                                    get-anykey '' "Continue"
+                                    Continue
+                                }
+                                write-host 'Delete and added WiFi (Wait)'
+                                azsphere device wifi forget  -id $id
+                                get-anykey '' 'Continue'
+                                $id = -1
+                            }
                             'A' {
+                                $SSID=''
+                                $NetworkKey=''
+                                write-host 'Getting Wifi Access Points (Wait)'
+                                azsphere device wifi scan
+                                $SSID = read-host 'Enter SSID of network to use'
+                                if (-not ([string]::IsNullOrEmpty($SSID ))) {
+                                    $NetworkKey = read-host "Please enter your your newtork key"
+                                    if(-not ([string]::IsNullOrEmpty($NetworkKey ))){
+                                        write-host 'Adding WifI network (Wait)'
+                                        azsphere device wifi add --ssid $SSID --psk $NetworkKey
+                                        write-host  'Please note the ID' 
+                                        get-anykey '' 'Continue'
+                                    }
+                                }
+                                $SSID=''
+                                $NetworkKey=''
+                            }
+                            'S' {
                                 write-host 'Getting Wifi Access Points (Wait)'
                                 azsphere device wifi scan
                                 get-anykey '' 'Continue'
-                                write-host 'Getting Wifi Status (Wait)'
-                                write-host "azsphere device wifi add --ssid '<yourSSID>' --psk '<yourNetworkKey>'"
-                                get-anykey '' 'Continue'
-                            }
-                            'L' {
-                                write-host 'Getting Wifi Access Points (Wait)'
-                                azsphere device wifi scan
-                                get-anykey '' 'Continue'
-                            }
-                            'B' {
                             }
                         }
                     } while  ($kk2 -ne 'B')

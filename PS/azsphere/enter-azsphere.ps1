@@ -90,7 +90,16 @@ function enter-azSphere{
         get-yesorno $true " Are you logged into azure Sphere?"
 
         if (-not $global:retVal){
-           azsphere login
+            get-yesorno $false " Are you a nw Azure Sphere user?"
+            if (-not $global:retVal){
+                azsphere login
+            }
+            else{
+                $emailaddress = read-host 'Please enter your Microsoft Account Email Address'
+                If (-not([string]::IsNullOrEmpty($emailaddress ))){
+                     azsphere login -newuser $emailaddress
+                }            
+            }
         }
         
     }

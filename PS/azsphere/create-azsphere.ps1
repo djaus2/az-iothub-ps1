@@ -8,7 +8,7 @@ function create-azsphere{
         [string]$EnrollmentGroupName='',
         [boolean]$Refresh=$false
     )
-    show-heading '  N E W  D P S  C E R T I F I C A T E '  1
+    show-heading '  D P S '  4 'New Certificate and Tenant Verification'
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
@@ -53,6 +53,15 @@ function create-azsphere{
         write-host $prompt
         get-anykey 
         $global:retVal =  'Back'
+        return
+    }
+    write-host ' '
+    write-host "The current IoT Hub needs to be connectd to the current DPS. See Main Menu-->5. DPS Menu then Options G. then C."
+    write-host "Has this been done?"
+    get-yesorno $true 'Continue'
+    $answer = $global:retVal
+    if (-not $answer)
+    {
         return
     }
 
@@ -127,6 +136,9 @@ function create-enrolmentgroup{
         [string]$EnrollmentGroupName='',
         [boolean]$Refresh=$false
     )
+
+
+    show-heading '  D P S  '  4  'Create new Enrolment Group'
     if ([string]::IsNullOrEmpty($EnrollmentGroupName))
     {
         $answer = get-name 'DPS Enrollment Group Name'
