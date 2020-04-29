@@ -105,8 +105,28 @@ function create-azsphere{
 
     write-host ''
     get-anykey "" "Continue when you have done that"
+    Write-Host 'Select Create Enrolment Group next.'
+    get-anykey '' 'Continue'
+    if (Test-Path $CAcertificate)
+    {
+        Remove-Item $CAcertificate
+    }
+    if (Test-Path $ValidationCertificationCertificate)
+    {
+        remove-item $ValidationCertificationCertificate
+    }
+}
    
-
+function create-enrolmentgroup{
+    param (
+        [string]$Subscription = '' ,
+        [string]$GroupName = '' ,
+        [string]$HubName = '' ,
+        [string]$DPSName= '',
+        [string]$DPSCertificateName= '',
+        [string]$EnrollmentGroupName='',
+        [boolean]$Refresh=$false
+    )
     if ([string]::IsNullOrEmpty($EnrollmentGroupName))
     {
         $answer = get-name 'DPS Enrollment Group Name'
@@ -124,14 +144,7 @@ function create-azsphere{
     write-host "`nDone that.`n"
     az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
 
-    if (Test-Path $CAcertificate)
-    {
-        Remove-Item $CAcertificate
-    }
-    if (Test-Path $ValidationCertificationCertificate)
-    {
-        remove-item $ValidationCertificationCertificate
-    }
+
 }
 <#
 # # Test by entering .\create-dps-cert

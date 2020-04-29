@@ -1,5 +1,4 @@
-
-function create-enrolmentgroup{
+function create-iotcentralcert{
     param (
         [string]$Subscription = '' ,
         [string]$GroupName = '' ,
@@ -9,7 +8,7 @@ function create-enrolmentgroup{
         [string]$EnrollmentGroupName='',
         [boolean]$Refresh=$false
     )
-    show-heading '  C R E A T E   E N R O L M E N T   G R O U P '  1
+    show-heading '  N E W  I o T   C E N T R A L  C E R T I F I C A T E '  1
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
@@ -19,47 +18,6 @@ function create-enrolmentgroup{
     $Prompt = '    Current DPS :"' + $DPSName +'"'
     write-Host $Prompt
 
-    read-host 1
-
-    if ([string]::IsNullOrEmpty($EnrollmentGroupName))
-    {
-        $answer = get-name 'DPS Enrollment Group Name'
-        if ($answer-eq 'Back')
-        {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-            return
-        }
-        $EnrollmentGroupName = $answer
-    }
-
-    write-host "`nCreating EnrollmentGroup (Wait)`n"
-    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
-    write-host "`nDone that.`n"
-    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
-}
-
-function create-azsphere{
-    param (
-        [string]$Subscription = '' ,
-        [string]$GroupName = '' ,
-        [string]$HubName = '' ,
-        [string]$DPSName= '',
-        [string]$DPSCertificateName= '',
-        [string]$EnrollmentGroupName='',
-        [boolean]$Refresh=$false
-    )
-    show-heading '  N E W  D P S  C E R T I F I C A T E '  1
-    $Prompt = '   Subscription :"' + $Subscription +'"'
-    write-Host $Prompt
-    $Prompt = '          Group :"' + $GroupName +'"'
-    write-Host $Prompt
-    $Prompt = '            Hub :"' + $HubName +'"'
-    write-Host $Prompt
-    $Prompt = '    Current DPS :"' + $DPSName +'"'
-    write-Host $Prompt
-
-    read-host 1
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {
@@ -98,8 +56,6 @@ function create-azsphere{
         return
     }
 
-    read-host 2
-
 	$CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
     $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
     
@@ -115,11 +71,18 @@ function create-azsphere{
         $DPSCertificateName = $answer
     }
 
-    read-host 3
-
     write-host "Getting CACertificate from azsphere (Wait)"
     azsphere tenant download-CA-certificate --output $CAcertificate
     write-host "Got CACertificate"
+
+    <#
+    Upload the tenant CA certificate to Azure IoT Central and generate a verification code
+In Azure IoT Central, go to Administration > Device Connection > Manage primary certificate.
+Click the folder icon next to the Primary box and navigate to the directory where you downloaded the certificate. If you don't see the .cer file in the list, make sure that the view filter is set to All files (*). Select the certificate and then click the gear icon next to the Primary box.
+The Primary Certificate dialog box appears. The Subject and Thumbprint fields contain information about the current Azure Sphere tenant and primary root certificate.
+Click the Refresh icon to the right of the Verification Code box to generate a verification code. Copy the verification code to the clipboard.
+    
+    #>
 
     write-host "Creating new DPS certificate (Wait):"
     $cert = az iot dps certificate create --subscription $subscription --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName --path $CAcertificate -o tsv | Out-String
@@ -151,8 +114,8 @@ function create-azsphere{
 
     write-host ''
     get-anykey "" "Continue when you have done that"
-    read-host "Now yoiu can run Create New Enrolment Group."
-   
+    Write-Host 'Select Create Enrolment Group next.'
+    get-anykey '' 'Continue'
     if (Test-Path $CAcertificate)
     {
         Remove-Item $CAcertificate
@@ -161,13 +124,41 @@ function create-azsphere{
     {
         remove-item $ValidationCertificationCertificate
     }
+}
+   
+function create-enrolmentgroup{
+    param (
+        [string]$Subscription = '' ,
+        [string]$GroupName = '' ,
+        [string]$HubName = '' ,
+        [string]$DPSName= '',
+        [string]$DPSCertificateName= '',
+        [string]$EnrollmentGroupName='',
+        [boolean]$Refresh=$false
+    )
+    if ([string]::IsNullOrEmpty($EnrollmentGroupName))
+    {
+        $answer = get-name 'DPS Enrollment Group Name'
+        if ($answer-eq 'Back')
+        {
+            write-Host 'Returning'
+            $global:retVal = 'Back'
+            return
+        }
+        $EnrollmentGroupName = $answer
+    }
 
-  }
+    write-host "`nCreating EnrollmentGroup (Wait)`n"
+    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
+    write-host "`nDone that.`n"
+    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
+
+
+}
 <#
 # # Test by entering .\create-dps-cert
 
 # show-heading calls this. Make a dummy call here:
-
 function show-time{}# Uses this this script
 
 

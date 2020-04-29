@@ -185,7 +185,7 @@ $data= @"
         $Prompt = ' IOT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
 
-        $options ='C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,D. Get DPS ID Scope,W. Write app_Manifest.json'
+        $options ='D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
@@ -208,96 +208,18 @@ $data= @"
         }
         else {
             
-            $kk = [char]::ToUpper($global:kk)
-            $global:kk = $null
-            switch ($kk)
+            $kk2 = [char]::ToUpper($global:kk)
+            $global:kk2 = $null
+            switch ($kk2)
             {
-                'A' {   enter-azsphere}
-                'L' {
-                        azsphere login
-                    }
-                'T' {
-                        $Tenant=$null
-                        $TenantName=$null
-                        $getTenant = azsphere tenant show-selected
-                        If ([string]::IsNullOrEmpty($getTenant))
-                        {
-                            read-host "No Tenants or None Selected"
-                        }
-                        else
-                        {
-                            $getTenantLines = $getTenant -split ' '
-                            [int] $numLines = $getTenantLines.Count
-                            if ($numLines -ne 8)
-                            {
-                                write-host $getTenant
-                                read-host 'Invalid return from Show Selected Tenant query'
-                            }
-                            else
-                            {
-                                $ten = $getTenantLines[$numLines-1]
-                                $tenName = $getTenantLines[$numLines-2]
-                                $Tenant = $ten.Substring(1,$ten.Length-3)
-                                $TenantName= $tenName.Substring(1,$tenName.Length-2)
-                            }
-                        }
-                        $global:Tenant= $Tenant
-                        $global:TenantName = $TenantName
-                    }
-                'S' {
-                        # Should improve this
-                        show-heading '  A Z U R E  S P H E R E : Select Tenant '  3
-                        write-host ''
-                        $tl= azsphere tenant list
-                        if ($tl.Length  -lt 3)
-                        {
-                            write-host 'No Tenants available'
-                            read-host ' '
-                        }
-                        else
-                        {
-                            [int]$numTenants=$tl.Length-2
-                            write-host "There are $numTenants Tenants"
-                            $start = 2
-                            $stop = 2 + $numTenants 
-                            write-host ''
-                            write-host "Select the Tenant"
-                            for ($i=$start;$i -lt $stop;$i++)
-                            {
-                                $var = $tl[$i]
-                                $z = $var -split ' '
-                                write-host ($i-1) $z[1]  $z[0]
-                            }
-                            $numStrn = read-host 'Enter its number. Default = 1'
-                            $num=1
-                            If (-not([string]::IsNullOrEmpty($answer)) )
-                            {
-                                if($numStrn -match '^\d+$')
-                                {
-                                    [int]$num = [int]($numStrn.Trim())
-                                    if(($num -gt $numTenants) -or ( $num -lt 1))
-                                    {
-                                        $num=1
-                                    }
-                                }
-                            }                          
-                            $var = $tl[$num+1]
-                            $z = $var -split ' '
-                            $TenantName = $z[1]
-                            $Tenant=$z[0]
-                            azsphere tenant select --tenantid $Tenant
-                            $global:Tenant= $Tenant
-                            $global:TenantName = $TenantName
-
-                        }
-                    }
                 'C' {
                         create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname 
                     }
                 'E' {
-                        create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname 
+                        create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
                     }
                 'D' {
+                        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub - Get DPS ID Scope' 
                         write-Host ''
                         write-Host "Getting DPS: $DPSName info (Wait) :"
                         $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
@@ -306,29 +228,12 @@ $data= @"
                         $DPSidscope = $dps.Properties.idScope
                         }
                         $global:DPSidscope = $DPSidscope
+                        write-host "DPS ID Scope: $DPSidscope"
+                        get-anykey '' 'Continue'
                     }
 
-                'M' {
-                        write-app_manifest $DPSidscope $HubName $Tenant
-                    }
-                'D' {
-                        write-host 'Enabling Development (Wait):'
-                        azsphere device enable-development
-                        get-anykey '' 'Continue'
-                    }
                 'W' {
-                        write-host 'Nb: Command to configure Wifi:'
-                        write-host 'azsphere device wifi add --ssid <yourSSID> --psk <yourNetworkKey>'
-                        write-host ''
-                        write-host 'This command: azsphere device wifi show-status'
-                        write-host 'Getting Wifi Status (wait)'
-                        azsphere device wifi show-status
-                        get-anykey '' 'Continue'
-                    }
-                'U' {
-                        write-host 'Getting Update Status (Wait):'
-                        azsphere device show-deployment-status
-                        get-anykey '' 'Continue'
+                        write-app_manifest $DPSidscope $HubName $Tenant
                     }
 
             }
