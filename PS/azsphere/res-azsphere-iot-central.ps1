@@ -160,7 +160,7 @@ $data= @"
         $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
         write-Host $Prompt
 
-        $options ='C. Create IoT Central App,V. Verify Tenant,W. Write app_Manifest.json'
+        $options ='O. Open Azure Sphere Developer Learning Path in browser,C. Create IoT Central App,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
@@ -187,6 +187,10 @@ $data= @"
             $global:kk = $null
             switch ($kk2)
             {
+                'O'{
+                        $url = "https://github.com/gloveboxes/Azure-Sphere-Learning-Path"
+                        start-process $url
+                    }
 
                 'C' {
                         create-iotcentral-app $global:subscription $global:groupname $global:IoTCentralName
@@ -195,8 +199,11 @@ $data= @"
                 'V' {
                         verify-tenant-iotcentra $global:subscription $global:groupname $global:IoTCentralName                  
                     }
-
                 'W' {
+                    write-host "Coming. Not yet though..."
+                    get-anykey '' 'Continue'
+                    }
+                'J' {
                         write-app_manifest $DPSidscope $HubName $Tenant
                     }
 
