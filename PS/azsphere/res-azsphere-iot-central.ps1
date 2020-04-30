@@ -3,7 +3,7 @@ function get-azsphereIOTCentral{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
-    [string]$IoTCentralName = '' ,
+    [string]$IoTCentralName = '' 
 )
 
 function write-app_manifest{
@@ -193,7 +193,7 @@ $data= @"
                         $iotcentralname = $global:iotcentralname
                     }
                 'V' {
-                        verify-tenant-iotcentra $global:subscription $global:groupname $IoTCentralName                  
+                        verify-tenant-iotcentra $global:subscription $global:groupname $global:IoTCentralName                  
                     }
 
                 'W' {
