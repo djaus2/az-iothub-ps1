@@ -57,6 +57,7 @@ try {
     . ("$global:ScriptDirectory\azsphere\enter-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-iotcentral.ps1")
+    . ("$global:ScriptDirectory\azsphere\show-image.ps1")
     
     . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
 }
@@ -242,7 +243,6 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 {
     & "$global:ScriptDirectory\set-env"
 }
-
 
 
 show-heading  -Prompt '  S E T U P  ' 1

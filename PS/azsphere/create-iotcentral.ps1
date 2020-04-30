@@ -46,48 +46,63 @@ function create-iotcentral{
         $global:retVal =  'Back'
         return
     }
-    elseIf ([string]::IsNullOrEmpty($DPSName ))
+
+    If ([string]::IsNullOrEmpty($IOtCentralName ))
     {
         write-Host ''
-        $prompt = 'Need to select a Group first.'
+        $prompt = 'Need to select your IoT Central Name.'
         write-host $prompt
-        get-anykey 
-        $global:retVal =  'Back'
-        return
+        $IOtCentralName = read-host 'Please enter your IoT Central Name' 
+        If ([string]::IsNullOrEmpty($IOtCentralName ))
+        {
+            return
+        }    
     }
-  
+    
+
+    $url = "https://$IOtCentralName.azureiotcentral.com"
+    # $url = "https://$IOtCentralName.azureiotcentral.com/admin/device-connection"
+    write-host ''
+    write-host "About to open $url"
+    write-host 'Please return here when its open'
+    get-anykey '' 'Open it'
+    start-process  $url
+    get-anykey '' 'Continue'
+    show-image 'iot-central-new-3.png' 'Open Verify' ''
 
 	$CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
     $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
     
 
 
-    write-host "Getting CACertificate from azsphere (Wait)"
+    write-host "Doing 1. Getting CACertificate from azsphere (Wait)"
     azsphere tenant download-CA-certificate --output $CAcertificate
     write-host "Got CACertificate"
-
-    write-host 'In Az Central Upload that cert back:'
     set-clipboard $CAcertificate
-    write-host "Clipboard contents is: $CAcertificate"
-    write-host  " ... Click on the [Primary] Button and paste (Cntrl-v) the cert file path"
-    write-host "Press the [Left] Verification Button"
-    write-host " Press the Verification [Right] Button"
-    get-anykey ''  'Continue'
+    write-host ''
+    write-host 'Now going to show the steps on that dialog to follow.'
+    write-host '1. was done just now here.'
+    write-host 'The ones in red are done here. The others on the dialog'
+    get-anykey '' 'Show the steps'
+    show-image 'tenant-verify.png' 'Verify' ''
+    write-host ''
+
+    
    
     $verificationcode  = Get-clipboard -format text
     
 
-    write-host "Downloading Validation Certificate"
+    write-host "Doing 5. Downloading Validation Certificate with Verification code: $verificationcode"
     azsphere tenant download-validation-certificate --output $ValidationCertificationCertificate --verificationcode $verificationcode
 
-    write-host 'In Az Central Upload:'
+    write-host 'In the dialog Do 6.'
     set-clipboard $ValidationCertificationCertificate
-    write-host "Clipboard contents is: $ValidationCertificationCertificate"
+    write-host "Clipboard contents is in : $ValidationCertificationCertificate"
     write-host "Press [Verify] and paste (cntrl-v) the cert file path Validation cert $ValidationCertificationCertificate and select it." 
-    write-host ''
+    write-host '>> Do step 5 now in the dialog.'
 
     get-anykey "" "Continue when you have done that"
-    Write-Host 'Select Create Enrolment Group next.'
+    Write-Host 'When the dialog show Verified, you are done and you can close it..'
     get-anykey '' 'Continue'
     if (Test-Path $CAcertificate)
     {
