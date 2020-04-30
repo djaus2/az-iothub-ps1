@@ -127,7 +127,7 @@ param (
             switch ($kk)
             {
                 'H' {get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
-                'C' {get-azsphereIOTCentral $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
+                'C' {get-azsphereIOTCentral $Subscription $GroupName $IoTCentralName}
                 'A' { enter-azsphere}
                 'L' { azsphere login}
                 'T' {

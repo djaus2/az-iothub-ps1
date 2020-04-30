@@ -1,4 +1,4 @@
-function create-iotcentral{
+function verify-tenant-iotcentral{
     param (
         [string]$Subscription = '' ,
         [string]$GroupName = '' ,
@@ -114,38 +114,52 @@ function create-iotcentral{
     }
 }
    
-function create-iotcentral-enrolmentgroup{
+function create-iotcentral-app{
     param (
         [string]$Subscription = '' ,
         [string]$GroupName = '' ,
-        [string]$HubName = '' ,
-        [string]$DPSName= '',
-        [string]$DPSCertificateName= '',
-        [string]$EnrollmentGroupName='',
-        [boolean]$Refresh=$false
+        [string]$Iotcentralname =''
     )
 
 
-    show-heading '  D P S  '  4  'Create new Enrolment Group'
-    if ([string]::IsNullOrEmpty($EnrollmentGroupName))
+    show-heading '  Azure Sphere '  4  'Create IoT Central App'
+
+    write-host ''
+    write-host "Creating an Azure Sphere Learning Path Azure IoT App using its Template"
+    write-host "Ref: https://github.com/gloveboxes/Azure-Sphere-Learning-Path: Lab 2"
+    write-host ''
+    write-host "Thanks To Dave Glover, Microsoft."
+    write-host ''
+    write-host 'On the template page you need to do the following:'
+    write-host 'Click on Build'
+    write-host '1.  Name your application.'
+    write-host '2. Select the Free pricing plan.'
+    write-host '3. Complete any required fields.'
+    write-host '4. Click Create to create the Azure IoT Central Application.'
+    write-host '5. Copy the URL'
+    write-host 'Openning the page'
+    $url = "https://apps.azureiotcentral.com/build/new/dba50ef5-fb7d-4260-8a5e-a4592677af4f"
+    start-process  $url
+    get-anykey '' 'Continue when tamplate is open'
+    write-host 'Going to web page for that in a moment. But first a screen shot of it'
+    show-image 'create-azapp.png' 'Configure Azure Sphere Learning Path Azure IoT App' ''
+
+    $appName= Get-clipboard -format text
+    if ([string]::IsNullOrEmpty($appName))
     {
-        $answer = get-name 'DPS Enrollment Group Name'
-        if ($answer-eq 'Back')
-        {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-            return
-        }
-        $EnrollmentGroupName = $answer
+        $appName=read-host 'What app name did you use?'
     }
-
-    write-host "`nCreating EnrollmentGroup (Wait)`n"
-    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
-    write-host "`nDone that.`n"
-    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
-
+    else
+    {
+        $appsname= $appname.Replace(".azureiotcentral.com","")
+    }
+    $global:iotcentralname = $appname
+    set-clipboard $appname
+    write-host "Using $global:iotcentralname as the app name"
+    get-anykey '' 'Finish'
 
 }
+
 <#
 # # Test by entering .\create-dps-cert
 

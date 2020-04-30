@@ -3,11 +3,7 @@ function get-azsphereIOTCentral{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
-    [string]$HubName = '' ,
-    [string]$DPSName = '',
-    [string]$Tenant='',
-    [String]$TenantName='',
-    [boolean]$Refresh=$false
+    [string]$IoTCentralName = '' ,
 )
 
 function write-app_manifest{
@@ -82,15 +78,17 @@ $data= @"
 
 
     show-heading '  A Z U R E  S P H E R E  ' 3 'Connect Via IoT Central' 
-    $Prompt = '   Subscription :"' + $Subscription +'"'
+    $Prompt = '     Subscription :"' + $Subscription +'"'
     write-Host $Prompt
-    $Prompt = '          Group :"' + $GroupName +'"'
+    $Prompt = '            Group :"' + $GroupName +'"'
+    write-host ' ------------------------------------ '
+    $Prompt = '          Tenant Name :"' + $TenantName +'"'
     write-Host $Prompt
-    $Prompt = '            Hub :"' + $HubName +'"'
+    $Prompt = '               Tenant :"' + $Tenant +'"'
     write-Host $Prompt
-    $Prompt = '    Current DPS :"' + $DPSName +'"'
+    $Prompt = ' IoT Central App Name :"' + $Iotcentralname +'"'
     write-Host $Prompt
-    $Prompt = ' Current Tenant :"' + $TenantName +'"'
+    $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
     write-Host $Prompt
 
  
@@ -108,24 +106,6 @@ $data= @"
     {
         write-Host ''
         $prompt = 'Need to select a Group first.'
-        write-host $prompt
-        get-anykey 
-        $global:DPS =  'Back'
-        return
-    }
-    elseIf ([string]::IsNullOrEmpty($HubName ))
-    {
-        write-Host ''
-        $prompt = 'Need to select a Hub first.'
-        write-host $prompt
-        get-anykey 
-        $global:DPS =  'Back'
-        return
-    }
-    elseIf ([string]::IsNullOrEmpty($DPsName ))
-    {
-        write-Host ''
-        $prompt = 'Need to select a DPS first.'
         write-host $prompt
         get-anykey 
         $global:DPS =  'Back'
@@ -166,26 +146,21 @@ $data= @"
         }
 
 
-        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Central' 
+        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Central using Azure Sphere Developer Learning Path Template' 
         $Prompt = '     Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '            Group :"' + $GroupName +'"'
-        write-Host $Prompt
-        $Prompt = '              Hub :"' + $HubName +'"'
-        write-Host $Prompt
-        $Prompt = '              DPS :"' + $DPSName +'"'
-        write-Host $Prompt
         write-host ' ------------------------------------ '
-        $Prompt = '      Tenant Name :"' + $TenantName +'"'
+        $Prompt = '          Tenant Name :"' + $TenantName +'"'
         write-Host $Prompt
-        $Prompt = '           Tenant :"' + $Tenant +'"'
+        $Prompt = '               Tenant :"' + $Tenant +'"'
         write-Host $Prompt
-        $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
+        $Prompt = ' IoT Central App Name :"' + $Iotcentralname +'"'
         write-Host $Prompt
-        $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
         write-Host $Prompt
 
-        $options ='D. Create IoT Central App,C. Create a Certificate on IoT Central and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json'
+        $options ='C. Create IoT Central App,V. Verify Tenant,W. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
@@ -212,24 +187,13 @@ $data= @"
             $global:kk = $null
             switch ($kk2)
             {
+
                 'C' {
-                        create-iotcentral $global:subscription $global:groupname $global:hubname $global:dpsname 
+                        create-iotcentral-app $global:subscription $global:groupname $global:IoTCentralName
+                        $iotcentralname = $global:iotcentralname
                     }
-                'E' {
-                        create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
-                    }
-                'D' {
-                        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS - Get DPS ID Scope' 
-                        write-Host ''
-                        write-Host "Getting DPS: $DPSName info (Wait) :"
-                        $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
-                        write-Host "DPS ID Scope:"
-                        foreach ($dps in $query) {
-                        $DPSidscope = $dps.Properties.idScope
-                        }
-                        $global:DPSidscope = $DPSidscope
-                        write-host "DPS ID Scope: $DPSidscope"
-                        get-anykey '' 'Continue'
+                'V' {
+                        verify-tenant-iotcentra $global:subscription $global:groupname $IoTCentralName                  
                     }
 
                 'W' {
