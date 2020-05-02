@@ -1,14 +1,23 @@
 
     {
         "SchemaVersion": 1,
-        "Name": "AzureIoT",
+        "Name": "AzureSphereIoTCentral",
         "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
         "CmdArgs": [ "0ne000F63C6" ],
         "Capabilities": {
-          "AllowedConnections": [ "global.azure-devices-provisioning.net", "iotc-7c6460dd-45d2-4e44-9e35-c9493facdb9d.azure-devices.net" ],
-          "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],
-          "DeviceAuthentication": "bfbe8861-c64c-4eae-a3f2-9adf312d2efd"
+          "Gpio": [
+            "$BUTTON_A",
+            "$BUTTON_B",
+            "$LED1",
+            "$LED2",
+            "$NETWORK_CONNECTED_LED",
+            "$RELAY"
+          ],
+          "Uart": [ "" ],
+          "PowerControls": [ "ForceReboot" ],
+          "AllowedConnections": [ "global.azure-devices-provisioning.net","iotc-7c6460dd-45d2-4e44-9e35-c9493facdb9d.azure-devices.net"],
+          "DeviceAuthentication":  "bfbe8861-c64c-4eae-a3f2-9adf312d2efd"
         },
         "ApplicationType": "Default"
-    }
+      }

@@ -53,26 +53,38 @@ $f=@"
     Hello
     World
 "@
-$SAMPLE_BUTTON_1 ='$SAMPLE_BUTTON_1'
-$SAMPLE_BUTTON_2 ='$SAMPLE_BUTTON_2'
-$SAMPLE_LED='$SAMPLE_LED'
+
+$BUTTON_A='$BUTTON_A'
+$BUTTON_B='$BUTTON_B'
+$LED1='$LED1'
+$LED2='$LED2'
+$NETWORK_CONNECTED_LED='$NETWORK_CONNECTED_LED'
+$RELAY='$RELAY'
 
 $data= @"
     {
         "SchemaVersion": 1,
-        "Name": "AzureIoT",
+        "Name": "AzureSphereIoTCentral",
         "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
         "CmdArgs": [ "$IDScope" ],
         "Capabilities": {
-          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$DevURL" ],
-          "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],
-          "DeviceAuthentication": "$Tenant"
+          "Gpio": [
+            "$BUTTON_A",
+            "$BUTTON_B",
+            "$LED1",
+            "$LED2",
+            "$NETWORK_CONNECTED_LED",
+            "$RELAY"
+          ],
+          "Uart": [ "$UART0" ],
+          "PowerControls": [ "ForceReboot" ],
+          "AllowedConnections": [ "global.azure-devices-provisioning.net","$DevURL"],
+          "DeviceAuthentication":  "$Tenant"
         },
         "ApplicationType": "Default"
-    }
+      }
 "@
-
       $PsScriptFile =  "$global:ScriptDirectory\app_manifest.json"
 
       $prompt ="Writing app_manifest.json (DPS ID Scope, IoT Hub DNS Name and Tenant) to $PsScriptFile"
@@ -82,8 +94,16 @@ $data= @"
       get-anykey '' 'Continue'
       Out-File -FilePath $PsScriptFile    -InputObject '' -Encoding ASCII
       Add-Content -Path  $PsScriptFile   -Value $data
-
+      write-host "***********************************************************************************"
+      write-host ''
       Get-Content -Path $PsScriptFile 
+      write-host ''
+      write-host "***********************************************************************************"
+      write-host "This is for the SEED version of the lab."
+      write-host "  This can directly replace app_manifest.json for that."
+      write-host "Copy the 3 variables into the app_manifest.json file from here if using other labs."
+      write-host "***********************************************************************************"
+      write-host ''
       get-anykey '' 'Continue'
 }
 
