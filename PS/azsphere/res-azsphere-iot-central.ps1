@@ -197,11 +197,10 @@ $data= @"
                         $iotcentralname = $global:iotcentralname
                     }
                 'V' {
-                        verify-tenant-iotcentra $global:subscription $global:groupname $global:IoTCentralName                  
+                        verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName                  
                     }
                 'W' {
-                    write-host "Coming. Not yet though..."
-                    get-anykey '' 'Continue'
+                        whitelist-iotcentralapp $global:subscription $global:groupname $global:IoTCentralName
                     }
                 'J' {
                         write-app_manifest $DPSidscope $HubName $Tenant

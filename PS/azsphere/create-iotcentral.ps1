@@ -37,15 +37,7 @@ function verify-tenant-iotcentral{
         $global:retVal =  'Back'
         return
     }
-    elseIf ([string]::IsNullOrEmpty($HubName ))
-    {
-        write-Host ''
-        $prompt = 'Need to select a Group first.'
-        write-host $prompt
-        get-anykey 
-        $global:retVal =  'Back'
-        return
-    }
+
 
     If ([string]::IsNullOrEmpty($IOtCentralName ))
     {
@@ -124,6 +116,8 @@ function create-iotcentral-app{
 
     show-heading '  Azure Sphere '  4  'Create IoT Central App'
 
+    Set-clipboard " "
+
     write-host ''
     write-host "Creating an Azure Sphere Learning Path Azure IoT App using its Template"
     write-host "Ref: https://github.com/gloveboxes/Azure-Sphere-Learning-Path: Lab 2"
@@ -137,22 +131,30 @@ function create-iotcentral-app{
     write-host '3. Complete any required fields.'
     write-host '4. Click Create to create the Azure IoT Central Application.'
     write-host '5. Copy the URL'
-    write-host 'Openning the page'
+    write-host 'Nb: If you already have a free IoT Central app then delete it first'
+    write-host 'And make sure you are logged into your Azsphere Tenant'
+    get-anykey '' 'to open the page'
     $url = "https://apps.azureiotcentral.com/build/new/dba50ef5-fb7d-4260-8a5e-a4592677af4f"
     start-process  $url
-    get-anykey '' 'Continue when tamplate is open'
-    write-host 'Going to web page for that in a moment. But first a screen shot of it'
+    get-anykey '' 'Continue when template is open (here)'
+
     show-image 'create-azapp.png' 'Configure Azure Sphere Learning Path Azure IoT App' ''
 
     $appName= Get-clipboard -format text
+    $appName = $appName.Trim()
+
+    if (-not([string]::IsNullOrEmpty($appName)))
+    {
+        $NewString = $appName  -replace ".azureiotcentral.*"
+        $NewString = $newstring.Replace('https://','')
+        $appName= $newstring.Trim()
+    }
+
     if ([string]::IsNullOrEmpty($appName))
     {
         $appName=read-host 'What app name did you use?'
     }
-    else
-    {
-        $appsname= $appname.Replace(".azureiotcentral.com","")
-    }
+
     $global:iotcentralname = $appname
     set-clipboard $appname
     write-host "Using $global:iotcentralname as the app name"
