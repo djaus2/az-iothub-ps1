@@ -3,29 +3,32 @@ function get-azsphereIOTCentral{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
-    [string]$IoTCentralName = '' 
+    [string]$IoTCentralName = '',
+    [string]$iotcentralURL = '',
+    [string]$IDScope='',
+    [string]$DevURL=''
 )
 
 function write-app_manifest{
     param (
-    [string]$ComID = '' ,
-    [string]$HubName = '' ,
+    [string]$IDScope = '' ,
+    [string]$DevURL = '' ,
     [string]$Tenant = '' 
     )
 
-    If ([string]::IsNullOrEmpty($ComID ))
+    If ([string]::IsNullOrEmpty($IDScope ))
     {
         write-Host ''
-        $prompt =  'Need to get DPS Scope ID first.'
+        $prompt =  'Need to get Scope ID first.'
         write-host $prompt
         get-anykey 
         $global:DPS =  'Back'
         return
     }
-    elseIf ([string]::IsNullOrEmpty($HUbName ))
+    elseIf ([string]::IsNullOrEmpty($DevURL ))
     {
         write-Host ''
-        $prompt = 'Need to select a Hub first.'
+        $prompt = 'Need to select a Dev ID first.'
         write-host $prompt
         get-anykey 
         $global:DPS =  'Back'
@@ -53,11 +56,11 @@ $data= @"
     {
         "SchemaVersion": 1,
         "Name": "AzureIoT",
-        "ComponentId": "819255ff-8640-41fd-aea7-f85d34c491d5",
+        "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
-        "CmdArgs": [ "$ComID" ],
+        "CmdArgs": [ "$IDScope" ],
         "Capabilities": {
-          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$HubName.azure-devices-provisioning.net" ],
+          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$DevURL" ],
           "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],
           "DeviceAuthentication": "$Tenant"
         },
@@ -77,7 +80,7 @@ $data= @"
 }
 
 
-    show-heading '  A Z U R E  S P H E R E  ' 3 'Connect Via IoT Central' 
+    show-heading '  A Z U R E  S P H E R E  ' 3 'Azure Sphere Developer Learning Path Template' 
     $Prompt = '     Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '            Group :"' + $GroupName +'"'
@@ -89,6 +92,10 @@ $data= @"
     $Prompt = ' IoT Central App Name :"' + $Iotcentralname +'"'
     write-Host $Prompt
     $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
+    write-Host $Prompt
+    $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
+    write-Host $Prompt
+    $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
     write-Host $Prompt
 
  
@@ -139,28 +146,33 @@ $data= @"
 
 
     do{
-
         if ($Refresh -eq $true)
         {
             $Refresh=$false
         }
+        $IDScope=$global:IDScope
+        $DevURL=$global:DevURL
+        $IotcentralURL=$global:IotcentralURL
 
-
-        show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Central using Azure Sphere Developer Learning Path Template' 
-        $Prompt = '     Subscription :"' + $Subscription +'"'
+        show-heading '  A Z U R E  S P H E R E  '  3 'Azure Sphere Developer Learning Path Template' 
+        $Prompt = '          Subscription :"' + $Subscription +'"'
         write-Host $Prompt
-        $Prompt = '            Group :"' + $GroupName +'"'
+        $Prompt = '                 Group :"' + $GroupName +'"'
         write-host ' ------------------------------------ '
-        $Prompt = '          Tenant Name :"' + $TenantName +'"'
+        $Prompt = '           Tenant Name :"' + $TenantName +'"'
         write-Host $Prompt
-        $Prompt = '               Tenant :"' + $Tenant +'"'
+        $Prompt = '                Tenant :"' + $Tenant +'"'
         write-Host $Prompt
-        $Prompt = ' IoT Central App Name :"' + $Iotcentralname +'"'
+        $Prompt = '  IoT Central App Name :"' + $Iotcentralname +'"'
         write-Host $Prompt
-        $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
+        $Prompt = '   IoT Central App URL :"' + $IotcentralURL +'"'
+        write-Host $Prompt
+        $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
+        write-Host $Prompt
+        $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
         write-Host $Prompt
 
-        $options ='O. Open Azure Sphere Developer Learning Path in browser,C. Create IoT Central App,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json'
+        $options ='O. Open Azure Sphere Developer Learning Path in browser,C. Create IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
@@ -195,15 +207,34 @@ $data= @"
                 'C' {
                         create-iotcentral-app $global:subscription $global:groupname $global:IoTCentralName
                         $iotcentralname = $global:iotcentralname
+                        $iotcentralURL = $global:iotcentralURL
                     }
+                'E' {  
+                        $name = read-host "Enter IoT Cenrtral app name. Default: $IoTCentralName"
+                        if(-not([string]::IsNullOrEmpty($name )))
+                        {
+                            $IotcentralName= $name.Trim()
+                        }
+                        $global:iotcentralname = $iotcentralname
+                        $IotcentralURL=''
+                        $IotcentralURL = read-host "Enter the URL for the IoT Central. Default: $Iotcentralname.azureiotcentral.com"
+                        $IotcentralURL = $IotcentralURL.Trim()
+                        if([string]::IsNullOrEmpty($IotcentralURL ))
+                        {
+                            $IotcentralURL= "$Iotcentralname.azureiotcentral.com"
+                        }
+                        $global:IotcentralURL = $IotcentralURL
+                    }   
                 'V' {
                         verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName                  
                     }
                 'W' {
-                        whitelist-iotcentralapp $global:subscription $global:groupname $global:IoTCentralName
+                        whitelist-iotcentralapp $global:subscription $global:groupname $global:IoTCentralName $global:IoTCentralURL
+                        $IDScope=$global:IDScope
+                        $DevURL=$global:DevURL
                     }
                 'J' {
-                        write-app_manifest $DPSidscope $HubName $Tenant
+                        write-app_manifest $Idscope $DevURL $Tenant
                     }
 
             }
