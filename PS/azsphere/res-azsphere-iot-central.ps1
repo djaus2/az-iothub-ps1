@@ -9,6 +9,11 @@ param (
     [string]$DevURL=''
 )
 
+$IoTCentralName = $global:IoTCentralName
+$IoTcentralURL= $global:IoTCentralName
+$IDScope = $global:IDScope
+$DevURL=$global:DevURL
+
 function write-app_manifest{
     param (
     [string]$IDScope = '' ,
@@ -77,6 +82,9 @@ $data= @"
       get-anykey '' 'Continue'
       Out-File -FilePath $PsScriptFile    -InputObject '' -Encoding ASCII
       Add-Content -Path  $PsScriptFile   -Value $data
+
+      Get-Content -Path $PsScriptFile 
+      get-anykey '' 'Continue'
 }
 
 
