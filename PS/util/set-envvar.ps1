@@ -352,7 +352,7 @@ function Get-All{
         write-host [4.2] Write to Bash script in Quickstarts folder
         write-export  $Subscription $grp $hb $dev 'quickstarts'
         write-host [4.3] Write sample launchSettings.json in Quickstarts folder
-        write- host " - Needs app name correction on line 3."
+        write-host " - Needs app name correction on line 3."
         write-json  $Subscription $grp $hb $dev 'quickstarts'
 }
 

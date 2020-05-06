@@ -20,6 +20,11 @@ try {
     . ("$global:ScriptDirectory\Util\get-location.ps1")
     . ("$global:ScriptDirectory\Util\get-SKU.ps1")
     . ("$global:ScriptDirectory\Util\show-time.ps1")
+    . ("$global:ScriptDirectory\Util\set-envvar.ps1")
+    . ("$global:ScriptDirectory\util\write-json.ps1")
+    . ("$global:ScriptDirectory\util\write-env.ps1")
+    . ("$global:ScriptDirectory\util\set-export.ps1")
+    . ("$global:ScriptDirectory\util\write-export.ps1")
 
 
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")

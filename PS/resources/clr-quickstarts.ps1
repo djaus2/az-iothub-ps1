@@ -34,7 +34,7 @@ function clr-apps{
 
 
     try {
-        . ("$global:ScriptDirectory\util\set-envvar.ps1")
+      #  . ("$global:ScriptDirectory\util\set-envvar.ps1")
         . ("$global:ScriptDirectory\util\set-export.ps1")
     }
     catch {

@@ -23,7 +23,7 @@ $Prompt = '    Current DPS :"' + $Current +'"'
 write-Host $Prompt
 
     try{
-    . ("$global:ScriptDirectory\util\set-envvar.ps1")
+    #  . ("$global:ScriptDirectory\util\set-envvar.ps1")
     } catch {
         Write-Host "Error while loading supporting Env Vars PowerShell Scripts" 
         Write-Host $_
