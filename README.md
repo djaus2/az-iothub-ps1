@@ -7,7 +7,7 @@ _**A PowerShell script that can create an Azure Group, IoT Hub and Device requir
 **_N.b.: The .NET (Core C#) versions of the Quickstart apps are the focus here._**
 
 <hr>
-Having problems running PowerShell scripts that you have downloaded, for example the ones from here, becuase they are unsigned. I've created a new GitHub repository [djaus2/sign-me-up-scotty](https://github.com/djaus/sign-me-up-scotty) that can create a local signing authority, create a personal certificate for code signing, and sign an individual PS script with that certificate. And for repository downloads like this, it can recursively sign all PS scripts in a folder and down from there, as well as recursively unsign them!
+Having problems running PowerShell scripts that you have downloaded, for example the ones from here, because they are unsigned. I've created a new GitHub repository [djaus2/sign-me-up-scotty](https://github.com/djaus/sign-me-up-scotty) that can create a local signing authority, create a personal certificate for code signing, and sign an individual PS script with that certificate. And for repository downloads like this, it can recursively sign all PS scripts in a folder and down from there, as well as recursively unsign them!
 <b><i>Much support now added for Azure Sphere including the azsphere command prompt as a PowerShell, device commands, DPS and IoT Central connectivity.</i></b>
 <hr>
 
