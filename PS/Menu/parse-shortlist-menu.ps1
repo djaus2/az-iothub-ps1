@@ -107,7 +107,10 @@ param (
             }
             else {       
                 $itemToList = ($line-split '\t')[$DisplayIndex]
-                    $SelectionList.Add([string]$i)
+                if ($itemToList -eq 'False'){
+                    continue
+                }
+                $SelectionList.Add([string]$i)
                 $NumActualEntries++
             }
             [string]$prompt = [string]$i

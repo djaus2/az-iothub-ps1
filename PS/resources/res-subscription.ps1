@@ -43,6 +43,7 @@ show-heading  -Prompt '  S U B S C R I P T I O N  '  2
         }
     }
 # Assume there is at least one subscription
+$global:SubscriptionsStrn  =  ''
 
     If  ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     {   
@@ -53,7 +54,29 @@ show-heading  -Prompt '  S U B S C R I P T I O N  '  2
             write-host "$global:SubscriptionsStrn  =  az account list  -o tsv | Out-String"
             get-anykey
         }
-        $global:SubscriptionsStrn  =  az account list  -o tsv | Out-String
+        $global:SubscriptionsStrn  =  ''
+        $lines1 =@()
+        $lines2 = {$lines1}.Invoke()
+        $ListString=  az account list  -o tsv | Out-String
+        $lines= $ListString.Split("`r`n",[System.StringSplitOptions]::RemoveEmptyEntries)
+        foreach ($j in $lines) 
+        {
+            $line = $j.Trim()
+
+            if ([string]::IsNullOrEmpty($line))
+            {          
+                continue
+            }
+            else {       
+                $itemToList = ($line-split '\t')[$SubscriptionIDIndex]
+                # Remove Subscriptions that are inactive
+                if ($itemToList.Trim() -eq 'False'){
+                    continue
+                }
+                $lines2.Add( $line )
+            }
+        }
+        $global:SubscriptionsStrn   = $lines2 | out-string
     }
     If ([string]::IsNullOrEmpty($global:SubscriptionsStrn))
     {

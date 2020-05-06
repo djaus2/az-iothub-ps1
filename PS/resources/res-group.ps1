@@ -29,10 +29,10 @@ $Prompt = ' Current Group :"' + $GroupName +'"'
    $GroupName = $Current
     do{
 
-    if ($Refresh -eq $true)
-    {
-        $global:GroupsStrn = null
-    }
+        if ($Refresh -eq $true)
+        {
+            $global:GroupsStrn = $null
+        }
     
     
   
@@ -53,6 +53,7 @@ $Prompt = ' Current Group :"' + $GroupName +'"'
             get-anykey
         }
         $global:GroupsStrn =  az group list --subscription  $Subscription -o tsv | Out-String
+
     }
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     {

@@ -1,8 +1,9 @@
 # When az query is returned.
 # Strindex is index to what is displayed
 # StrnDataIndex is the data used. Only different for Group location
-$SubscriptionStrnIndex =3
-$SubscriptionStrnDataIndex =3
+$SubscriptionStrnIndex =5
+$SubscriptionStrnDataIndex =5
+$SubscriptionIDIndex = 2
 $GroupStrnIndex =3
 $GroupStrnDataIndex =3
 $HubStrnIndex =3
