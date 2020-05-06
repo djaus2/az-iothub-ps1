@@ -67,6 +67,9 @@ catch {
     Write-Host $_
 }
 
+# show-image
+# exit
+
 
 
 # & "$global:ScriptDirectory\app-settings"

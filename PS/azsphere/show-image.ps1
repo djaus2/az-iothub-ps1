@@ -17,9 +17,9 @@ function clickme
 
     $Form = New-Object system.Windows.Forms.Form
     $Form.Text = $Title
-    $Icon = [system.drawing.icon]::ExtractAssociatedIcon($PSHOME + "\powershell.exe")
-    $Form.Icon = $Icon
-    $Image = [system.drawing.image]::FromFile("images\$ImageName")
+    # $Icon = [system.drawing.icon]::ExtractAssociatedIcon($PSHOME + "\powershell.exe")
+    # $Form.Icon = $Icon
+    $Image = [system.drawing.image]::FromFile("$global:ScriptDirectory\images\$ImageName")
     $Form.BackgroundImage = $Image
     $Form.BackgroundImageLayout = $Layout
         # None, Tile, Center, Stretch, Zoom
@@ -31,9 +31,11 @@ function clickme
     $Form.ControlBox=$false
     $Label = New-Object System.Windows.Forms.Label
     $Label.Text = $Text
-    $Label.BackColor = "Transparent"
+    $Label.BackColor = [System.Drawing.Color]::FromName("Transparent")
     $Label.AutoSize = $True
     $Form.Controls.Add($Label)
+
+
     $Button = New-Object System.Windows.Forms.Button
     $Button.Text = 'Done'
     $Button.Width = 100

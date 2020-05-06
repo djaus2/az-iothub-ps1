@@ -66,7 +66,7 @@ param (
     show-image 'whitelist-3.png' 'Configure Azure Sphere Learning Path Azure IoT App' ''
 
     show-image 'whitelist-4.png' 'Configure Azure Sphere Learning Path Azure IoT App' ''
-    $global:IDScope = get-clipboard -format text
+    $global:IDScope = get-clipboard  #-format text
     
     get-anykey '' 'show the IoT Central Info page. Return here when open.'   
     $url = "https://azuredps.z23.web.core.windows.net"
@@ -75,7 +75,7 @@ param (
 
 
     show-image 'whitelist-5.png' 'Configure Azure Sphere Learning Path Azure IoT App' ''  
-    $global:DevURL=get-clipboard -format text
+    $global:DevURL=get-clipboard # -format text
 
 
 

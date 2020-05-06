@@ -81,7 +81,7 @@ function verify-tenant-iotcentral{
 
     
    
-    $verificationcode  = Get-clipboard -format text
+    $verificationcode  = Get-clipboard # -format text
     
 
     write-host "Doing 5. Downloading Validation Certificate with Verification code: $verificationcode"
@@ -140,7 +140,7 @@ function create-iotcentral-app{
 
     show-image 'create-azapp.png' 'Configure Azure Sphere Learning Path Azure IoT App' ''
 
-    $appName= Get-clipboard -format text
+    $appName= Get-clipboard # -format text
     $appName = $appName.Trim()
 
     if (-not([string]::IsNullOrEmpty($appName)))
