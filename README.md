@@ -49,7 +49,7 @@ There is one other script that needs to be run once, set-path (run from the prom
 6. Environment Variables
 7. Quickstart Apps
 8. Manage App Data
-9. All in one. Get a New: (Group ... Hub in Group ... Device for Hub)
+9. All in one. Get a New: (Group ... Hub in Group ... Device for Hub)  
 A. Azure Sphere
 
 R. Reset script globals<br>
