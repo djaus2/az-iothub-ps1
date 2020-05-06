@@ -2,9 +2,12 @@
 
 # Azure IoT Hub PowerShell Scripts
 
-_**A PowerShell script that can create an Azure Group, IoT Hub and Device requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that have been reworked, extended and added to.**_
+_**A PowerShell script that can create an Azure Group, IoT Hub and Device requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that have been reworked, extended and added to. It now has some support of Azure IoT Central**_
 
 **_N.b.: The .NET (Core C#) versions of the Quickstart apps are the focus here._**
+
+<hr>
+Having problems running PowerShell scripts that you have downloaded, for example the ones from here, becuase they are unsigned. I've created a new GitHub repository [djaus2/sign-me-up-scotty](https://github.com/djaus/sign-me-up-scotty) that can create a local signing authority, create a personal certificate for code signing, and sign an individual PS script with that certificate. And for repository downloads like this, it can recursively sign all PS scripts in a folder and down from there, as well as recursively unsign them!
 <hr>
 
 ## Preamble
