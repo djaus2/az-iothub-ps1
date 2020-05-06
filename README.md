@@ -51,14 +51,14 @@ There is one other script that needs to be run once, set-path (run from the prom
 8. Manage App Data
 9. All in one. Get a New: (Group ... Hub in Group ... Device for Hub)
   
-A. Azure Sphere  
-
-R. Reset script globals<br>
-X. Exit<br>
-Select action (number). (Default is highlighted) X To exit
+  A. Azure Sphere  
+  
+  R. Reset script globals  
+  X. Exit  
+  Select action (number). (Default is highlighted) X To exit
 </td></tr></table>
 
-_The **get-iothub** PowerShell scipt Main Menu_
+_The **get-iothub** PowerShell script Main Menu_
 
 <hr>
 
