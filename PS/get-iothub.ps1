@@ -167,13 +167,13 @@ if ($($args.Count) -ne 0)
     switch ($args.Count)
     {
         1{
-            # Assume a csv of 3
+            # Assume a csv of 3 or 4
             [string]$arg0 = [string]$($args[0]) 
             $arg0 = $arg0.Replace(' ',',')
             get-allinone $arg0
         }
         2{ 
-            #assume a CSV of 3 and sleepparam
+            #assume a CSV of 3 or 4 and sleepparam
             [string]$arg0 = [string]$($args[0]) 
             $arg0 = $arg0.Replace(' ',',')
             [string]$delay = [string] $($args[1])
@@ -191,6 +191,12 @@ if ($($args.Count) -ne 0)
             $arg0 = $arg0.Replace(' ',',')
             [string]$delay = [string] $($args[3])
             get-allinone $arg0 $delay
+        }
+        5{ 
+            # assum space sep of 4 and sleepparam
+            $arg0= $($args[0])+' '+$($args[1])+ ' '+$($args[2]) 
+            $arg0 = $arg0.Replace(' ',',')
+            get-allinone $arg0
         }
     }
 

@@ -37,9 +37,12 @@ function get-allinone
         $names = $namesStrn -split ','
         if ($names.Length -ne 3)
         {
-            write-host $namesStrn
-            write-host $names.Length
-            return 'Back 2'
+            if ($names.Length -ne 4)
+            {
+                write-host $namesStrn
+                write-host $names.Length
+                return 'Back 2'
+            }
         }
         foreach ($name in $names)
         {
@@ -68,9 +71,27 @@ function get-allinone
                 return 'Back 6'
             }
         }
+        if ($names.Length -gt 3){
+            if ($false) { #Like dev check
+            if (check-dps  $Subscription $names[0]  $names[3] )
+            {
+                return 'Back 7'
+            }
+            }
+        }
         $grp = $names[0]
-        $hb = $names[1]
-        $dev =$names[2]
+        $hb =''
+        if ($names.Length -gt 1){
+            $hb =$names[1]
+        }
+        $dev=''
+        if ($names.Length -gt 2){
+            $dev =$names[2]
+        }  
+        $dps ="Add a 4th parameter to the list for this"
+        if ($names.Length -gt 3){
+            $dps = $names[3]
+        }
 
         show-heading  -Prompt '  D O  A L L  ' 2
 
@@ -104,11 +125,21 @@ function get-allinone
         write-host "[3] Create New Device " -NoNewline
         write-host " $dev " -BackgroundColor Yellow   -ForegroundColor   Black  -NoNewline
         write-host " for that Hub then ..."
+
+        write-host "[4] Get connection strings and Save to shell scripts etc (ps1,sh,json) then ..."
+
+
+
+        write-host "[5] Create a New Device Provisioning Service "  -NoNewline
+        write-host " $dps " -BackgroundColor Yellow   -ForegroundColor   Black  -NoNewline
+        write-host " ... Coming (Not yet) then ... "
+        write-host "[6] Connect the IoT Hub to the DPS ... Coming (Not yet)"
+
         
-        write-host "[4] Get connection strings and Save to shell script."
         write-host ''
 
-        write-host "Entity mames are unused so good to go ..."
+        write-host "Entity mames are unused (n.b. Device and DPS not checkeed here ... coming) so good to go ..."
+
         get-yesorno $true "Continue? (Y/N)"
 
         $answer = $global:retVal
