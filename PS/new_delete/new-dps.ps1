@@ -1,3 +1,33 @@
+function connect-dps{
+    param (
+        [Parameter(Mandatory)]
+        [string]$Subscription ,
+        [Parameter(Mandatory)]
+        [string]$GroupName,
+        [Parameter(Mandatory)]
+        [string]$HubName ,
+        [Parameter(Mandatory)]
+        [string]$DPSName ,
+        [boolean]$Refresh=$false
+    )
+
+    $Location =""
+    If (-not [string]::IsNullOrEmpty($HubName ))
+    {
+        try{
+        $Location =  ($global:HubsStrn -split '\t')[2] 
+
+        }
+        catch {
+            $Location = ''
+        }
+    }
+
+    # write-host "About to run (Press [Enter] to continue):"
+    # read-host "az iot dps linked-hub create --dps-name $DPSName --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location -o table"
+    az iot dps linked-hub create --dps-name $DPSName --subscription $Subscription --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location  -o table
+}
+
 function New-DPS{
 param (
     [Parameter(Mandatory)]
@@ -103,10 +133,10 @@ show-heading '  N E W  D P S   '   3
     if(-not([string]::IsNullOrEmpty($global:echoCommands)))
     {
         write-Host "Create DPS Command:"
-        write-Host "az iot dps create --name $DPSName  --subscription $Subscription --resource-group $GroupName  --sku S1 --unit $global:DPSunits  -o Table"
+        write-Host "az iot dps create --name $DPSName  --subscription "$Subscription" --resource-group $GroupName  --sku S1 --unit $global:DPSunits  -o Table"
         get-anykey
     }
-    az iot dps create --name $DPSName --subscription $Subscription  --resource-group $GroupName  --sku S1  --unit $global:DPSunits -o Table
+    az iot dps create --name $DPSName --subscription "$Subscription"  --resource-group $GroupName  --sku S1  --unit $global:DPSunits -o Table
 
     
 

@@ -4,7 +4,7 @@ param (
     [string]$Current='',
     [boolean]$Refresh=$false
 )
-
+$Subscription=$Subscription.Trim()
 show-heading '  G R O U P  '  2
 $Prompt =  ' Subscription :"' + $Subscription +'"'
 write-Host $Prompt
@@ -49,7 +49,7 @@ $Prompt = ' Current Group :"' + $GroupName +'"'
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
             write-Host "Get Groups Command:"
-            write-host "$global:GroupsStrn =  az group list --subscription  $Subscription -o tsv | Out-String"
+            write-host '$global:GroupsStrn =  az group list --subscription '$Subscription' -o tsv | Out-String'
             get-anykey
         }
         $global:GroupsStrn =  az group list --subscription  $Subscription -o tsv | Out-String

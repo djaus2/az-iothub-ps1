@@ -73,10 +73,10 @@ function get-allinone
         }
         if ($names.Length -gt 3){
             if ($false) { #Like dev check
-            if (check-dps  $Subscription $names[0]  $names[3] )
-            {
-                return 'Back 7'
-            }
+                if (check-dps  $Subscription $names[0]  $names[3] )
+                {
+                    return 'Back 7'
+                }
             }
         }
         $grp = $names[0]
@@ -180,7 +180,19 @@ function get-allinone
                     $lev++
                     write-host "[4] Get connection strings."
                     get-all  $Subscription $grp $hb $dev
-                    $success = $true
+                    write-host "[3] Create Device in Hub"
+                    new-dps $Subscription $grp $hb $dps
+                    if (check-dps  $Subscription $grp $dps )
+                    {
+                        new-dps $Subscription $grp $hb $dps
+                        {
+
+                        }
+                        $lev++
+                        write-host "[5] Get Create DPS"
+                        get-all  $Subscription $grp $hb $dev
+                        $success = $true
+                    }
                 }
             }
         }

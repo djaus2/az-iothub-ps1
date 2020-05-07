@@ -13,7 +13,7 @@ param (
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     {   
         write-Host 'Getting Groups from Azure'
-        $global:GroupsStrn =  az group list -o tsv | Out-String
+        $global:GroupsStrn =  az group list --subscription  "$global:Subscription"  -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:GroupsStrn ))
     {

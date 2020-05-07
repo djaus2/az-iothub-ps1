@@ -22,7 +22,7 @@ param (
     If([string]::IsNullOrEmpty($global:HubsStrn )) 
     { 
         write-Host 'Getting Hubs from Azure'
-        $global:HubsStrn =  az iot hub list --subscription $Subscription  -o tsv | Out-String
+        $global:HubsStrn =  az iot hub list --subscription "$Subscription"  -o tsv | Out-String
     }
     If (-not([string]::IsNullOrEmpty($global:HubsStrn )))
     {   

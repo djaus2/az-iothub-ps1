@@ -91,7 +91,7 @@ write-Host $Prompt
             write-host "$global:DPSStrn =  az iot dps list --resource-group $GroupName  -o tsv | Out-String "
             get-anykey
         }
-        $global:DPSStrn =  az iot dps list --resource-group $GroupName   -o tsv | Out-String
+        $global:DPSStrn =  az iot dps list --subscription $Subscription --resource-group $GroupName   -o tsv | Out-String
     }
 
 
@@ -204,17 +204,12 @@ write-Host $Prompt
 	    }
         elseif ($answer -eq 'Show')
         {
-            show-dps $Current
+            show-dps $subscription $groupname $hubname $Current
         }
 	elseif ($answer -eq 'Connect')
-        {        
-            $DPSName = $Current
-            $global:DPSName = $Current 
-            $global:retVal =  $Current
-            write-host "About to run (Press [Enter] to continue):"
-            read-host "az iot dps linked-hub create --dps-name $DPSName --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location -o table"
-            az iot dps linked-hub create --dps-name $DPSName --resource-group $GroupName --connection-string $env:IOTHUB_CONN_STRING_CSHARP  --location $location  -o table
-            show-dps $Current
+        {    
+            connect-dps $subscription $groupname $hubname $Current
+            show-dps $Subscription $GroupName $HubName $Current
         }
         elseif ($answer -eq 'Disconnect')
         {
@@ -225,8 +220,8 @@ write-Host $Prompt
             write-host "About to run (Press [Enter] to continue):"
             read-host "az iot dps linked-hub delete --dps-name $DPSName --resource-group $GroupName --linked-hub $ExtenedHubName -o table"
             $ExtenedHubName = "$HubName.azure-devices.net"
-            az iot dps linked-hub delete --dps-name $DPSName --resource-group $GroupName --linked-hub $ExtenedHubName -o table
-            show-dps $Current
+            az iot dps linked-hub delete --dps-name $DPSName --subscription $Subscription --resource-group $GroupName --linked-hub $ExtenedHubName -o table
+            show-dps $Subscription $GroupName $HubName $Current
         } 
         elseif ($answer -eq 'Generate')
         {
@@ -251,7 +246,14 @@ write-Host $Prompt
 
 function show-dps{
 param (
-    [string]$DPSName = ''
+    [Parameter(Mandatory)]
+    [string]$Subscription ,
+    [Parameter(Mandatory)]
+    [string]$GroupName,
+    [Parameter(Mandatory)]
+    [string]$HubName,
+    [Parameter(Mandatory)]
+    [string]$DPSName
 )
     If (-not [string]::IsNullOrEmpty($DPSName ))
     {
@@ -261,7 +263,7 @@ param (
  
         write-Host ''
         write-Host "Getting DPS: $DPSName info (Wait) :"
-        $query = az iot dps show --name $DPSName -o json | Out-String | ConvertFrom-Json
+        $query = az iot dps show --resource-group $groupname --name $DPSName -o json | Out-String | ConvertFrom-Json
         write-Host "DPS ID Scope:"
         foreach ($dps in $query) {$dps.Properties.idScope}
         write-Host "Connected Hubs:"

@@ -85,7 +85,7 @@ function create-azsphere{
     write-host "Got CACertificate"
 
     write-host "Creating new DPS certificate (Wait):"
-    $cert = az iot dps certificate create --subscription $subscription --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName --path $CAcertificate -o tsv | Out-String
+    $cert = az iot dps certificate create --subscription "$subscription" --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName --path $CAcertificate -o tsv | Out-String
     write-host "Created DPS Certificate:"
     write-host $cert 
     $items= $gh=$cert -split '\t'
@@ -94,7 +94,7 @@ function create-azsphere{
     get-anykey "" "Continue"
 
     write-host "Getting Verification Code for certificate (Wait):"
-    $valid = az iot dps certificate generate-verification-code --subscription $Subscription --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName   --etag $etag -o json| Out-String
+    $valid = az iot dps certificate generate-verification-code --subscription "$Subscription" --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName   --etag $etag -o json| Out-String
     write-host "Generated Verification Code"
     $validationObject = ConvertFrom-Json -InputObject $valid
     $verificationcode = $validationObject.properties.verificationCode

@@ -98,10 +98,10 @@ param (
     if(-not([string]::IsNullOrEmpty($global:echoCommands)))
     {
         write-Host "Create Device Command:"
-        write-Host "az group create --name $GroupName --location $Location --subscription $Subscription  -o Table"
+        write-Host "az group create --name $GroupName --location $Location --subscription "$Subscription"  -o Table"
         get-anykey
     }
-    az group create --name $GroupName --location $Location --subscription $Subscription  -o Table 
+    az group create --name $GroupName --location $Location --subscription "$Subscription"  -o Table 
 
     $prompt = 'Checking whether Azure Group "' + $GroupName  + '" in Subscription "' + $Subscription +'" was created.'
     write-Host $prompt

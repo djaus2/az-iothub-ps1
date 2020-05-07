@@ -65,10 +65,10 @@ write-Host $Prompt
         if(-not([string]::IsNullOrEmpty($global:echoCommands)))
         {
             write-Host "Get Hubs Command:"
-            write-host "$global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String "
+            write-host '$global:HubsStrn ='  "az iot hub list --subscription  $Subscription --resource-group  $GroupName  -o tsv | Out-String "
             get-anykey
         }
-        $global:HubsStrn =  az iot hub list --resource-group  $GroupName  -o tsv | Out-String
+        $global:HubsStrn =  az iot hub list --subscription  $Subscription --resource-group  $GroupName  -o tsv | Out-String
     }
     If ([string]::IsNullOrEmpty($global:HubsStrn ))
     {

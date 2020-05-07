@@ -132,10 +132,10 @@ if($false) {
     if(-not([string]::IsNullOrEmpty($global:echoCommands)))
     {
         write-Host "Create Hub Command:" -ForeGroundColor DarkGreen
-        write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table" -ForeGroundColor DarkBlue
+        write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription "$Subscription" --sku $SKU --output Table" -ForeGroundColor DarkBlue
         get-anykey
     }
-    az iot hub create --name $HubName   --resource-group $GroupName  --subscription $Subscription --sku $SKU --output Table
+    az iot hub create --name $HubName   --resource-group $GroupName  --subscription "$Subscription" --sku $SKU --output Table
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt
