@@ -70,7 +70,7 @@ param (
         write-Host $Prompt
 
         # $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Set Bash Env Vars,Generate Bash Envs,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json'
-        $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json'
+        $itemsList ='Show Environment Variables,Generate Env Vars,Permanently set Env Vars,Clear Env Vars,Read Env Vars from File,Write Env Vars To set-env.ps1 File,Write Bash Env Vars to set-env.sh File,Write Env Vars To launchSettings.Json,Get all'
 
 
         choose-selection $itemsList  'Action for IoT Hub Connection String Environment Variables'   '' ','
@@ -99,6 +99,7 @@ param (
             'D6'    {  write-env $Subscription $GroupName $HubName $DeviceName  }
             'D7'    {  write-export $Subscription $GroupName $HubName $DeviceName }
             'D8'    {  write-json $Subscription $GroupName $HubName $DeviceName }
+            'D9'    {  get-all $Subscription $GroupName $HubName $DeviceName }
             
 
             

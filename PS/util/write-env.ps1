@@ -4,9 +4,16 @@ function write-env{
     [string]$GroupName = '' ,
     [string]$HubName = '' ,
     [string]$DeviceName = '',
-    [string]$foldernameIn =''
+    [string]$foldernameIn ='',
+    [string]$ref=''
     )
-
+    $Refresh=$false
+    If (-not([string]::IsNullOrEmpty($ref )))
+    {
+        if ($ref -eq "Y"){
+            $Refresh=$true
+        }
+    }
     
     $answer=$foldernameIn
     $folderName = $folderNameIn
@@ -15,12 +22,17 @@ function write-env{
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S  F I L E  '  3
     write-host ''
 
-    $prompt =  'Do you want to regenerate the environment variables?'
-    write-Host $prompt
-    get-yesorno $true
-    $response = $global:retVal
-    if ($response){
-        set-env $Subscription $GroupName $HubName $DeviceName 
+    if($ref -eq ''){
+        $prompt =  'Do you want to regenerate the environment variables?'
+        write-Host $prompt
+        get-yesorno $true
+        $response = $global:retVal
+        if ($response){
+            set-env $Subscription $GroupName $HubName $DeviceName 
+        }
+    }
+    elseif($Refresh){
+        set-env $Subscription $GroupName $HubName $DeviceName
     }
     
     do {
@@ -68,6 +80,9 @@ function write-env{
         }
 
     }
+    else{
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\$foldernameIn\set-env.ps1"
+    }
 
 
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S  T O  P S   F I L E  '  3
@@ -77,51 +92,54 @@ function write-env{
 
     Out-File -FilePath $PsScriptFile    -InputObject '# Connection Details' -Encoding ASCII
 
-
-    $prompt =  'Do you want to include DOT references in env settings??'
-    write-Host $prompt
-    get-yesorno $true
-    $response = $global:retVal
-
-    if ($response)
+    If  ([string]::IsNullOrEmpty($foldernameIn))
     {
+        $prompt =  'Do you want to include DOT references in env settings??'
+        write-Host $prompt
+        get-yesorno $true
+        $response = $global:retVal
+    
 
-
-        $prompt = "# This script meant to run in the specific Quickstart folder: $foldername."
-        $op = '$dnp = "..\dotnet"'
-        switch ($global:retVal2)
+        if ($response)
         {
-            8 {
-                $prompt = "# This script meant to run in PS."
-                $op = '$dnp ="$global:ScriptDirectory\qs-apps\quickstarts\dotnet"'
+
+
+            $prompt = "# This script meant to run in the specific Quickstart folder: $foldername."
+            $op = '$dnp = "..\dotnet"'
+            switch ($global:retVal2)
+            {
+                8 {
+                    $prompt = "# This script meant to run in PS."
+                    $op = '$dnp ="$global:ScriptDirectory\qs-apps\quickstarts\dotnet"'
+                }
+                7 {
+                    $prompt = "# This script is meant to run in Quickstarts."
+                    $op = '$dnp ="$global:ScriptDirectory\dotnet"'
+                }
             }
-            7 {
-                $prompt = "# This script is meant to run in Quickstarts."
-                $op = '$dnp ="$global:ScriptDirectory\dotnet"'
-            }
-        }
-        Add-Content -Path $PsScriptFile     -Value $prompt 
-        $opdir='$global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent'
-        Add-Content -Path $PsScriptFile     -Value $opdir
-        Add-Content -Path $PsScriptFile     -Value $op 
-        
-        $op = 'if (Test-Path $dnp){'
-        Add-Content -Path $PsScriptFile     -Value $op 
-            $op = '     $regexAddPath = [regex]::Escape($dnp)'
-            Add-Content -Path $PsScriptFile     -Value $op 
-            $op = '     $arrPath = $env:Path -split ";" | Where-Object {$_ -notMatch "^$regexAddPath\\?"}'
-            Add-Content -Path $PsScriptFile     -Value $op 
-            $op = '     $env:Path = ($arrPath + $dnp) -join ";" '
-            Add-Content -Path $PsScriptFile     -Value $op 
-            $op = '     $env:DOTNET_ROOT = $dnp' 
+            Add-Content -Path $PsScriptFile     -Value $prompt 
+            $opdir='$global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent'
+            Add-Content -Path $PsScriptFile     -Value $opdir
             Add-Content -Path $PsScriptFile     -Value $op 
             
-        $op = '} else {'
-        Add-Content -Path $PsScriptFile     -Value $op 
-        $op = '    Throw "$dnp is not a valid path."'
-        Add-Content -Path $PsScriptFile     -Value $op 
-        $op ='}'
-        Add-Content -Path $PsScriptFile     -Value $op 
+            $op = 'if (Test-Path $dnp){'
+            Add-Content -Path $PsScriptFile     -Value $op 
+                $op = '     $regexAddPath = [regex]::Escape($dnp)'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op = '     $arrPath = $env:Path -split ";" | Where-Object {$_ -notMatch "^$regexAddPath\\?"}'
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op = '     $env:Path = ($arrPath + $dnp) -join ";" '
+                Add-Content -Path $PsScriptFile     -Value $op 
+                $op = '     $env:DOTNET_ROOT = $dnp' 
+                Add-Content -Path $PsScriptFile     -Value $op 
+                
+            $op = '} else {'
+            Add-Content -Path $PsScriptFile     -Value $op 
+            $op = '    Throw "$dnp is not a valid path."'
+            Add-Content -Path $PsScriptFile     -Value $op 
+            $op ='}'
+            Add-Content -Path $PsScriptFile     -Value $op 
+        }
     }
 
 

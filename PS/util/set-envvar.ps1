@@ -343,17 +343,27 @@ function Get-All{
         [string]$HubName = '' ,
         [string]$DeviceName = ''
         )
-
+        show-heading '  Get all 3 Env Var scripts, PS, Bash and JSon  '  4
         write-host "[4] Get connection strings."
-        set-env  $Subscription $GroupName $HubName $DeviceName
+        $prompt =  'Do you want refresh enviroment settings?'
+        write-Host $prompt
+        get-yesorno $true
+        $response = $global:retVal
+        if ($response){
+            set-env  $Subscription $GroupName $HubName $DeviceName
+        }
         show-env  $Subscription $GroupName $HubName $DeviceNam
         write-host [4.1] Write to PS script in Quickstarts folder
-        write-env  $Subscription $GroupName $HubName $DeviceNam 'quickstarts'
+        write-env  $Subscription $GroupName $HubName $DeviceNam 'quickstarts' 'N'
         write-host [4.2] Write to Bash script in Quickstarts folder
-        write-export  $Subscription $grp $hb $dev 'quickstarts'
+        write-export  $Subscription $grp $hb $dev 'quickstarts' 'N'
         write-host [4.3] Write sample launchSettings.json in Quickstarts folder
         write-host " - Needs app name correction on line 3."
-        write-json  $Subscription $grp $hb $dev 'quickstarts'
+        write-json  $Subscription $grp $hb $dev 'quickstarts' 'N'
+        show-heading '  Get all 3 Env Var scripts, PS, Bash and JSon  '  4
+        write-host ''
+        write-host "The 3 scripts are now in $global:ScriptDirectory\qs-apps\quickstarts\"
+        get-anykey 
 }
 
 function set-env{

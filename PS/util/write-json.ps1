@@ -4,8 +4,16 @@ function write-json{
     [string]$GroupName='' ,
     [string]$HubName='' ,
     [string]$DeviceName='',
-    [string]$foldernameIn =''
+    [string]$foldernameIn ='',
+    [string]$ref=''
     )
+    $Refresh=$false
+    If (-not([string]::IsNullOrEmpty($ref )))
+    {
+        if ($ref -eq "Y"){
+            $Refresh=$true
+        }
+    }
 
     $answer=$foldernameIn
     $folderName = $folderNameIn
@@ -13,13 +21,20 @@ function write-json{
 
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
     write-host ''
-    $prompt =  'Do you want to regenerate the environment variables?'
-    write-Host $prompt
-    get-yesorno $true
-    $response = $global:retVal
-    if ($response){
-        set-env $Subscription $GroupName $HubName $DeviceName 
+
+    if($ref -eq ''){
+        $prompt =  'Do you want to regenerate the environment variables?'
+        write-Host $prompt
+        get-yesorno $true
+        $response = $global:retVal
+        if ($response){
+            set-env $Subscription $GroupName $HubName $DeviceName 
+        }
     }
+    elseif($Refresh){
+        set-env $Subscription $GroupName $HubName $DeviceName
+    }
+    
     
     do {
     show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
@@ -74,6 +89,8 @@ function write-json{
         }
 
         show-heading '  W R I T E   E N V I R O N M E N T  V A R S to  L a u n c h s e t t i n g s  J S O N  F I L E  ' 3
+    }else{
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\$foldernameIn\launchSettings.json"
     }
 
 

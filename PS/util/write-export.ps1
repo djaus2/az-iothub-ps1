@@ -4,8 +4,16 @@ function write-export{
     [string]$GroupName='' ,
     [string]$HubName='' ,
     [string]$DeviceName='',
-    [string]$foldernameIn =''
+    [string]$foldernameIn ='',
+    [string]$ref=''
     )
+    $Refresh=$false
+    If (-not([string]::IsNullOrEmpty($ref )))
+    {
+        if ($ref -eq "Y"){
+            $Refresh=$true
+        }
+    }
 
     $answer=$foldernameIn
     $folderName = $folderNameIn
@@ -14,12 +22,19 @@ function write-export{
     show-heading '  W R I T E   E X P O R T S  E N V I R O N M E N T  V A R S  T O  B A S H  F I L E  ' 3
     write-host ''
 
-    $prompt =  'Do you want to regenerate the environment variables?'
-    write-Host $prompt
-    get-yesorno $true
-    $response = $global:retVal
-    if ($response){
-        set-env $Subscription $GroupName $HubName $DeviceName 
+
+
+    if($ref -eq ''){
+        $prompt =  'Do you want to regenerate the environment variables?'
+        write-Host $prompt
+        get-yesorno $true
+        $response = $global:retVal
+        if ($response){
+            set-env $Subscription $GroupName $HubName $DeviceName 
+        }
+    }
+    elseif($Refresh){
+        set-env $Subscription $GroupName $HubName $DeviceName
     }
     
  do {
@@ -69,7 +84,9 @@ function write-export{
 
 
     }
-
+    else {
+        $PsScriptFile = "$global:ScriptDirectory\qs-apps\$foldernameIn\set-env.sh"
+    }
     
 
 
@@ -82,44 +99,46 @@ function write-export{
     $op='#!/bin/bash'
     Out-File -FilePath $PsScriptFile     -InputObject $op -Encoding ASCII
 
-    $prompt =  'Do you want to include DOTNET references in env settings??'
-    write-Host $prompt
-    get-yesorno $true
-    $response = $global:retVal
+    If  ([string]::IsNullOrEmpty($foldernameIn)){
+        $prompt =  'Do you want to include DOTNET references in env settings??'
+        write-Host $prompt
+        get-yesorno $true
+        $response = $global:retVal
 
-    if ($response)
-    {
-
-
- 
-        switch ($global:retVal2)
+        if ($response)
         {
-            8 {
-                $prompt = "# This script meant to run in PS.Assumes qs-apps is in ~"
-                Add-Content -Path $PsScriptFile     -Value $prompt
-                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
-                Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:~/qs-apps/dotnet' 
-                Add-Content -Path $PsScriptFile     -Value $op
-            }
-            7 {
-                $prompt = "# This script is meant to run in Quickstarts. Assumes qs-apps is in ~"
-                Add-Content -Path $PsScriptFile     -Value $prompt 
-                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
-                Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:~/qs-apps/dotnet' 
-                Add-Content -Path $PsScriptFile     -Value $op
-            }
-            default {
-                $prompt = "# This script meant to run in the specific Quickstart folder: $foldername. Assumes qs-apps is in ~"
-                Add-Content -Path $PsScriptFile     -Value $prompt
-                # To do here got to get $PWD/../../../dotnet
-                $op='export DOTNET_ROOT=~/qs-apps/dotnet'
-                Add-Content -Path $PsScriptFile     -Value $op 
-                $op='export PATH=$PATH:~/qs-apps/dotnet' 
-                Add-Content -Path $PsScriptFile     -Value $op
-            }
-        } 
+
+
+    
+            switch ($global:retVal2)
+            {
+                8 {
+                    $prompt = "# This script meant to run in PS.Assumes qs-apps is in ~"
+                    Add-Content -Path $PsScriptFile     -Value $prompt
+                    $op='export DOTNET_ROOT=~/qs-apps/dotnet'
+                    Add-Content -Path $PsScriptFile     -Value $op 
+                    $op='export PATH=$PATH:~/qs-apps/dotnet' 
+                    Add-Content -Path $PsScriptFile     -Value $op
+                }
+                7 {
+                    $prompt = "# This script is meant to run in Quickstarts. Assumes qs-apps is in ~"
+                    Add-Content -Path $PsScriptFile     -Value $prompt 
+                    $op='export DOTNET_ROOT=~/qs-apps/dotnet'
+                    Add-Content -Path $PsScriptFile     -Value $op 
+                    $op='export PATH=$PATH:~/qs-apps/dotnet' 
+                    Add-Content -Path $PsScriptFile     -Value $op
+                }
+                default {
+                    $prompt = "# This script meant to run in the specific Quickstart folder: $foldername. Assumes qs-apps is in ~"
+                    Add-Content -Path $PsScriptFile     -Value $prompt
+                    # To do here got to get $PWD/../../../dotnet
+                    $op='export DOTNET_ROOT=~/qs-apps/dotnet'
+                    Add-Content -Path $PsScriptFile     -Value $op 
+                    $op='export PATH=$PATH:~/qs-apps/dotnet' 
+                    Add-Content -Path $PsScriptFile     -Value $op
+                }
+            } 
+        }
     }
     
 

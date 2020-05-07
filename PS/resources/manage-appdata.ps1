@@ -94,6 +94,7 @@ function Manage-AppData{
                     $global:echoCommands=$null
                 }          
             }
+
         }  
     }  
     while ($true)
