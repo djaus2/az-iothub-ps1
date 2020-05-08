@@ -75,8 +75,17 @@ catch {
 
 # show-image
 # exit
-
-
+If (-not([string]::IsNullOrEmpty($global:logs )))
+{
+    write-host ''
+    write-host "Any loading errors?"
+    get-yesorno $false "Continue"
+    $answer = $global:retVal
+    if ( $answer)
+    {
+        exit
+    }
+}
 
 # & "$global:ScriptDirectory\app-settings"
 

@@ -95,11 +95,12 @@ param (
         write-Host $Prompt
         $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
+        write-host ''
+        write-host "Azure Sphere SDK setup available in Main Menu --> Setup, option Z"   -ForegroundColor   Yellow
+        write-host ''
 
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central: Azure-Sphere-Learning-Path
-        /
-        Azure-Sphere-Learning-Path'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central: Azure-Sphere-Learning-Path'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 

@@ -270,6 +270,11 @@ function clear-appData
             remove-variable DPSName  -Scope Global
         }
 
+        If (-not([string]::IsNullOrEmpty($global:usePreviousDownloads )))
+        {
+            remove-variable usePreviousDownloads -Scope Global
+        }
+
         $global:Units="1"
 
         
