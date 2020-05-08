@@ -260,6 +260,12 @@ param (
         $promptFinal =$output + " selected."
         $global:kk = $kk
     }
+    elseif ($Title -like '*S E T U P*')
+    {
+        $output = "Setup Action: $kk"
+        $promptFinal =$output + " selected."
+        $global:kk = $kk
+    }
     elseif ($KK -eq 'D')
     {
         $output = 'Delete'

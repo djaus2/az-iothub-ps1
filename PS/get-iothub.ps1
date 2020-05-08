@@ -44,6 +44,7 @@ try {
     . ("$global:ScriptDirectory\resources\run-quickstarts.ps1")
     . ("$global:ScriptDirectory\resources\clr-quickstarts.ps1")
     . ("$global:ScriptDirectory\resources\manage-appdata.ps1")
+    . ("$global:ScriptDirectory\resources\res-setup.ps1")
 
 
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
@@ -264,7 +265,7 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 show-heading  -Prompt '  S E T U P  ' 1
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','UpArrow','DownArrow','Enter','X','R')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','UpArrow','DownArrow','Enter','X','R','S')
 
 # $selections = $selectionList -split ','
 $itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere'
@@ -332,6 +333,8 @@ do
 
     write-Host ''
     write-Host R. 'Reset script globals'
+    write-host S. 'Azure CLI Setup'
+    write-host ''
     write-Host X. 'Exit'
     
     write-Host 'Select action (number). (Default is highlighted) X To exit'
@@ -366,6 +369,7 @@ do
 
         switch ( $k )
         {
+            'S'    { do-setup}
             'D1'   { 
                     $current=1
                     

@@ -180,19 +180,15 @@ function get-allinone
                     $lev++
                     write-host "[4] Get connection strings."
                     get-all  $Subscription $grp $hb $dev
-                    write-host "[3] Create Device in Hub"
-                    new-dps $Subscription $grp $hb $dps
+                    write-host "[5] Create Device DPS"
+                    new-dps $Subscription $grp $dps
                     if (check-dps  $Subscription $grp $dps )
                     {
-                        new-dps $Subscription $grp $hb $dps
-                        {
-
-                        }
-                        $lev++
-                        write-host "[5] Get Create DPS"
-                        get-all  $Subscription $grp $hb $dev
-                        $success = $true
+                        connect-dps $subscription $grp $hb $dps
+                        show-dps $Subscription $grp $hb $dps
+                       
                     }
+                    $success = $true
                 }
             }
         }
