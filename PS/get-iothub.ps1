@@ -204,9 +204,10 @@ if ($($args.Count) -ne 0)
         }
         5{ 
             # assum space sep of 4 and sleepparam
-            $arg0= $($args[0])+' '+$($args[1])+ ' '+$($args[2]) 
+            $arg0= $($args[0])+' '+$($args[1])+ ' '+$($args[2] + ' '+$($args[3]) 
             $arg0 = $arg0.Replace(' ',',')
-            get-allinone $arg0
+            [string]$delay = [string] $($args[4])
+            get-allinone $arg0 $delay
         }
     }
 
