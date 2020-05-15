@@ -1,5 +1,5 @@
 
-function get-azsphereIOTCentral{
+function get-IOTCentral{
 param (
     [string]$Subscription = '' ,
     [string]$GroupName = '' ,
@@ -7,7 +7,7 @@ param (
     [string]$iotcentralURL = '',
     [string]$IDScope='',
     [string]$DevURL='',
-    [bool]$Refresh=$true
+    [bool]$Refresh=$false
 )
 
 $IoTCentralName = $global:IoTCentralName
@@ -109,18 +109,14 @@ $data= @"
 }
 
 
-    show-heading '  A Z U R E  S P H E R E  ' 3 'Azure Sphere Developer Learning Path Template' 
+    show-heading '  A Z U R E  I o T  C E N T R A L  ' 2 '' 
     $Prompt = '     Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '            Group :"' + $GroupName +'"'
     write-host ' ------------------------------------ '
-    $Prompt = '          Tenant Name :"' + $TenantName +'"'
-    write-Host $Prompt
-    $Prompt = '               Tenant :"' + $Tenant +'"'
-    write-Host $Prompt
     $Prompt = ' IoT Central App Name :"' + $Iotcentralname +'"'
     write-Host $Prompt
-    $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
+    $Prompt = '  IoT Central App URL :"' + $IotcentralURL +'"'
     write-Host $Prompt
     $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
     write-Host $Prompt
@@ -147,24 +143,12 @@ $data= @"
         $global:DPS =  'Back'
         return
     }
-    elseIf ([string]::IsNullOrEmpty($Tenant ))
+
+    If ([string]::IsNullOrEmpty($global:IoTCentralsStrn ))
     {
-        write-Host ''
-        $prompt = 'Need to get Tenant first.'
-        write-host $prompt
-        get-anykey 
-        $global:DPS =  'Back'
-        return
+        $Refresh=$true
     }
-    elseIf ([string]::IsNullOrEmpty($TenantName ))
-    {
-        write-Host ''
-        $prompt = 'Need to get Tenant first.'
-        write-host $prompt
-        get-anykey 
-        $global:DPS =  'Back'
-        return
-    }
+
 
 
   
@@ -182,21 +166,19 @@ $data= @"
         $DevURL=$global:DevURL
         $Iotcentralname=$global:Iotcentralname
         $IotcentralURL=$global:IotcentralURL
-
+        $centralappS=$global:IoTCentralsStrn
         if ($Refresh){
             write-host "Please wait: Getting IOT Centrals apps for Group $Groupname from Azure."
             $centralappS = az iot central app list -g $groupname -o tsv | out-string
             $Refresh= $false
+            $global:IoTCentralsStrn=$centralappS
         }
-
-        show-heading '  A Z U R E  S P H E R E  '  3 'Azure Sphere Developer Learning Path Template' 
+        show-heading '  A Z U R E  I o T  C E N T R A L   ' 2 ''
         $Prompt = '          Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '                 Group :"' + $GroupName +'"'
-        write-host ' ------------------------------------ '
-        $Prompt = '           Tenant Name :"' + $TenantName +'"'
         write-Host $Prompt
-        $Prompt = '                Tenant :"' + $Tenant +'"'
+        write-host ' ------------------------------------ '
         write-Host $Prompt
         $Prompt = '  IoT Central App Name :"' + $Iotcentralname +'"'
         write-Host $Prompt
@@ -207,20 +189,44 @@ $data= @"
         $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
         write-Host $Prompt
 
-        $options ='C. Create IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json'
+        $options ='U. Unselect,R. Refresh,C. Create IoT Central App,E. Enter App Name and URL,O. Open current App,W. Write app_Manifest.json'
 
         $options="$options,B. Back"
 
         
 
-        parse-shortlist $centralappS   '   A Z U R E  S P H E R E IoT Central App  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Iotcentralname $true
-        $answer= $global:retVal
-	    read-host $answer
-        $Refresh=$false
+        parse-list $centralappS   '   A Z U R E  I o T  C E N T R A L  A P P '  $options $DPSStrnIndex $DPSStrnIndex 1  30 $Iotcentralname $true
+        $answer= $global:retVal 
         If ([string]::IsNullOrEmpty($answer)) 
         {
             write-Host 'Back'
             $answer = 'Back'
+        }
+        elseif ($answer -eq $Iotcentralname){
+            write-host 'Unchanged'
+            $answer=''
+        }
+        elseif ($global:kk -eq 'R'){
+            $Refresh=$true
+            $answer=''
+        }
+        elseif ($global:kk -eq 'O'){
+            write-host 'About to open the App portal.'
+            get-yesorno $true "Continue"
+            $answer = $global:retVal
+            if ( $answer){
+                $url = $IotcentralURL
+                start-process $url  
+                get-anykey
+            }
+            a\$answer=''
+        }
+        elseif ($global:kk -eq 'U'){
+            $Iotcentralname=''
+            $IotcentralURL =''
+            $global:Iotcentralname = $Iotcentralname
+            $global:IotcentralURL = $IotcentralURL
+            $answer=''
         }
         elseif ($answer-eq 'Back')
         {
@@ -231,11 +237,16 @@ $data= @"
             write-Host 'Error'
         }
         elseif ($global:kk -lt '9'){
-            
-            $Iotcentralname =$asnswer
-            $IotcentralURL =$answer
+            $Iotcentralname =$answer
+            read-host $Iotcentralname
+            write-host "Please wait. Getting App details from Azure."
+            $query =az iot central app show --name $Iotcentralname -o tsv | out-string
+            # $query=$global:IoTCentralsStrn
+            $subdomain = ($query -split '\t' )[8]
+            $IotcentralURL ="$subdomain.azureiotcentral.com"
             $global:Iotcentralname = $Iotcentralname
             $global:IotcentralURL = $IotcentralURL
+            $answer=''
         }
         else {
             
@@ -243,8 +254,6 @@ $data= @"
             $global:kk = $null
             switch ($kk2)
             {
-
-
                 'C' {
 
                         do { 
@@ -253,10 +262,6 @@ $data= @"
                             write-Host $Prompt
                             $Prompt = '                 Group :"' + $GroupName +'"'
                             write-host ' ------------------------------------ '
-                            $Prompt = '           Tenant Name :"' + $TenantName +'"'
-                            write-Host $Prompt
-                            $Prompt = '                Tenant :"' + $Tenant +'"'
-                            write-Host $Prompt
                             $Prompt = '  IoT Central App Name :"' + $Iotcentralname +'"'
                             write-Host $Prompt
                             $Prompt = '   IoT Central App URL :"' + $IotcentralURL +'"'
@@ -266,7 +271,7 @@ $data= @"
                             $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
                             write-Host $Prompt
                             $done=$true;
-                            $menu='How ro create IoT Central app in browser,Create in browser,Create using Custom Template,Open Azure Sphere Developer Learning Path Tutorial in browser,Create using Azure Sphere Developer Learning Path'
+                            $menu='How ro create IoT Central app in browser,Create in browser,Create using Custom Template'
                             $res = choose-selection $menu 'Select between' 
                             
                             switch ($global:retVal2 ){
@@ -372,34 +377,23 @@ $data= @"
                                     $iotcentralname = $iotcentralname.ToLower()
                                     $guid1=new-guid
                                     $guid = $guid1.ToString()
-                                    $template ="iotc-pnp-preview"
+                                    # $template ="iotc-pnp-preview"
                                     $subdomain="$IoTCentralName$guid"
                                     # $azquery += --display-name 'My Custom Display Name'
-                                    "az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU    --template  $template                        "
-                                    az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU    --template  $template
-
-
-                                    $global:iotcentralname =$iotcentralname
-                                    $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'
-                                    $global:iotcentralURL=$iotcentralURL
+                                    write-host 'About to run:'
+                                    write-host "az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU "
+                                    get-yesorno $true "Continue"
+                                    $answer = $global:retVal
+                                    if ( $answer)
+                                    {
+                                        write-host 'Please wait'
+                                        az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU   #  --template  $template
+                                        $global:iotcentralname =$iotcentralname
+                                        $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'
+                                        $global:iotcentralURL=$iotcentralURL
+                                    }
                                 }
-                            }
-                            '4'{
-                                $url = "https://github.com/gloveboxes/Azure-Sphere-Learning-Path"
-                                start-process $url
-                                $done=$false
-                            }
-                            '5'{
-                                Write-host 'Doing Azure Sphere Developer Learning Path Template'
-                                get-yesorno $true "Continue"
-                                $answer = $global:retVal
-                                if ( $answer)
-                                {          
-                                    create-iotcentral-app $global:subscription $global:groupname $global:IoTCentralName
-                                    $iotcentralname = $global:iotcentralname
-                                    $iotcentralURL = $global:iotcentralURL
-                                }
-                            }    
+                            }   
                             'B'{
 
                             }

@@ -86,10 +86,14 @@ $global:SubscriptionsStrn  =  ''
         
     }
 
-    parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'B. Back'   $SubscriptionStrnIndex  $SubscriptionStrnDataIndex  1 22  $Current
+    parse-list $global:SubscriptionsStrn   '  S U B S C R I P T I O N   ' 'D. Set Current Subscription as Default, B. Back'   $SubscriptionStrnIndex  $SubscriptionStrnDataIndex  1 22  $Current
     $answer = $global:retVal
 
-    If ([string]::IsNullOrEmpty($answer)) 
+   if ($globalkk -eq 'S')
+   {
+    azure account set -s {Subscription Id}
+   }
+    elseIf ([string]::IsNullOrEmpty($answer)) 
     {
         write-Host 'Back'
         $answer =  'Back'

@@ -8,7 +8,8 @@ param (
     [int]$CodeIndex='0',
     [int]$ItemsPerLine=1,
     [int]$ColWidth=22 ,
-    [string]$CurrentSelection='None'
+    [string]$CurrentSelection='None',
+    [bool]$HandBack=$false
 )
 
     if ($CurrentSelection -eq $null)
@@ -117,7 +118,7 @@ param (
 
     if ( ($noEntities -lt 10) -and    ([string]::IsNullOrEmpty($env:IsRedirected)))
     {
-        parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection 
+        parse-shortlist $ListString    $Title  $AdditionalMenuOptions  $DisplayIndex  $CodeIndex  $ItemsPerLine $ColWidth $CurrentSelection  $HandBack
         return $global:retVal
     }
     else 
@@ -203,7 +204,7 @@ param (
             
             $i++
         }
-
+        write-host ''
         If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
         {
             write-host ''

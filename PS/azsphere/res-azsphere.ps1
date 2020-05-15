@@ -42,6 +42,7 @@ param (
         $global:DPS =  'Back'
         return
     }
+    <#
     elseIf ([string]::IsNullOrEmpty($HubName ))
     {
         write-Host ''
@@ -59,7 +60,7 @@ param (
         get-anykey 
         $global:DPS =  'Back'
         return
-    }
+    }#>
 
 
   
@@ -96,19 +97,18 @@ param (
         $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
         write-host ''
-        write-host "Azure Sphere SDK setup available in Main Menu --> Setup, option Z"   -ForegroundColor   Yellow
+        write-host "Azure Sphere SDK setup available in Main Menu --> Setup, and below."   -ForegroundColor   Yellow
         write-host ''
 
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central: Azure-Sphere-Learning-Path'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central,S. Setup Azsphere SDK (Setup Menu)'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 
         $options="$options,B. Back"
 
-        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current
+        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current $true
         $answer= $global:retVal
-	    write-host $answer
 
         If ([string]::IsNullOrEmpty($answer)) 
         {
@@ -129,10 +129,11 @@ param (
             $global:kk = $null
             switch ($kk)
             {
+                'S' {  do-setup }
                 'H' {get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
                 'C' {get-azsphereIOTCentral $Subscription $GroupName $IoTCentralName}
                 'A' { enter-azsphere}
-                'L' { azsphere login}
+                'L' { write-host "Please wait. Azure Login dialog will appear.";azsphere login}
                 'T' {
                     do{
                         show-heading '  A Z U R E  S P H E R E : Tenant '  4
@@ -279,14 +280,19 @@ param (
                                 }
                             }
 
+
                         }
                     } while ($kk2 -ne 'B')
                 }
+
                 'D' {
                     do{
                         show-heading '  A Z U R E  S P H E R E '  3 ' Development '
+                        write-host ''
+                        write-host 'Need to be connected to device here'
+                        write-host ''
                         $options='E. Enable Development,A. App Show Status,P. App Stop,S. App Start,D. Existing app sideload Delete,R. Restart Device,V. Show Security Services,T. Show Attached,G. Show Deployment Status,Y. Get Capability Configuration,B. Back'
-                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 '' $true
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
                         switch($kk2){
@@ -344,8 +350,11 @@ param (
                     do 
                     {
                         show-heading '  A Z U R E  S P H E R E  '  3  'WiFi'
+                        write-host ''
+                        write-host 'Need to be connected to device here'
+                        write-host ''
                         $options='W. Get WifI Status,S. Scan WiFi Networks,A. Add a WiFi Network,L. List and Select an added Wifi Network,F. Forget an added Wifi Network,E. Enable selected WiFi Network,D. Disable selected WiFi Network,B. Back'
-                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 '' $true
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
                         switch ($kk2){
@@ -434,8 +443,11 @@ param (
                 'U' {
                     do{
                         show-heading '  A Z U R E  S P H E R E  '  3  'Updates'
+                        write-host ''
+                        write-host 'Need to be connected to device here' 
+                        write-host ''
                         $options='O. Show OS Version,U. Get Update Status,R. Restart Device,,B.Back'
-                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 '' $true
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
                         switch ($kk2){

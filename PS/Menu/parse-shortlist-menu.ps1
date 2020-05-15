@@ -9,7 +9,8 @@ param (
     [int]$CodeIndex='0',
     [int]$ItemsPerLine=1,
     [int]$ColWidth=22 ,
-    [string]$CurrentSelection='None'
+    [string]$CurrentSelection='None',
+    [bool]$HandBack=$false
 )
     write-host 'Using Short Menu'    
 
@@ -168,7 +169,7 @@ param (
             $i++
         }
     }
-
+    write-host ''
     If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
     {
         $Options = $AdditionalMenuOptions -split ','
@@ -242,71 +243,83 @@ param (
     }
 
     $output = ''
-    
     if ($KK -eq [string]$DefaultNo)
     {
-        $output = 'Back'
-        $promptFinal =$output + " selected."
-
+        $output = $CurrentSelection
+        $promptFinal ="$output selected."
     }
     elseif ($KK -eq 'B')
     {
         $output = 'Back'
-        $promptFinal =$output + " selected."
+        $promptFinal ="$output selected."
     }
-    elseif ($Title -like '*A Z U R E  S P H E R E*')
+    elseif (($HandBack) -and ( $kk -gt '@')) 
+    {
+        $output = "$Title Action: $kk"
+        $promptFinal ="$output selected."
+        $global:kk = $kk
+    }
+    <# elseif ($Title -like '*A Z U R E  S P H E R E*')
     {
         $output = "AzSphere Action: $kk"
-        $promptFinal =$output + " selected."
+        $promptFinal ="$output selected."
+        $global:kk = $kk
+    }
+    elseif ($Title -like '*A Z U R E  I o T  C E N T R A L  A P P*')
+    {
+        $output = "Azure IoT Central Action: $kk"
+        $promptFinal ="$output selected."
         $global:kk = $kk
     }
     elseif ($Title -like '*S E T U P*')
     {
         $output = "Setup Action: $kk"
-        $promptFinal =$output + " selected."
+        $promptFinal ="$output selected."
         $global:kk = $kk
+    }#>
+    else{
+        if ($KK -eq 'D')
+        {
+            $output = 'Delete'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'G')
+        {
+            $output =  'Generate'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'S')
+        {
+            $output =  'Show'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'N')
+        {
+            $output =  'New'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'R')
+        {
+            $output =  'Refresh'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'U')
+        {
+            $output =  'Unselect'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'C')
+        {
+            $output =  'Connect'
+            $promptFinal ="$output selected."
+        }
+        elseif ($KK -eq 'Z')
+        {
+            $output =  'Disconnect'
+            $promptFinal ="$output selected."
+        }
     }
-    elseif ($KK -eq 'D')
-    {
-        $output = 'Delete'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'G')
-    {
-        $output =  'Generate'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'S')
-    {
-        $output =  'Show'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'N')
-    {
-        $output =  'New'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'R')
-    {
-        $output =  'Refresh'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'U')
-    {
-        $output =  'Unselect'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'C')
-    {
-        $output =  'Connect'
-        $promptFinal =$output + " selected."
-    }
-    elseif ($KK -eq 'Z')
-    {
-        $output =  'Disconnect'
-        $promptFinal =$output + " selected."
-    }
-    else 
+    if ($output -eq '')
     {     
         [int]$indx =-1  
         if ( [int]::TryParse($KK,[ref] $indx))

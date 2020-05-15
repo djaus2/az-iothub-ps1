@@ -2,10 +2,8 @@ function verify-tenant-iotcentral{
     param (
         [string]$Subscription = '' ,
         [string]$GroupName = '' ,
-        [string]$HubName = '' ,
-        [string]$DPSName= '',
-        [string]$DPSCertificateName= '',
-        [string]$EnrollmentGroupName='',
+        [string]$IoTCentralName = '' ,
+        [string]$IOTCentralURL= '',
         [boolean]$Refresh=$false
     )
     show-heading '  D P S '  4 'New Certificate and Tenant Verification'
@@ -13,9 +11,9 @@ function verify-tenant-iotcentral{
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
     write-Host $Prompt
-    $Prompt = '            Hub :"' + $HubName +'"'
+    $Prompt = '            Hub :"' + $IoTCentralName +'"'
     write-Host $Prompt
-    $Prompt = '    Current DPS :"' + $DPSName +'"'
+    $Prompt = '    Current DPS :"' + $IoTCentralURL +'"'
     write-Host $Prompt
 
 
@@ -50,9 +48,22 @@ function verify-tenant-iotcentral{
             return
         }    
     }
+    $url =$IOTCentralURL
+    If ([string]::IsNullOrEmpty($IoTCentralUrl ))
+    {
+        write-Host ''
+        $prompt = 'Need to get your IoT Central YRL.'
+        write-host $prompt
+        $IOtCentralUrl = read-host 'Please enter your IoT Central URL' 
+        $url =$IOTCentralURL
+        If ([string]::IsNullOrEmpty($IOtCentralUrl ))
+        {
+            $url = "https://$IOtCentralName.azureiotcentral.com"
+        }    
+    }
     
 
-    $url = "https://$IOtCentralName.azureiotcentral.com"
+    
     # $url = "https://$IOtCentralName.azureiotcentral.com/admin/device-connection"
     write-host ''
     write-host "About to open $url"

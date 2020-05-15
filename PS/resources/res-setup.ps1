@@ -51,7 +51,7 @@ function do-setup{
 
     $options="$options,B. Back"
     do{
-        $res = parse-list 'EMPTY'   ' A z  C L I  S E T U P   ' $options  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current
+        $res = parse-list 'EMPTY'   ' A Z U R E   C L I   S E T U P   ' $options  $DeviceStrnIndex $DeviceStrnDataIndex 1  22 $Current $true
         $answer =  $global:retVal
         $kk = $global:kk
 

@@ -91,12 +91,14 @@ function enter-azSphere{
 
         if (-not $global:retVal){
             get-yesorno $false " Are you a nw Azure Sphere user?"
+            write-host "Please wait. Azure Login dialog will appear."
             if (-not $global:retVal){
                 azsphere login
             }
             else{
                 $emailaddress = read-host 'Please enter your Microsoft Account Email Address'
                 If (-not([string]::IsNullOrEmpty($emailaddress ))){
+                    write-host "Please wait."
                      azsphere login -newuser $emailaddress
                 }            
             }

@@ -45,6 +45,7 @@ try {
     . ("$global:ScriptDirectory\resources\clr-quickstarts.ps1")
     . ("$global:ScriptDirectory\resources\manage-appdata.ps1")
     . ("$global:ScriptDirectory\resources\res-setup.ps1")
+    . ("$global:ScriptDirectory\resources\res-iot-central.ps1")
 
 
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
@@ -63,6 +64,7 @@ try {
     . ("$global:ScriptDirectory\azsphere\enter-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-iotcentral.ps1")
+    . ("$global:ScriptDirectory\azsphere\res-azsphere-iot-central-custom.ps1")
     . ("$global:ScriptDirectory\azsphere\show-image.ps1")
     . ("$global:ScriptDirectory\azsphere\whitelist-app-enpoint.ps1")
     
@@ -73,8 +75,6 @@ catch {
     Write-Host $_
 }
 
-# show-image
-# exit
 If (-not([string]::IsNullOrEmpty($global:logs )))
 {
     write-host ''
@@ -274,10 +274,10 @@ if (Test-Path "$global:ScriptDirectory\set-env.ps1")
 show-heading  -Prompt '  S E T U P  ' 1
 $answer = ''
 [int]$current = 1
-$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','UpArrow','DownArrow','Enter','X','R','S')
+$selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','B','UpArrow','DownArrow','Enter','X','R','S')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),IoT Central,Azure Sphere'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -286,6 +286,7 @@ $DeviceName = $global:DeviceName
 $DPSName =$global:DPSName
 $Tenant = $global:Tenant
 $TenantName = $global:TenantName
+$IoTCentralName =$global:IoTCentralName
 [boolean] $GetKey = $true
 do
 {
@@ -296,6 +297,7 @@ do
     $DPSName = $global:DPSName
     $Tenant = $global:Tenant
     $TenantName = $global:TenantName
+    $IoTCentralName =$global:IoTCentralName
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '          Group :"' + $GroupName +'"'
@@ -305,6 +307,8 @@ do
     $Prompt = '         Device :"' + $DeviceName +'"'
     write-Host $Prompt
     $Prompt = '            DPS :"' + $DPSName +'"'
+    write-Host $Prompt
+    $Prompt = '    IoT Central :"' + $IOTCentralName +'"'
     write-Host $Prompt
     $Prompt = '         Tenant :"' + $TenantName +'"'
     write-Host $Prompt
@@ -669,6 +673,9 @@ do
                     }
                 }
             'A' { 
+                get-IOTCentral $Subscription $GroupName $HubName $DPSName $IoTCentralName
+                }
+            'B' { 
                 get-azsphere $Subscription $GroupName $HubName $DPSName $Tenant $TenantName
                 }
             R    { 
