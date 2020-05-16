@@ -1,6 +1,6 @@
 ## az-iothub-ps
 
-# Azure IoT Hub PowerShell Scripts
+# Azure IoT Hub PowerShell Scripts V3.0.0
 
 _**A PowerShell script that can create an Azure Group, IoT Hub and Device requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that have been reworked, extended and added to. Also, there is now has support for DPS and Azure IoT Central.**_
 
