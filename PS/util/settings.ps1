@@ -1,6 +1,10 @@
+$AppVersion="3.0.0"
 # When az query is returned.
 # Strindex is index to what is displayed
 # StrnDataIndex is the data used. Only different for Group location
+
+
+
 $SubscriptionStrnIndex =5
 $SubscriptionStrnDataIndex =5
 $SubscriptionIDIndex = 2

@@ -16,6 +16,8 @@ InitializeCommandPrompt.cmd:
 
 
 function enter-azSphere{
+    show-heading '  A Z U R E  S P H E R E : Enter AzSphere Shell'  3
+    write-host 'Entering AzSpehere comamnd prompt (as a PowerShell!) and logging into AzSphere.' -ForegroundColor   Yellow 
     function add-path
     {
         param (
@@ -61,7 +63,7 @@ function enter-azSphere{
     }
     # Select the first value.
     $env:latestgcc=$SelectionList[0]
-
+    write-host ''
     write-host "Using gcc version $env:latestgcc"
     write-host ''
     write-host "Available versions:"
@@ -82,16 +84,17 @@ function enter-azSphere{
         add-path "$env:dp0\tools"
         $env:sysroots="$env:sysroots\$env:latestgcc"
         add-path "$env:sysroots\tools\gcc"
-        If  ([string]::IsNullOrEmpty($env:IsRedirected))
+        <#If  ([string]::IsNullOrEmpty($env:IsRedirected))
         {
             $env:Path -split ';'
-        }
+        }#>
         write-host ''
         get-yesorno $true " Are you logged into azure Sphere?"
 
         if (-not $global:retVal){
             get-yesorno $false " Are you a nw Azure Sphere user?"
             if (-not $global:retVal){
+                write-host 'Please wait: The Login dialog will appear.'
                 azsphere login
             }
             else{

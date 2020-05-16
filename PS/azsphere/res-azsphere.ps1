@@ -61,7 +61,12 @@ param (
         return
     }
 
-
+    If ([string]::IsNullOrEmpty($global:AzSphereLoggedIn ))
+    {
+        write-host ''
+        enter-azsphere
+        $global:AzSphereLoggedIn ="LoggedIn"
+    }
   
     $DPSidscope=$global:DPSidscope
 
@@ -99,8 +104,10 @@ param (
         write-host "Azure Sphere SDK setup available in Main Menu --> Setup, option Z"   -ForegroundColor   Yellow
         write-host ''
 
+
+
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central: Azure-Sphere-Learning-Path'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version) and Login,L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,C. Connect via IoT Hub and DPS'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 
@@ -129,19 +136,44 @@ param (
             $global:kk = $null
             switch ($kk)
             {
-                'H' {get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName}
-                'C' {get-azsphereIOTCentral $Subscription $GroupName $IoTCentralName}
-                'A' { enter-azsphere}
-                'L' { azsphere login}
+                'C' {
+                        get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName
+                    }
+                'A' {   
+                        enter-azsphere
+                        $global:AzSphereLoggedIn ="LoggedInAgain"
+                    }
+                'L' { 
+                        azsphere login
+                        $global:AzSphereLoggedIn ="LoggedInOnly"
+                    }
                 'T' {
                     do{
-                        show-heading '  A Z U R E  S P H E R E : Tenant '  4
+                        show-heading '  A Z U R E  S P H E R E : Tenant xx '  4
+                        $Prompt = '     Subscription :"' + $Subscription +'"'
+                        write-Host $Prompt
+                        $Prompt = '            Group :"' + $GroupName +'"'
+                        write-Host $Prompt
+                        $Prompt = '              Hub :"' + $HubName +'"'
+                        write-Host $Prompt
+                        $Prompt = '              DPS :"' + $DPSName +'"'
+                        write-Host $Prompt
+                        write-host ' ------------------------------------ '
+                        $Prompt = '      Tenant Name :"' + $TenantName +'"'
+                        write-Host $Prompt
+                        $Prompt = '           Tenant :"' + $Tenant +'"'
+                        write-Host $Prompt
+                        $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
+                        write-Host $Prompt
+                        $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+                        write-host ''
                         $options='T. Get Tenant,L. List Tenants,S. Set Tenant,V. Validate Tenant'
                         If (-not([string]::IsNullOrEmpty($CanClaimDevice ))){
                             $options += ',L. Create new Tenant,C. Claim Device'
                         }
                         $options +=",B. Back"
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+                        
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null 
                         switch($kk2){
@@ -152,14 +184,30 @@ param (
                                 }                          
                             }
                             'T'{
-                                show-heading '  A Z U R E  S P H E R E : Get Tenant '  3
+                                show-heading '  A Z U R E  S P H E R E : Get Tenant GT'  3
+                                $Prompt = '     Subscription :"' + $Subscription +'"'
+                                write-Host $Prompt
+                                $Prompt = '            Group :"' + $GroupName +'"'
+                                write-Host $Prompt
+                                $Prompt = '              Hub :"' + $HubName +'"'
+                                write-Host $Prompt
+                                $Prompt = '              DPS :"' + $DPSName +'"'
+                                write-Host $Prompt
+                                write-host ' ------------------------------------ '
+                                $Prompt = '      Tenant Name :"' + $TenantName +'"'
+                                write-Host $Prompt
+                                $Prompt = '           Tenant :"' + $Tenant +'"'
+                                write-Host $Prompt
+                                $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
+                                write-Host $Prompt
+                                $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
                                 $Tenant=$null
                                 $TenantName=$null
                                 $getTenant = azsphere tenant show-selected
                                 If ([string]::IsNullOrEmpty($getTenant))
                                 {
                                     write-host "No Tenants or None Selected"
-                                    get-anykey '' "Coninue"
+                                    get-anykey '' "Continue"
                                 }
                                 else
                                 {
@@ -192,6 +240,22 @@ param (
                             's'{
                                 # Should improve this
                                 show-heading '  A Z U R E  S P H E R E : Select Tenant '  4
+                                $Prompt = '     Subscription :"' + $Subscription +'"'
+                                write-Host $Prompt
+                                $Prompt = '            Group :"' + $GroupName +'"'
+                                write-Host $Prompt
+                                $Prompt = '              Hub :"' + $HubName +'"'
+                                write-Host $Prompt
+                                $Prompt = '              DPS :"' + $DPSName +'"'
+                                write-Host $Prompt
+                                write-host ' ------------------------------------ '
+                                $Prompt = '      Tenant Name :"' + $TenantName +'"'
+                                write-Host $Prompt
+                                $Prompt = '           Tenant :"' + $Tenant +'"'
+                                write-Host $Prompt
+                                $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
+                                write-Host $Prompt
+                                $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
                                 write-host ''
                                 $tl= azsphere tenant list
                                 if ($tl.Length  -lt 3)
@@ -239,8 +303,11 @@ param (
                             'V'{
                                 write-host 'Verify Tenant'
                                 write-host '============='
-                                write-Host "For an IoT Hub - DPS connection see 'H. Connect via IoT Hub'-->C. Create Certificate on DPS and Verify it."
-                                write-host " ... The current IoT Hub needs to be connected to the current DPS. See Main Menu-->5. DPS Menu then Options G. then C."
+                                write-Host "For an IoT Hub - DPS connection Validation see:"
+                                write-host " 'H. Connect via IoT Hub'-->C. Create Certificate on DPS and Verify it."
+                                write-host " ... The current IoT Hub needs to be connected to the current DPS. "
+                                write-host " See Main Menu-->5. DPS Menu then Options G. then C."
+                                write-host ''
                                 write-host "For an IoT Central - Watch this space."
                                 get-anykey '' 'Continue'
 
@@ -285,8 +352,13 @@ param (
                 'D' {
                     do{
                         show-heading '  A Z U R E  S P H E R E '  3 ' Development '
+                        write-host 'NOTE:'  -BackgroundColor Yellow  -ForegroundColor   Black -nonewline
+                        write-host ' ' -nonewline
+                        write-host 'This menu requires the Device to be connected.'    -ForegroundColor   DarkRed 
+                        write-host ''
                         $options='E. Enable Development,A. App Show Status,P. App Stop,S. App Start,D. Existing app sideload Delete,R. Restart Device,V. Show Security Services,T. Show Attached,G. Show Deployment Status,Y. Get Capability Configuration,B. Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
+  
                         $kk2 = [char]::ToUpper($global:kk)
                         $global:kk = $null
                         switch($kk2){
@@ -344,6 +416,10 @@ param (
                     do 
                     {
                         show-heading '  A Z U R E  S P H E R E  '  3  'WiFi'
+                        write-host 'NOTE:'  -BackgroundColor Yellow  -ForegroundColor   Black -nonewline
+                        write-host ' ' -nonewline
+                        write-host 'This menu requires the Device to be connected.'    -ForegroundColor   DarkRed 
+                        write-host ''
                         $options='W. Get WifI Status,S. Scan WiFi Networks,A. Add a WiFi Network,L. List and Select an added Wifi Network,F. Forget an added Wifi Network,E. Enable selected WiFi Network,D. Disable selected WiFi Network,B. Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
                         $kk2 = [char]::ToUpper($global:kk)
@@ -434,6 +510,10 @@ param (
                 'U' {
                     do{
                         show-heading '  A Z U R E  S P H E R E  '  3  'Updates'
+                        write-host 'NOTE:'  -BackgroundColor Yellow  -ForegroundColor   Black -nonewline
+                        write-host ' ' -nonewline
+                        write-host 'This menu requires the Device to be connected.'    -ForegroundColor   DarkRed 
+                        write-host ''
                         $options='O. Show OS Version,U. Get Update Status,R. Restart Device,,B.Back'
                         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options 0 0  2  22 ''
                         $kk2 = [char]::ToUpper($global:kk)

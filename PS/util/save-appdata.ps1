@@ -150,6 +150,11 @@ function clear-appData
     $answer = $global:retVal
     if ($answer)
     {
+        If (-not([string]::IsNullOrEmpty($global:AzSphereLoggedIn )))
+        {
+            remove-variable AzSphereLoggedIn -Scope Global
+        }
+        
         If (-not([string]::IsNullOrEmpty($global:DPS )))
         {
             remove-variable DPS -Scope Global
