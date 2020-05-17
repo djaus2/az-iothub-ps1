@@ -8,7 +8,7 @@ _**A PowerShell script that can create an Azure Group, IoT Hub, Device and Devic
 
 <hr>
 
-The Azure IoT Central capabilities have been removed from this branch of the repository. They are though still under development in the **iot-central** branch of the repository.  You can clone that by adding ```--branch iot-central``` to the git clone command. You might also want to add ```--single-branch``` as well to the git clone command. The iot-central branch functionality is a superset  of the functionality in this branch,except for some tweaks in both branches which will be merged, adding the **Azure IoT Central** functionality to the iot-central branch.
+The Azure IoT Central capabilities have been removed from this branch of the repository. They are though still under development in the **IoT-Central** branch of the repository.  You can clone that by adding ```--branch IoT-Central``` to the git clone command. You might also want to add ```--single-branch``` as well to the git clone command. The iot-central branch functionality is a superset  of the functionality in this branch,except for some tweaks in both branches which will be merged, adding the **Azure IoT Central** functionality to the iot-central branch.
 
 <hr>
 Having problems running PowerShell scripts that you have downloaded, for example the ones from here, because they are unsigned. I've created a new GitHub repository [djaus2/sign-me-up-scotty](https://github.com/djaus/sign-me-up-scotty) that can create a local signing authority, create a personal certificate for code signing, and sign an individual PS script with that certificate. And for repository downloads like this, it can recursively sign all PS scripts in a folder and down from there, as well as recursively unsign them!
