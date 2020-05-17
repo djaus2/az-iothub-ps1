@@ -91,8 +91,10 @@ function get-allinone
             $dev =$names[2]
         }  
         $dps ="Add a 4th parameter to the list for this"
+        [bool]$doDPS=$false
         if ($names.Length -gt 3){
             $dps = $names[3]
+            $doDPS=$true
         }
 
         show-heading  -Prompt '  D O  A L L  ' 2
@@ -137,7 +139,10 @@ function get-allinone
         write-host "  then ... "
         write-host "[6] Connect the IoT Hub to the DPS."
 
-        
+        if (-not $doDoDPS)
+        {
+            $dps=$null
+        }
         write-host ''
 
         write-host "Entity mames are unused (n.b. Device and DPS not checked here ... coming) so good to go ..."
@@ -185,15 +190,18 @@ function get-allinone
                     $lev++
                     write-host "[4] Get connection strings."
                     get-all  $Subscription $grp $hb $dev
-                    write-host "[5] Create Device DPS"
-                    new-dps $Subscription $grp $dps
-                    if (check-dps  $Subscription $grp $dps )
-                    {
-                        $global:DPSName = $dps
-                        $lev++
-                        connect-dps $subscription $grp $hb $dps
-                        show-dps $Subscription $grp $hb $dps
-                       
+                    if($doDPS){
+                        write-host "[5] Create Device DPS"
+                        new-dps $Subscription $grp $dps
+
+                        if (check-dps  $Subscription $grp $dps )
+                        {
+                            $global:DPSName = $dps
+                            $lev++
+                            connect-dps $subscription $grp $hb $dps
+                            show-dps $Subscription $grp $hb $dps
+                        
+                        }
                     }
                     $success = $true
                 }
@@ -212,10 +220,7 @@ function get-allinone
         get-any-key
     
         
-        If (-not([string]::IsNullOrEmpty($global:yesnowait )))
-        {
-            remove-variable yesnowait  -Scope Global
-        }
+
         show-heading  -Prompt ' D O  A L L - S U M M A R Y  ' 1
         write-host "These entities were created:"
         write-host ''
@@ -238,7 +243,7 @@ function get-allinone
                 {
                     $Prompt = '         Device :"' + $DeviceName +'"'
                     write-Host $Prompt
-                    if ($lev -gt 3)
+                    if (($lev -gt 3) -and ($doDPS))
                     {
                         $Prompt = '            DPS :"' + $DPSName +'"'
                         write-Host $Prompt
@@ -250,10 +255,14 @@ function get-allinone
         write-host ''
         write-host "These files were created in $dir :"
         get-childitem -path $dir -name -include  *.json,set-env.*
-        Save-AppData
-        write-host "App settings saved to $global:ScriptDirectory\app-settings.ps1"
         get-anykey
+        Save-AppData
+        # write-host "App settings saved to $global:ScriptDirectory\app-settings.ps1"
         
+        If (-not([string]::IsNullOrEmpty($global:yesnowait )))
+        {
+            remove-variable yesnowait  -Scope Global
+        }
         stop-time
      
     }
