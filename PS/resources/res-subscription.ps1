@@ -25,6 +25,8 @@ show-heading  -Prompt '  S U B S C R I P T I O N  '  2
     }
 
 
+
+
     show-heading  -Prompt '  S U B S C R I P T I O N  '  2
     $Prompt =  'Current Subscription :"' + $Current +'"'
     write-Host $Prompt
@@ -106,6 +108,7 @@ $global:SubscriptionsStrn  =  ''
     elseif ($answer -ne $global:Subscription) 
     {
         $global:Subscription = $answer
+        az account set  --subscription  $global:Subscription
         $global:GroupsStrn =$null
         $global:HubsStrn=$null
         $global:DevicesStrn=$null

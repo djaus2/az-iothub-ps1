@@ -2,6 +2,14 @@
 #
 $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 
+If ([string]::IsNullOrEmpty($global:Subscription)) {
+    $sub = az account show -o tsv | out-string
+    If ([string]::IsNullOrEmpty($sub)) {
+        $Current =  (($sub -split '\t')[5]).Trim()
+        $global:Subscription = $Current
+    }
+}
+
 try {
     . ("$global:ScriptDirectory\menu\qs.ps1")
     . ("$global:ScriptDirectory\util\settings.ps1")
@@ -169,9 +177,6 @@ if ($($args.Count) -ne 0)
         exit
     }
     $global:SKU = $result
-
-    
-
 
 
     switch ($args.Count)

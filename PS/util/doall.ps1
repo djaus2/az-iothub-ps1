@@ -34,7 +34,9 @@ function get-allinone
             write-host 'Empty string'
             return 'Back 1'
         }
+
         $names = $namesStrn -split ','
+        write-host "$Number of Azure entities to create: $names.Length"
         if ($names.Length -ne 3)
         {
             if ($names.Length -ne 4)
@@ -132,13 +134,13 @@ function get-allinone
 
         write-host "[5] Create a New Device Provisioning Service "  -NoNewline
         write-host " $dps " -BackgroundColor Yellow   -ForegroundColor   Black  -NoNewline
-        write-host " ... Coming (Not yet) then ... "
-        write-host "[6] Connect the IoT Hub to the DPS ... Coming (Not yet)"
+        write-host "  then ... "
+        write-host "[6] Connect the IoT Hub to the DPS."
 
         
         write-host ''
 
-        write-host "Entity mames are unused (n.b. Device and DPS not checkeed here ... coming) so good to go ..."
+        write-host "Entity mames are unused (n.b. Device and DPS not checked here ... coming) so good to go ..."
 
         get-yesorno $true "Continue? (Y/N)"
 
@@ -167,16 +169,19 @@ function get-allinone
         new-group $Subscription $grp
         if   ( check-group $Subscription $grp  )
         {
+            $global:GroupName = $grp
             $lev++
             write-host "[2] Create New Hub in Group"
             new-hub $Subscription $grp $hb
             if (check-hub  $Subscription $grp $hb )
             {
+                $global:HubName = $hb
                 $lev++
                 write-host "[3] Create Device in Hub"
                 new-device $Subscription $grp $hb $dev
                 if (check-device  $Subscription $grp $hb $dev )
                 {
+                    $global:DeviceName = $dev
                     $lev++
                     write-host "[4] Get connection strings."
                     get-all  $Subscription $grp $hb $dev
@@ -184,6 +189,8 @@ function get-allinone
                     new-dps $Subscription $grp $dps
                     if (check-dps  $Subscription $grp $dps )
                     {
+                        $global:DPSName = $dps
+                        $lev++
                         connect-dps $subscription $grp $hb $dps
                         show-dps $Subscription $grp $hb $dps
                        
@@ -192,7 +199,7 @@ function get-allinone
                 }
             }
         }
-        if ($success)
+        if ($sucess)
         {
             show-heading  -Prompt '  D O  A L L : DONE ' 2
             write-host "Creation succeeded."
@@ -201,12 +208,50 @@ function get-allinone
             show-heading  -Prompt '  D O  A L L : FAILED ' 2
             write-host "Failed: $lev"
         }
+
+        get-any-key
     
         
         If (-not([string]::IsNullOrEmpty($global:yesnowait )))
         {
             remove-variable yesnowait  -Scope Global
         }
+        show-heading  -Prompt ' D O  A L L - S U M M A R Y  ' 1
+        write-host "These entities were created:"
+        write-host ''
+        $Subscription = $global:Subscription
+        $GroupName = $Global:GroupName
+        $HubName = $global:HubName
+        $DeviceName = $global:DeviceName
+        $DPSName = $global:DPSName
+        $Prompt = 'In Subscription :"' + $Subscription +'"'
+        write-Host $Prompt
+        if ($lev -gt 0)
+        {
+            $Prompt = '          Group :"' + $GroupName +'"'
+            write-Host $Prompt
+            if ($lev -gt 1)
+            {
+                $Prompt = '            Hub :"' + $HubName +'"'
+                write-Host $Prompt
+                if ($lev -gt 2)
+                {
+                    $Prompt = '         Device :"' + $DeviceName +'"'
+                    write-Host $Prompt
+                    if ($lev -gt 3)
+                    {
+                        $Prompt = '            DPS :"' + $DPSName +'"'
+                        write-Host $Prompt
+                    }
+                }
+            }
+        }
+        $dir = "$global:ScriptDirectory\qs-apps\Quickstarts"
+        write-host ''
+        write-host "These files were created in $dir :"
+        get-childitem -path $dir -name -include  *.json,set-env.*
+        Save-AppData
+        write-host "App settings saved to $global:ScriptDirectory\app-settings.ps1"
         get-anykey
         
         stop-time

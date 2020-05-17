@@ -1,4 +1,4 @@
-$AppVersion="3.0.0"
+$AppVersion="3.0.1"
 # When az query is returned.
 # Strindex is index to what is displayed
 # StrnDataIndex is the data used. Only different for Group location
