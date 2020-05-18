@@ -8,7 +8,7 @@ function doall-azsphere-iothub-dps
     [string]$Tenant='',
     [String]$TenantName=''
 )
-<#
+
     write-host 'Please wait. Connecting IoTHub and DPS in Azure.'
     connect-dps $global:subscription $global:groupname $global:hubname $global:dpsname
     show-dps $global:subscription $global:groupname $global:hubname $global:dpsname
@@ -109,7 +109,7 @@ function doall-azsphere-iothub-dps
     $global:DPSidscope = $DPSidscope
     write-host "DPS ID Scope: $DPSidscope"
     get-anykey '' 'Continue'
-    #>
+    
 
     create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname  "$global:groupname-$global:hubname-$global:dpsname"
 }
