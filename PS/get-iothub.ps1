@@ -73,7 +73,9 @@ try {
     . ("$global:ScriptDirectory\azsphere\create-iotcentral.ps1")
     . ("$global:ScriptDirectory\azsphere\show-image.ps1")
     . ("$global:ScriptDirectory\azsphere\whitelist-app-enpoint.ps1")
-    
+    . ("$global:ScriptDirectory\azsphere\doall-azsphere-hubdps.ps1")  
+
+
     . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
 }
 catch {

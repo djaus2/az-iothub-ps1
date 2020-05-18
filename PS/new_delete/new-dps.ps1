@@ -68,7 +68,7 @@ show-heading '  N E W  D P S   '   3
         if (-not $global:retVal)
         {
             write-host "New"
-            $DeviceName =''
+            $DpsName =''
         }
     }
 

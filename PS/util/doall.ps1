@@ -10,7 +10,7 @@ function get-allinone
         $yesnodelay=$null
 
     )
-
+    [bool]$doAzsphere=$false
     show-heading  -Prompt '  D O  A L L  ' 2
 
     $answer =$true
@@ -95,6 +95,12 @@ function get-allinone
         if ($names.Length -gt 3){
             $dps = $names[3]
             $doDPS=$true
+            write-host "Do you want to setup for Azsphere IoT Hub - DPS app?"
+            get-yesorno $true "Do you want to do that?"
+
+            if ($global:retVal){
+                $doAzsphere=$true
+            }
         }
 
         show-heading  -Prompt '  D O  A L L  ' 2
@@ -137,12 +143,10 @@ function get-allinone
         write-host "[5] Create a New Device Provisioning Service "  -NoNewline
         write-host " $dps " -BackgroundColor Yellow   -ForegroundColor   Black  -NoNewline
         write-host "  then ... "
-        write-host "[6] Connect the IoT Hub to the DPS."
+        write-host "[6] Connect the IoT Hub to the DPS." - nonewline
+        write-host " then... "
+        write-host "[7] Setup Azsphere, and Verify Tenant with Certificates."
 
-        if (-not $doDoDPS)
-        {
-            $dps=$null
-        }
         write-host ''
 
         write-host "Entity mames are unused (n.b. Device and DPS not checked here ... coming) so good to go ..."
@@ -198,9 +202,12 @@ function get-allinone
                         {
                             $global:DPSName = $dps
                             $lev++
-                            connect-dps $subscription $grp $hb $dps
-                            show-dps $Subscription $grp $hb $dps
-                        
+                            if ($doAzsphere)
+                            {
+                                get-anykey "Do Azsphere setup etc."
+                                doall-azsphere-iothub-dps $Subscription $grp $hb $dps "$grp-$hb-$dps" $global:Tenant $global:TenantName
+                                # doall-azsphere-iothub-dps $global:subscription $global:groupname $global:hubname $global:dpsname $Tenant $TenantName
+                            }                        
                         }
                     }
                     $success = $true
@@ -217,7 +224,7 @@ function get-allinone
             write-host "Failed: $lev"
         }
 
-        get-any-key
+        get-anykey
     
         
 

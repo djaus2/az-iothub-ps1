@@ -1,12 +1,14 @@
 ## az-iothub-ps
 
-# Azure IoT Hub PowerShell Scripts V3.0.0
+# Azure IoT Hub PowerShell Scripts V3.0.2
 
-_**A PowerShell script that can create an Azure Group, IoT Hub, Device and Device Provisioning Service (DPS) requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates Hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that Shave been reworked, extended and added to. Also, there is now has support for DPS and Azure Sphere, including the Azsphere command prompt as a PowerShell.**_
+_**A PowerShell script that can create an Azure Group, IoT Hub, Device and Device Provisioning Service (DPS) requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates Hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that Shave been reworked, extended and added to. Also, there is now has support for DPS and Azure Sphere, including the AzSphere command prompt as a PowerShell.**_
 
 **_N.b.: The .NET (Core C#) versions of the Azure IoT SDK Quickstart apps are the focus here._**
 
 <hr>
+<b>STOP PRESS:</b> Can now do Azure Tenant Verification without going to Azure Portal!
+<r>
 
 The Azure IoT Central capabilities have been removed from this branch of the repository. They are though still under development in the **IoT-Central** branch of the repository.  You can clone that by adding ```--branch IoT-Central``` to the git clone command. You might also want to add ```--single-branch``` as well to the git clone command. The iot-central branch functionality is a superset  of the functionality in this branch,except for some tweaks in both branches which will be merged, adding the **Azure IoT Central** functionality to the iot-central branch.
 

@@ -107,7 +107,7 @@ param (
 
 
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version) and Login,L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,C. Connect via IoT Hub and DPS'
+        $options ='A. Do all AzSphere Hub-DPS Connection,E. Enter Azure Sphere Developer Command Prompt (PS Version) and Login,L. Login to Azure Sphere,T. Tenant,W. WiFi,U. Update,D. App Dev settings,C. Connect via IoT Hub and DPS'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 
@@ -136,10 +136,16 @@ param (
             $global:kk = $null
             switch ($kk)
             {
+                'A' {
+                    doall-azsphere-iothub-dps $global:subscription $global:groupname $global:hubname $global:dpsname $Tenant $TenantName
+                    $Tenant = $global:Tenant
+                    $TenantName = $global:TenantName
+                    $DPSIDScope = $global:DPSIDScope
+                }
                 'C' {
                         get-azsphereDPS $Subscription $GroupName $HubName $DPSName $Tenant $TenantName
                     }
-                'A' {   
+                'E' {   
                         enter-azsphere
                         $global:AzSphereLoggedIn ="LoggedInAgain"
                     }
