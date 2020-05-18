@@ -7,7 +7,9 @@ _**A PowerShell script that can create an Azure Group, IoT Hub, Device and Devic
 **_N.b.: The .NET (Core C#) versions of the Azure IoT SDK Quickstart apps are the focus here._**
 
 <hr>
-<font color='Red'><b>STOP PRESS:</b> </font><Font color='Blue><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font>
+<font color='Red'><b>STOP PRESS:</b> </font><Font color='Blue><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font>  
+eg ```.\get-iothub MyGroup,MyHub,MyDevice,MyDPS 2```  
+Will create all 4 entities, Group,Hub,Device,DPS and link the Hub and DPS. For AzSphere it will certify and verify that. And generate .son files for runtime. All automatigically!
 <hr>
 
 The Azure IoT Central capabilities have been removed from this branch of the repository. They are though still under development in the **IoT-Central** branch of the repository.  You can clone that by adding ```--branch IoT-Central``` to the git clone command. You might also want to add ```--single-branch``` as well to the git clone command. The iot-central branch functionality is a superset  of the functionality in this branch,except for some tweaks in both branches which will be merged, adding the **Azure IoT Central** functionality to the iot-central branch.
