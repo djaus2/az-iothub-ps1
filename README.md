@@ -7,7 +7,7 @@ _**A PowerShell script that can create an Azure Group, IoT Hub, Device and Devic
 **_N.b.: The .NET (Core C#) versions of the Azure IoT SDK Quickstart apps are the focus here._**
 
 <hr>
-<font color='Red'><b>STOP PRESS:</b> </font><Font color='Blue><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font>  
+<font color='Red'><b>STOP PRESS:</b> </font><Font color='Blue'><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font>  
 eg ```.\get-iothub MyGroup,MyHub,MyDevice,MyDPS 2```  
 Will create all 4 entities, Group,Hub,Device,DPS and link the Hub and DPS. For AzSphere it will certify and verify that. And generate .son files for runtime. All automatigically!
 <hr>
