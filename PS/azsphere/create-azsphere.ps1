@@ -96,7 +96,7 @@ function create-azsphere{
     if (-not ([string]::IsNullOrEmpty($query)))
     {
         write-host "Please wait: Verification Certificate $DPSCertificateName exists so deleting it."
-        $query =az iot dps certificate show --dps-name $global:DPSName --resource-group $global:GroupName --name asd-sdf-qwerty -o tsv |out-string
+        $query =az iot dps certificate show --dps-name $global:DPSName --resource-group $global:GroupName --name  $DPSCertificateName  -o tsv |out-string
         $etag= ($query -split '\t')[0]
         $etag = $etag.Trim()
         write-host "Ready to delete certificate $DPSCertificateName on Azure"
@@ -160,7 +160,7 @@ function create-azsphere{
     $query = az iot dps certificate show --dps-name $global:DPSName --resource-group $global:GroupName --name $DPSCertificateName  -o json | Out-String | ConvertFrom-Json
     $isverified = $query.properties.isverified
     write-host ''
-    write-host "Validation certificate $DPSCertificateName IsVerified:  is" -nonewline
+    write-host "Validation certificate $DPSCertificateName IsVerified:  is " -nonewline
     write-host  $isverified -ForegroundColor Yellow
     write-host ''
     get-anykey
@@ -204,11 +204,35 @@ function create-enrolmentgroup{
         $EnrollmentGroupName = $answer
     }
 
-    write-host "`nCreating EnrollmentGroup (Wait)`n"
-    az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
-    write-host "`nDone that.`n"
-    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName
-
+    write-host "Please wait: Checking if enrollment group exists"
+    write-host "Ignore errors. Expecting: " -nonewline
+    write-host "Not Found" -foregroundcolor Red
+    $query = az iot dps enrollment-group show  --dps-name   $DPSName       --enrollment-id  $EnrollmentGroupName   --resource-group $GroupName 
+    [Console]::ResetColor()
+    if (-not ([string]::IsNullOrEmpty($query))){
+        write-host "Please wait: Enrollment Group:  $EnrollmentGroupName exist so deleting it."
+        az iot dps enrollment-group delete  --dps-name   $DPSName       --enrollment-id  $EnrollmentGroupName   --resource-group $GroupName 
+        write-host "Please wait: Checking if enrollment was deleted"
+        write-host "Ignore errors. Expecting: " -nonewline
+        write-host "Not Found" -foregroundcolor Red
+        $query = az iot dps enrollment-group show  --dps-name   $DPSName       --enrollment-id  $EnrollmentGroupName   --resource-group $GroupName 
+        [Console]::ResetColor()
+        if (-not([string]::IsNullOrEmpty($query))){
+            write-host "It wasn't deleted"
+        } else {
+            write-host "Done that"
+        }
+    }
+    if ([string]::IsNullOrEmpty($query)){
+        write-host "`nPlease wait: Creating EnrollmentGroup`n"
+        az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
+        write-host "`nDone that.`n"
+    } else{
+        write-host "Enrollment Group $EnrollmentGroupName  exists (couldn't delete it) so skipping that."
+    }
+    write-host "`nPlease wait: Getting Enrollment Groups`n"
+    az iot dps enrollment-group list --dps-name   $DPSName    --resource-group $GroupName -o tsv| out-string
+    get-anykey
 
 }
 <#

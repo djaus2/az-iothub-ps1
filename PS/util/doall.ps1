@@ -11,6 +11,7 @@ function get-allinone
 
     )
     [bool]$doAzsphere=$false
+    $global:azspheresummary =''
     show-heading  -Prompt '  D O  A L L  ' 2
 
     $answer =$true
@@ -170,7 +171,7 @@ function get-allinone
             write-host "No YesNo and GetAnyKey Pause. Will wait."
         }
 
-        start-time        
+        start-time     
 
         [boolean]$success=$false
         $lev=0
@@ -204,9 +205,8 @@ function get-allinone
                             $lev++
                             if ($doAzsphere)
                             {
-                                get-anykey "Do Azsphere setup etc."
-                                doall-azsphere-iothub-dps $Subscription $grp $hb $dps "$grp-$hb-$dps" $global:Tenant $global:TenantName
-                                # doall-azsphere-iothub-dps $global:subscription $global:groupname $global:hubname $global:dpsname $Tenant $TenantName
+                                get-anykey "Do AzSphere setup etc."
+                                doall-azsphere-iothub-dps $Subscription $grp $hb $dps $global:Tenant $global:TenantName
                             }                        
                         }
                     }
@@ -226,7 +226,7 @@ function get-allinone
 
         get-anykey
     
-        
+        Save-AppData
 
         show-heading  -Prompt ' D O  A L L - S U M M A R Y  ' 1
         write-host "These entities were created:"
@@ -258,13 +258,27 @@ function get-allinone
                 }
             }
         }
+        if (-not ([string]::IsNullOrEmpty($global:azspheresummary)) )
+        {
+            write-host $global:azspheresummary
+        }
         $dir = "$global:ScriptDirectory\qs-apps\Quickstarts"
         write-host ''
         write-host "These files were created in $dir :"
         get-childitem -path $dir -name -include  *.json,set-env.*
+        if (-not ([string]::IsNullOrEmpty($global:azspheresummary)) )
+        {
+            $PsScriptFile =  "$global:ScriptDirectory\app_manifest.json"
+            if (Test-Path $PsScriptFile ){
+                $jsn = Get-Content $PsScriptFile 
+                set-clipboard $jsn
+                write-host "And app_manifest.json is in $global:ScriptDirectory\app_manifest.json"
+                write-host "   ... which is now on the clipboard for pasting into your AzSphere app."
+            }
+        }
         get-anykey
-        Save-AppData
-        # write-host "App settings saved to $global:ScriptDirectory\app-settings.ps1"
+ 
+
         
         If (-not([string]::IsNullOrEmpty($global:yesnowait )))
         {

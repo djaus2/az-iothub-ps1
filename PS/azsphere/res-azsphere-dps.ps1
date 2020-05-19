@@ -1,15 +1,3 @@
-
-function get-azsphereDPS{
-param (
-    [string]$Subscription = '' ,
-    [string]$GroupName = '' ,
-    [string]$HubName = '' ,
-    [string]$DPSName = '',
-    [string]$Tenant='',
-    [String]$TenantName='',
-    [boolean]$Refresh=$false
-)
-
 function write-app_manifest{
     param (
     [string]$ComID = '' ,
@@ -61,7 +49,7 @@ $data= @"
         "EntryPoint": "/bin/app",
         "CmdArgs": [ "$ComID" ],
         "Capabilities": {
-          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$HubName.azure-devices-provisioning.net" ],
+          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$HubName.azure-devices.net" ],
           "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],
           "DeviceAuthentication": "$Tenant"
         },
@@ -79,6 +67,20 @@ $data= @"
       Out-File -FilePath $PsScriptFile    -InputObject '' -Encoding ASCII
       Add-Content -Path  $PsScriptFile   -Value $data
 }
+
+
+function get-azsphereDPS{
+param (
+    [string]$Subscription = '' ,
+    [string]$GroupName = '' ,
+    [string]$HubName = '' ,
+    [string]$DPSName = '',
+    [string]$Tenant='',
+    [String]$TenantName='',
+    [boolean]$Refresh=$false
+)
+
+
 
 
     show-heading '  A Z U R E  S P H E R E  ' 3 'Connect Via IoT Hub' 

@@ -9,7 +9,9 @@ function doall-azsphere-iothub-dps
     [String]$TenantName=''
 )
 
+    show-heading ' DOAll -  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS - Get DPS ID Scope'
     write-host 'Please wait. Connecting IoTHub and DPS in Azure.'
+    write-host 'Nb: If already connected, an error wil show but will be ignored. All OK.'
     connect-dps $global:subscription $global:groupname $global:hubname $global:dpsname
     show-dps $global:subscription $global:groupname $global:hubname $global:dpsname
     write-host 'Please wait: Checking AzSphere Login.'
@@ -53,6 +55,7 @@ function doall-azsphere-iothub-dps
         $global:Tenant= $Tenant
         $global:TenantName = $TenantName
     }
+
     If  ([string]::IsNullOrEmpty($global:TenantName ))
     {
         $tl= azsphere tenant list
@@ -98,6 +101,7 @@ function doall-azsphere-iothub-dps
 
         }
     }
+
     # show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS - Get DPS ID Scope' 
     write-Host ''
     write-Host "Please wait: Getting DPS: $DPSName info:"
@@ -108,8 +112,47 @@ function doall-azsphere-iothub-dps
     }
     $global:DPSidscope = $DPSidscope
     write-host "DPS ID Scope: $DPSidscope"
-    get-anykey '' 'Continue'
-    
+    get-anykey  'Continue'
 
-    create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname  "$global:groupname-$global:hubname-$global:dpsname"
+
+    $global:DPSCertificateName = "cert-$global:groupname-$global:hubname-$global:dpsname"
+    create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname  $global:DPSCertificateName 
+    $global:EnrollmentGroup = "enrolGroup-$global:DPSCertificateName"
+    create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName $global:EnrollmentGroup
+
+    
+    write-app_manifest $global:DPSidscope $HubName $global:Tenant
+
+    $global:azspheresummary =
+@"
+
+function doall-azsphere-iothub-dps()  A Z U R E  S P H E R E  SUMMARY  
+    The following were attempted if not already done:
+     - Connect IoT Hub to DPS
+     - Open Azsphere command prompt (PS version) and Login
+     -       Get DPS ID Scope: $global:DPSidscope
+         DPS Service endpoint: $global:HubName.azure-devices.net
+     -             Get Tenant: $global:TenantName
+     -          Get Tenant ID: $global:Tenant
+     -          Certify (Name: $global:DPSCertificateName) and Verify the Tenant for DPS
+     - Create EnrollmentGroup: $global:EnrollmentGroup
+     - Generate app-manifest.json fie in PS folder.
+       ... This is a direct replacement for the file in the Azure IoT Sample at https://github.com/Azure/azure-sphere-samples/tree/master/Samples/AzureIoT (IoT Hub modde).
+
+"@
+
+    show-heading ' DOAll -  A Z U R E  S P H E R E  SUMMARY '  3 'Connect Via IoT Hub and DPS - Get DPS ID Scope'
+    write-host "The following were attempted if not already done:"
+    write-host ' - Connect IoT Hub to DPS'
+    write-host ' - Open Azsphere command prompt (PS version) and Login'
+    write-host " -       Get DPS ID Scope: $global:DPSidscope"
+    write-host "     DPS Service endpoint: $global:HubName.azure-devices.net"
+    write-host " -             Get Tenant: $global:TenantName"
+    write-host " -          Get Tenant ID: $global:Tenant"
+    write-host " -          Certify (Name: $global:DPSCertificateName) and Verify the Tenant for DPS"
+    write-host " - Create EnrollmentGroup: $global:EnrollmentGroup"
+    write-host ' - Generate app-manifest.json fie in PS folder for AzSphere Azure IoT App.\r\nThis is a direct replacement for the file in the Azure IoT Sample at https://github.com/Azure/azure-sphere-samples/tree/master/Samples/AzureIoT (IoT Hub modde).'
+    get-anykey
+    
+    
 }
