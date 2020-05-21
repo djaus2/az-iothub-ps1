@@ -7,6 +7,8 @@ _**A PowerShell script that can create an Azure Group, IoT Hub, Device and Devic
 **_N.b.: The .NET (Core C#) versions of the Azure IoT SDK Quickstart apps are the focus here._**
 
 <hr>
+Can now run ```run-ui``` in PS. Gives a UI start to action!! Good for auto mode.
+<hr>
 <font color='Red'><b>STOP PRESS: Just in time for Build!</b> </font><Font color='Blue'><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font> <br> 
 
 ```.\get-iothub MyGroup,MyHub,MyDevice,MyDPS 2```  

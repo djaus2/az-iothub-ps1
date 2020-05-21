@@ -16,6 +16,7 @@ function get-allinone
 
     $answer =$true
 
+
     if ($answer)
     {
 
@@ -35,7 +36,6 @@ function get-allinone
             write-host 'Empty string'
             return 'Back 1'
         }
-
         $names = $namesStrn -split ','
         write-host "$Number of Azure entities to create: $names.Length"
         if ($names.Length -ne 3)

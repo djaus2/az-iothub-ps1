@@ -4,7 +4,7 @@ $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -P
 
 If ([string]::IsNullOrEmpty($global:Subscription)) {
     $sub = az account show -o tsv | out-string
-    If ([string]::IsNullOrEmpty($sub)) {
+    If (-not ([string]::IsNullOrEmpty($sub))) {
         $Current =  (($sub -split '\t')[5]).Trim()
         $global:Subscription = $Current
     }
@@ -72,6 +72,7 @@ try {
     . ("$global:ScriptDirectory\azsphere\create-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\create-iotcentral.ps1")
     . ("$global:ScriptDirectory\azsphere\show-image.ps1")
+    . ("$global:ScriptDirectory\azsphere\show-form.ps1")
     . ("$global:ScriptDirectory\azsphere\whitelist-app-enpoint.ps1")
     . ("$global:ScriptDirectory\azsphere\doall-azsphere-hubdps.ps1")  
 
@@ -115,8 +116,8 @@ if ($($args.Count) -ne 0)
         remove-variable yesnowait  -Scope Global
     }
 
-    $global:Location= $null
-    $global:SKU= $null
+    # $global:Location= $null
+    # $global:SKU= $null
 
    
     If (-not ([string]::IsNullOrEmpty($global:SubscriptionsStrn)))
@@ -155,39 +156,48 @@ if ($($args.Count) -ne 0)
     $global:Location = $result
 
 
+    if ([string]::IsNullOrEmpty($global:SKU)){
+        $global:SKU = get-SKU
+        $result = $global:retVal
 
-    $global:SKU = get-SKU
-    $result = $global:retVal
+        $prompt = 'SKU for Hub is "' + $result +'"'
+        write-Host $prompt
 
-    $prompt = 'SKU for Hub is "' + $result +'"'
-    write-Host $prompt
-
-    if ([string]::IsNullOrEmpty($result))
-    {
-        exit
+        if ([string]::IsNullOrEmpty($result))
+        {
+            exit
+        }
+        elseif ($result -eq 'Back')
+        {
+            exit
+        }
+        elseif ($result -eq 'Error')
+        {
+            exit
+        }
+        elseif ($result -eq 'Exit')
+        {
+            exit
+        }
+        $global:SKU = $result
     }
-    elseif ($result -eq 'Back')
-    {
-        exit
-    }
-    elseif ($result -eq 'Error')
-    {
-        exit
-    }
-    elseif ($result -eq 'Exit')
-    {
-        exit
-    }
-    $global:SKU = $result
 
 
     switch ($args.Count)
     {
         1{
-            # Assume a csv of 3 or 4
-            [string]$arg0 = [string]$($args[0]) 
-            $arg0 = $arg0.Replace(' ',',')
-            get-allinone $arg0
+            if ([string]::IsNullOrEmpty($global:delay)){
+                # Assume a csv of 3 or 4
+                [string]$arg0 = [string]$($args[0]) 
+                $arg0 = $arg0.Replace(' ',',')
+                get-allinone $arg0
+            }
+            else{
+                # Assume a csv of 3 or 4
+                [string]$arg0 = [string]$($args[0]) 
+                $arg0 = $arg0.Replace(' ',',')
+                get-allinone $arg0 $global:delay
+            }
         }
         2{ 
             #assume a CSV of 3 or 4 and sleepparam
