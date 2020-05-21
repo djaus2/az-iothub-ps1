@@ -10,7 +10,8 @@ _**A PowerShell script that can create an Azure Group, IoT Hub, Device and Devic
 
 Can now run 
 ```run-ui``` 
-in PS. Gives a UI start to action!! Good for auto mode.
+in PS. Gives a UI start to actions!! Good for auto mode.  
+Can exit from there, run az-iothub-ps as usual, or enter entity names and start their auto-generation.
 
 <hr>
 <font color='Red'><b>STOP PRESS: Just in time for Build!</b> </font><Font color='Blue'><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font> <br> 
