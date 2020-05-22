@@ -52,3 +52,54 @@ param (
         return $false
     }
 }
+
+function Check-DeviceForSubscription{
+    param (
+        [Parameter(Mandatory)]
+        [string]$Subscription,
+        [Parameter(Mandatory)]
+        [string]$DeviceName,
+        [boolean]$Refresh=$false
+    )
+        # $DevicesStrnIndex =5
+        if ($Refresh -eq $true)
+        {
+            $Refresh
+            $global:DevicesStrn  = $null
+        }
+    
+        $prompt = 'Checking whether Azure IoT Hub Device "' + $DeviceName +'" exists.'
+        write-Host $prompt
+        If ([string]::IsNullOrEmpty($global:DevicesStrn ))
+        {   
+            write-Host 'Getting Devices from Azure'
+            $global:DevicesStrn =  az iot hub device-identity list   -o tsv | Out-String
+        }
+        If ([string]::IsNullOrEmpty($global:DevicesStrn  ))
+        {
+            $Prompt = 'No Devices found . Return'
+            write-Host $Prompt
+            return $false
+        }
+        else
+        {   
+            $lines =$global:DevicesStrn -split '\n'
+            foreach ($line in $lines) 
+            {
+                if ([string]::IsNullOrEmpty($line))
+                {   
+                    continue
+                }
+                $itemToList = ($line -split '\t')[$DeviceStrnIndex]
+                if ($itemToList -eq $DeviceName)
+                {
+                    $prompt = 'It exists'
+                    write-Host $prompt
+                    return $true
+                }
+            }
+            $prompt = 'Device not found in Hub.'
+            write-Host $prompt
+            return $false
+        }
+    }

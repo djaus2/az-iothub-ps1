@@ -61,7 +61,7 @@ function get-allinone
         {
             return 'Back 4'
         }
-        if (check-hub  $Subscription $names[0] $names[1] )
+        if (check-hub  $Subscription $names[1] )
         {
             return 'Back 5'
         }
@@ -183,7 +183,7 @@ function get-allinone
             $lev++
             write-host "[2] Create New Hub in Group"
             new-hub $Subscription $grp $hb
-            if (check-hub  $Subscription $grp $hb )
+            if (check-hub  $Subscription  $hb )
             {
                 $global:HubName = $hb
                 $lev++

@@ -112,7 +112,7 @@ if($false) {
 
     # $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName  +'" exists.'
     # write-Host $prompt
-    if (check-hub  $Subscription $GroupName $HubName ) 
+    if (check-hub  $Subscription $HubName ) 
     {
         $prompt = 'Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" already exists.'
         get-anykey $prompt
@@ -141,7 +141,7 @@ if($false) {
     write-Host $prompt
     # Need to refresh the list of hubs
     $global:HubsStrn = $null
-    if (check-hub  $Subscription $GroupName $HubName)
+    if (check-hub  $Subscription $HubName)
     {
         $prompt = 'Hub was created.'
         get-anykey $prompt

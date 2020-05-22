@@ -2,11 +2,13 @@
 #
 $global:ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 
-If ([string]::IsNullOrEmpty($global:Subscription)) {
-    $sub = az account show -o tsv | out-string
-    If (-not ([string]::IsNullOrEmpty($sub))) {
-        $Current =  (($sub -split '\t')[5]).Trim()
-        $global:Subscription = $Current
+if ([string]::IsNullOrEmpty($global:skipLoginCheck)){
+    If ([string]::IsNullOrEmpty($global:Subscription)) {
+        $sub = az account show -o tsv | out-string
+        If (-not ([string]::IsNullOrEmpty($sub))) {
+            $Current =  (($sub -split '\t')[5]).Trim()
+            $global:Subscription = $Current
+        }
     }
 }
 
@@ -119,20 +121,27 @@ if ($($args.Count) -ne 0)
     # $global:Location= $null
     # $global:SKU= $null
 
-   
-    If (-not ([string]::IsNullOrEmpty($global:SubscriptionsStrn)))
+    if ([string]::IsNullOrEmpty($global:skipLoginCheck)){
+        If (-not ([string]::IsNullOrEmpty($global:SubscriptionsStrn)))
+        {
+            Get-Subscription $global:Subscription
+        }
+        else{
+            Get-Subscription
+        }
+    }
+    If (-not([string]::IsNullOrEmpty($global:skipLoginCheck )))
     {
-        Get-Subscription $global:Subscription
+        remove-variable skipLoginCheck  -Scope Global
     }
-    else{
-        Get-Subscription
-    }
+
 
     
     $Subscription = $global:Subscription
 
     $global:Location = get-Location
     $result = $global:retVal
+    
 
     $prompt = 'Location for Resource Group is "' + $result +'"'
     write-Host $prompt
@@ -624,7 +633,7 @@ do
                             {
                                 return 'Back 4'
                             }
-                            if (check-hub  $Subscription $names[0] $names[1] )
+                            if (check-hub  $Subscription  $names[1] )
                             {
                                 return 'Back 5'
                             }
@@ -660,7 +669,7 @@ do
                                 $lev++
                                 write-host "[2] Create New Hub in Group"
                                 new-hub $Subscription $grp $hb
-                                if (check-hub  $Subscription $grp $hb )
+                                if (check-hub  $Subscription  $hb )
                                 {
                                     $lev++
                                     write-host "[3] Create Device in Hub"

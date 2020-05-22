@@ -102,7 +102,7 @@ param (
     $global:DevicesStrn = $null
 
 
-    if ( check-hub $Subscription $GroupName $HubName )
+    if ( check-hub $Subscription  $HubName )
     {
     	$prompt = 'Deleting Azure Resource Hub "' + $HubName + '" in Group "' + $GroupName +'"'
     	write-Host $prompt
@@ -118,7 +118,7 @@ param (
     	$prompt = 'Checking whether Azure Hub "' + $HubName   +'" was deleted.'
     	write-Host $prompt
     	$global:HubsStrn = $null
-    	if ( check-hub $Subscription $GroupName $HubName )
+    	if ( check-hub $Subscription  $HubName )
     	{
             $prompt = 'It Failed.'
             get-anykey $prompt

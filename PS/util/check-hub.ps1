@@ -3,8 +3,6 @@ param (
     [Parameter(Mandatory)]
     [string]$Subscription,
     [Parameter(Mandatory)]
-    [string]$GroupName,
-    [Parameter(Mandatory)]
     [string]$HubName,
     [boolean]$Refresh=$false
 )
@@ -16,6 +14,8 @@ param (
         $Refresh
         $global:HubsStrn  = $null
     }
+
+    $global:retVal=$false
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Subscription "' + $Subscription + '" exists.'
     write-Host $prompt
@@ -39,6 +39,7 @@ param (
             {
                 $prompt = 'It exists'
                 write-Host $prompt
+                $global:retVal=$true
                 return $true
             }
         }

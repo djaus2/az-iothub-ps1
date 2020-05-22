@@ -3,8 +3,12 @@ param (
     [Parameter(Mandatory)]
     [string]$Subscription,
     [Parameter(Mandatory)]
-    [string]$GroupName
+    [string]$GroupName,
+    $Refresh=$false
 )
+    if($Refresh){
+        $global:GroupsStrn =$null
+    }
 
     # $GroupStrnIndex =3
 

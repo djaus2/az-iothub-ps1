@@ -87,10 +87,12 @@ catch {
 $global:retVal=''
 $global:Location= $null
 $global:SKU= $null
+$global:skipLoginCheck=$null
 show-form
 If (-not([string]::IsNullOrEmpty($global:retVal )))
 {
     if($global:retVal -eq 'Cancel'){
+        $global:retVal=''
         return
     } else{
         & "$global:ScriptDirectory\get-iothub" $global:retVal
