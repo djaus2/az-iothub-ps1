@@ -26,7 +26,7 @@ There is one other script that needs to be run once, set-path (run from the prom
   - Nb: Run refers to running Quickstart .Net Core apps in the context of the selected entities.
 - Numerous additional PowerShell functions in separate PowerShell scripts for implementing the required Azure queries through the Azure Cli API.
 - The main script can be run be in autonomous mode where the entity names are supplied as command line parameters to be created, as a csv list.
-- **run-ui Menu:** The latter mode can now be initiated through a UI by running ```run-ui``` This collects the entity names and verifies their availability before calling az-iothub-ps.
+- **run-ui Menu:** The latter mode can now be initiated through a UI by running ```run-ui``` This collects the entity names and verifies their availability before calling az-iothub-ps. See screenshot below.
 - az-iothub-ps and run-ui can both initiate the Azure Cli login.
 - Functions have checks and balances. eg. If creating or deleting an entity, does it exist beforehand, does it exist afterwards?
 - You select or create a Resource Group in the Azure Subscription, then an IoT Hub in that group, then a Device and/or a DPS connected to the hub
