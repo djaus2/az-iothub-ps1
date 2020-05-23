@@ -1,22 +1,16 @@
 ## az-iothub-ps
 
-# Azure IoT Hub PowerShell Scripts V3.0.3
+# Azure IoT Hub PowerShell Scripts V3.0.4
 
 _**A PowerShell script that can create an Azure Group, IoT Hub, Device and Device Provisioning Service (DPS) requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates Hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that Shave been reworked, extended and added to. Also, there is now has support for DPS and Azure Sphere, including the AzSphere command prompt as a PowerShell.**_
 
 **_N.b.: The .NET (Core C#) versions of the Azure IoT SDK Quickstart apps are the focus here._**
 
 <hr>
-<<<<<<< HEAD
-Can now run ```run-ui``` in PS. Gives a UI start to actions!! Good for auto mode. Option just to go direct az-iothub-ps (no auto mode).  Or  Enter entity names, check availability and then run az-iothub-ps in auto mode to generate them!
-=======
-
 Can now run 
-```run-ui``` 
-in PS. Gives a UI start to actions!! Good for auto mode.  
-Can exit from there, run az-iothub-ps as usual, or enter entity names and start their auto-generation.
+```run-ui```
+ in PS. Gives a UI start to actions!! Good for auto mode. Option just to go direct az-iothub-ps (no auto mode).  Or  Enter entity names, check availability and then run az-iothub-ps in auto mode to generate them!
 
->>>>>>> b236cf9d901619abc7eb81d4690da480e616db02
 <hr>
 <font color='Red'><b>STOP PRESS: Just in time for Build!</b> </font><Font color='Blue'><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font> <br> 
 
