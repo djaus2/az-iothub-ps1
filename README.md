@@ -89,6 +89,16 @@ _The **get-iothub** PowerShell script Main Menu_
 
 <hr>
 
+![run-ui-1](/PS/images/run-ui-1.png)  
+_The **run-ui** PowerShell UI interface_  
+
+Reminder: run-ui runs as PowerShell script.  
+
+![run-ui-1](/PS/images/run-ui-2.png)  
+_**run-ui** IS menu driven_
+
+<hr>
+
 ## The Quickstart projects and their apps
 
 ```
