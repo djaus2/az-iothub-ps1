@@ -1,21 +1,56 @@
-## az-iothub-ps
-
 # Azure IoT Hub PowerShell Scripts V3.0.4
 
-_**A PowerShell script that can create an Azure Group, IoT Hub, Device and Device Provisioning Service (DPS) requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates Hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Quickstart apps. The repository contains the Quickstart IoT Hub SDK .NET Core apps that Shave been reworked, extended and added to. Also, there is now has support for DPS and Azure Sphere, including the AzSphere command prompt as a PowerShell.**_
+_**az-iothub-ps is a PowerShell script that can create an Azure Group, IoT Hub, Device and Device Provisioning Service (DPS) requiring only their names, location and the Hub SKU. It automatically makes all of the Azure queries and posts from that info. The script can be used in a menu manner, or driven in one step from the command line. The script also generates Hub connection meta-information and packages it into a ps, sh and json files for transparent use by the Azure IoT Hub SDK Quickstart apps. The repository contains those Quickstart IoT Hub SDK .NET Core apps that have been reworked, extended and added to. Also, there is now has support for DPS and Azure Sphere, including the AzSphere command prompt as a PowerShell.**_
 
 **_N.b.: The .NET (Core C#) versions of the Azure IoT SDK Quickstart apps are the focus here._**
 
-<hr>
+## Summary
 
-Can now run ```run-ui``` in PS. Gives a UI start to actions!! Good for auto mode. Option just to go direct az-iothub-ps (no auto mode).  Or  Enter entity names, check availability and then run az-iothub-ps in auto mode to generate them!
+Wouldn't it be nice to have **ONE PowerShell script that prompts you for required information _(Group, Hub name and Device name)_** when creating or selecting a Hub and for when collecting the required meta-data. Its output could be the required meta-data in temporary environment variables, ready for use by the Quickstarts. _Look no further!_
 
-<hr>
-<font color='Red'><b>STOP PRESS: Just in time for Build!</b> </font><Font color='Blue'><i>Can now do Azure Tenant Verification without going to Azure Portal!</i></font> <br> 
+It's here now.  You run the main PowerShell script **_get-iothub_** in the PS folder. Whilst there are numerous other PowerShell scripts under PS in other folders, these are functions called by the main script. The script displays menus where the user makes selections or choices.
 
-```.\get-iothub MyGroup,MyHub,MyDevice,MyDPS 2```  
-Will create all 4 entities, Group,Hub,Device,DPS and link the Hub and DPS. For AzSphere it will certify and verify that. And generate .json files for runtime. All automagically!<br>
-**Further** Outcome is the app_manifest.json copied to the clipboard so you can just paste it directly into the AzureIoT sample app, and your away! How good is that!
+There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as   ```.\set-path``` ). You then can run the main script just by entering ```get-iothub``` as the PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
+
+- Within an Azure Subscription you have a Resource Group.
+- An IoT Hub is a member of a Resource Group.
+- A Device belongs to an IoT Hub.
+- An IoT Hub and its device both have connection meta-information need by the Quickstart apps.
+- The Quickstart apps(as in this repository) get that info from environment variables, and use it to connect to the hub when they run.
+- A Hub can also be connected with a Device Provisioning Service (DPS)
+
+## Features
+
+- An textual menu based PowerShell script, ```az-iothub-ps.ps1```, for managing the creation, deletion, selection and interrogation for connection meta-information
+- <b><u>CLIRSD:</u></b> Create, List, Select, Interrogate, Run and Delete actions
+  - Nb: Run refers to running Quickstart .Net Core apps in the context of the selected entities.
+- Numerous additional PowerShell functions in separate PowerShell scripts for implementing the required Azure queries through the Azure Cli API.
+- The main script can be run be in autonomous mode where the entity names are supplied as command line parameters to be created, as a csv list.
+- This latter mode can now be initiated through a UI by running ```run-ui``` This collects the entity names and verifies their availability before calling az-iothub-ps.
+- az-iothub-ps and run-ui can both initiate the Azure Cli login.
+- Functions have checks and balances. eg. If creating or deleting an entity, does it exist beforehand, does it exist afterwards?
+- You select or create a Resource Group in the Azure Subscription, then an IoT Hub in that group, then a Device and/or a DPS connected to the hub
+  - Within the menus you configure the DPS to be connected to the Hub, after selecting both
+- **Connectivity Info:** Generates the required context for the selected Hub,Device and DPS in terms of the various connectivity meta-information
+  - Eg Hub or Device connection string
+  - Manifested as temporary environment variables
+    - Option to permanently set the environment variable with Windows (a PS script)
+     - Creates scripts to reassert those environment variables as a PowerShell script for Windows and as a .sh script (EXPORTS) for Linux
+    - Also generates a launchsettings.json file that can be used with a .Net Core app to generate the environment variables in the app's runtime context
+- _**Quickstarts:**_ Azure IoT Hub SDK Quickstart apps are included in the repository such that they all read the required connectivity information from these environment variables
+  - Some additional Quickstarts such as a Motor H-Bridge
+  - Can embed the environment variables scripts directly into teh Quickstarts ready for copying directly to a remote device such as a RPi
+    - eg. PS for IOT-Core or .sh for Rapsian. Or launchsettings.json (works with Windows0.)
+  - Also a ```run-apps``` PS script that can simultaneously launch both the simulated Hub and Device on the desktop
+- **Azure Sphere:** A fully fledged textual menu for setting up an Azure Sphere, including an Azsphere Comamnd Prompt, as a PowerShell rather than CMD
+  - Can log into AzSphere
+  - Tenant, WiFi, Update and App Dev submenus that call the various AzSphere API functions for setting up for Azsphere development
+  - In another submenu separately perform all of the steps required for connecting an Azsphere app (certification, verification etc) using IOT Hub-DPS connectivity without using the Azure Portal
+    - _**OR:Do all that automatically as one menu option**_ from the AzSphere main menu.
+    - Both methods include generating an app_manifest.json file with the 3 required meta-data item written into it, ready for copying into an AzSphere app:
+      - DPS ID Scope, Hub Connection URL and Tenant ID
+      - Specifically for the AzureIoT Sample app from [github Azure/azure-sphere-samples](https://github.com/Azure/azure-sphere-samples/tree/master/Samples/AzureIoT) but only requires GPIO modifications and possibly ComponentId (??) for use in other apps.
+
 <hr>
 
 The Azure IoT Central capabilities have been removed from this branch of the repository. They are though still under development in the **IoT-Central** branch of the repository.  You can clone that by adding ```--branch IoT-Central``` to the git clone command. You might also want to add ```--single-branch``` as well to the git clone command. The iot-central branch functionality is a superset  of the functionality in this branch,except for some tweaks in both branches which will be merged, adding the **Azure IoT Central** functionality to the iot-central branch.
@@ -23,28 +58,6 @@ The Azure IoT Central capabilities have been removed from this branch of the rep
 <hr>
 Having problems running PowerShell scripts that you have downloaded, for example the ones from here, because they are unsigned. I've created a new GitHub repository [djaus2/sign-me-up-scotty](https://github.com/djaus/sign-me-up-scotty) that can create a local signing authority, create a personal certificate for code signing, and sign an individual PS script with that certificate. And for repository downloads like this, it can recursively sign all PS scripts in a folder and down from there, as well as recursively unsign them!
 <hr>
-<b><i>Much support now added for Azure Sphere including the azsphere command prompt as a PowerShell command prompt, device commands and DPS.</i></b>
-<hr>
-
-## Preamble
-
-In the [Azure IoT Hub Quickstarts](https://docs.microsoft.com/en-us/azure/iot-hub/). _take the Quickstart link in the sidebar on left_, a list of steps are repeated on most pages for creating a new Azure IoT Hub from scratch as well as for getting the required Hub connection meta-data. This meta-data is required to be provided as environment variables for the [Quickstart .NET Core Sample apps](https://github.com/Azure-Samples/azure-iot-samples-csharp/archive/master.zip), _(n.b. this is a zip file)_, or provided as command line parameters for the apps. The Quickstart tutorials use the **Azure Cli** (Az Cli) in a **PowerShell** terminal. The UWP app **Azure IoT Hub Toolbox** simplifies this a little, as available as source [GitHub](https://github.com/djaus2/Azure.IoTHub.Toolbox) as well as a ready to run app on the [Microsoft Store](https://www.microsoft.com/en-au/p/azureiothubtoolbox/9pmcf9clttwz?activetab=pivot:overviewtab), with the app's Settings page stepping you through the Hub creation and collection of the meta-data to be used in-app. The Toolbox also requires a PowerShell Az Cli terminal as it supplies the required Az Cli commands on the clipboard.
-
-
-
-But wouldn't it be nice to have **ONE PowerShell script that prompts you for required information _(Group, Hub name and Device name)_** when creating or selecting a Hub and for when collecting the required meta-data. Its output could be the required meta-data in temporary environment variables, ready for use by the Quickstarts. _Look no further!_
-
-It's here now.  You run the main PowerShell script **_get-iothub_** in the PS folder. Whilst there are numerous other PowerShell scripts under PS in other folders, these are functions called by the main script. The script displays menus where the user makes selections or choices.
-
-There is one other script that needs to be run once, set-path (run from the prompt in PS foloder as   ```.\set-path``` ). You then can run the main script just by entering ```get-iothub``` as the PS folder is now in the System Path; but only for the life of the  shell. set-path only needs to be run once for a new PowerShell terminal.
-
-## The get-iothub PowerShell script
-
-- Within an Azure Subscription you have a Resource Group.
-- An IoT Hub is a member of a Resource Group.
-- A Device belongs to an IoT Hub.
-- An IOT Hub and its device both have connection meta-information need by the Quickstart apps.
-- The Quickstart apps(as in this repository) get that info from environment variables, and use it to connect to the hub when they run.
 
 <table border="1"  style="background-color:#FFFFE0;"><tr><td>
 
@@ -76,72 +89,10 @@ _The **get-iothub** PowerShell script Main Menu_
 
 <hr>
 
-## Creating an IoT and subservient Device
-
-- Start in PS folder and run ```.\set-path``` 
-- Run ```get-iothub``` 
-
-- Select the Subscription to use _(Normally only one option here)_
-- Create a Group ( or select an existing one)  _(Group option in Main Menu)_
-- Create an IoT Hub (or select an existing one) _(Hub option in Main Menu)_
-- Create a Device (or select an existing one) _(Device opton in Main Menu)_
-
-- Then Generate Environment Variables (Connection Strings)<br>
-  Note only persist for life of existing shell.
-
-### Or the quick way..
-- Run ```get-iothub  groupname,hubname,devicename```
-
-You can add a wait period which will skip the default yes confirmations but pause at them for the specified numner of seconds:
-- Run ```get-iothub  groupname,hubname,devicename 5```  Thsi will pause for 5 seconds at every [Y] confirmation.
-
-At the start there are 3 menu selections before the script takes off:
-- Select Subscription
-- Select Location
-- Select Hub SKU
-
-## The PS Script CanDos
-
-The script can...
-- Create a new Group, IoT Hub and Device
-- Generate all of the Hub and Device connection strings required by the IoT Hub SDK for the Quickstart apps and write them as System environment variables and to a PS script to do same.
-- Place you in the folder to run a Quickstart (menu of them) with the environment variables set so as to be able to run the app/s.
-    - You then just enter ```dontnet run``` to run the app/s.
-    - There is also a script in some Quickstart folders to fork two (or 3) processes for when a device and service are required (Eg Device Streaming).
-    - The Quickstarts are part of the repository download and have been modified so that you don't need to edit the source to include the connection strings. Connection strings are taken from environment variables. Other mods and extra apps too.
-- Install the required version of .NET Core locally (PS/qs-apps/dotnet) and add to path and set required environment variable to it.
-   - Can copy qs-apps folder via a share to a remote device. Quickstarts are in ps/qs-apps/quickstarts. Scripts can be placed in quickstarts folder to set environment variables on remote device for connection strings and dotnet.
-
-<hr>
-
-## Quickstart Apps
-There is now a device app under Telemetry that uses a DHT22 sensor on a RPi. Only works on Raspian. For further info on that,eg setup, see the repo: https://github.com/djaus2/DNETCoreGPIO  Run the app quickstarts\telemetry\telemetry\simulated-device_on_RPi app from here on the RPi.  Run the mirroring app quickstarts\telemetry\telemetry\read-d2c-messages on the desktop.<br><b>New:</b> control-a-motor variant on control-a-device based upon the motor code in device-streams-cmds-motor. (Works on the RPi win-arm and linux-arm) Similar to the the Device Streaming motor app.
-<br>
-<br>
-Also in Device-Streams look in quickstarts\device-streams\device-streams-cmds\device-RPI. The quickstarts\device-streams\device-streams-cmds\service (run on desktop) will now get real live data from this device app when running on the RPi, upon request (send tem or hum). This also uses the DHT22 on the RPi running Raspbian.<br>You can also control a motor remotely using Device Streaming. Look in  quickstarts\device-streams\device-streams-cmds-motor.
-
-See list of Quickstarts below.
-
-<hr>
-
-## The Env Vars scripts
-
-If just running on the desktop then get-iothub can set temporarily set the environment variables for use by the apps on the desktop. If running on the device, you need to set the variables there.
-
-- You can now generate a launchsettings.json file and place it in the Properties folder of an app.<br>
-The app will read the variables fromm there at startup.
-<p>
-Alternatively, the set-env.ps1 and set-env.sh scripts can be copied to the device.
-
-- To set environment variables on the device:
-  - In a Window context ```.\set-env```   to run set-env.ps1
-  - On Linux (eg Raspian on the Pi)  ```source ./set-env.sh```
-
-<hr>
-
 ## The Quickstart projects and their apps
 
 ```
+
 az-iothub-ps\ps\qs-apps
 │
 ├───dotnet
@@ -187,8 +138,9 @@ az-iothub-ps\ps\qs-apps
             ├───simulated-device
             └───simulated-device_on_RPi
 ```
+
 <hr>
 
-Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html)   
+Read more on my blog [http://www.sportronics.com.au](http://www.sportronics.com.au/dotnetcoreiot/.NET_Core_on_IoT-Fast_tracking_IoT_Hub_Creation_with_PS-dotnetcoreiot.html)
 
 Enjoy!
