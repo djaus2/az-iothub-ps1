@@ -59,7 +59,7 @@ The Azure IoT Central capabilities have been removed from this branch of the rep
 Having problems running PowerShell scripts that you have downloaded, for example the ones from here, because they are unsigned. I've created a new GitHub repository [djaus2/sign-me-up-scotty](https://github.com/djaus/sign-me-up-scotty) that can create a local signing authority, create a personal certificate for code signing, and sign an individual PS script with that certificate. And for repository downloads like this, it can recursively sign all PS scripts in a folder and down from there, as well as recursively unsign them!
 <hr>
 
-## az-iothub-ps Main Menu
+## <font color="blue">az-iothub-ps Main Menu</font>
 
 <table border="1"  style="background-color:#FFFFE0;"><tr><td>
 
@@ -89,7 +89,7 @@ Having problems running PowerShell scripts that you have downloaded, for example
 
 _The **get-iothub** PowerShell script Main Menu_
 
-## run-ui
+## <font color="blue">run-ui</font>
 
 Reminder: run-ui is a graphical UI frontend to az-iothub-ps.  
 It runs as PowerShell script
