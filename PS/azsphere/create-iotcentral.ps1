@@ -52,7 +52,7 @@ function verify-tenant-iotcentral{
     If ([string]::IsNullOrEmpty($IoTCentralUrl ))
     {
         write-Host ''
-        $prompt = 'Need to get your IoT Central YRL.'
+        $prompt = 'Need to get your IoT Central URL.'
         write-host $prompt
         $IOtCentralUrl = read-host 'Please enter your IoT Central URL' 
         $url =$IOTCentralURL
