@@ -121,151 +121,156 @@ param (
                 
                 write-Host $prompt -NoNewline
             
-        
-                if ($col -eq ($ItemsPerLine-1))
-                {
-                    $col =0
-                    write-Host ''
+                    if ($col -eq ($ItemsPerLine-1))
+                    {
+                        $col =0
+                        write-Host ''
+                    }
+                    else 
+                    {
+                        $Tab = [char]9
+                        write-Host $Tab -NoNewline
+                        $col++
+                    }
                 }
-                else 
+                
+                $i++
+            }
+            If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
+            {
+                $Options = $AdditionalMenuOptions -split ','
+                write-Host ''
+                foreach ($option in $Options)
                 {
-                    $Tab = [char]9
-                    write-Host $Tab -NoNewline
-                    $col++
+                    
+                    write-Host $option
+                    $val = -100
+                    switch ( $option[0] )
+                    {
+                        B {$val = -1}
+                        D {$val = -2}
+                        N {$val = -3}
+                        X {$val = -4}
+                    }
+                    if ($val -ne -100)
+                    {
+                        $n = $SelectionList.Add($val)
+                    }
                 }
             }
             
-            $i++
-        }
-        If (-not ([string]::IsNullOrEmpty($AdditionalMenuOptions)))
-        {
-            $Options = $AdditionalMenuOptions -split ','
-            write-Host ''
-            foreach ($option in $Options)
+            # [int]$selection =1
+            #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
+            #}
+            $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
+            # $SelectionList =@('1','2','3','4','-1','-2','-3')
+            write-Host $prompt
+            $first = $true
+            $val=0
+            do 
             {
-                
-                write-Host $option
-                $val = -100
-                switch ( $option[0] )
+                # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
+                # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
+                $KeyPress = [System.Console]::ReadKey($true)
+                $K = $KeyPress.Key
+                $KK = $KeyPress.KeyChar
+            
+                $val=-10
+                switch ( $k )
                 {
+                    # Numerical Keys 0 to 9
+       
+                    'D1'  {$val = 1  }
+                    'D2'  {$val = 2  }
+                    'D3'  {$val = 3  }
+                    'D4'  {$val = 4  }
+                    'D5'  {$val = 5  }
+                    'D6'  {$val = 6  }
+                    'D7'  {$val = 7  }
+                    'D8'  {$val = 8  }
+                    'D9'  {$val = 9  }
+                    'D0'  {$val = 10  }
                     B {$val = -1}
                     D {$val = -2}
                     N {$val = -3}
                     X {$val = -4}
+                    UpArrow  { 
+                        switch ($Default )
+                        {
+                            1 { $Default = 1}
+                            2 { $Default = 1}
+                            3 { $Default = 2}
+                            4 { $Default = 3}
+                        } 
+                    }
+                    DownArrow  { 
+                        switch ($Default )
+                        {
+                            1 { $Default = 2}
+                            2 { $Default= 3}
+                            3 { $Default= 4}
+                            4 { $Default= 5}
+                        } 
+                    }
+                    Enter { 
+                        If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
+                        {
+                            $val = $DefaultNo
+                        } 
+                        else{
+                            $val = -11
+                        }
+                    }
+            
                 }
-                if ($val -ne -100)
-                {
-                    $n = $SelectionList.Add($val)
-                }
-            }
-        }
-        
-        # [int]$selection =1
-        #$SelectionList | where-object {$_ } | Foreach-Object { write-Host '>>' -NoNewline;write-Host $_ 
-        #}
-        $prompt ="Please make a (numerical) selection .. Or [Enter] if previous selection highlighted."
-        # $SelectionList =@('1','2','3','4','-1','-2','-3')
-        write-Host $prompt
-        $first = $true
-        
-        do 
-        {
-            # Ref: https://stackoverflow.com/questions/31603128/check-if-a-string-contains-any-substring-in-an-array-in-powershell
-            # Ref https://stackoverflow.com/questions/25768509/read-individual-key-presses-in-powershell
-            $KeyPress = [System.Console]::ReadKey($true)
-            $K = $KeyPress.Key
-            $KK = $KeyPress.KeyChar
-        
-            $val=-10
-            switch ( $k )
-            {
-                # Numerical Keys 0 to 9
-                'D1'  {$val = 0  }
-                'D1'  {$val = 1  }
-                'D2'  {$val = 2  }
-                'D3'  {$val = 3  }
-                'D4'  {$val = 4  }
-                'D5'  {$val = 5  }
-                'D6'  {$val = 6  }
-                'D7'  {$val = 7  }
-                'D8'  {$val = 8  }
-                'D9'  {$val = 9  }
-                'D0'  {$val = 10  }
-                B {$val = -1}
-                D {$val = -2}
-                N {$val = -3}
-                X {$val = -4}
-                UpArrow  { 
-                    switch ($Default )
-                    {
-                        1 { $Default = 1}
-                        2 { $Default = 1}
-                        3 { $Default = 2}
-                        4 { $Default = 3}
-                    } 
-                }
-                DownArrow  { 
-                    switch ($Default )
-                    {
-                        1 { $Default = 2}
-                        2 { $Default= 3}
-                        3 { $Default= 4}
-                        4 { $Default= 5}
-                    } 
-                }
-                Enter { 
-                    If (-not ([string]::IsNullOrEmpty($CurrentSelection)))
-                    {
-                        $val = $DefaultNo
-                    } 
-                    else{
-                        $val = -11
+                if ( $SelectionList -notcontains $val){
+                    if ($first){
+                        write-Host '  --Invalid' -NoNewLine
+                        $first = $false
                     }
                 }
-        
-            }
-            if ( $SelectionList -notcontains $val){
-                if ($first){
-                    write-Host '  --Invalid' -NoNewLine
-                    $first = $false
-                }
-            }
-            ## $resp = [string]$val
-        # Ref: https://www.computerperformance.co.uk/powershell/contains/
-        } while ( $SelectionList -notcontains $val) ##  $resp)
-        
-        
-        if ($first -eq $false)
-        {
-            write-Host `b`b`b`b`b`b`b -NoNewLine
-            write-Host 'OK Now  ' 
-        }
-        
-        $output = ''
-        $selection = $val
-        if ($selection -eq  -1)
-        {
-            $global:retVal = 'Back'
-            return 'Back'
-        }
-        else 
-        {          
-            $output  =($ListString-split ',')[$selection-1]  
-        }
-        write-Host ''
-        $promptFinal = $Title +' "' +  $output + '" selected'
-        write-Host $promptFinal
+                ## $resp = [string]$val
+            # Ref: https://www.computerperformance.co.uk/powershell/contains/
+            } while ( $SelectionList -notcontains $val) ##  $resp)
 
-        $val=$null
-        $SelectionList = $null
-        $ListString = $null
-        
-        $global:retVal =  $output
-        $global:retVal1 = $k
-        $global:retVal2 = $kk
-
-        return $output
+            
+            if ($first -eq $false)
+            {
+                write-Host `b`b`b`b`b`b`b -NoNewLine
+                write-Host 'OK Now  ' 
+            }
+            
+            $output = ''
+            $selection = $val
+            if ($selection -eq  -1)
+            {
+                $global:retVal = 'Back'
+                return 'Back'
+            }
+            else 
+            {          
+                $output  =($ListString-split ',')[$selection-1]  
+            }
+            write-Host ''
+            $promptFinal = $Title +' "' +  $output + '" selected'
+            write-Host $promptFinal
+    
+            
+            $SelectionList = $null
+            $ListString = $null
+            
+            # This is the selected item from the list
+            $global:retVal =  $output
+            # This is the key code pressed (D1 for 1 etc))
+            $global:retVal1 = $k
+            # This is the key pressed
+            $global:retVal2 = $kk
+            # This is the number selected if list item selected (1...9, 0)  Nb: 0 is 10
+            $global:retValNum = $val
+            $val=$null
+            return $output
+        }
     }
-}
+
  
  

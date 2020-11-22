@@ -12,7 +12,7 @@ param (
     [string]$CurrentSelection='None',
     [bool]$HandBack=$false
 )
-    write-host 'Using Short Menu'    
+    # write-host 'Using Short Menu'    
 
     $baseMenu =@()
     $SelectionList={$baseMenu}.Invoke()
@@ -43,12 +43,13 @@ param (
     [Parameter(Mandatory)]
         [string]$ch
     )
-        switch ($ch)
-        {
-            'B'  {$SelectionList.Add('B') }
-            'N'  {$SelectionList.Add({'N'}) }
-            'D'  {$SelectionList.Add({'D'}) }
-        }
+        $SelectionList.Add($ch)
+        #switch ($ch)
+        #{
+        #    'B'  {$SelectionList.Add('B') }
+        #    'N'  {$SelectionList.Add({'N'}) }
+        #    'D'  {$SelectionList.Add({'D'}) }
+        #}
     }
 
     [string]$temp =  [string]$ColWidth
@@ -76,13 +77,13 @@ param (
     $noEntities =0
     if ($ListString -eq 'EMPTY'){
         write-Host ''
-        write-host  'Select a ' -noNewLine
+        write-host  'Select a/an ' -noNewLine
         write-host $Title   -BackgroundColor DarkGreen  -ForegroundColor  Black -NoNewline
         write-host ' option:'
     }
     else{
         write-Host ''
-        write-host  'Select a ' -noNewLine
+        write-host  'Select a/an ' -noNewLine
         write-host $Title   -BackgroundColor DarkGreen  -ForegroundColor  Black -NoNewline
         write-host ' or option:'
         write-Host ''
@@ -339,7 +340,8 @@ param (
 
     $global:kk = $kk
     
-    write-Host $promptFinal
+    # write-Host $promptFinal
+   
     $global:retVal= $output
     
     if ($global:recording)

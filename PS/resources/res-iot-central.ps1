@@ -1,4 +1,4 @@
-
+﻿
 function get-IOTCentral{
 param (
     [string]$Subscription = '' ,
@@ -11,7 +11,7 @@ param (
 )
 
 $IoTCentralName = $global:IoTCentralName
-$IoTcentralURL= $global:IoTCentralName
+$IoTcentralURL= $global:IoTcentralURL
 $IDScope = $global:IDScope
 $DevURL=$global:DevURL
 
@@ -157,6 +157,7 @@ $data= @"
     $DPSStrnIndex =1
     $DPSStrnDataIndex =3
 
+    $Refresh=$false
 
     do{
 
@@ -164,15 +165,28 @@ $data= @"
         
         $IDScope=$global:IDScope
         $DevURL=$global:DevURL
-        $Iotcentralname=$global:Iotcentralname
-        $IotcentralURL=$global:IotcentralURL
         $centralappS=$global:IoTCentralsStrn
-        if ($Refresh){
-            write-host "Please wait: Getting IOT Centrals apps for Group $Groupname from Azure."
+        $template=$global:IotcentralTemplate
+        if ($Refresh)
+        {
+            write-host "Please wait: Getting IoT Central apps for Group $Groupname from Azure."
             $centralappS = az iot central app list -g $groupname -o tsv | out-string
             $Refresh= $false
             $global:IoTCentralsStrn=$centralappS
+            $Iotcentralname = ''
+            $IotcentralURL=''
+            $global:Iotcentralname=$Iotcentralname
+            $global:IotcentralURL=$IotcentralURL
+            $IDScope=''
+            $DevURL=''
+            $global:IDScope=''
+            $global:DevURL=''
+            $global:IotcentralTemplate=''
         }
+    
+        $Iotcentralname=$global:Iotcentralname
+        $IotcentralURL=$global:IotcentralURL
+        $template=$global:IotcentralTemplate
         show-heading '  A Z U R E  I o T  C E N T R A L   ' 2 ''
         $Prompt = '          Subscription :"' + $Subscription +'"'
         write-Host $Prompt
@@ -180,23 +194,41 @@ $data= @"
         write-Host $Prompt
         write-host ' ------------------------------------ '
         write-Host $Prompt
-        $Prompt = '  IoT Central App Name :"' + $Iotcentralname +'"'
+        $Prompt = '     IoT Central App Name :"' + $Iotcentralname +'"'
         write-Host $Prompt
-        $Prompt = '   IoT Central App URL :"' + $IotcentralURL +'"'
+        $Prompt = '      IoT Central App URL :"' + $IotcentralURL +'"'
         write-Host $Prompt
-        $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
+        $Prompt = '     IoT Central ID Scope :"' + $IDScope+'"'
         write-Host $Prompt
-        $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
+        $Prompt = '      IoT Central Dev URL :"' + $DevURL+'"'
+        write-Host $Prompt
+        $Prompt = ' IoT Central App Template :"' + $template+'"'
         write-Host $Prompt
 
-        $options ='U. Unselect,R. Refresh,C. Create IoT Central App,E. Enter App Name and URL,O. Open current App,W. Write app_Manifest.json'
+        $options ='R. Refresh,C. Create IoT Central App,E. Enter App Name and URL'
 
+        If (-not([string]::IsNullOrEmpty($Iotcentralname )))
+        {
+            If (-not([string]::IsNullOrEmpty($IotcentralURL )))
+            {
+                $options="$options,U. Unselect App,S. Show App Details,D. Delete App,O. Open current App,W. Write app_Manifest.json"
+            }
+        }
         $options="$options,B. Back"
 
-        
 
-        parse-list $centralappS   '   A Z U R E  I o T  C E N T R A L  A P P '  $options $DPSStrnIndex $DPSStrnIndex 1  30 $Iotcentralname $true
+        If ([string]::IsNullOrEmpty($centralappS ))
+        {
+            write-Host ''
+            $prompt =  'No IoTCentral Apps.'
+            write-host $prompt
+            $centralappS='EMPTY'
+        }
+        $val = parse-list $centralappS   '   A Z U R E  I o T  C E N T R A L  A P P '  $options 5 5 1  30 $Iotcentralname $true
+        
         $answer= $global:retVal 
+        $Refresh =$false
+
         If ([string]::IsNullOrEmpty($answer)) 
         {
             write-Host 'Back'
@@ -215,17 +247,21 @@ $data= @"
             get-yesorno $true "Continue"
             $answer = $global:retVal
             if ( $answer){
-                $url = $IotcentralURL
+                $url = "https://$IotcentralURL"
                 start-process $url  
                 get-anykey
             }
-            a\$answer=''
+            $answer=''
         }
         elseif ($global:kk -eq 'U'){
             $Iotcentralname=''
             $IotcentralURL =''
             $global:Iotcentralname = $Iotcentralname
             $global:IotcentralURL = $IotcentralURL
+            $IDScope=''
+            $DevURL=''
+            $global:IDScope=''
+            $global:DevURL=''
             $answer=''
         }
         elseif ($answer-eq 'Back')
@@ -240,10 +276,12 @@ $data= @"
             $Iotcentralname =$answer
             read-host $Iotcentralname
             write-host "Please wait. Getting App details from Azure."
-            $query =az iot central app show --name $Iotcentralname -o tsv | out-string
+            $query =az iot central app show --name $Iotcentralname  -g $global:groupname -o tsv | out-string
             # $query=$global:IoTCentralsStrn
             $subdomain = ($query -split '\t' )[8]
             $IotcentralURL ="$subdomain.azureiotcentral.com"
+            $template = ($query -split '\t' )[10]
+            $global:IotcentralTemplate = $template
             $global:Iotcentralname = $Iotcentralname
             $global:IotcentralURL = $IotcentralURL
             $answer=''
@@ -271,14 +309,14 @@ $data= @"
                             $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
                             write-Host $Prompt
                             $done=$true;
-                            $menu='How ro create IoT Central app in browser,Create in browser,Create using Custom Template'
+                            $menu='Create here,How to create an IoT Central app in browser,Create in browser - direct'
                             $res = choose-selection $menu 'Select between' 
                             
                             switch ($global:retVal2 ){
-                            '1'{
-                                write-host 'Just follow the steps on the first page to create a Custom app inteh Build Portal.'
+                            '2'{
+                                write-host 'Just follow the steps on the first page to create a Custom app in the Build Portal.'
                                 write-host 'Return here when done to enter the required information.'
-                                write-host 'Menu option 2. will take you directly to Build Portal, in future.'
+                                write-host 'Menu option 3. will take you directly to Build Portal, in future.'
                                 get-yesorno $true "Continue"
                                 $answer = $global:retVal
                                 if ( $answer){
@@ -302,7 +340,7 @@ $data= @"
                                     $global:IotcentralURL = $IotcentralURL
                                 }
                             }
-                            '2'{
+                            '3'{
                                 write-host "Taking you to the Build Portal"
                                 write-host "Return here when you have created the app, only to enter inromation."
                                 get-yesorno $true "Continue"
@@ -327,12 +365,28 @@ $data= @"
                                     $global:IotcentralURL = $IotcentralURL
                                 }
                             }
-                            '3'{
-                                Write-host 'Doing Custom Template'
-                                get-yesorno $true "Continue"
-                                $answer = $global:retVal
-                                if ( $answer)
+                            '1'{
+                                $template = get-iotcentral-template
+
+                                If ([string]::IsNullOrEmpty($template ))
                                 {
+                                    break
+                                }
+                                elseif ($template -eq 'Back')
+                                {
+                                    break
+                                }
+                                
+                                write-host "Template '$template' chosen."
+                                $iotcentralname = get-name 'IoT Central App Name';
+                                $iotcentralname = $iotcentralname.ToLower()
+                                $guid1=new-guid
+                                $guid = $guid1.ToString()
+                                # $template ="iotc-pnp-preview"
+                                $subdomain="$IoTCentralName$guid"
+                                # $azquery += --display-name 'My Custom Display Name'
+
+
                                     # get-azsphereIOTCentral-custom $global:subscription $global:groupname $global:IoTCentralName
                                     # Need an SKU
                                     $skus = 'F1, S1, ST0, ST1, ST2'
@@ -373,26 +427,24 @@ $data= @"
                                     
                                 
 
-                                    $iotcentralname = get-name 'IoT Central App Name';
-                                    $iotcentralname = $iotcentralname.ToLower()
-                                    $guid1=new-guid
-                                    $guid = $guid1.ToString()
-                                    # $template ="iotc-pnp-preview"
-                                    $subdomain="$IoTCentralName$guid"
-                                    # $azquery += --display-name 'My Custom Display Name'
+                              
+
+
+
                                     write-host 'About to run:'
-                                    write-host "az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU "
+                                    write-host "az iot central app create --subscription $Subscription  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU " --template  $template
                                     get-yesorno $true "Continue"
                                     $answer = $global:retVal
                                     if ( $answer)
                                     {
                                         write-host 'Please wait'
-                                        az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU   #  --template  $template
-                                        $global:iotcentralname =$iotcentralname
-                                        $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'
-                                        $global:iotcentralURL=$iotcentralURL
+                                        az iot central app create --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU     --template  $template
+                                        $prompt =  'Done.'
+                                        write-host $prompt
+                                        get-anykey '' ' Continue.'
+                                        $Refresh=$true
                                     }
-                                }
+                                
                             }   
                             'B'{
 
@@ -410,13 +462,23 @@ $data= @"
                         }
                         $global:iotcentralname = $iotcentralname
                         $IotcentralURL=''
-                        $IotcentralURL = read-host "Enter the URL for the IoT Central. Default: $Iotcentralname.azureiotcentral.com"
+                        $guid1=new-guid
+                        $guid = $guid1.ToString()
+                        $IotcentralURL = read-host "Enter the URL for the IoT Central. Default: $Iotcentralname$guid.azureiotcentral.com"
                         $IotcentralURL = $IotcentralURL.Trim()
                         if([string]::IsNullOrEmpty($IotcentralURL ))
                         {
-                            $IotcentralURL= "$Iotcentralname.azureiotcentral.com"
+                            $IotcentralURL= "$Iotcentralname$guid.azureiotcentral.com"
                         }
                         $global:IotcentralURL = $IotcentralURL
+                    }   
+                'D' {  
+                    write-host 'Please wait'
+                    az iot central app delete --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName  
+                    $Refresh=$true
+                    $prompt =  'Done.'
+                    write-host $prompt
+                    get-anykey '' ' Continue.'
                     }   
                 'V' {
                         verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName   $global:IoTCentralURL               
@@ -429,6 +491,11 @@ $data= @"
                 'J' {
                         write-app_manifest $Idscope $DevURL $Tenant
                     }
+                'S' {
+                        $name = $global:IoTCentralName.Replace(' ','-')
+                        az iot central app show -n $global:IoTCentralName -g $global:groupname
+                        get-anykey
+                    }
 
             }
         }
@@ -436,3 +503,38 @@ $data= @"
 
     $global:retval = $answer
 }
+
+
+# SIG # Begin signature block
+# MIIFvQYJKoZIhvcNAQcCoIIFrjCCBaoCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUkTxHs4+h6KB6RwPc3vYvTPjA
+# LpKgggNLMIIDRzCCAi+gAwIBAgIQa6QCRzY4lrZG+RhikcTxrjANBgkqhkiG9w0B
+# AQsFADAnMSUwIwYDVQQDDBxkYXZpZGpvbmVzQHNwb3J0cm9uaWNzLmNvLmF1MB4X
+# DTIwMTExOTA3MTY1OVoXDTIxMTExOTA3MzY1OVowJzElMCMGA1UEAwwcZGF2aWRq
+# b25lc0BzcG9ydHJvbmljcy5jby5hdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+# AQoCggEBALuIy+cU+dHYEoYaO2h4ZzyBz344XEcL1jupJJsY/CE1XgqSEVTpFShx
+# DYOQbsuSh88Wto/7IYtVY+vqX4rn36pc1rYOLo3EK8kNIhkb3x21R078VnlWWg0D
+# Ok3xmuON/iK6FawNjJ7y7fppSqVNTEo2j8I5h51Pssn1PxS86aERWgElnN7jWB+B
+# wvwh4zULooQNf+a8/Yd0FlWo1ggM7+hmvUURYa6ueRy+G/LyWwhtWLy9BpitTWRP
+# wqjjHlc0/z1qrNc0M139tbszE/v57WCIbZahrZWdbSQvEBXSfqCtCbkLMgEVZ4QX
+# MQx017dkfoEKtwxc9AFgZ7IA3Mo4FwkCAwEAAaNvMG0wDgYDVR0PAQH/BAQDAgeA
+# MBMGA1UdJQQMMAoGCCsGAQUFBwMDMCcGA1UdEQQgMB6CHGRhdmlkam9uZXNAc3Bv
+# cnRyb25pY3MuY28uYXUwHQYDVR0OBBYEFG90a5e0b1NlWeK8Yq9ooDdhrv4aMA0G
+# CSqGSIb3DQEBCwUAA4IBAQBenA40fJVqvPdp2R+rTSRaB2iOENA+p99qsYsHp4Gl
+# hU49AHneB5Et9lEWd6UBZ+reYcNbitaD/A+4kPOArm6MVxmYL0oc9QKvc2T9z6YY
+# O47PKk4NkU3vH2SwygPHD8MlNgpJMO89/u7Sb08Xa5dALGo7VMcPiTNnMji45RMM
+# UOPcQBJkzoX6+17JM9Q16qtIZ4Wyl/fEpqqEfnhQsSi+5KpLxD7WNeA43BUx1edC
+# gl7PeNfiF4ARlYp4mZykQslg77l02HtRtnEVf74VkzhjBsAcvW60FWMgx2SGcPV1
+# zP4UwdFHVyJjXPx//42Zp6AgbCQBcgcl3fSRpxSsObm4MYIB3DCCAdgCAQEwOzAn
+# MSUwIwYDVQQDDBxkYXZpZGpvbmVzQHNwb3J0cm9uaWNzLmNvLmF1AhBrpAJHNjiW
+# tkb5GGKRxPGuMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAA
+# MBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgor
+# BgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBS3jG/lkOK8rVSVl7ypQUiB2HEqlDAN
+# BgkqhkiG9w0BAQEFAASCAQAoqSXwW9wyrhOI1XwrYRCEguFwh9BairYIx+c3iBMG
+# KQ2QOVeJWOuUK3TyLDZDBC0QgJhJNFEBWLgV+Kkz4JF18qQcxqxsTXL7tyYxqkpN
+# sfP4TVrcyzigjXQyNxpmdSTf51lpiZuoOmo1gp6Q6ZmmEf3TFjEVWmw7lqkJ0Sqq
+# 3IrVHtginwVFRfa0fU67MdcNzSPnzWvqSEEE3/5nvxCppW0rzIVg+/JpkUB2CMnH
+# IDCf4DCEiOBT362RiZs0y3QlKDIpmL0S86CYsKXhK5uu2RIHTu+eGU1SE/s4+Gzr
+# 5HZZyCKMj2o6MPYlODu6vm0Hfh446WQqaG1LZRU91bRu
+# SIG # End signature block

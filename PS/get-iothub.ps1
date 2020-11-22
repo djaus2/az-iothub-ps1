@@ -46,6 +46,7 @@ try {
     . ("$global:ScriptDirectory\resources\manage-appdata.ps1")
     . ("$global:ScriptDirectory\resources\res-setup.ps1")
     . ("$global:ScriptDirectory\resources\res-iot-central.ps1")
+    . ("$global:ScriptDirectory\resources\get-iotcentral-template.ps1")
 
 
     . ("$global:ScriptDirectory\new_delete\new-group.ps1")
