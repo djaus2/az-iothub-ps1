@@ -68,8 +68,10 @@ $data= @"
         "Name": "AzureSphereIoTCentral",
         "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
-        "CmdArgs": [ "$IDScope" ],
+        "CmdArgsAlt": [$IDScope],
+        "CmdArgs": ["--ConnectionType","DPS","--ScopeID","$IDScope"],
         "Capabilities": {
+          "GpioAlt": [ "$SAMPLE_BUTTON_1", "$SAMPLE_LED" ],
           "Gpio": [
             "$BUTTON_A",
             "$BUTTON_B",

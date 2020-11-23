@@ -278,7 +278,7 @@ $answer = ''
 $selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','B','UpArrow','DownArrow','Enter','X','R','S')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),IoT Central,Azure Sphere'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),IoT Central Samples,Azure Sphere'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName

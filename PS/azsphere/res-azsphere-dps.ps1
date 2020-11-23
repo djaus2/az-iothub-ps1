@@ -59,7 +59,8 @@ $data= @"
         "Name": "AzureIoT",
         "ComponentId": "819255ff-8640-41fd-aea7-f85d34c491d5",
         "EntryPoint": "/bin/app",
-        "CmdArgs": [ "$ComID" ],
+        "CmdArgsOld": [ "$ComID" ],
+        "CmdArgs": [ "--ConnectionType", "DPS", "--ScopeID", "$ComID" ],
         "Capabilities": {
           "AllowedConnections": [ "global.azure-devices-provisioning.net", "$HubName.azure-devices-provisioning.net" ],
           "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],

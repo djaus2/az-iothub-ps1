@@ -65,12 +65,14 @@ function create-azsphere{
         return
     }
 
+    # need to create temp if it doesn't exist
+    New-Item -ItemType Directory -Force -Path "$global:ScriptDirectory\temp"
 	$CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
     $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
     
     if ([string]::IsNullOrEmpty($DPSCertificateName))
     {
-        $answer = get-name 'DPS Cretificate'
+        $answer = get-name 'DPS Certificate .. Anything plausable will do.'
         if ($answer-eq 'Back')
         {
             write-Host 'Returning'
@@ -81,7 +83,12 @@ function create-azsphere{
     }
 
     write-host "Getting CACertificate from azsphere (Wait)"
-    azsphere tenant download-CA-certificate --output $CAcertificate
+    if (Test-Path $CAcertificate)
+    {
+        Remove-Item $CAcertificate
+    }
+    # Previous: azsphere tenant download-CA-certificate --output $CAcertificate
+    azsphere ca-certificate download  --output $CAcertificate
     write-host "Got CACertificate"
 
     write-host "Creating new DPS certificate (Wait):"
@@ -102,14 +109,20 @@ function create-azsphere{
     get-anykey "" "Continue"
 
     write-host "Downloading Validation Certificate"
-    azsphere tenant download-validation-certificate --output $ValidationCertificationCertificate --verificationcode $verificationcode
-
+    if (Test-Path $ValidationCertificationCertificate)
+    {
+        remove-item $ValidationCertificationCertificate
+    }
+    # Previous: azsphere tenant download-validation-certificate --output $ValidationCertificationCertificate --verificationcode $verificationcode
+    azsphere ca-certificate download-proof --output $ValidationCertificationCertificate --verificationcode $verificationcode
+    Set-Clipboard $ValidationCertificationCertificate 
     write-host ''
     write-host "Sorry but can't script next step yet, so you have to go to the Portal:" 
     write-host ''
     write-host "Uploading Validation Certificate:"  -BackgroundColor DarkRed  -ForegroundColor   Yellow
     write-host "Go to the Azure Portal.`n- Go to Device Provisioning Services.`n- Choose $DPSName.`n- Select Certificates.`n- Select $DPSCertificateName.`n     Ignore Verification Code...Done that."
-    write-host "- Upload the Validation Certificate: Click in last box at bottom 'Select a File' and browse to it."
+    write-host "- Upload the Validation Certificate: Click in last box at bottom"
+    write-host "  Paste it's path. (Its on the clipboard now.)"
     write-host "Then Verify the Certificate (Click on [Verify])." -BackgroundColor DarkRed  -ForegroundColor   Yellow
 
     write-host ''
