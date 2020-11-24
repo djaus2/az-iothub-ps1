@@ -81,6 +81,7 @@ $data= @"
       Add-Content -Path  $PsScriptFile   -Value $data
 }
 
+    $DPSCertificateName = $global:DPSCertificateName
 
     show-heading '  A Z U R E  S P H E R E  ' 3 'Connect Via IoT Hub' 
     $Prompt = '   Subscription :"' + $Subscription +'"'
@@ -92,6 +93,8 @@ $data= @"
     $Prompt = '    Current DPS :"' + $DPSName +'"'
     write-Host $Prompt
     $Prompt = ' Current Tenant :"' + $TenantName +'"'
+    write-Host $Prompt
+    $Prompt = ' DPSCertificateName :"' + $DPSCertificateName
     write-Host $Prompt
 
  
@@ -168,22 +171,24 @@ $data= @"
 
 
         show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS' 
-        $Prompt = '     Subscription :"' + $Subscription +'"'
+        $Prompt = '       Subscription :"' + $Subscription +'"'
         write-Host $Prompt
-        $Prompt = '            Group :"' + $GroupName +'"'
+        $Prompt = '              Group :"' + $GroupName +'"'
         write-Host $Prompt
-        $Prompt = '              Hub :"' + $HubName +'"'
+        $Prompt = '                Hub :"' + $HubName +'"'
         write-Host $Prompt
-        $Prompt = '              DPS :"' + $DPSName +'"'
+        $Prompt = '                DPS :"' + $DPSName +'"'
         write-Host $Prompt
-        write-host ' ------------------------------------ '
-        $Prompt = '      Tenant Name :"' + $TenantName +'"'
+        write-host ' -------------------------------------- '
+        $Prompt = '        Tenant Name :"' + $TenantName +'"'
         write-Host $Prompt
-        $Prompt = '           Tenant :"' + $Tenant +'"'
+        $Prompt = '             Tenant :"' + $Tenant +'"'
         write-Host $Prompt
-        $Prompt = '     DPS ID Scope :"' + $DPSIdScope +'"'
+        $Prompt = '       DPS ID Scope :"' + $DPSIdScope +'"'
         write-Host $Prompt
-        $Prompt = ' IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        $Prompt = '   IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        write-Host $Prompt
+        $Prompt = ' DPSCertificateName :"' + $DPSCertificateName
         write-Host $Prompt
 
         $options ='D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json'
@@ -214,10 +219,11 @@ $data= @"
             switch ($kk2)
             {
                 'C' {
-                        create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname 
+                        create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
                     }
                 'E' {
                         create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
+                        # az iot dps enrollment-group create  -g $global:groupname  --dps-name $global:dpsname --ca-name  $global:DPSCertificateName  --enrollment-id $GroupName
                     }
                 'D' {
                         show-heading '  A Z U R E  S P H E R E  '  3 'Connect Via IoT Hub and DPS - Get DPS ID Scope' 

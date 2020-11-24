@@ -81,6 +81,7 @@ function create-azsphere{
         }
         $DPSCertificateName = $answer
     }
+    $global:DPSCertificateName = $DPSCertificateName
 
     write-host "Getting CACertificate from azsphere (Wait)"
     if (Test-Path $CAcertificate)

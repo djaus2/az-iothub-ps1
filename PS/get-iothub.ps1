@@ -278,7 +278,7 @@ $answer = ''
 $selectionList =@('D1','D2','D3','D4','D5','D6','D7','D8','D9','A','B','UpArrow','DownArrow','Enter','X','R','S')
 
 # $selections = $selectionList -split ','
-$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),IoT Central Samples,Azure Sphere'
+$itemsList ='Subscription,Groups,IoT Hubs,Devices,DPS,Environment Variables,Quickstart Apps,Manage App Data,All in one. Get a New: (Group ... Hub in Group ... Device for Hub),Azure Sphere,IoT Central Samples'
 
 $Subscription = $global:Subscription
 $GroupName = $Global:GroupName
@@ -673,10 +673,10 @@ do
                         }
                     }
                 }
-            'A' { 
+            'B' { 
                 get-IOTCentral $Subscription $GroupName $HubName $DPSName $IoTCentralName
                 }
-            'B' { 
+            'A' { 
                 get-azsphere $Subscription $GroupName $HubName $DPSName $Tenant $TenantName
                 }
             R    { 
