@@ -164,6 +164,17 @@ function create-enrolmentgroup{
         }
         $EnrollmentGroupName = $answer
     }
+    if ([string]::IsNullOrEmpty($DPSCertificateName))
+    {
+        $answer = get-name 'DPS Certificate Name'
+        if ($answer-eq 'Back')
+        {
+            write-Host 'Returning'
+            $global:retVal = 'Back'
+            return
+        }
+        $DPSCertificateName = $answer
+    }
 
     write-host "`nCreating EnrollmentGroup (Wait)`n"
     az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName

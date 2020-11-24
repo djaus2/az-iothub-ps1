@@ -143,6 +143,7 @@ function create-enrolmentgroup{
             return
         }
         $DPSCertificateName = $answer
+        $global:DPSCertificateName = $DPSCertificateName
     }
 
     write-host "`nCreating EnrollmentGroup (Wait)`n"

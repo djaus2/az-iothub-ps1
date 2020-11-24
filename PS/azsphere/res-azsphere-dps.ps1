@@ -188,10 +188,10 @@ $data= @"
         write-Host $Prompt
         $Prompt = '   IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
         write-Host $Prompt
-        $Prompt = ' DPSCertificateName :"' + $DPSCertificateName
+        $Prompt = ' DPSCertificateName :"' + $DPSCertificateName +'"'
         write-Host $Prompt
 
-        $options ='D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json'
+        $options ='D. Get DPS ID Scope,S. Set DPS Certificate Name,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json,X. Clear DPS Certificate Name,R. Delete SPS Certificate'
 
         $options="$options,B. Back"
 
@@ -220,6 +220,33 @@ $data= @"
             {
                 'C' {
                         create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
+                    }
+                'S' {
+
+                        $answer = get-name 'DPS Certificate Name'
+                        if ($answer-eq 'Back')
+                        {
+
+                        }
+                        else
+                        {
+                        $DPSCertificateName = $answer
+                        $global:DPSCertificateName = $DPSCertificateName
+                        }
+                    
+                    }
+                'X' {
+                        If (-not([string]::IsNullOrEmpty($global:DPSCertificateName )))
+                        {
+                            $DPSCertificateName = ''
+                            $global:DPSCertificateName = $DPSCertificateName
+                        }
+                    }
+                'R' {
+                        write-host "To Do"
+                        write-host "Need to check it exists and get etag"
+                        write-host 'az iot dps certificate delete --dps-name $global:dpsname  --resource-group $global:groupname  --certificate-name $global:DPSCertificateName --etag AAAAAAAAAAA='
+                        get-anykey
                     }
                 'E' {
                         create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
