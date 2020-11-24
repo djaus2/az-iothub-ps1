@@ -191,13 +191,14 @@ $data= @"
         $Prompt = ' DPSCertificateName :"' + $DPSCertificateName +'"'
         write-Host $Prompt
 
-        $options ='D. Get DPS ID Scope,S. Set DPS Certificate Name,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json,X. Clear DPS Certificate Name,R. Delete SPS Certificate'
+        $options ="D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json"
+        $options +=",M. Misc Actions: ==========="
+        $options +=",L. List and select one of the DPS's Certificates,N. Set DPS Certificate Name,S. Show Certifcate,X. Clear DPS Certificate Name,R. Delete DPS Certificate"
 
         $options="$options,B. Back"
 
-        parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current $true
+        $answer = parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  D P S  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current $true
         $answer= $global:retVal
-	    write-host $answer
 
         If ([string]::IsNullOrEmpty($answer)) 
         {
@@ -221,7 +222,7 @@ $data= @"
                 'C' {
                         create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
                     }
-                'S' {
+                'N' {
 
                         $answer = get-name 'DPS Certificate Name'
                         if ($answer-eq 'Back')
@@ -230,11 +231,61 @@ $data= @"
                         }
                         else
                         {
-                        $DPSCertificateName = $answer
-                        $global:DPSCertificateName = $DPSCertificateName
+                            $DPSCertificateName = $answer
+                            $global:DPSCertificateName = $DPSCertificateName
                         }
                     
                     }
+                'L' { 
+                        write-host "Please wait. Getting Certificates."
+                        $x = az iot dps certificate list --dps-name $global:dpsname  --resource-group $global:groupname -o json | ConvertFrom-Json
+                        $n = $x.value.length
+                        if ($n -ne 0)
+                        {
+                            # $z = $x.value | Select name
+                            $list =''
+                            foreach ($v in $x.value)
+                            {
+                                $name = $v.name
+                                $list += $name + ','
+                            }
+                            $res = choose-selection $list '  A Z U R E  S P H E R E  DPS Certificates  ' $DPSCertificateName
+                            $res = $global:retVal
+                            If (-not ([string]::IsNullOrEmpty($res )))
+                            {
+                                if (-not ($res -eq 'Back'))
+                                {
+                                    $DPSCertificateName= $res
+                                    $global:DPSCertificateName = $DPSCertificateName
+                                }
+                                else {
+                                    write-host "No certificate selected 2."
+                                    get-anykey
+                                }
+                            }
+                            else {
+                                write-host "No certificate selected 1."
+                                get-anykey
+                            }
+                        }
+                        else {
+                            write-host "No certificates."
+                            get-anykey
+                        }
+                    }
+                'S' {
+                    If (-not ([string]::IsNullOrEmpty($global:DPSCertificateName )))
+                    {
+                        write-host "Please wait. Getting certificate info."
+                        az iot dps certificate show --dps-name $global:dpsname --resource-group $global:groupname --certificate-name $global:DPSCertificateName -o jsonc
+                        get-anykey
+                    }
+                    else 
+                    {
+                        write-host "No DPS Certicate name."
+                        get-anykey
+                    }
+                }
                 'X' {
                         If (-not([string]::IsNullOrEmpty($global:DPSCertificateName )))
                         {
@@ -243,10 +294,43 @@ $data= @"
                         }
                     }
                 'R' {
-                        write-host "To Do"
-                        write-host "Need to check it exists and get etag"
-                        write-host 'az iot dps certificate delete --dps-name $global:dpsname  --resource-group $global:groupname  --certificate-name $global:DPSCertificateName --etag AAAAAAAAAAA='
-                        get-anykey
+                        If (-not ([string]::IsNullOrEmpty($global:DPSCertificateName )))
+                        {
+                            write-host "Please wait. Getting certificate info."
+                            $cert = az iot dps certificate show --dps-name $global:dpsname --resource-group $global:groupname --certificate-name $global:DPSCertificateName -o tsv | Out-String
+                            If (-not ([string]::IsNullOrEmpty($cert )))
+                            {
+                                $infos =   $cert -split '\t'
+                                if ($infos.Length -gt 0)
+                                {
+                                    $etag = $infos[0]
+                                    If (-not([string]::IsNullOrEmpty($etag )))
+                                    {                                
+                                        write-Host "etag: " + $etag
+                                        # write-host "az iot dps certificate delete --dps-name $global:dpsname  --resource-group $global:groupname  --certificate-name $global:DPSCertificateName --etag $etag"
+                                        # get-anykey
+                                        write-host "Please wait. Deleting certifcate"
+                                        az iot dps certificate delete --dps-name $global:dpsname  --resource-group $global:groupname  --certificate-name $global:DPSCertificateName --etag $etag
+                                        $DPSCertificateName = ''
+                                        $global:DPSCertificateName = $DPSCertificateName
+                                        get-anykey 'Done' 'Press any key to continue'
+                                    }
+                                    else {
+                                        write-host "Certificate etag not found."
+                                        get-anykey
+                                    }
+                                }
+                                else {
+                                    write-host "Certificate not found."
+                                    get-anykey
+                                }
+                            }
+                        }
+                        else 
+                        {
+                            write-host "No DPS Certicate name."
+                            get-anykey
+                        }
                     }
                 'E' {
                         create-enrolmentgroup $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName

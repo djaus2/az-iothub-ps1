@@ -117,6 +117,7 @@ function create-azsphere{
     # Previous: azsphere tenant download-validation-certificate --output $ValidationCertificationCertificate --verificationcode $verificationcode
     azsphere ca-certificate download-proof --output $ValidationCertificationCertificate --verificationcode $verificationcode
     Set-Clipboard $ValidationCertificationCertificate 
+    <#
     write-host ''
     write-host "Sorry but can't script next step yet, so you have to go to the Portal:" 
     write-host ''
@@ -130,6 +131,23 @@ function create-azsphere{
     get-anykey "" "Continue when you have done that"
     Write-Host 'Select Create Enrolment Group next.'
     get-anykey '' 'Continue'
+    #>
+    # Can now script the next bit:
+
+    write-host "Please wait. Getting certificate etag."
+    $cert = az iot dps certificate show --dps-name $global:dpsname --resource-group $global:groupname --certificate-name $global:DPSCertificateName -o tsv | Out-String
+                            If (-not ([string]::IsNullOrEmpty($cert )))
+                            {
+                                $infos =   $cert -split '\t'
+                                if ($infos.Length -gt 0)
+                                {
+                                    $etag = $infos[0]
+                                    write-host "Please wait. Verifying certificate."
+    az iot dps certificate verify --dps-name $global:dpsname --resource-group $global:groupname --certificate-name $global:DPSCertificateName --path $ValidationCertificationCertificate  --etag $etag
+                                }
+                            }
+                            write-host "Done."
+                            get-anykey
     if (Test-Path $CAcertificate)
     {
         Remove-Item $CAcertificate
