@@ -62,7 +62,7 @@ $data= @"
         "CmdArgsOld": [ "$ComID" ],
         "CmdArgs": [ "--ConnectionType", "DPS", "--ScopeID", "$ComID" ],
         "Capabilities": {
-          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$HubName.azure-devices-provisioning.net" ],
+          "AllowedConnections": [ "global.azure-devices-provisioning.net", "$HubName.azure-devices.net" ],
           "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],
           "DeviceAuthentication": "$Tenant"
         },
@@ -186,7 +186,7 @@ $data= @"
         write-Host $Prompt
         $Prompt = '       DPS ID Scope :"' + $DPSIdScope +'"'
         write-Host $Prompt
-        $Prompt = '   IoT Hub DNS Name :"' + $HubName + '.azure-devices-provisioning.net"'
+        $Prompt = '   IoT Hub DNS Name :"' + $HubName + '.azure-devices.net'
         write-Host $Prompt
         $Prompt = ' DPSCertificateName :"' + $DPSCertificateName +'"'
         write-Host $Prompt
