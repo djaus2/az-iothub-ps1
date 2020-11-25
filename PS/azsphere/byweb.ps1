@@ -1,6 +1,6 @@
 # Authentication
 $webclient = New-Object System.Net.WebClient
-$creds = New-Object System.Net.NetworkCredential("davidjonesd@sportronics.com.au","Amyliz2020sp");
+$creds = New-Object System.Net.NetworkCredential("login","pwd");
 $webclient.Credentials = $creds
 
 # Data prep
