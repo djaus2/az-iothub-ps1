@@ -220,7 +220,7 @@ $data= @"
             switch ($kk2)
             {
                 'C' {
-                        create-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
+                        verify-tenant-azsphere $global:subscription $global:groupname $global:hubname $global:dpsname $global:DPSCertificateName
                     }
                 'N' {
 

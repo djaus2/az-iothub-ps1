@@ -1,4 +1,4 @@
-function create-azsphere{
+function verify-tenant-azsphere {
     param (
         [string]$Subscription = '' ,
         [string]$GroupName = '' ,
@@ -40,7 +40,7 @@ function create-azsphere{
     elseIf ([string]::IsNullOrEmpty($HubName ))
     {
         write-Host ''
-        $prompt = 'Need to select a Group first.'
+        $prompt = 'Need to select a Hub first.'
         write-host $prompt
         get-anykey 
         $global:retVal =  'Back'
@@ -65,13 +65,10 @@ function create-azsphere{
         return
     }
 
-    # need to create temp if it doesn't exist
-    New-Item -ItemType Directory -Force -Path "$global:ScriptDirectory\temp"
-	$CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
-    $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
-    
     if ([string]::IsNullOrEmpty($DPSCertificateName))
     {
+        $DPSCertificateName = 'DPSCertificateforIoTHubValidation'
+        @"
         $answer = get-name 'DPS Certificate .. Anything plausable will do.'
         if ($answer-eq 'Back')
         {
@@ -80,23 +77,55 @@ function create-azsphere{
             return
         }
         $DPSCertificateName = $answer
+"@      | Out-Null
     }
     $global:DPSCertificateName = $DPSCertificateName
+    # need to create temp if it doesn't exist
+    if (-not (Test-Path "$global:ScriptDirectory\temp"))
+    {
+        New-Item -ItemType Directory -Force -Path "$global:ScriptDirectory\temp"
+    }
+    
+    $CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
+    $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
 
     write-host "Getting CACertificate from azsphere (Wait)"
     if (Test-Path $CAcertificate)
     {
-        Remove-Item $CAcertificate
+    	write-host "You have a previously obtained a Certificate"
+        get-yesorno $false "Use that? [Y]es [N]o"
+        if (-not $global:retVal)
+        {        
+            Remove-Item $CAcertificate
+        }
     }
-    # Previous: azsphere tenant download-CA-certificate --output $CAcertificate
-    azsphere ca-certificate download  --output $CAcertificate
-    write-host "Got CACertificate"
-
+    if (-not ( Test-Path $CAcertificate))
+    {
+        # Previous: azsphere tenant download-CA-certificate --output $CAcertificate
+        azsphere ca-certificate download  --output $CAcertificate
+        write-host "Got CACertificate"
+    }
+    write-host "Please wait. Checking if DPS Certificate exists. "
+    $certs = az iot dps certificate list --dps-name $DPSName --resource-group $GroupName | convertfrom-json
+    if ($certs.value.length -ne 0){
+        $cert = $certs.value | where-object{$PSItem.name -eq $DPSCertificateName}
+        If ($null -ne $cert )
+        {
+            write-host "Please wait. Certificate exists. Deleting it"
+            $etag = $cert.etag
+            az iot dps certificate delete --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName --etag $etag
+            write-host "Done that."
+        }
+    }
+    if (Test-Path $ValidationCertificationCertificate)
+    {
+        remove-item $ValidationCertificationCertificate
+    }
     write-host "Creating new DPS certificate (Wait):"
     $cert = az iot dps certificate create --subscription "$subscription" --dps-name $DPSName --resource-group $GroupName --name $DPSCertificateName --path $CAcertificate -o tsv | Out-String
     write-host "Created DPS Certificate:"
     write-host $cert 
-    $items= $gh=$cert -split '\t'
+    $items= $cert -split '\t'
     $etag = $items[0].Trim()
     write-host "etag: $etag"
     get-anykey "" "Continue"
@@ -150,7 +179,11 @@ function create-azsphere{
                             get-anykey
     if (Test-Path $CAcertificate)
     {
-        Remove-Item $CAcertificate
+        get-yesorno $true "Delete the CACertificate from azsphere? [Y]es [N]o"
+        if ($global:retVal)
+        {
+            Remove-Item $CAcertificate
+        }
     }
     if (Test-Path $ValidationCertificationCertificate)
     {

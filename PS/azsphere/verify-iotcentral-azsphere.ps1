@@ -35,9 +35,7 @@ function verify-tenant-iotcentral{
         $global:retVal =  'Back'
         return
     }
-
-
-    If ([string]::IsNullOrEmpty($IOtCentralName ))
+    elseIf ([string]::IsNullOrEmpty($IOtCentralName ))
     {
         write-Host ''
         $prompt = 'Need to select your IoT Central Name.'
@@ -72,14 +70,20 @@ function verify-tenant-iotcentral{
     start-process  $url
     get-anykey '' 'Continue'
     show-image 'iot-central-new-3.png' 'Open Verify' ''
-
-	$CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
-    $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
-    
-
-
     write-host "Doing 1. Getting CACertificate from azsphere (Wait)"
-    azsphere tenant download-CA-certificate --output $CAcertificate
+
+    # need to create temp if it doesn't exist
+    New-Item -ItemType Directory -Force -Path "$global:ScriptDirectory\temp"
+    $CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
+    $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
+        
+   write-host "Getting CACertificate from azsphere (Wait)"
+    if (Test-Path $CAcertificate)
+    {
+        Remove-Item $CAcertificate
+    }
+    # Previous azsphere tenant download-CA-certificate --output $CAcertificate
+    azsphere ca-certificate download  --output $CAcertificate
     write-host "Got CACertificate"
     set-clipboard $CAcertificate
     write-host ''

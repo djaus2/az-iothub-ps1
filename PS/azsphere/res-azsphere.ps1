@@ -101,7 +101,7 @@ param (
         write-host ''
 
         #$options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Get Tenant,S. Select Tenant,S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
-        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenat,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central,S. Setup Azsphere SDK (Setup Menu)'
+        $options ='A. Enter Azure Sphere Developer Command Prompt (PS Version),L. Login to Azure Sphere,T. Tenant,W. WiFi,U. Update,D. App Dev settings,H. Connect via IoT Hub,C. Connect Via IoT Central,S. Setup Azsphere SDK (Setup Menu)'
         
         # -S. Existing app sideload delete,R. Restart Device,D. Enable Debugging,W. Wifi,O. Check OS Version,T. Trigger Update, U. Check Update Status'
 
