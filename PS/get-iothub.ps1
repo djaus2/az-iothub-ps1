@@ -68,6 +68,9 @@ try {
     . ("$global:ScriptDirectory\azsphere\res-azsphere-iot-central-custom.ps1")
     . ("$global:ScriptDirectory\azsphere\show-image.ps1")
     . ("$global:ScriptDirectory\azsphere\whitelist-app-enpoint.ps1")
+    . ("$global:ScriptDirectory\azsphere\res-azsphere-dps-manage-certs.ps1")
+    . ("$global:ScriptDirectory\azsphere\res-azsphere-dps-manage-enrollments.ps1")
+    
     
     . ("$global:ScriptDirectory\resources\show-splashscreen.ps1")
 }

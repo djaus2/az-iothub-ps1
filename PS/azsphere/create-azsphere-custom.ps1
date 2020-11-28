@@ -132,6 +132,7 @@ function create-enrolmentgroup{
             return
         }
         $EnrollmentGroupName = $answer
+        $global:EnrollmentGroupName = $answer
     }
     if ([string]::IsNullOrEmpty($DPSCertificateName))
     {

@@ -49,7 +49,7 @@ function verify-tenant-azsphere {
     elseIf ([string]::IsNullOrEmpty($DPSName ))
     {
         write-Host ''
-        $prompt = 'Need to select a Group first.'
+        $prompt = 'Need to select a DPS first.'
         write-host $prompt
         get-anykey 
         $global:retVal =  'Back'
@@ -68,16 +68,6 @@ function verify-tenant-azsphere {
     if ([string]::IsNullOrEmpty($DPSCertificateName))
     {
         $DPSCertificateName = 'DPSCertificateforIoTHubValidation'
-        @"
-        $answer = get-name 'DPS Certificate .. Anything plausable will do.'
-        if ($answer-eq 'Back')
-        {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-            return
-        }
-        $DPSCertificateName = $answer
-"@      | Out-Null
     }
     $global:DPSCertificateName = $DPSCertificateName
     # need to create temp if it doesn't exist
@@ -203,7 +193,14 @@ function create-enrolmentgroup{
     )
 
 
-    show-heading '  D P S  '  4  'Create new Enrolment Group'
+    show-heading ' A Z U R E   D P S  '  4  'Create new Enrolment Group'
+    if ([string]::IsNullOrEmpty($DPSCertificateName))
+    {
+        $prompt = "No DPS Certificate selected."
+        write-host $prompt
+        $global:retVal = 'Back'
+    }
+
     if ([string]::IsNullOrEmpty($EnrollmentGroupName))
     {
         $answer = get-name 'DPS Enrollment Group Name'
@@ -214,18 +211,9 @@ function create-enrolmentgroup{
             return
         }
         $EnrollmentGroupName = $answer
+        $global:EnrollmentGroupName =$answer
     }
-    if ([string]::IsNullOrEmpty($DPSCertificateName))
-    {
-        $answer = get-name 'DPS Certificate Name'
-        if ($answer-eq 'Back')
-        {
-            write-Host 'Returning'
-            $global:retVal = 'Back'
-            return
-        }
-        $DPSCertificateName = $answer
-    }
+
 
     write-host "`nCreating EnrollmentGroup (Wait)`n"
     az iot dps enrollment-group create -g $GroupName --dps-name $DPSName --enrollment-id $EnrollmentGroupName --ca-name $DPSCertificateName
