@@ -216,7 +216,6 @@ $data= @"
         }
         $options="$options,B. Back"
 
-
         If ([string]::IsNullOrEmpty($centralappS ))
         {
             write-Host ''
@@ -226,6 +225,11 @@ $data= @"
         }
         $val = parse-list $centralappS   '   A Z U R E  I o T  C E N T R A L  A P P '  $options 5 5 1  30 $Iotcentralname $true
         
+        if ($centralappS -eq 'EMPTY')
+        {
+            $centralappS=''
+        }
+
         $answer= $global:retVal 
         $Refresh =$false
 
@@ -385,8 +389,6 @@ $data= @"
                                 # $template ="iotc-pnp-preview"
                                 $subdomain="$IoTCentralName$guid"
                                 # $azquery += --display-name 'My Custom Display Name'
-
-
                                     # get-azsphereIOTCentral-custom $global:subscription $global:groupname $global:IoTCentralName
                                     # Need an SKU
                                     $skus = 'F1, S1, ST0, ST1, ST2'
@@ -424,12 +426,6 @@ $data= @"
                                     }
                             
                                     $location = $answer
-                                    
-                                
-
-                              
-
-
 
                                     write-host 'About to run:'
                                     write-host "az iot central app create --subscription $Subscription  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU " --template  $template
@@ -444,7 +440,9 @@ $data= @"
                                         get-anykey '' ' Continue.'
                                         $Refresh=$true
                                     }
-                                
+                                    $global:iotcentralname =$iotcentralname
+                                    $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'
+                                    $global:iotcentralURL=$iotcentralURL
                             }   
                             'B'{
 

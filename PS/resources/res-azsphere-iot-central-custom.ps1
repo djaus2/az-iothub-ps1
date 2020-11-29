@@ -179,8 +179,9 @@ $data= @"
         $options ='C. Create Custom IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json'
 
         $options="$options,B. Back"
-
+        get-anykey
         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22  $Current
+        get-anykey
         $answer= $global:retVal
 	    write-host $answer
 

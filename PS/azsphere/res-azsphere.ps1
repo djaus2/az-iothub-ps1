@@ -108,6 +108,7 @@ param (
         $options="$options,B. Back"
 
         parse-shortlist 'EMPTY'   '   A Z U R E  S P H E R E  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Current $true
+        
         $answer= $global:retVal
 
         If ([string]::IsNullOrEmpty($answer)) 

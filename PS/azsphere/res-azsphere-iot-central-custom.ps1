@@ -240,6 +240,29 @@ $data= @"
                 'C' {
                         
                         #Need an SKU
+                        $template = get-iotcentral-template
+
+                        If ([string]::IsNullOrEmpty($template ))
+                        {
+                            break
+                        }
+                        elseif ($template -eq 'Back')
+                        {
+                            break
+                        }
+                        
+                        write-host "Template '$template' chosen."
+                        $iotcentralname = get-name 'IoT Central App Name';
+                        $iotcentralname = $iotcentralname.ToLower()
+                        $guid1=new-guid
+                        $guid = $guid1.ToString()
+                        # $template ="iotc-pnp-preview"
+                        $subdomain="$IoTCentralName$guid"
+                        # $azquery += --display-name 'My Custom Display Name'
+
+
+                            # get-azsphereIOTCentral-custom $global:subscription $global:groupname $global:IoTCentralName
+                            # Need an SKU
                         $skus = 'F1, S1, ST0, ST1, ST2'
                    
                         $answer = choose-selection $skus 'SKU' 'S1'
@@ -278,16 +301,19 @@ $data= @"
                         
                        
 
-                        $iotcentralname = get-name 'IoT Central App Name';
-                        $iotcentralname = $iotcentralname.ToLower()
-                        $guid1=new-guid
-                        $guid = $guid1.ToString()
-                        $template ="iotc-pnp-preview"
-                        $subdomain="$IoTCentralName$guid"
-                        # $azquery += --display-name 'My Custom Display Name'
-                        "az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU    --template  $template                        "
-                        az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU    --template  $template
-
+                        write-host 'About to run:'
+                        write-host "az iot central app create --subscription $Subscription  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU " --template  $template
+                        get-yesorno $true "Continue"
+                        $answer = $global:retVal
+                        if ( $answer)
+                        {
+                            write-host 'Please wait'
+                            az iot central app create --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU     --template  $template
+                            $prompt =  'Done.'
+                            write-host $prompt
+                            get-anykey '' ' Continue.'
+                            $Refresh=$true
+                        }
 
                         $global:iotcentralname =$iotcentralname
                         $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'

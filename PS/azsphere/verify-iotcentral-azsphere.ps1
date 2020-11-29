@@ -66,24 +66,40 @@ function verify-tenant-iotcentral{
     write-host ''
     write-host "About to open $url"
     write-host 'Please return here when its open'
+    write-hots 'If app there is just starting, and you get an error messgae, try a page refresh in the browser.'
     get-anykey '' 'Open it'
     start-process  $url
     get-anykey '' 'Continue'
     show-image 'iot-central-new-3.png' 'Open Verify' ''
     write-host "Doing 1. Getting CACertificate from azsphere (Wait)"
 
+    if (-not (Test-Path "$global:ScriptDirectory\temp"))
+    {
+        New-Item -ItemType Directory -Force -Path "$global:ScriptDirectory\temp"
+    }
+
     # need to create temp if it doesn't exist
     New-Item -ItemType Directory -Force -Path "$global:ScriptDirectory\temp"
     $CAcertificate="$global:ScriptDirectory\temp\CAcertificateTemp.cer"
     $ValidationCertificationCertificate="$global:ScriptDirectory\temp\ValidationCertificationTemp.cer"
         
-   write-host "Getting CACertificate from azsphere (Wait)"
+    write-host "Getting CACertificate from azsphere (Wait)"
     if (Test-Path $CAcertificate)
     {
-        Remove-Item $CAcertificate
+    	write-host "You have a previously obtained a Certificate"
+        get-yesorno $false "Use that? [Y]es [N]o"
+        if (-not $global:retVal)
+        {        
+            Remove-Item $CAcertificate
+        }
     }
-    # Previous azsphere tenant download-CA-certificate --output $CAcertificate
-    azsphere ca-certificate download  --output $CAcertificate
+    if (-not ( Test-Path $CAcertificate))
+    {
+        # Previous: azsphere tenant download-CA-certificate --output $CAcertificate
+        azsphere ca-certificate download  --output $CAcertificate
+        write-host "Got CACertificate"
+    }
+
     write-host "Got CACertificate"
     set-clipboard $CAcertificate
     write-host ''

@@ -11,7 +11,7 @@ param (
 )
 
 $IoTCentralName = $global:IoTCentralName
-$IoTcentralURL= $global:IoTCentralName
+$IoTcentralURL= $global:IoTCentralURL
 $IDScope = $global:IDScope
 $DevURL=$global:DevURL
 
@@ -174,7 +174,7 @@ $data= @"
 
     $DPSStrnIndex =1
     $DPSStrnDataIndex =3
-
+    $Refresh=$false
 
     do{
 
@@ -184,6 +184,7 @@ $data= @"
         $DevURL=$global:DevURL
         $Iotcentralname=$global:Iotcentralname
         $IotcentralURL=$global:IotcentralURL
+
 
         if ($Refresh){
             write-host "Please wait: Getting IOT Centrals apps for Group $Groupname from Azure."
@@ -209,15 +210,25 @@ $data= @"
         $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
         write-Host $Prompt
 
-        $options ='C. Create IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json'
+        $options ='C. Create IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json,R. Refresh App List'
 
         $options="$options,B. Back"
 
+        If ([string]::IsNullOrEmpty($centralappS ))
+        {
+            write-Host ''
+            $prompt =  'No IoTCentral Apps.'
+            write-host $prompt
+            $centralappS='EMPTY'
+        }
+        $res = parse-shortlist $centralappS   '   A Z U R E  S P H E R E IoT Central App  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Iotcentralname $true
+        if ($centralappS -eq 'EMPTY')
+        {
+            $centralappS=''
+        }
         
-
-        parse-shortlist $centralappS   '   A Z U R E  S P H E R E IoT Central App  '  $options $DPSStrnIndex $DPSStrnIndex 2  22 $Iotcentralname $true
         $answer= $global:retVal
-	    read-host $answer
+	    
         $Refresh=$false
         If ([string]::IsNullOrEmpty($answer)) 
         {
@@ -233,9 +244,23 @@ $data= @"
             write-Host 'Error'
         }
         elseif ($global:kk -lt '9'){
-            
-            $Iotcentralname =$asnswer
-            $IotcentralURL =$answer
+            $Iotcentralname =$answer
+            write-host "Please wait. Getting info for $Iotcentralname from Azure"
+            $info = az iot central app show --name $Iotcentralname --resource-group $GroupName |  ConvertFrom-Json
+            write-host 'App Info:'
+            write-host $info.displayName
+            write-host $info.applicationId
+            write-host $info.etag
+            write-host $info.resourceGroup
+            write-host $info.name
+            write-host $info.subdomain
+            write-host $info.template
+            write-host $info.location
+            write-host $info.sku
+            get-anykey
+            $IDScope =$info.applicationId
+            $IotcentralURL =$info.subdomain + '.azureiotcentral.com'
+            $global:IDScope = $IDScope
             $global:Iotcentralname = $Iotcentralname
             $global:IotcentralURL = $IotcentralURL
         }
@@ -246,7 +271,7 @@ $data= @"
             switch ($kk2)
             {
 
-
+                'R' { $Refresh=$true}
                 'C' {
 
                         do { 
@@ -268,69 +293,94 @@ $data= @"
                             $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
                             write-Host $Prompt
                             $done=$true;
-                            $menu='How ro create IoT Central app in browser,Create in browser,Create using Custom Template,Open Azure Sphere Developer Learning Path Tutorial in browser,Create using Azure Sphere Developer Learning Path'
+                            $menu='Create using Custom Template,Create in browser'
+                            # Open Azure Sphere Developer Learning Path Tutorial in browser,Create using Azure Sphere Developer Learning Path'
                             $res = choose-selection $menu 'Select between' 
                             
                             switch ($global:retVal2 ){
-                            '1'{
-                                write-host 'Just follow the steps on the first page to create a Custom app inteh Build Portal.'
-                                write-host 'Return here when done to enter the required information.'
-                                write-host 'Menu option 2. will take you directly to Build Portal, in future.'
-                                get-yesorno $true "Continue"
-                                $answer = $global:retVal
-                                if ( $answer){
-                                    $url = "https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central"
-                                    start-process $url  
-                                    get-anykey
-
-                                    $name = read-host "Enter IoT Central app name. Default: $IoTCentralName"
-                                    if(-not([string]::IsNullOrEmpty($name )))
-                                    {
-                                        $IotcentralName= $name.Trim()
-                                    }
-                                    $global:iotcentralname = $iotcentralname
-                                    $IotcentralURL=''
-                                    $IotcentralURL = read-host "Enter the URL for the IoT Central. Default: $Iotcentralname.azureiotcentral.com"
-                                    $IotcentralURL = $IotcentralURL.Trim()
-                                    if([string]::IsNullOrEmpty($IotcentralURL ))
-                                    {
-                                        $IotcentralURL= "$Iotcentralname.azureiotcentral.com"
-                                    }
-                                    $global:IotcentralURL = $IotcentralURL
-                                }
-                            }
                             '2'{
+                                $apps=$null
+                                $apps = Get-Content "$global:ScriptDirectory\iotcentralappz.json" | ConvertFrom-Json
+                                $appnames=''
+                                foreach ($x in $apps)
+                                {
+                                    $appnames += $x.displayname +','
+                                }
+                                $res = choose-selection $appnames  'Select the IoTCetralapp to create.'
+                                if ($res -eq 'Back')
+                                {
+                                    break
+                                }
+                                $name = $apps[$global:retValNum-1].displayname
+                                $url = $apps[$global:retValNum-1].url
+                                write-host ''
+                                write-host "App:$name  Url:$url"
+                                write-host "Nb: You can add more apps to PS\iotcentralapps.json"
                                 write-host "Taking you to the Build Portal"
-                                write-host "Return here when you have created the app, only to enter inromation."
+                                write-host "============="
+                                write-host "Nb: Apps created in the Portal belong to the group IOTC"
+                                write-host ''
+                                $GroupName ='IOTC'
+                                $HubName =''
+                                $DPSName =''
+                                $Device=''
+                                $global:GroupName ='IOTC'
+                                $global:HubName =''
+                                $global:DPSName =''
+                                $global:Device=''
+                                write-host "Return here when you have created the app, to get app information."
                                 get-yesorno $true "Continue"
                                 $answer = $global:retVal
                                 if ($answer){
-                                    $url = "https://apps.azureiotcentral.com/build"
                                     start-process $url
                                     get-anykey       
-                                    $name = read-host "Enter IoT Central app name. Default: $IoTCentralName"
+                                    $name = read-host "Enter IoT Central app Dashboard Url."
                                     if(-not([string]::IsNullOrEmpty($name )))
                                     {
-                                        $IotcentralName= $name.Trim()
+                                        $name= $name.Trim()
                                     }
+                                    $name=$name.replace("/dashboards/urn:homepageView:els1mecc", "")
+                                    $name=$name.replace("https://","")
+                                    $name=$name.replace(".azureiotcentral.com","")
+                                    $iotcentralname =$name
                                     $global:iotcentralname = $iotcentralname
-                                    $IotcentralURL=''
-                                    $IotcentralURL = read-host "Enter the URL for the IoT Central. Default: $Iotcentralname.azureiotcentral.com"
-                                    $IotcentralURL = $IotcentralURL.Trim()
-                                    if([string]::IsNullOrEmpty($IotcentralURL ))
-                                    {
-                                        $IotcentralURL= "$Iotcentralname.azureiotcentral.com"
-                                    }
+                                    write-host "Please wait. Getting info for $Iotcentralname from Azure"
+                                    $info = az iot central app show --name $Iotcentralname --resource-group $GroupName |  ConvertFrom-Json
+                                    write-host 'App Info:'
+                                    write-host $info.displayName
+                                    write-host $info.applicationId
+                                    write-host $info.etag
+                                    write-host $info.resourceGroup
+                                    write-host "====="
+                                    write-host $info.name
+                                    write-host $info.subdomain
+                                    write-host $info.template
+                                    write-host $info.location
+                                    write-host $info.sku
+                                    get-anykey
+                                    $IDScope =$info.applicationId
+                                    $IotcentralURL =$info.subdomain + '.azureiotcentral.com'
+                                    $global:IDScope = $IDScope
+                                    $global:Iotcentralname = $Iotcentralname
                                     $global:IotcentralURL = $IotcentralURL
                                 }
                             }
-                            '3'{
-                                Write-host 'Doing Custom Template'
+                            '1'{
+                                $template = 'iotc-pnp-preview'
+                                Write-host 'Doing Custom Template xx'
                                 get-yesorno $true "Continue"
                                 $answer = $global:retVal
                                 if ( $answer)
                                 {
-                                    # get-azsphereIOTCentral-custom $global:subscription $global:groupname $global:IoTCentralName
+                                    write-host "Template '$template' chosen."
+                                    $iotcentralname = get-name 'IoT Central App Name';
+                                    $iotcentralname = $iotcentralname.ToLower()
+                                    $guid1=new-guid
+                                    $guid = $guid1.ToString()
+                                    # $template ="iotc-pnp-preview"
+                                    $subdomain="$IoTCentralName$guid"
+                                    # $azquery += --display-name 'My Custom Display Name'
+                                        # get-azsphereIOTCentral-custom $global:subscription $global:groupname $global:IoTCentralName
                                     # Need an SKU
                                     $skus = 'F1, S1, ST0, ST1, ST2'
                             
@@ -367,41 +417,43 @@ $data= @"
                                     }
                             
                                     $location = $answer
-                                    
-                                
 
-                                    $iotcentralname = get-name 'IoT Central App Name';
-                                    $iotcentralname = $iotcentralname.ToLower()
-                                    $guid1=new-guid
-                                    $guid = $guid1.ToString()
-                                    $template ="iotc-pnp-preview"
-                                    $subdomain="$IoTCentralName$guid"
-                                    # $azquery += --display-name 'My Custom Display Name'
-                                    "az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU    --template  $template                        "
-                                    az iot central app create  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU    --template  $template
-
-
-                                    $global:iotcentralname =$iotcentralname
-                                    $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'
-                                    $global:iotcentralURL=$iotcentralURL
+                                    write-host 'About to run:'
+                                    write-host "az iot central app create --subscription $Subscription  --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain   --location $location  --sku $SKU " --template  $template
+                                    get-yesorno $true "Continue"
+                                    $answer = $global:retVal
+                                    if ( $answer)
+                                    {
+                                        write-host 'Please wait'
+                                        az iot central app create --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName --subdomain $subdomain  --location $location  --sku $SKU     --template  $template
+                                        $prompt =  'Done.'
+                                        write-host $prompt
+                                        $Refresh=$true
+                                        write-host "Please wait. Getting info for $Iotcentralname from Azure"
+                                        $info = az iot central app show --name $Iotcentralname --resource-group $GroupName |  ConvertFrom-Json
+                                        write-host 'App Info:'
+                                        write-host $info.displayName
+                                        write-host $info.applicationId
+                                        write-host $info.etag
+                                        write-host $info.resourceGroup
+                                        write-host $info.name
+                                        write-host $info.subdomain
+                                        write-host $info.template
+                                        write-host $info.location
+                                        write-host $info.sku
+                                        get-anykey
+                                        $IDScope =$info.applicationId
+                                        $IotcentralURL =$info.subdomain + '.azureiotcentral.com'
+                                        $global:IDScope = $IDScope
+                                        $global:Iotcentralname = $Iotcentralname
+                                        $global:IotcentralURL = $IotcentralURL
+                                    }
+                                    # $global:iotcentralname =$iotcentralname
+                                    # $iotcentralURL = "https://$subdomain" + '.azureiotcentral.com'
+                                    # $global:iotcentralURL=$iotcentralURL
                                 }
                             }
-                            '4'{
-                                $url = "https://github.com/gloveboxes/Azure-Sphere-Learning-Path"
-                                start-process $url
-                                $done=$false
-                            }
-                            '5'{
-                                Write-host 'Doing Azure Sphere Developer Learning Path Template'
-                                get-yesorno $true "Continue"
-                                $answer = $global:retVal
-                                if ( $answer)
-                                {          
-                                    create-iotcentral-app $global:subscription $global:groupname $global:IoTCentralName
-                                    $iotcentralname = $global:iotcentralname
-                                    $iotcentralURL = $global:iotcentralURL
-                                }
-                            }    
+                             
                             'B'{
 
                             }
