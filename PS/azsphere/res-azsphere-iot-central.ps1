@@ -209,7 +209,8 @@ $data= @"
         write-Host $Prompt
         $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
         write-Host $Prompt
-
+        write-host ''
+        write-host "Nb: To delete IoT Central Apps go to 'B. IoT Central Samples' on main menu, whilst still in this group."
         $options ='C. Create IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json,R. Refresh App List'
 
         $options="$options,B. Back"

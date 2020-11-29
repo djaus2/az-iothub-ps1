@@ -278,7 +278,8 @@ $data= @"
         }
         elseif ($global:kk -lt '9'){
             $Iotcentralname =$answer
-            read-host $Iotcentralname
+            write-host $Iotcentralname
+            get-anykey
             write-host "Please wait. Getting App details from Azure."
             $query =az iot central app show --name $Iotcentralname  -g $global:groupname -o tsv | out-string
             # $query=$global:IoTCentralsStrn
