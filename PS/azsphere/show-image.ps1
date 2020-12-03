@@ -6,7 +6,7 @@ function show-image{
     [string]$Text = 'Doh!' ,
     $Layout='none',
     $FontStyle='Italic'
-)
+) 
         # This function isn't used.
         function clickme
         {
@@ -14,13 +14,14 @@ function show-image{
                 [System.EventArgs] $e=$null
             )
         }
-        
+
     Add-Type -AssemblyName System.Windows.Forms
 
     $Form = New-Object system.Windows.Forms.Form
     $Form.Text = $Title
     # $Icon = [system.drawing.icon]::ExtractAssociatedIcon($PSHOME + "\powershell.exe")
     # $Form.Icon = $Icon
+    write-host "$global:ScriptDirectory\images\$ImageName"
     $Image = [system.drawing.image]::FromFile("$global:ScriptDirectory\images\$ImageName")
     $Form.BackgroundImage = $Image
     $Form.BackgroundImageLayout = $Layout
@@ -36,7 +37,6 @@ function show-image{
     $Label.BackColor = [System.Drawing.Color]::FromName("Transparent")
     $Label.AutoSize = $True
     $Form.Controls.Add($Label)
-
 
     $Button = New-Object System.Windows.Forms.Button
     $Button.Text = 'Done'
@@ -235,3 +235,4 @@ function show-ppt{
 
     $Form.ShowDialog()
 }
+# show-image 'iot-central-new-3-V2.png' 'Open Verify' 

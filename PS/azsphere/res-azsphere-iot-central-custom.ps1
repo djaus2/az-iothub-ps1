@@ -346,7 +346,7 @@ $data= @"
                         $global:IotcentralURL = $IotcentralURL
                     }   
                 'V' {
-                        verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName  $global:IoTCentralURL                
+                        verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName  $global:IoTCentralURL  $global:Tenant $global:$TenantName              
                     }
                 'W' {
                         whitelist-iotcentralapp $global:subscription $global:groupname $global:IoTCentralName $global:IoTCentralURL

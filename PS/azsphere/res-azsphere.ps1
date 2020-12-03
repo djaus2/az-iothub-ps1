@@ -21,6 +21,8 @@ param (
     write-Host $Prompt
     $Prompt = ' Current Tenant :"' + $TenantName +'"'
     write-Host $Prompt
+    $Prompt = '         Tenant :"' + $Tenant +'"'
+    write-Host $Prompt
 
  
 

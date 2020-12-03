@@ -25,6 +25,7 @@ try {
     . ("$global:ScriptDirectory\util\write-env.ps1")
     . ("$global:ScriptDirectory\util\set-export.ps1")
     . ("$global:ScriptDirectory\util\write-export.ps1")
+    . ("$global:ScriptDirectory\util\alt-tab.ps1")
 
 
     . ("$global:ScriptDirectory\menu\any-key-menu.ps1")
@@ -65,7 +66,7 @@ try {
     . ("$global:ScriptDirectory\azsphere\enter-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\verify-dps-azsphere.ps1")
     . ("$global:ScriptDirectory\azsphere\verify-iotcentral-azsphere.ps1")
-    . ("$global:ScriptDirectory\azsphere\res-azsphere-iot-central-custom.ps1")
+    #. ("$global:ScriptDirectory\azsphere\res-azsphere-iot-central-custom.ps1")
     . ("$global:ScriptDirectory\azsphere\show-image.ps1")
     . ("$global:ScriptDirectory\azsphere\whitelist-app-enpoint.ps1")
     . ("$global:ScriptDirectory\azsphere\res-azsphere-dps-manage-certs.ps1")
