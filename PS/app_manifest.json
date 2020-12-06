@@ -1,15 +1,24 @@
 
     {
         "SchemaVersion": 1,
-        "Name": "AzureIoT",
-        "ComponentId": "819255ff-8640-41fd-aea7-f85d34c491d5",
+        "Name": "AzureSphereIoTCentral",
+        "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
-        "CmdArgsOld": [ "0ne00186D14" ],
-        "CmdArgs": [ "--ConnectionType", "DPS", "--ScopeID", "0ne00186D14" ],
+        "CmdArgs": ["--ConnectionType","DPS","--ScopeID","e45350e4-75ed-4f2e-beed-be4b0e8f445c"],
         "Capabilities": {
-          "AllowedConnections": [ "global.azure-devices-provisioning.net", "BlazeMe3.azure-devices.net" ],
-          "Gpio": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ],
-          "DeviceAuthentication": "bfbe8861-c64c-4eae-a3f2-9adf312d2efd"
+          "GpioAlt": [ "", "" ],
+          "Gpio": [
+            "$BUTTON_A",
+            "$BUTTON_B",
+            "$LED1",
+            "$LED2",
+            "$NETWORK_CONNECTED_LED",
+            "$RELAY"
+          ],
+          "Uart": [ "" ],
+          "PowerControls": [ "ForceReboot" ],
+          "AllowedConnections": [ "global.azure-devices-provisioning.net", "iotc-a8eb454e-b7b3-456c-ad32-458e299f6d19.azure-devices.net", "iotc-17ad8a09-303e-4b4d-ab03-7410d085b459.azure-devices.net", "iotc-ae668c0b-da99-4744-833a-1a6a89ddef7a.azure-devices.net", "iotc-26ae676c-d5d0-4582-9c36-dd205beee599.azure-devices.net", "iotc-8f86795b-6503-4422-a133-673fd7f549aa.azure-devices.net", "iotc-05117d92-b1c6-47f4-ae49-448ae4cafcdd.azure-devices.net", "iotc-f767b3ab-aa63-42ba-bde7-2e0f8f8d6826.azure-devices.net", "iotc-cdd097bc-d87f-4fe4-8f24-ee4faf4f634c.azure-devices.net", "iotc-b00189c5-1d2b-48ff-9e3a-c318293a731a.azure-devices.net", "iotc-c0ea2d74-79c4-41bc-8a82-b874cfde1490.azure-devices.net" ],,
+          "DeviceAuthentication":  "bfbe8861-c64c-4eae-a3f2-9adf312d2efd"
         },
         "ApplicationType": "Default"
-    }
+      }

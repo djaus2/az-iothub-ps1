@@ -6,9 +6,9 @@ function verify-tenant-iotcentral{
         [string]$IOTCentralURL= '',
         [string]$Tenant='',
         [String]$TenantName='',
+        [String]$EnrollmentGroup='',
         [boolean]$Refresh=$false
     )
-    $EnrollmentGroup=''
     show-heading '  I O T   C E N T R A L '  4 'New Certificate and Tenant Verification'
     $Prompt = '   Subscription :"' + $Subscription +'"'
     write-Host $Prompt
@@ -160,7 +160,7 @@ function verify-tenant-iotcentral{
         write-host "6. "  -NoNewline
         write-host " Alt-Tab back to Portal and do 5."  -ForegroundColor   Magenta 
         write-host "7. "  -NoNewline 
-        write-host "Generate Verification Code (Here)" -ForegroundColor   Blue
+        write-host "Generate Verification Certificate (Here)" -ForegroundColor   Blue
         write-host "8. "  -NoNewline 
         write-host "HOW TO: " -NoNewline -ForegroundColor   Green
         write-host "Upload Verification Certificate"  
@@ -265,9 +265,22 @@ function verify-tenant-iotcentral{
             3  { show-image 'iot-central-new-4-V2.png' 'Open Verify' ''}
             4  {do-alttab; $doneAction=$true}
             5  { show-image 'iot-central-new-5-V2.png' 'Open Verify' ''}
-            6  {do-alttab; $doneAction=$true}
+            6  {set-clipboard ' ';do-alttab; $doneAction=$true}
             7  { 
-                show-heading '  I O T   C E N T R A L '  4 'New Certificate and Tenant Verification'
+                $verificationcode=""
+                $verificationcode = Get-Clipboard
+                $verificationcode.Trim()
+                get-anykey 'A'
+                If ([string]::IsNullOrEmpty($verificationcode ))
+                {
+                    write-Host ''
+                    $prompt = 'Need to copy Verification Code first.'
+                    write-host $prompt
+                    get-anykey 
+                    $global:DPS =  'Back'
+                    return
+                }
+                show-heading '  I o T   C E N T R A L '  4 'New Certificate and Tenant Verification'
                 $Prompt = '   Subscription :"' + $Subscription +'"'
                 write-Host $Prompt
                 $Prompt = '            Group :"' + $GroupName +'"'
@@ -284,10 +297,13 @@ function verify-tenant-iotcentral{
                 $Prompt = '  EnrollmentGroup :"' + $EnrollmentGroup +'"'
                 write-Host $Prompt
                 write-host ''
-                write-host "Doing step: 7."
-                write-host ''
                 write-host "Downloading Validation Certificate with Verification code: $verificationcode"
-                write-host "azsphere tenant download-validation-certificate --output $ValidationCertificationCertificate --verificationcode $verificationcode"  
+                if (Test-Path $ValidationCertificationCertificate)
+                {
+                    remove-item $ValidationCertificationCertificate
+                }
+                # Previous: azsphere tenant download-validation-certificate --output $ValidationCertificationCertificate --verificationcode $verificationcode
+                azsphere ca-certificate download-proof --output $ValidationCertificationCertificate --verificationcode $verificationcode
                 set-clipboard $ValidationCertificationCertificate
                 get-anykey
             }

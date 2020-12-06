@@ -1,4 +1,5 @@
-
+Add-Type -AssemblyName System.Windows.Forms
+. ("$global:ScriptDirectory\azsphere\Tools\win-x64\get-info.ps1")
 function get-azsphereIOTCentral{
 param (
     [string]$Subscription = '' ,
@@ -7,6 +8,7 @@ param (
     [string]$iotcentralURL = '',
     [string]$IDScope='',
     [string]$DevURL='',
+    [string]$EnrollmentGroup='',
     [bool]$Refresh=$true
 )
 
@@ -18,23 +20,14 @@ $DevURL=$global:DevURL
 function write-app_manifest{
     param (
     [string]$IDScope = '' ,
-    [string]$DevURL = '' ,
-    [string]$Tenant = '' 
+    [string]$Tenant = '',
+    [string]$AllowedConnections =''
     )
 
     If ([string]::IsNullOrEmpty($IDScope ))
     {
         write-Host ''
         $prompt =  'Need to get Scope ID first.'
-        write-host $prompt
-        get-anykey 
-        $global:DPS =  'Back'
-        return
-    }
-    elseIf ([string]::IsNullOrEmpty($DevURL ))
-    {
-        write-Host ''
-        $prompt = 'Need to select a Dev ID first.'
         write-host $prompt
         get-anykey 
         $global:DPS =  'Back'
@@ -49,6 +42,47 @@ function write-app_manifest{
         $global:DPS =  'Back'
         return
     }
+
+    if([string]::IsNullOrEmpty($allowedConnections))
+    {
+        $allowedConnections = "global.azure-devices-provisioning.net","$DevURL"
+    }
+
+    # May be allow for linux here
+    $location= "$global:ScriptDirectory\azsphere\Tools\win-x64"
+    push-location $location
+    write-host "Please wait."
+
+    # Some housekeeping
+    $paramsFile = "info.params"
+    $paramsPath= "$location\$paramsFile"
+    if (Test-Path $paramsPath) 
+    {
+     Remove-Item $paramsPath
+    }
+    $FileName = "info.txt"
+    $filePath= "$location\$FileName"
+    if (Test-Path $filePath) 
+    {
+     Remove-Item $filePath
+    }
+
+    # Got to patse or generate this
+    $APIToken="SharedAccessSignature sr=e45350e4-75ed-4f2e-beed-be4b0e8f445c&sig=kcvXaiV7W8EyLthw7GsfoE6FRkFO1LT3pF8Qoi2PPak%3D&skn=First&se=1638763820124"
+    
+    # Create inputs required
+    New-Item $paramsPath
+    Add-Content $paramsPath "N"
+    Add-Content $paramsPath "https://$iotcentralURL"
+    Add-Content $paramsPath "$APIToken"
+    Add-Content $paramsPath "IDScope"
+
+    get-info
+    $FileName = "info.txt"
+    $allowedConnections = Select-String -Path ".\$FileName" -Pattern '"AllowedConnections"' 
+    $locn = $allowedConnections.IndexOf("AllowedConnections")
+    $allowedConnections = $allowedConnections.Substring($locn-1);
+    pop-location
 
 $f=@"
     Hello
@@ -68,7 +102,6 @@ $data= @"
         "Name": "AzureSphereIoTCentral",
         "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
-        "CmdArgsAlt": [$IDScope],
         "CmdArgs": ["--ConnectionType","DPS","--ScopeID","$IDScope"],
         "Capabilities": {
           "GpioAlt": [ "$SAMPLE_BUTTON_1", "$SAMPLE_LED" ],
@@ -82,13 +115,14 @@ $data= @"
           ],
           "Uart": [ "$UART0" ],
           "PowerControls": [ "ForceReboot" ],
-          "AllowedConnections": [ "global.azure-devices-provisioning.net","$DevURL"],
+          $allowedConnections,
           "DeviceAuthentication":  "$Tenant"
         },
         "ApplicationType": "Default"
       }
 "@
       $PsScriptFile =  "$global:ScriptDirectory\app_manifest.json"
+
 
       $prompt ="Writing app_manifest.json (DPS ID Scope, IoT Hub DNS Name and Tenant) to $PsScriptFile"
       write-host $prompt
@@ -111,7 +145,7 @@ $data= @"
 }
 
 
-    show-heading '  A Z U R E  S P H E R E  ' 3 'Azure Sphere Developer Learning Path Template' 
+    show-heading '  A Z U R E  S P H E R E  ' 3 'Azure Sphere - IoT Central' 
     $Prompt = '     Subscription :"' + $Subscription +'"'
     write-Host $Prompt
     $Prompt = '            Group :"' + $GroupName +'"'
@@ -127,6 +161,8 @@ $data= @"
     $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
     write-Host $Prompt
     $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
+    write-Host $Prompt
+    $Prompt = '   EnrollmentGroup :"' + $EnrollmentGroup+'"'
     write-Host $Prompt
 
 
@@ -192,7 +228,7 @@ $data= @"
             $Refresh= $false
         }
 
-        show-heading '  A Z U R E  S P H E R E  '  3 'Azure Sphere Developer Learning Path Template' 
+        show-heading '  A Z U R E  S P H E R E  '  3 'Azure Sphere - IoT Central' 
         $Prompt = '          Subscription :"' + $Subscription +'"'
         write-Host $Prompt
         $Prompt = '                 Group :"' + $GroupName +'"'
@@ -209,10 +245,18 @@ $data= @"
         write-Host $Prompt
         $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
         write-Host $Prompt
+        $Prompt = '   EnrollmentGroup :"' + $EnrollmentGroup+'"'
+        write-Host $Prompt
         write-host ''
-        write-host "Nb: To delete IoT Central Apps go to 'B. IoT Central Samples' on main menu, whilst still in this group."
-        $options ='C. Create IoT Central App,E. Enter App Name and URL,V. Verify Tenant,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json,R. Refresh App List'
+        $options ='R. Refresh App List,C. Create IoT Central App,N. Enter App Name and URL,V. Create an Enrollment Group and Verify Tenant'
 
+        If (-not([string]::IsNullOrEmpty($Iotcentralname )))
+        {
+            If (-not([string]::IsNullOrEmpty($IotcentralURL )))
+            {
+                $options="$options,U. Unselect App,S. Show App Details,D. Delete App,O. Open current App,Z. ====================,G. Manage Enrollment Groups,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json"
+            }
+        }
         $options="$options,B. Back"
 
         If ([string]::IsNullOrEmpty($centralappS ))
@@ -243,6 +287,26 @@ $data= @"
         elseif ($answer-eq 'Error')
         {
             write-Host 'Error'
+        }
+        elseif ($global:kk -eq 'O'){
+            write-host 'About to open the App Portal.'
+            Start-Sleep -Seconds 2
+
+            $url = "https://$IotcentralURL"
+            start-process $url  
+            get-anykey
+
+        }
+        elseif ($global:kk -eq 'U'){
+            $Iotcentralname=''
+            $IotcentralURL =''
+            $global:Iotcentralname = $Iotcentralname
+            $global:IotcentralURL = $IotcentralURL
+            $IDScope=''
+            $DevURL=''
+            $global:IDScope=''
+            $global:DevURL=''
+            $answer=''
         }
         elseif ($global:kk -lt '9'){
             $Iotcentralname =$answer
@@ -461,9 +525,23 @@ $data= @"
                         }
                         } while (-not $done)
                         $answer=''
-                    }              
-                
-                'E' {  
+                    } 
+                'D' {  
+                        write-host 'Please wait'
+                        az iot central app delete --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName  
+                        $Refresh=$true
+                        $prompt =  'Done.'
+                        write-host $prompt
+                        get-anykey '' ' Continue.'
+                        $Refresh=$true
+                        }   
+                'S' {
+                        write-host "Getting app details from Azure."
+                        $name = $global:IoTCentralName.Replace(' ','-')
+                        az iot central app show -n $global:IoTCentralName -g $global:groupname -o jsonc
+                        get-anykey
+                    }                          
+                'N' {  
                         $name = read-host "Enter IoT Central app name. Default: $IoTCentralName"
                         if(-not([string]::IsNullOrEmpty($name )))
                         {
@@ -478,9 +556,69 @@ $data= @"
                             $IotcentralURL= "$Iotcentralname.azureiotcentral.com"
                         }
                         $global:IotcentralURL = $IotcentralURL
-                    }   
-                'V' {
-                        verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName   $global:IoTCentralURL  $global:Tenant $global:TenantName              
+                    }  
+                'V'   { verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName   $global:IoTCentralURL  $global:Tenant $global:TenantName  $global:EnrollmentGroup  }          
+
+                'E' {
+                    do {
+                        show-heading '  A Z U R E  S P H E R E  '  4 ' Create IoT Central Enrollment Group and Verify Tenant' 
+                        $Prompt = '          Subscription :"' + $Subscription +'"'
+                        write-Host $Prompt
+                        $Prompt = '                 Group :"' + $GroupName +'"'
+                        write-host ' ------------------------------------ '
+                        $Prompt = '           Tenant Name :"' + $TenantName +'"'
+                        write-Host $Prompt
+                        $Prompt = '                Tenant :"' + $Tenant +'"'
+                        write-Host $Prompt
+                        $Prompt = '  IoT Central App Name :"' + $Iotcentralname +'"'
+                        write-Host $Prompt
+                        $Prompt = '   IoT Central App URL :"' + $IotcentralURL +'"'
+                        write-Host $Prompt
+                        $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
+                        write-Host $Prompt
+                        $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
+                        write-Host $Prompt
+                        $Prompt = '   EnrollmentGroup :"' + $EnrollmentGroup+'"'
+                        write-Host $Prompt
+                        write-host
+                        write-host "Do the following in the IoT Central App Portal:"
+                        write-host "- From IoT Central App Portal, go to Administration > Device Connection."
+                        write-host "- Click + Create an enrollment group"                        
+                        write-host "- Name the enrollment group Azure Sphere"                       
+                        write-host "- Select Certificates (X.509) from the Attestation type dropdown."                            
+                        write-host "- Click Save" 
+                        write-host "IoT Central Enrollemnt Group Management:"
+                        write-host "- You can Select an existing Enrollment Group when you verify the Tenant. ie Skip this."
+                        write-host "- You can Delete an Enrollment Group by selecting it in Admin and deleting it."
+                        write-host '' 
+                        write-host "1. Alt-Tab to the (already open) Portal .. or:"  
+                        write-host "2. Open Portal in browser"
+                        write-host "V. Verify Tenant"
+                        write-host "========"
+                        write-host "D. Done" 
+                        write-host 'B. Back'
+                        $KeyPress = [System.Console]::ReadKey($true)
+                        $K = $KeyPress.Key
+                        $KK = $KeyPress.KeyChar
+            
+                        if ($kk -eq 'B')
+                        {
+                            break;
+                        }
+                        elseif ($kk -eq 'D')
+                        {
+                            break;
+                        } 
+                        switch ( $k )
+                        {
+                            'D1'  {do-alttab  }
+                            'D2'  {$url ="https://$IOTCentralURL";start-process  $url }
+  
+                        }
+                        } while($true)
+                    }
+                'G' {
+                    [System.Windows.Forms.MessageBox]::Show('You have to manage EnrollmentGroups from App Portal: O. Open current App.','az-iothub-ps:  Azure Sphere IoTCentral')
                     }
                 'W' {
                         whitelist-iotcentralapp $global:subscription $global:groupname $global:IoTCentralName $global:IoTCentralURL
@@ -488,7 +626,7 @@ $data= @"
                         $DevURL=$global:DevURL
                     }
                 'J' {
-                        write-app_manifest $Idscope $DevURL $Tenant
+                        write-app_manifest $Idscope $Tenant $allowwedConnections
                     }
 
             }

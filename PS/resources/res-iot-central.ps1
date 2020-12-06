@@ -211,7 +211,7 @@ $data= @"
         {
             If (-not([string]::IsNullOrEmpty($IotcentralURL )))
             {
-                $options="$options,U. Unselect App,S. Show App Details,D. Delete App,O. Open current App,W. Write app_Manifest.json"
+                $options="$options,U. Unselect App,S. Show App Details,D. Delete App,O. Open current App,Z. ====================,W. Write app_Manifest.json"
             }
         }
         $options="$options,B. Back"
@@ -247,7 +247,7 @@ $data= @"
             $answer=''
         }
         elseif ($global:kk -eq 'O'){
-            write-host 'About to open the App portal.'
+            write-host 'About to open the App Portal.'
             get-yesorno $true "Continue"
             $answer = $global:retVal
             if ( $answer){
@@ -472,12 +472,13 @@ $data= @"
                         $global:IotcentralURL = $IotcentralURL
                     }   
                 'D' {  
-                    write-host 'Please wait'
-                    az iot central app delete --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName  
-                    $Refresh=$true
-                    $prompt =  'Done.'
-                    write-host $prompt
-                    get-anykey '' ' Continue.'
+                        write-host 'Please wait'
+                        az iot central app delete --subscription "$Subscription" --resource-group $GroupName --name $IoTCentralName  
+                        $Refresh=$true
+                        $prompt =  'Done.'
+                        write-host $prompt
+                        get-anykey '' ' Continue.'
+                        $Refresh=$true
                     }   
                 'V' {
                         verify-tenant-iotcentral $global:subscription $global:groupname $global:IoTCentralName   $global:IoTCentralURL               
@@ -491,8 +492,9 @@ $data= @"
                         write-app_manifest $Idscope $DevURL $Tenant
                     }
                 'S' {
+                        write-host "Getting app details from Azure."
                         $name = $global:IoTCentralName.Replace(' ','-')
-                        az iot central app show -n $global:IoTCentralName -g $global:groupname
+                        az iot central app show -n $global:IoTCentralName -g $global:groupname -o jsonc
                         get-anykey
                     }
 

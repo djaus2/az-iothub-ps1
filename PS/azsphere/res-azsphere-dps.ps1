@@ -193,7 +193,7 @@ $data= @"
         $Prompt = '    EnrollmentGroup :"' + $EnrollmentGroupName +'"'
         write-Host $Prompt
 
-        $options ="D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrolment group on DPS with that certificate,W. Write app_Manifest.json"
+        $options ="D. Get DPS ID Scope,C. Create a Certificate on DPS and verify it,E. Create an Enrollment Group on DPS with that certificate,W. Write app_Manifest.json"
         $options +=",M. Manage DPS Certificates"
         $options +=",G. Manage Enrollment Groups"
  

@@ -1,0 +1,4 @@
+N
+https://mycentral790b25f99-e302-4b6b-8afb-e5e76d00a60e.azureiotcentral.com
+SharedAccessSignature sr=e45350e4-75ed-4f2e-beed-be4b0e8f445c&sig=kcvXaiV7W8EyLthw7GsfoE6FRkFO1LT3pF8Qoi2PPak%3D&skn=First&se=1638763820124
+0ne001C8FF2
