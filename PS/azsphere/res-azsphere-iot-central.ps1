@@ -7,7 +7,6 @@ param (
     [string]$IoTCentralName = '',
     [string]$iotcentralURL = '',
     [string]$IDScope='',
-    [string]$DevURL='',
     [string]$EnrollmentGroup='',
     [bool]$Refresh=$true
 )
@@ -15,13 +14,14 @@ param (
 $IoTCentralName = $global:IoTCentralName
 $IoTcentralURL= $global:IoTCentralURL
 $IDScope = $global:IDScope
-$DevURL=$global:DevURL
+
 
 function write-app_manifest{
     param (
     [string]$IDScope = '' ,
     [string]$Tenant = '',
-    [string]$AllowedConnections =''
+    [string]$AllowedConnections ='',
+    [string]$applicationID=''
     )
 
     If ([string]::IsNullOrEmpty($IDScope ))
@@ -42,10 +42,19 @@ function write-app_manifest{
         $global:DPS =  'Back'
         return
     }
+    elseIf ([string]::IsNullOrEmpty($applicationID ))
+    {
+        write-Host ''
+        $prompt =  'Need to get applicationID first.'
+        write-host $prompt
+        get-anykey 
+        $global:DPS =  'Back'
+        return
+    }
 
     if([string]::IsNullOrEmpty($allowedConnections))
     {
-        $allowedConnections = "global.azure-devices-provisioning.net","$DevURL"
+        $allowedConnections = "global.azure-devices-provisioning.net","$IotcentralURL "
     }
 
     # May be allow for linux here
@@ -68,14 +77,27 @@ function write-app_manifest{
     }
 
     # Got to patse or generate this
-    $APIToken="SharedAccessSignature sr=e45350e4-75ed-4f2e-beed-be4b0e8f445c&sig=kcvXaiV7W8EyLthw7GsfoE6FRkFO1LT3pF8Qoi2PPak%3D&skn=First&se=1638763820124"
-    
+    $APIToken=''
+    $guid1=new-guid
+    $guid = $guid1.ToString()
+    $token= az iot central api-token create --token-id $guid --app-id $applicationID --role admin -o json | ConvertFrom-Json
+    [Console]::ResetColor()
+    $APIToken= $token.token | out-string
+
+    write-host ''
+    write-host "Token: $APIToken"
+    write-host "Nb1: This token cannot be recovered if needed later."
+    write-host " ... You can only get the token when you create them."
+    write-host "Nb2: Delete API-Tokens in the App Portal."
+    write-host "Please wait."
+    Start-Sleep -Seconds 5 
+
     # Create inputs required
     New-Item $paramsPath
     Add-Content $paramsPath "N"
     Add-Content $paramsPath "https://$iotcentralURL"
     Add-Content $paramsPath "$APIToken"
-    Add-Content $paramsPath "IDScope"
+    Add-Content $paramsPath "$IDScope"
 
     get-info
     $FileName = "info.txt"
@@ -104,8 +126,8 @@ $data= @"
         "EntryPoint": "/bin/app",
         "CmdArgs": ["--ConnectionType","DPS","--ScopeID","$IDScope"],
         "Capabilities": {
-          "GpioAlt": [ "$SAMPLE_BUTTON_1", "$SAMPLE_LED" ],
-          "Gpio": [
+          "Gpio":["Use one of the two following:"]
+          "Gpio-msdocs-develop-secure-iot-solutions-azure-sphere-iot-central": [
             "$BUTTON_A",
             "$BUTTON_B",
             "$LED1",
@@ -113,6 +135,7 @@ $data= @"
             "$NETWORK_CONNECTED_LED",
             "$RELAY"
           ],
+          "Gpio-azure-sphere-samples-Samples-AzureIoT-IoTCentral": [ "$SAMPLE_BUTTON_1", "$SAMPLE_BUTTON_2", "$SAMPLE_LED" ]
           "Uart": [ "$UART0" ],
           "PowerControls": [ "ForceReboot" ],
           $allowedConnections,
@@ -141,7 +164,8 @@ $data= @"
       write-host "Copy the 3 variables into the app_manifest.json file from here if using other labs."
       write-host "***********************************************************************************"
       write-host ''
-      get-anykey '' 'Continue'
+      write-host "Please wait."
+      Start-Sleep -Seconds 10
 }
 
 
@@ -159,8 +183,6 @@ $data= @"
     $Prompt = '  IoT Central App URL :"' + $Iotcentralname.azureiotcentral.com +'"'
     write-Host $Prompt
     $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
-    write-Host $Prompt
-    $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
     write-Host $Prompt
     $Prompt = '   EnrollmentGroup :"' + $EnrollmentGroup+'"'
     write-Host $Prompt
@@ -204,7 +226,13 @@ $data= @"
         return
     }
 
-
+    If ([string]::IsNullOrEmpty($global:centralappS ))
+    {
+        $centralappS = $global:centralappS 
+    }
+    else{
+        $centralappS =''
+    }
   
     $DPSidscope=$global:DPSidscope
 
@@ -216,17 +244,25 @@ $data= @"
 
 
         
-        $IDScope=$global:IDScope
-        $DevURL=$global:DevURL
-        $Iotcentralname=$global:Iotcentralname
-        $IotcentralURL=$global:IotcentralURL
+
 
 
         if ($Refresh){
             write-host "Please wait: Getting IOT Centrals apps for Group $Groupname from Azure."
             $centralappS = az iot central app list -g $groupname -o tsv | out-string
             $Refresh= $false
+            $global:IDScope =''
+            $global:Iotcentralname=''
+            $global:IotcentralURL=''
+            $global:EnrollmentGroup=''
+            $global:centralappS = $centralappS
         }
+
+        $IDScope=$global:IDScope
+        $Iotcentralname=$global:Iotcentralname
+        $IotcentralURL=$global:IotcentralURL
+        $EnrollmentGroup=$global:EnrollmentGroup
+        $centralappS= $global:centralappS 
 
         show-heading '  A Z U R E  S P H E R E  '  3 'Azure Sphere - IoT Central' 
         $Prompt = '          Subscription :"' + $Subscription +'"'
@@ -243,9 +279,7 @@ $data= @"
         write-Host $Prompt
         $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
         write-Host $Prompt
-        $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
-        write-Host $Prompt
-        $Prompt = '   EnrollmentGroup :"' + $EnrollmentGroup+'"'
+        $Prompt = '       EnrollmentGroup :"' + $EnrollmentGroup+'"'
         write-Host $Prompt
         write-host ''
         $options ='R. Refresh App List,C. Create IoT Central App,N. Enter App Name and URL,V. Create an Enrollment Group and Verify Tenant'
@@ -254,7 +288,7 @@ $data= @"
         {
             If (-not([string]::IsNullOrEmpty($IotcentralURL )))
             {
-                $options="$options,U. Unselect App,S. Show App Details,D. Delete App,O. Open current App,Z. ====================,G. Manage Enrollment Groups,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json"
+                $options="$options,I. Enter IDScope and Enrollment Group Name,U. Unselect App,S. Show App Details,D. Delete App,O. Open current App,Z. ====================,G. Manage Enrollment Groups,W. Whitelist the Azure IoT Central Application Endpoint (2Do),J. Write app_Manifest.json"
             }
         }
         $options="$options,B. Back"
@@ -298,14 +332,18 @@ $data= @"
 
         }
         elseif ($global:kk -eq 'U'){
-            $Iotcentralname=''
-            $IotcentralURL =''
-            $global:Iotcentralname = $Iotcentralname
-            $global:IotcentralURL = $IotcentralURL
-            $IDScope=''
-            $DevURL=''
-            $global:IDScope=''
-            $global:DevURL=''
+            $global:IDScope =''
+            $global:Iotcentralname=''
+            $global:IotcentralURL=''
+            $global:EnrollmentGroup=''
+            $global:centralappS = $centralappS
+        
+
+            $IDScope=$global:IDScope
+            $Iotcentralname=$global:Iotcentralname
+            $IotcentralURL=$global:IotcentralURL
+            $EnrollmentGroup=$global:EnrollmentGroup
+            $centralappS= $global:centralappS 
             $answer=''
         }
         elseif ($global:kk -lt '9'){
@@ -323,11 +361,13 @@ $data= @"
             write-host $info.location
             write-host $info.sku
             get-anykey
-            $IDScope =$info.applicationId
+
+            $IDScope = ''
             $IotcentralURL =$info.subdomain + '.azureiotcentral.com'
             $global:IDScope = $IDScope
             $global:Iotcentralname = $Iotcentralname
             $global:IotcentralURL = $IotcentralURL
+            $global:EnrollmentGroup=''
         }
         else {
             
@@ -337,6 +377,28 @@ $data= @"
             {
 
                 'R' { $Refresh=$true}
+                'I' {
+                    $default = $IDScope
+                    $val = read-host "Enter IDScope for app. Default: $default"
+                    $val=$val.Trim()
+                    if ($val.ToUpper() -ne 'B')
+                    {
+                        If (-not ([string]::IsNullOrEmpty($val))) {
+                            $IDScope=$val
+                            $global:IDScope = $IDScope
+                        }
+                    }
+                    $default = $EnrollmentGroup
+                    $val = read-host "Enter Enrollment for app. Default: $default"
+                    $val=$val.Trim()
+                    if ($val.ToUpper() -ne 'B')
+                    {
+                        If (-not ([string]::IsNullOrEmpty($val))) {
+                            $EnrollmentGroup=$val
+                            $global:EnrollmentGroup = $EnrollmentGroup
+                        }
+                    }
+                }
                 'C' {
 
                         do { 
@@ -354,8 +416,6 @@ $data= @"
                             $Prompt = '   IoT Central App URL :"' + $IotcentralURL +'"'
                             write-Host $Prompt
                             $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
-                            write-Host $Prompt
-                            $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
                             write-Host $Prompt
                             $done=$true;
                             $menu='Create using Custom Template,Create in browser'
@@ -536,7 +596,7 @@ $data= @"
                         $Refresh=$true
                         }   
                 'S' {
-                        write-host "Getting app details from Azure."
+                        write-host "Please wait. Getting app details from Azure."
                         $name = $global:IoTCentralName.Replace(' ','-')
                         az iot central app show -n $global:IoTCentralName -g $global:groupname -o jsonc
                         get-anykey
@@ -575,8 +635,6 @@ $data= @"
                         $Prompt = '   IoT Central App URL :"' + $IotcentralURL +'"'
                         write-Host $Prompt
                         $Prompt = '  IoT Central ID Scope :"' + $IDScope+'"'
-                        write-Host $Prompt
-                        $Prompt = '   IoT Central Dev URL :"' + $DevURL+'"'
                         write-Host $Prompt
                         $Prompt = '   EnrollmentGroup :"' + $EnrollmentGroup+'"'
                         write-Host $Prompt
@@ -623,10 +681,17 @@ $data= @"
                 'W' {
                         whitelist-iotcentralapp $global:subscription $global:groupname $global:IoTCentralName $global:IoTCentralURL
                         $IDScope=$global:IDScope
-                        $DevURL=$global:DevURL
+                        # $global:DevU RL
                     }
                 'J' {
-                        write-app_manifest $Idscope $Tenant $allowwedConnections
+                        write-host "Please wait. Collecting app meta-data"
+                        $info = az iot central app show -n $global:IoTCentralName -g $global:groupname -o json | Convertfrom-json
+                        $applicationId = $info.applicationId
+                        write-host "applicationId: $applicationId"
+                        write-host ''
+                        write-host "Please wait."
+                        Start-Sleep -Seconds 3
+                        write-app_manifest $Idscope $Tenant $allowwedConnections $applicationId 
                     }
 
             }

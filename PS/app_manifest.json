@@ -4,7 +4,7 @@
         "Name": "AzureSphereIoTCentral",
         "ComponentId": "25025d2c-66da-4448-bae1-ac26fcdd3627",
         "EntryPoint": "/bin/app",
-        "CmdArgs": ["--ConnectionType","DPS","--ScopeID","e45350e4-75ed-4f2e-beed-be4b0e8f445c"],
+        "CmdArgs": ["--ConnectionType","DPS","--ScopeID","0ne001C8FF2"],
         "Capabilities": {
           "GpioAlt": [ "", "" ],
           "Gpio": [
