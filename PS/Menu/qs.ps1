@@ -29,16 +29,19 @@ function show-quickstarts{
                 {
                     $dpath3 = $dpath2.Replace($ScriptDirectory2,'')
                     $dirprops = $dpath3 -split '\\'
-                    if ($dirprops[0].substring(0,'dotnet'.Length) -ne 'dotnet')
+                    if ($dirprops.Length -gt 1)
                     {
-                        if($dirprops[1].ToLower() -ne 'common'){
-                            $dirsPaths.Add($dpath2)
-                            $folder ='Quickstarts\'+ $dirprops[0] + "\" + $dirprops[1] 
-                            $FolderNames.Add($folder)
-                            write-Host $i. $dirprops[0] - $dirprops[1]
-                            $SelectionList.Add($i)
-                            $i++
-                            
+                        if ($dirprops[0].substring(0,'dotnet'.Length) -ne 'dotnet')
+                        {
+                            if($dirprops[1].ToLower() -ne 'common'){
+                                $dirsPaths.Add($dpath2)
+                                $folder ='Quickstarts\'+ $dirprops[0] + "\" + $dirprops[1] 
+                                $FolderNames.Add($folder)
+                                write-Host $i. $dirprops[0] - $dirprops[1]
+                                $SelectionList.Add($i)
+                                $i++
+                                
+                            }
                         }
                     }
                 }

@@ -18,7 +18,7 @@ namespace simulated_device
 
         // The device connection string to authenticate the device with your IoT hub.
         // Using the Azure CLI:
-        // az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyDotnetDevice --output table
+        // az iot hub device-identity connection-string show --hub-name {YourIoTHubName} --device-id MyDotnetDevice --output table
         ////private readonly static string s_connectionString = "{Your device connection string here}";
         
         // For this sample either
@@ -49,7 +49,7 @@ namespace simulated_device
                     humidity = currentHumidity
                 };
                 var messageString = JsonConvert.SerializeObject(telemetryDataPoint);
-                var message = new Message(Encoding.ASCII.GetBytes(messageString));
+                Message message = new Message(Encoding.ASCII.GetBytes(messageString));
 
                 // Add a custom application property to the message.
                 // An IoT hub can filter on these properties without access to the message body.

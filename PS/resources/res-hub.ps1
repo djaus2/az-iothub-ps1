@@ -33,7 +33,7 @@ write-Host $Prompt
         return
     }
 
-    # $HubStrnIndex =3
+    # $HubStrnIndex =3 Defined in settings.ps1
     # $HubStrnDataIndex =3
 
 
@@ -69,6 +69,7 @@ write-Host $Prompt
             get-anykey
         }
         $global:HubsStrn =  az iot hub list --subscription  $Subscription --resource-group  $GroupName  -o tsv | Out-String
+        write-host $global:HubsStrn
     }
     If ([string]::IsNullOrEmpty($global:HubsStrn ))
     {
@@ -122,6 +123,7 @@ write-Host $Prompt
     elseif ($answer -eq 'New')
     {
         write-Host 'New'
+        $global:SKU=''
         new-Hub $Subscription $GroupName
         $answer = $global:retVal
         if ($answer -eq 'Done')

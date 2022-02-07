@@ -135,7 +135,15 @@ if($false) {
         write-Host "az iot hub create --name $HubName   --resource-group $GroupName  --subscription "$Subscription" --sku $SKU --output Table" -ForeGroundColor DarkBlue
         get-anykey
     }
-    az iot hub create --name $HubName   --resource-group $GroupName  --subscription "$Subscription" --sku $SKU --output Table
+    if ($SKU -eq "F1")
+    {
+        # Musr be --partion-count2 for F1
+        az iot hub create --name $HubName   --resource-group $GroupName  --subscription "$Subscription" --sku $SKU --partion-count 2 --output Table
+    }
+    else {
+        # Default is 4
+        az iot hub create --name $HubName   --resource-group $GroupName  --subscription "$Subscription" --sku $SKU --output Table
+    }
 
     $prompt = 'Checking whether Azure IoT Hub "' + $HubName +'" in Group "' + $GroupName + '" was created.'
     write-Host $prompt

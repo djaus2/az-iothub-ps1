@@ -18,7 +18,7 @@ namespace simulated_device
 
         // The device connection string to authenticate the device with your IoT hub.
         // Using the Azure CLI:
-        // az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyDotnetDevice --output table
+        // az iot hub device-identity connection-string show --hub-name {YourIoTHubName} --device-id MyDotnetDevice --output table
         //// private readonly static string s_connectionString = "{Your device connection string here}";
         private static string s_connectionString = Environment.GetEnvironmentVariable("IOTHUB_DEVICE_CONN_STRING");
 
@@ -36,7 +36,7 @@ namespace simulated_device
                 Console.WriteLine("Telemetry interval set to {0} seconds", data);
                 Console.ResetColor();
 
-                // Acknowlege the direct method call with a 200 success message
+                // Acknowledge the direct method call with a 200 success message
                 string result = "{\"result\":\"Executed direct method: " + methodRequest.Name + "\"}";
                 return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
             }

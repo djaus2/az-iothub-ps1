@@ -52,16 +52,16 @@ function set-export{
     #SharedAccesKeyName
     $SharedAccesKeyName='iothubowner'
      write-Host 'Getting IOTHUB_DEVICE_CONN_STRING'
-    $cs = az iot hub device-identity show-connection-string --hub-name $HubName --device-id $DeviceName  --output json  | out-string
+    $cs = az iot hub device-identity connection-string show --hub-name $HubName --device-id $DeviceName  --output json  | out-string
     $IOTHUB_DEVICE_CONN_STRING = ($cs   | ConvertFrom-Json).connectionString
     write-Host $IOTHUB_DEVICE_CONN_STRING
     export IOTHUB_DEVICE_CONN_STRING = $IOTHUB_DEVICE_CONN_STRING 
 
 
     # Hub Coonection String
-    #                             az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
+    #                             az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
     write-host 'Getting IOTHUB_CONN_STRING_CSHARP'
-    $cs = az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
+    $cs = az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
     $IOTHUB_CONN_STRING_CSHARP = ($cs   | ConvertFrom-Json).connectionString
     write-host $IOTHUB_CONN_STRING_CSHARP
     export IOTHUB_CONN_STRING_CSHARP =$IOTHUB_CONN_STRING_CSHARP 
@@ -70,7 +70,7 @@ function set-export{
     
     # Service Connection string
      write-host 'Getting Service Connection string'
-      $cs = az iot hub show-connection-string --policy-name service --name $HubName --output json | out-string
+      $cs = az iot hub connection-string show --policy-name service --name $HubName --output json | out-string
       $SERVICE_CONNECTION_STRING = ($cs   | ConvertFrom-Json).connectionString
       write-host $SERVICE_CONNECTION_STRING
      export SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING

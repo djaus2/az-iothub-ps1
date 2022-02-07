@@ -9,8 +9,8 @@ param (
 )
 . ("$global:ScriptDirectory\Util\Check-Hub.ps1")
 
-    $HubStrnIndex =3
-    $HubStrnDataIndex =3
+    # $HubStrnIndex =3 Defined in seetpgs.ps1
+    # $HubStrnDataIndex =3
 
     If ([string]::IsNullOrEmpty($Subscription ))
     {

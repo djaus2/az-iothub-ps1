@@ -74,6 +74,15 @@ param (
 
         if  ($noEntities -eq 1) 
         {
+            # write-host ($lines[0] -split '\t')[0]
+            # write-host ($lines[0] -split '\t')[1]
+            # write-host ($lines[0] -split '\t')[2]
+            # write-host ($lines[0] -split '\t')[3]
+            # write-host ($lines[0] -split '\t')[4]
+            # write-host ($lines[0] -split '\t')[5]
+            # write-host ($lines[0] -split '\t')[6]
+            # write-host $DisplayIndex
+            # get-anykey
             $prompt1 = $itemToList = ($lines[0] -split '\t')[$DisplayIndex]
             if ($prompt1 -ne  $CurrentSelection)
             {

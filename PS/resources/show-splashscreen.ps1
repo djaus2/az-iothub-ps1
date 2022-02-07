@@ -26,7 +26,7 @@ function Show-Splashscreen{
    write-host 'Note: The iot-central branch has some added IoT Central capabilities ... Under development"'
    write-host ''
    write-host 'Blog: ' -NoNewLine -ForegroundColor White
-   write-host 'http://www.sportronics.com.au' -ForegroundColor Yellow
+   write-host 'https://davidjones.sportronics.com.au' -ForegroundColor Yellow
    write-host ''
    get-anykey '' 'Continue'
    [Console]::ResetColor()

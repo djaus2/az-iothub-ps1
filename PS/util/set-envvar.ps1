@@ -396,19 +396,21 @@ function set-env{
     }
 
     # Device Connection String
-    #                             az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyDevice --output table
-    #                             az iot hub device-identity show-connection-string --hub-name $HubName --device-id $DeviceName --output table
+    #                             az iot hub device-identity connection-string show --hub-name {YourIoTHubName} --device-id MyDevice --output table
+    #                             az iot hub device-identity connection-string show --hub-name $HubName --device-id $DeviceName --output table
     write-Host 'Getting IOTHUB_DEVICE_CONN_STRING'
-    $cs = az iot hub device-identity show-connection-string --hub-name $HubName --device-id $DeviceName  --output json  | out-string
+    # This command has been deprecated and will be removed in a future release. Use 'az iot hub device-identity connection-string show' instead.
+    # $cs = az iot hub device-identity connection-string show --hub-name $HubName --device-id $DeviceName  --output json  | out-string
+    $cs = az iot hub device-identity connection-string show --hub-name $HubName --device-id $DeviceName  --output json  | out-string
     $IOTHUB_DEVICE_CONN_STRING = ($cs   | ConvertFrom-Json).connectionString
     write-Host $IOTHUB_DEVICE_CONN_STRING
     $env:IOTHUB_DEVICE_CONN_STRING = $IOTHUB_DEVICE_CONN_STRING 
 
 
     # Hub Coonection String
-    #                             az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
+    #                             az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
     write-host 'Getting IOTHUB_CONN_STRING_CSHARP'
-    $cs = az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
+    $cs = az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
     $IOTHUB_CONN_STRING_CSHARP = ($cs   | ConvertFrom-Json).connectionString
     write-host $IOTHUB_CONN_STRING_CSHARP
     $env:IOTHUB_CONN_STRING_CSHARP =$IOTHUB_CONN_STRING_CSHARP 
@@ -417,7 +419,7 @@ function set-env{
     
     # Service Connection string
      write-host 'Getting Service Connection string'
-      $cs = az iot hub show-connection-string --policy-name service --name $HubName --output json | out-string
+      $cs = az iot hub connection-string show --policy-name service --name $HubName --output json | out-string
       $SERVICE_CONNECTION_STRING = ($cs   | ConvertFrom-Json).connectionString
       write-host $SERVICE_CONNECTION_STRING
      $env:SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING
@@ -465,7 +467,7 @@ function set-env{
 
 
     
-    $EventHubsConnectionString="$EventHubsCompatibleEndpoint;SharedAccessKeyName=$SharedAccesKeyName;SharedAccessKey=$EventHubsSasKey;EntityPath=$EventHubsCompatiblePath"
+    $EventHubsConnectionString="Enpoint=$EventHubsCompatibleEndpoint;SharedAccessKeyName=$SharedAccesKeyName;SharedAccessKey=$EventHubsSasKey;EntityPath=$EventHubsCompatiblePath"
     write-host $EventHubsConnectionString
     $env:EVENT_HUBS_CONNECTION_STRING = $EventHubsConnectionString
 
@@ -592,7 +594,7 @@ function read-env{
  
 
     # Hub Coonection String
-    #                             az iot hub show-connection-string --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
+    #                             az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
     If(-not ([string]::IsNullOrEmpty($env:IOTHUB_CONN_STRING_CSHARP )))
     {  
         write-host "4. IOTHUB_CONN_STRING_CSHARP =  $env:IOTHUB_CONN_STRING_CSHARP"
