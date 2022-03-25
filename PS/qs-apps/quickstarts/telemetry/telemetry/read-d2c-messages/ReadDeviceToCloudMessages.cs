@@ -1,135 +1,155 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿    // Copyright (c) Microsoft. All rights reserved.
+    // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-// This application uses the Microsoft Azure Event Hubs Client for .NET
-// For samples see: https://github.com/Azure/azure-event-hubs/tree/master/samples/DotNet
-// For documenation see: https://docs.microsoft.com/azure/event-hubs/
-using System;
-using Microsoft.Azure.EventHubs;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Text;
-using System.Collections.Generic;
+    // This application uses the Azure Event Hubs Client for .NET
+    // For samples see: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/eventhub/Azure.Messaging.EventHubs/samples/README.md
+    // For documentation see: https://docs.microsoft.com/azure/event-hubs/
 
-namespace read_d2c_messages
+    using Azure.Messaging.EventHubs.Consumer;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+namespace ReadD2cMessages
 {
-    class ReadDeviceToCloudMessages
+    /// <summary>
+    /// A sample to illustrate reading Device-to-Cloud messages from a service app.
+    /// </summary>
+    internal class Program
     {
+
         private static bool show_system_properties = true;
         // Event Hub-compatible endpoint
         // az iot hub show --query properties.eventHubEndpoints.events.endpoint --name {your IoT Hub name}
         ////private readonly static string s_eventHubsCompatibleEndpoint = "{your Event Hubs compatible endpoint}";
-        
-        private  static string s_eventHubsCompatibleEndpoint = Environment.GetEnvironmentVariable("EVENT_HUBS_COMPATIBILITY_ENDPOINT");
+
+        private static string EventHubCompatibleEndpoint = Environment.GetEnvironmentVariable("EVENT_HUBS_COMPATIBILITY_ENDPOINT");
 
 
         // Event Hub-compatible name
         // az iot hub show --query properties.eventHubEndpoints.events.path --name {your IoT Hub name}
         //// private readonly static string s_eventHubsCompatiblePath = "{your Event Hubs compatible name}";
-  
-        private  static string s_eventHubsCompatiblePath = Environment.GetEnvironmentVariable("EVENT_HUBS_COMPATIBILITY_PATH");
+
+        private static string EventHubName = Environment.GetEnvironmentVariable("EVENT_HUBS_COMPATIBILITY_PATH");
 
 
         // az iot hub policy show --name service --query primaryKey --hub-name {your IoT Hub name}
         //private readonly static string s_iotHubSasKey = "{your service primary key}";
         //private readonly static string s_iotHubSasKeyName = "service";
 
-        private  static string s_iotHubSasKey = Environment.GetEnvironmentVariable("EVENT_HUBS_SAS_KEY");// "{your service primary key}";
-        private  static string s_iotHubSasKeyName = Environment.GetEnvironmentVariable("SHARED_ACCESS_KEY_NAME");// "service, iothubowner";
-        
-        
-        
-        private static EventHubClient s_eventHubClient;
+        private static string SharedAccessKey = Environment.GetEnvironmentVariable("EVENT_HUBS_SAS_KEY");// "{your service primary key}";
+        private static string IotHubSharedAccessKeyName = Environment.GetEnvironmentVariable("SHARED_ACCESS_KEY_NAME");// "service, iothubowner";
 
-        // Asynchronously create a PartitionReceiver for a partition and then start 
-        // reading any messages sent from the simulated client.
-        private static async Task ReceiveMessagesFromDeviceAsync(string partition, CancellationToken ct)
+        private static string EventHubConnectionString = null;
+        //The event hub-compatible name of your IoT Hub instance. Use `az iot hub show --query properties.eventHubEndpoints.events.path --name { your IoT Hub name}` to fetch via the Azure CLI.")]
+        //private static string EventHubName = "";
+
+        public static async Task Main(string[] args)
         {
-            // Create the receiver using the default consumer group.
-            // For the purposes of this sample, read only messages sent since 
-            // the time the receiver is created. Typically, you don't want to skip any messages.
-            var eventHubReceiver = s_eventHubClient.CreateReceiver("$Default", partition, EventPosition.FromEnqueuedTime(DateTime.Now));
-            Console.WriteLine("Create receiver on partition: " + partition);
-            while (true)
+            show_system_properties = true;
+            // Parse application parameters
+
+            // Either the connection string must be supplied, or the set of endpoint, name, and shared access key must be.
+            if (string.IsNullOrWhiteSpace(EventHubConnectionString)
+                && (string.IsNullOrWhiteSpace(EventHubCompatibleEndpoint)
+                    || string.IsNullOrWhiteSpace(EventHubName)
+                    || string.IsNullOrWhiteSpace(SharedAccessKey)))
             {
-                if (ct.IsCancellationRequested) break;
-                Console.WriteLine("Listening for messages on: " + partition);
-                // Check for EventData - this methods times out if there is nothing to retrieve.
-                var events = await eventHubReceiver.ReceiveAsync(100);
-
-                // If there is data in the batch, process it.
-                if (events == null) continue;
-
-                foreach(EventData eventData in events)
-                { 
-                  string data = Encoding.UTF8.GetString(eventData.Body.Array);
-                  Console.WriteLine("Message received on partition {0}:", partition);
-                  Console.WriteLine("  {0}:", data);
-                  Console.WriteLine("Application properties (set by device):");
-                  foreach (var prop in eventData.Properties)
-                  {
-                    Console.WriteLine("  {0}: {1}", prop.Key, prop.Value);
-                  }
-                  if(show_system_properties)
-                  {
-                    Console.WriteLine("System properties (set by IoT Hub):");
-                    foreach (var prop in eventData.SystemProperties)
-                    {
-                        Console.WriteLine("  {0}: {1}", prop.Key, prop.Value);
-                    }
-                  }
-                }
+                Console.WriteLine("Bye");
+                Environment.Exit(1);
             }
-        }
 
-        private static async Task Main(string[] args)
-        {
             Console.WriteLine("IoT Hub Quickstarts - Read device to cloud messages. Ctrl-C to exit.\n");
-            Console.WriteLine ("Using Env Var EVENT_HUBS_COMPATIBILITY_ENDPOINT = " + s_eventHubsCompatibleEndpoint );
-            Console.WriteLine ("Using Env Var EVENT_HUBS_COMPATIBILITY_PATH = " + s_eventHubsCompatiblePath );
-            Console.WriteLine ("Using Env Var EVENT_HUBS_SAS_KEY = " + s_iotHubSasKey );
-            Console.WriteLine ("Using Env Var SHARED_ACCESS_KEY_NAME = " + s_iotHubSasKeyName );
 
-            Console.WriteLine("\nDo you want to Hide System Properties sent by IoT Hub? [Y]es Default No");
-            var ch = Console.ReadKey();
-            if ((ch.KeyChar=='Y')|| (ch.KeyChar=='y'))
+            // Set up a way for the user to gracefully shutdown
+            using var cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (sender, eventArgs) =>
             {
-                show_system_properties = false;
-            }
-
-
-            Console.WriteLine("Press Enter to continue when the Simulated-Device is sending messages.");
-            Console.ReadLine();
-
-            // Create an EventHubClient instance to connect to the
-            // IoT Hub Event Hubs-compatible endpoint.
-            var connectionString = new EventHubsConnectionStringBuilder(new Uri(s_eventHubsCompatibleEndpoint), s_eventHubsCompatiblePath, s_iotHubSasKeyName, s_iotHubSasKey);
-            
-            
-            
-            s_eventHubClient = EventHubClient.CreateFromConnectionString(connectionString.ToString());
-
-            // Create a PartitionReciever for each partition on the hub.
-            var runtimeInfo = await s_eventHubClient.GetRuntimeInformationAsync();
-            var d2cPartitions = runtimeInfo.PartitionIds;
-
-            CancellationTokenSource cts = new CancellationTokenSource();
-
-            Console.CancelKeyPress += (s, e) =>
-            {
-                e.Cancel = true;
+                eventArgs.Cancel = true;
                 cts.Cancel();
                 Console.WriteLine("Exiting...");
             };
 
-            var tasks = new List<Task>();
-            foreach (string partition in d2cPartitions)
-            {
-                tasks.Add(ReceiveMessagesFromDeviceAsync(partition, cts.Token));
-            }
+            // Run the sample
+            await ReceiveMessagesFromDeviceAsync(cts.Token);
 
-            // Wait for all the PartitionReceivers to finsih.
-            Task.WaitAll(tasks.ToArray());
+            Console.WriteLine("Cloud message reader finished.");
+        }
+
+        internal static string GetEventHubConnectionString()
+        {
+            return EventHubConnectionString ?? $"Endpoint={EventHubCompatibleEndpoint};SharedAccessKeyName={IotHubSharedAccessKeyName};SharedAccessKey={SharedAccessKey}";
+        }
+
+        // Asynchronously create a PartitionReceiver for a partition and then start
+        // reading any messages sent from the simulated client.
+        private static async Task ReceiveMessagesFromDeviceAsync(CancellationToken ct)
+        {
+            string connectionString = GetEventHubConnectionString();
+
+            // Create the consumer using the default consumer group using a direct connection to the service.
+            // Information on using the client with a proxy can be found in the README for this quick start, here:
+            // https://github.com/Azure-Samples/azure-iot-samples-csharp/tree/main/iot-hub/Quickstarts/ReadD2cMessages/README.md#websocket-and-proxy-support
+            await using var consumer = new EventHubConsumerClient(
+                EventHubConsumerClient.DefaultConsumerGroupName,
+                connectionString,
+                EventHubName);
+
+            Console.WriteLine("Listening for messages on all partitions.");
+
+            try
+            {
+                // Begin reading events for all partitions, starting with the first event in each partition and waiting indefinitely for
+                // events to become available. Reading can be canceled by breaking out of the loop when an event is processed or by
+                // signaling the cancellation token.
+                //
+                // The "ReadEventsAsync" method on the consumer is a good starting point for consuming events for prototypes
+                // and samples. For real-world production scenarios, it is strongly recommended that you consider using the
+                // "EventProcessorClient" from the "Azure.Messaging.EventHubs.Processor" package.
+                //
+                // More information on the "EventProcessorClient" and its benefits can be found here:
+                //   https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/eventhub/Azure.Messaging.EventHubs.Processor/README.md
+                await foreach (PartitionEvent partitionEvent in consumer.ReadEventsAsync(ct))
+                {
+                    Console.WriteLine($"\nMessage received on partition {partitionEvent.Partition.PartitionId}:");
+
+                    string data = Encoding.UTF8.GetString(partitionEvent.Data.Body.ToArray());
+                    Console.WriteLine($"\tMessage body: {data}");
+
+                    Console.WriteLine("\tApplication properties (set by device):");
+                    foreach (KeyValuePair<string, object> prop in partitionEvent.Data.Properties)
+                    {
+                        PrintProperties(prop);
+                    }
+                    if (show_system_properties)
+                    {
+                        Console.WriteLine("\tSystem properties (set by IoT Hub):");
+                        foreach (KeyValuePair<string, object> prop in partitionEvent.Data.SystemProperties)
+                        {
+                            PrintProperties(prop);
+                        }
+                    }
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // This is expected when the token is signaled; it should not be considered an
+                // error in this scenario.
+            }
+        }
+
+        private static void PrintProperties(KeyValuePair<string, object> prop)
+        {
+            string propValue = prop.Value is DateTime
+                ? ((DateTime)prop.Value).ToString("O") // using a built-in date format here that includes milliseconds
+                : prop.Value.ToString();
+
+            Console.WriteLine($"\t\t{prop.Key}: {propValue}");
         }
     }
 }
+

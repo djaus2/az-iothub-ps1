@@ -410,7 +410,7 @@ function set-env{
     # Hub Coonection String
     #                             az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output table
     write-host 'Getting IOTHUB_CONN_STRING_CSHARP'
-    $cs = az iot hub connection-string show --name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
+    $cs = az iot hub connection-string show --hub-name $HubName --policy-name iothubowner --key primary  --resource-group $GroupName --output json  
     $IOTHUB_CONN_STRING_CSHARP = ($cs   | ConvertFrom-Json).connectionString
     write-host $IOTHUB_CONN_STRING_CSHARP
     $env:IOTHUB_CONN_STRING_CSHARP =$IOTHUB_CONN_STRING_CSHARP 
@@ -419,7 +419,7 @@ function set-env{
     
     # Service Connection string
      write-host 'Getting Service Connection string'
-      $cs = az iot hub connection-string show --policy-name service --name $HubName --output json | out-string
+      $cs = az iot hub connection-string show --policy-name service --hub-name $HubName --output json | out-string
       $SERVICE_CONNECTION_STRING = ($cs   | ConvertFrom-Json).connectionString
       write-host $SERVICE_CONNECTION_STRING
      $env:SERVICE_CONNECTION_STRING = $SERVICE_CONNECTION_STRING

@@ -34,7 +34,7 @@ param (
     }
     elseIf  ( -not ([string]::IsNullOrEmpty( $Mode  )))
     {
-        $prompt += ' ' + $Mode +'.'
+        $prompt += ' Press any key to ' + $Mode +'.'
     }
     else{
         
